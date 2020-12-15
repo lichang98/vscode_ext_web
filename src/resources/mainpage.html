@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Cat Coding</title>
+</head>
+
+<body>
+    <input type="file" id="upload_file"/>
+</body>
+
+<script>
+    
+    function getObjectURL(file) { 
+            var url = null; 
+            if (window.createObjcectURL != undefined) { 
+                url = window.createOjcectURL(file); 
+            } else if (window.URL != undefined) { 
+                url = window.URL.createObjectURL(file); 
+            } else if (window.webkitURL != undefined) { 
+                url = window.webkitURL.createObjectURL(file); 
+            } 
+            return url; 
+    }
+    $("#upload_file").change(function(){
+        console.log("上传文件");
+        console.log($("#upload_file").prop("files"));
+        console.log($("#upload_file").prop("files")[0].path);
+    });
+</script>
+
+</html>

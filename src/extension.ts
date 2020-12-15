@@ -36,6 +36,9 @@ export function activate(context: vscode.ExtensionContext) {
 			let buf = fs.readFileSync(pathStr,"UTF-8");
 			console.log("Sync read: "+buf.toString());
 			currentPanel.webview.html = buf.toString();
+			currentPanel.webview.onDidReceiveMessage(message =>{
+				console.log("extension receive msg: "+message);
+			},undefined,context.subscriptions);
 			currentPanel.onDidDispose(()=> {currentPanel=undefined;}, null,context.subscriptions);
 		}
 	});

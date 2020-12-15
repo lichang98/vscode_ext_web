@@ -4,31 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>Cat Coding</title>
 </head>
 
 <body>
-    <input type="file" id="upload_file"/>
+    <input type="file" id="upload_file" style="visibility: hidden;" />
+    <button id="upload_btn" type="button" class="btn btn-primary">ANN模型导入</button>
+    <br/>
+    <button id="start_convert_btn" type="button" class="btn btn-primary">ANN模型转换</button>
 </body>
 
 <script>
-    
-    function getObjectURL(file) { 
-            var url = null; 
-            if (window.createObjcectURL != undefined) { 
-                url = window.createOjcectURL(file); 
-            } else if (window.URL != undefined) { 
-                url = window.URL.createObjectURL(file); 
-            } else if (window.webkitURL != undefined) { 
-                url = window.webkitURL.createObjectURL(file); 
-            } 
-            return url; 
-    }
-    $("#upload_file").change(function(){
+    $("#upload_btn").click(function () {
+        $("#upload_file").click();
+    });
+    let annModelPath=undefined;
+    $("#upload_file").change(function () {
         console.log("上传文件");
         console.log($("#upload_file").prop("files"));
         console.log($("#upload_file").prop("files")[0].path);
+        annModelPath = $("#upload_file").prop("files")[0].path;
+    });
+    $("#start_convert_btn").click(function(){
+        console.log("ann model path:"+annModelPath);
+        const vscode=acquireVsCodeApi();
+        vscode.postMessage(annModelPath);
     });
 </script>
 

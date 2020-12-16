@@ -54,7 +54,7 @@
         </div>
     </div>
     <!--功能按键区面板-->
-    <div class="panel panel-default col-md-2">
+    <div class="panel panel-default col-md-2 col-sm-2">
         <div class="panel-heading">
             <h3 class="panel-title">功能区</h3>
         </div>
@@ -88,7 +88,7 @@
         </div>
     </div>
     <!--可视化区面板-->
-    <div class="panel panel-default col-md-8" style="height: 60%;">
+    <div class="panel panel-default col-md-8 col-sm-8" style="height: 60%;">
         <div class="panel-heading">
             可视化区
         </div>
@@ -97,7 +97,7 @@
         </div>
     </div>
     <!--参数配置区-->
-    <div class="panel panel-default col-md-2">
+    <div class="panel panel-default col-md-2 col-sm-2">
         <div class="panel-heading">
             参数配置区
         </div>
@@ -118,8 +118,8 @@
         </div>
     </div>
     <!--运行信息输出区-->
-    <div class="panel panel-default col-md-9" style="height: 300px;">
-        <div class="panel-body" style="overflow-x: auto;overflow-y: auto;" style="height: 100%;">
+    <div class="panel panel-default col-md-9 col-sm-9" style="height: 300px;">
+        <div class="panel-body" style="overflow-x: auto;overflow-y: auto;">
             <!--输出区标签-->
             <ul id="outputTab" class="nav nav-tabs">
                 <li class="active">
@@ -134,11 +134,11 @@
                 </li>
             </ul>
             <!--运行信息输出区 标签页对应的数据区-->
-            <div class="tab-content">
-                <div class="tab-pane fade in active" id="annOutput">
+            <div class="tab-content" style="overflow-x: auto;overflow-y: auto; height: 240px;width: 100%;" id="outputPanel">
+                <div class="tab-pane fade in active"  style="overflow-x: auto;overflow-y: auto; height: 240px;width: 100%;" id="annOutput">
                     ANN校验输出
                 </div>
-                <div class="tab-pane fade" id="snnOutput">
+                <div class="tab-pane fade"  style="overflow-x: auto;overflow-y: auto; height: 240px;width: 100%;" id="snnOutput">
                     SNN校验输出
                 </div>
             </div>
@@ -149,6 +149,7 @@
 </body>
 
 <script>
+    const vscode = acquireVsCodeApi();
     $("#upload_btn").click(function () {
         $("#upload_file").click();
     });
@@ -162,13 +163,15 @@
     // post message from webview to extension
     $("#start_convert_btn").click(function () {
         console.log("ann model path:" + annModelPath);
-        const vscode = acquireVsCodeApi();
-        vscode.postMessage(annModelPath);
+        vscode.postMessage(JSON.stringify({"start_ann_conversion":"/c/users"})+"");
     });
     window.addEventListener("message",event=>{
         const msg = event.data;
         console.log("web view receive data:"+msg.data.toString());
-        $("#annOutput").html(msg.data.toString().replace('\n','<br/>'));
+        let prevContent = $("#annOutput").html()
+        prevContent += "\n<br/>"+msg.data.toString().replace('\n','<br/>');
+        $("#annOutput").html(prevContent);
+        $("#annOutput").animate({scrollTop: $("#annOutput").get(0).scrollHeight},1);
     });
 </script>
 

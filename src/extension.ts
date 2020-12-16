@@ -37,16 +37,21 @@ export function activate(context: vscode.ExtensionContext) {
 			let buf = fs.readFileSync(pathStr,"UTF-8");
 			// console.log("Sync read: "+buf.toString());
 			currentPanel.webview.html = buf.toString();
-			currentPanel.webview.onDidReceiveMessage(message =>{
+			let count=0;
+			let msgReceiver = currentPanel.webview.onDidReceiveMessage(message =>{
 				console.log("extension receive msg: "+message);
+				count++;
+				console.log("This is "+count+" th message");
+				let data = JSON.parse(message);
+				if(data.start_ann_conversion){
+					console.log("receive convert ann command from webview, path:"+data.start_ann_conversion);
+					let pyScript = child_process.spawn("python",['C:\\Users\\32344\\Downloads\\darwin2\\test.py']);
+					pyScript.stdout.on("data",(data)=>{
+						console.log("python execued output:"+data);
+						currentPanel?.webview.postMessage({"data":data.toString()});
+					});
+				}
 			},undefined,context.subscriptions);
-
-			let pyScript = child_process.spawn("python",['C:\\Users\\32344\\Downloads\\darwin2\\test.py']);
-			pyScript.stdout.on("data",(data)=>{
-				console.log("python execued output:"+data);
-				currentPanel?.webview.postMessage({"data":data.toString()});
-			});
-
 
 			currentPanel.onDidDispose(()=> {currentPanel=undefined;}, null,context.subscriptions);
 		}

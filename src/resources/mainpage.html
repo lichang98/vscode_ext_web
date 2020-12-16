@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%;">
 
 <head>
     <meta charset="UTF-8">
@@ -7,30 +7,161 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <title>Cat Coding</title>
+    <title>Darwin IDE</title>
 </head>
 
-<body>
-    <input type="file" id="upload_file" style="visibility: hidden;" />
-    <button id="upload_btn" type="button" class="btn btn-primary">ANN模型导入</button>
-    <br/>
-    <button id="start_convert_btn" type="button" class="btn btn-primary">ANN模型转换</button>
+<body style="height: 100%;">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Darwin IDE</h4>
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        开始
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#"></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        公共功能菜单栏
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#"></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        帮助
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#"></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--功能按键区面板-->
+    <div class="panel panel-default col-md-2">
+        <div class="panel-heading">
+            <h3 class="panel-title">功能区</h3>
+        </div>
+        <div class="panel-body">
+            <input type="file" id="upload_file" style="visibility: hidden;" />
+            <button id="upload_btn" type="button" class="btn btn-primary">ANN模型导入</button>
+            <br />
+            <br />
+            <br />
+            <button id="start_convert_btn" type="button" class="btn btn-primary">ANN模型转换</button>
+            <br />
+            <br />
+            <br />
+            <button id="import_snn_btn" type="button" class="btn btn-primary">SNN模型导入</button>
+            <br />
+            <br />
+            <br />
+            <button id="import_snn_btn" type="button" class="btn btn-primary">SNN模型训练</button>
+            <br />
+            <br />
+            <br />
+            <button id="import_snn_btn" type="button" class="btn btn-primary">SNN模型编译</button>
+            <br />
+            <br />
+            <br />
+            <button id="import_snn_btn" type="button" class="btn btn-primary">SNN模型仿真</button>
+            <br />
+            <br />
+            <br />
+            <button id="import_snn_btn" type="button" class="btn btn-primary">SNN模型运行</button>
+        </div>
+    </div>
+    <!--可视化区面板-->
+    <div class="panel panel-default col-md-8" style="height: 60%;">
+        <div class="panel-heading">
+            可视化区
+        </div>
+        <div class="panel-body">
+            <!--可视化展示-->
+        </div>
+    </div>
+    <!--参数配置区-->
+    <div class="panel panel-default col-md-2">
+        <div class="panel-heading">
+            参数配置区
+        </div>
+        <div class="panel-body">
+            <!--参数配置-->
+            <form class="bs-example bs-example-form" role="form">
+                <div class="input-group">
+                    <span class="input-group-addon">膜电位权重位宽(bit)</span>
+                    <input type="text" class="form-control" placeholder="8">
+                </div>
+                <br />
+                <div class="input-group">
+                    <span class="input-group-addon">权重位宽(bit)</span>
+                    <input type="text" class="form-control" placeholder="8">
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <!--运行信息输出区-->
+    <div class="panel panel-default col-md-9" style="height: 300px;">
+        <div class="panel-body" style="overflow-x: auto;overflow-y: auto;" style="height: 100%;">
+            <!--输出区标签-->
+            <ul id="outputTab" class="nav nav-tabs">
+                <li class="active">
+                    <a href="#annOutput" data-toggle="tab">
+                        ANN校验日志输出
+                    </a>
+                </li>
+                <li>
+                    <a href="#snnOutput" data-toggle="tab">
+                        SNN校验日志输出
+                    </a>
+                </li>
+            </ul>
+            <!--运行信息输出区 标签页对应的数据区-->
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="annOutput">
+                    ANN校验输出
+                </div>
+                <div class="tab-pane fade" id="snnOutput">
+                    SNN校验输出
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </body>
 
 <script>
     $("#upload_btn").click(function () {
         $("#upload_file").click();
     });
-    let annModelPath=undefined;
+    let annModelPath = undefined;
     $("#upload_file").change(function () {
         console.log("上传文件");
         console.log($("#upload_file").prop("files"));
         console.log($("#upload_file").prop("files")[0].path);
         annModelPath = $("#upload_file").prop("files")[0].path;
     });
-    $("#start_convert_btn").click(function(){
-        console.log("ann model path:"+annModelPath);
-        const vscode=acquireVsCodeApi();
+    $("#start_convert_btn").click(function () {
+        console.log("ann model path:" + annModelPath);
+        const vscode = acquireVsCodeApi();
         vscode.postMessage(annModelPath);
     });
 </script>

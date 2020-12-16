@@ -10,7 +10,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:darwin2.helloWorld"
+		"onCommand:darwin2.helloWorld",
+		"onWebviewPanel:darwin2web"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {

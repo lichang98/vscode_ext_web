@@ -159,10 +159,16 @@
         console.log($("#upload_file").prop("files")[0].path);
         annModelPath = $("#upload_file").prop("files")[0].path;
     });
+    // post message from webview to extension
     $("#start_convert_btn").click(function () {
         console.log("ann model path:" + annModelPath);
         const vscode = acquireVsCodeApi();
         vscode.postMessage(annModelPath);
+    });
+    window.addEventListener("message",event=>{
+        const msg = event.data;
+        console.log("web view receive data:"+msg.data.toString());
+        $("#annOutput").html(msg.data.toString().replace('\n','<br/>'));
     });
 </script>
 

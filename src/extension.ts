@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path'
 import * as fs from 'fs'
+import * as child_process from "child_process"
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -39,6 +40,13 @@ export function activate(context: vscode.ExtensionContext) {
 			currentPanel.webview.onDidReceiveMessage(message =>{
 				console.log("extension receive msg: "+message);
 			},undefined,context.subscriptions);
+
+			let pyScript = child_process.spawn("python",['C:\\Users\\32344\\Downloads\\darwin2\\test.py']);
+			pyScript.stdout.on("data",(data)=>{
+				console.log("python execued output:"+data);
+			});
+
+
 			currentPanel.onDidDispose(()=> {currentPanel=undefined;}, null,context.subscriptions);
 		}
 	});

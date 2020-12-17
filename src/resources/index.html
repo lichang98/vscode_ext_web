@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" style="height: 100%;">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="./anime.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.js" integrity="sha512-E378bwaeZf1nwXeJGIwTB58A5gPt5jFU3u6aTGja4ZdRFJeo/N/REKnBgNZOZlH6JdnOPO98vg2AnSGaNfCMFQ==" crossorigin="anonymous"></script>
     <style type="text/css">
         .circle{
             width: 30px;
@@ -118,7 +119,7 @@
         </div>
     </div>
     <!--可视化区面板-->
-    <div class="panel panel-default col-md-8 col-sm-8" style="height: 60%;">
+    <div class="panel panel-default col-md-8 col-sm-8" style="min-height: 500px;">
         <div class="panel-heading">
             可视化区
         </div>
@@ -196,14 +197,16 @@
 </body>
 
 <script>
-    anime({
-        targets:"#circle1",
-        backgroundColor:["rgb(14, 18, 219)","rgb(50, 205, 50)","rgb(14, 18, 219)"],
-        easing:'easeInOutQuad',
-        duration:3000,
-        loop:true
-    });
-    setTimeout('anime.remove("#circle1")',6000);
+    setTimeout(function(){
+        anime({
+            targets:"#circle1",
+            backgroundColor:["rgb(14, 18, 219)","rgb(50, 205, 50)","rgb(14, 18, 219)"],
+            easing:'easeInOutQuad',
+            duration:3000,
+            loop:true
+        });
+        setTimeout('anime.remove("#circle1")',6000);
+    },5000);
     const vscode = acquireVsCodeApi();
     $("#upload_btn").click(function () {
         $("#upload_file").click();
@@ -214,6 +217,7 @@
         console.log($("#upload_file").prop("files"));
         console.log($("#upload_file").prop("files")[0].path);
         annModelPath = $("#upload_file").prop("files")[0].path;
+        console.log("上传文件，选择的文件路径为："+annModelPath);
     });
     // post message from webview to extension
     $("#start_convert_btn").click(function () {

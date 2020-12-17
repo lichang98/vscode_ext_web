@@ -25,11 +25,11 @@ export function activate(context: vscode.ExtensionContext) {
 			currentPanel.reveal(columnToShowIn);
 		}else{
 			currentPanel = vscode.window.createWebviewPanel("darwin2web", "Darwin IDE",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(context.extensionPath)], enableScripts:true,retainContextWhenHidden:true});
-			const onDiskPath = vscode.Uri.file(path.join(context.extensionPath,"src","resources","mainpage.html"));
+			const onDiskPath = vscode.Uri.file(path.join(context.extensionPath,"src","resources","index.html"));
 			let val = onDiskPath.with({scheme: "vscode-resource"});
 			let pathStr = val.toString();
 			// console.log("pathStr:"+pathStr);
-			pathStr="C:\\Users\\32344\\Downloads\\darwin2\\src\\resources\\mainpage.html";
+			pathStr="C:\\Users\\32344\\Downloads\\darwin2\\src\\resources\\index.html";
 			// fs.readFile(pathStr,'UTF-8',(err,fcontent)=>{
 			// 	console.log("file content:\n"+fcontent.toString());
 			// 	console.log("error:"+err?.message);

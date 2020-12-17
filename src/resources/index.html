@@ -91,7 +91,7 @@
         </div>
         <div class="panel-body">
             <input type="file" id="upload_file" style="visibility: hidden;"/>
-            <input type="file" id="upload_testdata" style="visibility: hidden;" webkitdirectory directory/>
+            <input type="file" id="upload_testdata" style="visibility: hidden;" webkitdirectory directory multiple/>
             <button id="upload_btn" type="button" class="btn btn-primary">ANN模型导入</button>
             <br />
             <br />
@@ -228,12 +228,16 @@
     });
     $("#upload_testdata").change(function(){
         console.log("上传测试数据");
+        console.log($("#upload_testdata").prop("files"))
         let dirPath = $("#upload_testdata").prop("files")[0].path;
         console.log("dir path="+dirPath);
         dirPath = dirPath.substring(0, dirPath.lastIndexOf("\\"));
+        dirPath = dirPath.substring(0, dirPath.lastIndexOf("\\"));
         console.log("目录的路径为："+dirPath);
+        // windows 环境下路径处理
+        dirPath = dirPath.split("\\").join("\\\\");
         // 将测试数据的目录路径发送到插件
-        vscode.postMessage(JSON.stringify({"upload_testdata_dirpath":dirPath.toString()})+"");
+        vscode.postMessage(JSON.stringify({"upload_testdata_dirpath":dirPath.toString()}));
     });
     // post message from webview to extension
     $("#start_convert_btn").click(function () {

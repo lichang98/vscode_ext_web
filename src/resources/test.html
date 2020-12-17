@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="./anime.js"></script>
+        <style type="text/css">
+            .square{
+                width: 300px;
+                height: 300px;
+                background: red;
+            }
+            .circle{
+                width: 100px;
+                height: 100px;
+                background: red;
+                -webkit-border-radius:50px;
+                border-radius: 50px;
+            }
+            .arrow-right-1:after {
+                content: "";
+                display: inline-block !important;
+                width: 0;
+                height: 0;
+                border-left: 8px solid #C8A962;
+                border-top: 8px solid transparent;
+                border-bottom: 8px solid transparent;
+                vertical-align: middle;
+
+            }
+            .arrow-right-1:before {
+                width: 20px;
+                height: 2px;
+                background: #C8A962;
+                content: "";
+                display: inline-block;
+                vertical-align: middle;
+            }
+            .arrow-right-2:after {
+                content: "";
+                display: inline-block !important;
+                width: 0;
+                height: 0;
+                border-left: 8px solid #09ca6a;
+                border-top: 8px solid transparent;
+                border-bottom: 8px solid transparent;
+                vertical-align: middle;
+
+            }
+            .arrow-right-2:before {
+                width: 20px;
+                height: 2px;
+                background: #09ca6a;
+                content: "";
+                display: inline-block;
+                vertical-align: middle;
+            }
+        </style>
+    </head>
+    <body>
+        <br/>
+        <br/>
+        <br/>
+        <article style="height: 300px; width: 300px;">
+            <div id="square1" class="arrow-right-1"></div>
+        </article>
+
+    </body>
+    <script>
+        
+        var myAnimation = anime({
+            targets: ".arrow-right-1",
+            translateX: '2rem',
+            rotate: -90,
+            background:"#09ca6a",
+            easing:"easeInOutQuad",
+            duration: 1000,
+            loop: true
+        });
+    </script>
+</html>

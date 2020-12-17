@@ -56,7 +56,7 @@ export function activate(context: vscode.ExtensionContext) {
 				}else if(data.start_ann_conversion){
 					// 开始启动ANN转换流程
 					console.log("receive convert ann command from webview");
-					let pyScript = child_process.spawn("python",['C:\\Users\\32344\\Downloads\\nn_convertor\\stage1.py '+uploadedTestDataDirPath]);
+					let pyScript = child_process.spawn("python",['C:\\Users\\32344\\Downloads\\nn_convertor\\stage1.py ', uploadedTestDataDirPath]);
 					pyScript.stdout.on("data",(data)=>{
 						console.log("python executed output:"+data);
 						currentPanel?.webview.postMessage({"data":data.toString()});

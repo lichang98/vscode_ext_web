@@ -8,6 +8,35 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="./anime.js"></script>
+    <style type="text/css">
+        .circle{
+            width: 30px;
+            height: 30px;
+            background: rgb(14, 18, 219);
+            -webkit-border-radius:35px;
+            border-radius: 35px;
+            vertical-align:middle;
+        }
+        .arrow-right:after {
+                content: "";
+                display: inline-block !important;
+                width: 0;
+                height: 0;
+                border-left: 8px solid #C8A962;
+                border-top: 8px solid transparent;
+                border-bottom: 8px solid transparent;
+                vertical-align: middle;
+
+            }
+            .arrow-right:before {
+                width: 20px;
+                height: 2px;
+                background: #C8A962;
+                content: "";
+                display: inline-block;
+                vertical-align: middle;
+            }
+    </style>
     <title>Darwin IDE</title>
 </head>
 
@@ -95,6 +124,25 @@
         </div>
         <div class="panel-body">
             <!--可视化展示-->
+            <article style="height: 100%; width: 100%;">
+                <div id="circle1" class="circle" style="height: 65px;width: 65px;display: inline-block;">
+                    <span style="color: rgb(248, 252, 252); width: 65px; height: 65px;display: inline-block;text-align: center;">
+                        模型<br/>加载<br/>解析
+                    </span>
+                </div>
+                <div id="arrow1" class="arrow-right" style="height: 60px;width: 60px;display: inline-block;"></div>
+                <div id="circle2" class="circle" style="height: 65px;width: 65px;display: inline-block;">
+                    <span style="color: rgb(248, 252, 252); width: 65px; height: 65px;display: inline-block;text-align: center;">
+                        参数<br/>调整
+                    </span>
+                </div>
+                <div id="arrow2" class="arrow-right" style="height: 50px;width: 50px;display: inline-block;"></div>
+                <div id="circle3" class="circle" style="height: 65px;width: 65px;display: inline-block;">
+                    <span style="color: rgb(248, 252, 252); width: 65px; height: 65px;display: inline-block;text-align: center;">
+                        模型<br/>校验
+                    </span>
+                </div>
+            </article>
         </div>
     </div>
     <!--参数配置区-->
@@ -145,21 +193,18 @@
             </div>
         </div>
     </div>
-
-    <div id="test_anime" style="height: 100px; width: 200px;">
-测试ssssssssssssssssssssss
-    </div>
 </body>
 
 <script>
-    const vscode = acquireVsCodeApi();
-    animate({
-        targets: 'div',
-        translateX: 250,
-        rotate: '1turn',
-        backgroundColor: '#FFF',
-        duration: 800
+    anime({
+        targets:"#circle1",
+        backgroundColor:["rgb(14, 18, 219)","rgb(50, 205, 50)","rgb(14, 18, 219)"],
+        easing:'easeInOutQuad',
+        duration:3000,
+        loop:true
     });
+    setTimeout('anime.remove("#circle1")',6000);
+    const vscode = acquireVsCodeApi();
     $("#upload_btn").click(function () {
         $("#upload_file").click();
     });

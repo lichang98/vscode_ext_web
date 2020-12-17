@@ -38,17 +38,32 @@ export function activate(context: vscode.ExtensionContext) {
 			// console.log("Sync read: "+buf.toString());
 			currentPanel.webview.html = buf.toString();
 			let count=0;
+			let uploadedANNModelPath=undefined;
+			let uploadedTestDataDirPath=undefined;
 			let msgReceiver = currentPanel.webview.onDidReceiveMessage(message =>{
 				console.log("extension receive msg: "+message);
 				count++;
 				console.log("This is "+count+" th message");
 				let data = JSON.parse(message);
-				if(data.start_ann_conversion){
+				if(data.upload_ann_model_path){
+					console.log("uploaded ann model path is:["+data.upload_ann_model_path+"]");
+					// 记录上传的ANN模型，等待接收开始转换的指令
+					uploadedANNModelPath = data.upload_ann_model_path;
+				}else if(data.upload_testdata_dirpath){
+					// 记录上传的测试数据所在的目录路径
+					console.log("Test data are in directory: ["+data.upload_testdata_dirpath+"]");
+					uploadedTestDataDirPath = data.upload_testdata_dirpath;
+				}else if(data.start_ann_conversion){
+					// 开始启动ANN转换流程
 					console.log("receive convert ann command from webview, path:"+data.start_ann_conversion);
 					let pyScript = child_process.spawn("python",['C:\\Users\\32344\\Downloads\\darwin2\\test.py']);
 					pyScript.stdout.on("data",(data)=>{
-						console.log("python execued output:"+data);
+						console.log("python executed output:"+data);
 						currentPanel?.webview.postMessage({"data":data.toString()});
+					});
+					pyScript.stderr.on("data",(err)=>{
+						console.log("python executed err output:"+err.toString());
+						currentPanel?.webview.postMessage({"data":err.toString()});
 					});
 				}
 			},undefined,context.subscriptions);

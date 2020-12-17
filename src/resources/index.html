@@ -90,8 +90,13 @@
             <h3 class="panel-title">功能区</h3>
         </div>
         <div class="panel-body">
-            <input type="file" id="upload_file" style="visibility: hidden;" />
+            <input type="file" id="upload_file" style="visibility: hidden;"/>
+            <input type="file" id="upload_testdata" style="visibility: hidden;" webkitdirectory directory/>
             <button id="upload_btn" type="button" class="btn btn-primary">ANN模型导入</button>
+            <br />
+            <br />
+            <br />
+            <button id="import_test_data_btn" type="button" class="btn btn-primary">导入测试数据</button>
             <br />
             <br />
             <br />
@@ -186,10 +191,10 @@
             <!--运行信息输出区 标签页对应的数据区-->
             <div class="tab-content" style="overflow-x: auto;overflow-y: auto; height: 240px;width: 100%;" id="outputPanel">
                 <div class="tab-pane fade in active"  style="overflow-x: auto;overflow-y: auto; height: 240px;width: 100%;" id="annOutput">
-                    ANN校验输出
+                    <!-- ANN校验输出内容 -->
                 </div>
                 <div class="tab-pane fade"  style="overflow-x: auto;overflow-y: auto; height: 240px;width: 100%;" id="snnOutput">
-                    SNN校验输出
+                    <!-- SNN校验输出内容 -->
                 </div>
             </div>
         </div>
@@ -197,19 +202,20 @@
 </body>
 
 <script>
-    setTimeout(function(){
-        anime({
-            targets:"#circle1",
-            backgroundColor:["rgb(14, 18, 219)","rgb(50, 205, 50)","rgb(14, 18, 219)"],
-            easing:'easeInOutQuad',
-            duration:3000,
-            loop:true
-        });
-        setTimeout('anime.remove("#circle1")',6000);
-    },5000);
+    anime({
+        targets:"#circle1",
+        backgroundColor:["rgb(14, 18, 219)","rgb(50, 205, 50)","rgb(14, 18, 219)"],
+        easing:'easeInOutQuad',
+        duration:3000,
+        loop:true
+    });
+    setTimeout('anime.remove("#circle1")',6000);
     const vscode = acquireVsCodeApi();
     $("#upload_btn").click(function () {
         $("#upload_file").click();
+    });
+    $("#import_test_data_btn").click(function(){
+        $("#upload_testdata").click();
     });
     let annModelPath = undefined;
     $("#upload_file").change(function () {
@@ -218,17 +224,28 @@
         console.log($("#upload_file").prop("files")[0].path);
         annModelPath = $("#upload_file").prop("files")[0].path;
         console.log("上传文件，选择的文件路径为："+annModelPath);
+        vscode.postMessage(JSON.stringify({"upload_ann_model_path":annModelPath.toString()})+"");
+    });
+    $("#upload_testdata").change(function(){
+        console.log("上传测试数据");
+        let dirPath = $("#upload_testdata").prop("files")[0].path;
+        console.log("dir path="+dirPath);
+        dirPath = dirPath.substring(0, dirPath.lastIndexOf("\\"));
+        console.log("目录的路径为："+dirPath);
+        // 将测试数据的目录路径发送到插件
+        vscode.postMessage(JSON.stringify({"upload_testdata_dirpath":dirPath.toString()})+"");
     });
     // post message from webview to extension
     $("#start_convert_btn").click(function () {
         console.log("ann model path:" + annModelPath);
-        vscode.postMessage(JSON.stringify({"start_ann_conversion":"/c/users"})+"");
+        vscode.postMessage(JSON.stringify({"start_ann_conversion":"start"})+"");
     });
     window.addEventListener("message",event=>{
         const msg = event.data;
         console.log("web view receive data:"+msg.data.toString());
-        let prevContent = $("#annOutput").html()
-        prevContent += "\n<br/>"+msg.data.toString().replace('\n','<br/>');
+        let prevContent = $("#annOutput").html();
+        prevContent += "<br/>"+msg.data.toString().split("\n").join("<br/>");
+        console.log("content html="+prevContent);
         $("#annOutput").html(prevContent);
         $("#annOutput").animate({scrollTop: $("#annOutput").get(0).scrollHeight},1);
     });

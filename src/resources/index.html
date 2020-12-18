@@ -92,15 +92,15 @@
         <div class="panel-body">
             <input type="file" id="upload_file" style="visibility: hidden;"/>
             <input type="file" id="upload_testdata" style="visibility: hidden;" webkitdirectory directory multiple/>
-            <button id="upload_btn" type="button" class="btn btn-primary">ANN模型导入</button>
-            <br />
-            <br />
-            <br />
             <button id="import_test_data_btn" type="button" class="btn btn-primary">导入测试数据</button>
             <br />
             <br />
             <br />
-            <button id="start_convert_btn" type="button" class="btn btn-primary">ANN模型转换</button>
+            <button id="start_data_preprocess_btn" type="button" class="btn btn-primary">数据预处理</button>
+            <br />
+            <br />
+            <br />
+            <button id="upload_btn" type="button" class="btn btn-primary">ANN模型导入转换</button>
             <br />
             <br />
             <br />
@@ -139,7 +139,7 @@
                 <div id="arrow1" class="arrow-right" style="height: 60px;width: 60px;display: inline-block;"></div>
                 <div id="circle2" class="circle" style="height: 65px;width: 65px;display: inline-block;">
                     <span style="color: rgb(248, 252, 252); width: 65px; height: 65px;display: inline-block;text-align: center;">
-                        模型<br/>加载<br/>解析
+                        数据<br/>预处理
                     </span>
                 </div>
                 <div id="arrow2" class="arrow-right" style="height: 60px;width: 60px;display: inline-block;"></div>
@@ -216,6 +216,7 @@
     //     loop:true
     // });
     // setTimeout('anime.remove("#circle1")',6000);
+    let currentStage=0;
     const vscode = acquireVsCodeApi();
     $("#upload_btn").click(function () {
         $("#upload_file").click();
@@ -267,18 +268,41 @@
         vscode.postMessage(JSON.stringify({"upload_testdata_dirpath":dirPath.toString()}));
     });
     // post message from webview to extension
-    $("#start_convert_btn").click(function () {
+    $("#start_data_preprocess_btn").click(function () {
+        // 数据预处理
         console.log("ann model path:" + annModelPath);
-        vscode.postMessage(JSON.stringify({"start_ann_conversion":"start"})+"");
+        anime({
+                targets:"#circle2",
+                backgroundColor:[ "rgb(14, 18, 219)","rgb(50, 205, 50)"],
+                easing:'easeInOutQuad',
+                duration:1000,
+                loop:true
+        });
+        vscode.postMessage(JSON.stringify({"start_data_preprocess":"start"})+"");
     });
     window.addEventListener("message",event=>{
-        const msg = event.data;
-        console.log("web view receive data:"+msg.data.toString());
-        let prevContent = $("#annOutput").html();
-        prevContent += "<br/>"+msg.data.toString().split("\n").join("<br/>");
-        console.log("content html="+prevContent);
-        $("#annOutput").html(prevContent);
-        $("#annOutput").animate({scrollTop: $("#annOutput").get(0).scrollHeight},1);
+        console.log("event data="+event.data);
+        recvObj = JSON.parse(event.data);
+        if(recvObj.stage1Data){
+            console.log("receiving stage 1 data");
+            let prevContent = $("#annOutput").html();
+            prevContent += "<br/>"+recvObj.stage1Data.toString().split("\r\n").join("<br/>");
+            $("#annOutput").html(prevContent);
+            $("#annOutput").animate({scrollTop: $("#annOutput").get(0).scrollHeight},1);
+            anime.remove("#circle2");
+            anime({
+                targets:"#circle2",
+                backgroundColor:["rgb(50, 205, 50)","rgb(14, 18, 219)"],
+                easing:'easeInOutQuad',
+                duration:1000,
+                loop:false
+            });
+            setTimeout(() => {
+                anime.remove("#circle2");
+            }, 1500);
+        }else if(recvObj.stage2Data){
+
+        }
     });
 </script>
 

@@ -53,17 +53,17 @@ export function activate(context: vscode.ExtensionContext) {
 					// 记录上传的测试数据所在的目录路径
 					console.log("Test data are in directory: ["+data.upload_testdata_dirpath+"]");
 					uploadedTestDataDirPath = data.upload_testdata_dirpath;
-				}else if(data.start_ann_conversion){
-					// 开始启动ANN转换流程
+				}else if(data.start_data_preprocess){
+					// 开始数据预处理
 					console.log("receive convert ann command from webview");
 					let pyScript = child_process.spawn("python",['C:\\Users\\32344\\Downloads\\nn_convertor\\stage1.py ', uploadedTestDataDirPath]);
 					pyScript.stdout.on("data",(data)=>{
 						console.log("python executed output:"+data);
-						currentPanel?.webview.postMessage({"data":data.toString()});
+						currentPanel?.webview.postMessage(JSON.stringify({"stage1Data":data.toString()})+"");
 					});
 					pyScript.stderr.on("data",(err)=>{
 						console.log("python executed err output:"+err.toString());
-						currentPanel?.webview.postMessage({"data":err.toString()});
+						currentPanel?.webview.postMessage(JSON.stringify({"stage1Data":err.toString()})+"");
 					});
 				}
 			},undefined,context.subscriptions);

@@ -133,17 +133,23 @@
             <article style="height: 100%; width: 100%;">
                 <div id="circle1" class="circle" style="height: 65px;width: 65px;display: inline-block;">
                     <span style="color: rgb(248, 252, 252); width: 65px; height: 65px;display: inline-block;text-align: center;">
-                        模型<br/>加载<br/>解析
+                        测试<br/>数据<br/>加载
                     </span>
                 </div>
                 <div id="arrow1" class="arrow-right" style="height: 60px;width: 60px;display: inline-block;"></div>
                 <div id="circle2" class="circle" style="height: 65px;width: 65px;display: inline-block;">
                     <span style="color: rgb(248, 252, 252); width: 65px; height: 65px;display: inline-block;text-align: center;">
+                        模型<br/>加载<br/>解析
+                    </span>
+                </div>
+                <div id="arrow2" class="arrow-right" style="height: 60px;width: 60px;display: inline-block;"></div>
+                <div id="circle3" class="circle" style="height: 65px;width: 65px;display: inline-block;">
+                    <span style="color: rgb(248, 252, 252); width: 65px; height: 65px;display: inline-block;text-align: center;">
                         参数<br/>调整
                     </span>
                 </div>
-                <div id="arrow2" class="arrow-right" style="height: 50px;width: 50px;display: inline-block;"></div>
-                <div id="circle3" class="circle" style="height: 65px;width: 65px;display: inline-block;">
+                <div id="arrow3" class="arrow-right" style="height: 50px;width: 50px;display: inline-block;"></div>
+                <div id="circle4" class="circle" style="height: 65px;width: 65px;display: inline-block;">
                     <span style="color: rgb(248, 252, 252); width: 65px; height: 65px;display: inline-block;text-align: center;">
                         模型<br/>校验
                     </span>
@@ -202,20 +208,29 @@
 </body>
 
 <script>
-    anime({
-        targets:"#circle1",
-        backgroundColor:["rgb(14, 18, 219)","rgb(50, 205, 50)","rgb(14, 18, 219)"],
-        easing:'easeInOutQuad',
-        duration:3000,
-        loop:true
-    });
-    setTimeout('anime.remove("#circle1")',6000);
+    // anime({
+    //     targets:"#circle1",
+    //     backgroundColor:["rgb(14, 18, 219)","rgb(50, 205, 50)","rgb(14, 18, 219)"],
+    //     easing:'easeInOutQuad',
+    //     duration:3000,
+    //     loop:true
+    // });
+    // setTimeout('anime.remove("#circle1")',6000);
     const vscode = acquireVsCodeApi();
     $("#upload_btn").click(function () {
         $("#upload_file").click();
     });
     $("#import_test_data_btn").click(function(){
-        $("#upload_testdata").click();
+        anime({
+                targets:"#circle1",
+                backgroundColor:["rgb(14, 18, 219)","rgb(50, 205, 50)"],
+                easing:'easeInOutQuad',
+                duration:1000,
+                loop:false
+        });
+        setTimeout(() => {
+            $("#upload_testdata").click();
+        }, 1000);
     });
     let annModelPath = undefined;
     $("#upload_file").change(function () {
@@ -228,6 +243,18 @@
     });
     $("#upload_testdata").change(function(){
         console.log("上传测试数据");
+        setTimeout(()=>{
+            anime({
+                targets:"#circle1",
+                backgroundColor:["rgb(50, 205, 50)", "rgb(14, 18, 219)"],
+                easing:'easeInOutQuad',
+                duration:1000,
+                loop:false
+            });
+        }, 1000);
+        setTimeout(() => {
+            anime.remove("#circle1");
+        }, 2000);
         console.log($("#upload_testdata").prop("files"))
         let dirPath = $("#upload_testdata").prop("files")[0].path;
         console.log("dir path="+dirPath);

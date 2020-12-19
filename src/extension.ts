@@ -67,7 +67,7 @@ export function activate(context: vscode.ExtensionContext) {
 					});
 				}else if(data.start_ann_conversion){
 					// 开始ANN模型转换与校验
-					let pyScript = child_process.spawn("python",['E:\\courses\\ZJLab\\IDE设计相关文档\\nn_convertor\\stage2.py ',data.start_ann_conversion])
+					let pyScript = child_process.spawn("python",['E:\\courses\\ZJLab\\IDE设计相关文档\\nn_convertor\\stage2.py ',data.start_ann_conversion]);
 					pyScript.stdout.on("data",(data)=>{
 						console.log("python execute output:"+data);
 						currentPanel?.webview.postMessage(JSON.stringify({"stage2Data":data.toString()})+"");

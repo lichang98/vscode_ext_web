@@ -2,6 +2,7 @@
 <html>
     <head>
         <script src="./anime.js"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <style type="text/css">
             .square{
                 width: 300px;
@@ -63,8 +64,19 @@
             <div id="square1" class="arrow-right-1"></div>
         </article>
 
+        <button id="btn_test">点击测试</button>
+        <input type="file" id="input_btn"/>
     </body>
     <script>
+        $("#btn_test").click(()=>{
+            console.log("test btn clicked..");
+            $("#input_btn").click();
+        });
+
+        $("#input_btn").change(()=>{
+            console.log("input butn clicked!!");
+        });
+
         
         var myAnimation = anime({
             targets: ".arrow-right-1",

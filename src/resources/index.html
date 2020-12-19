@@ -90,7 +90,7 @@
             <h3 class="panel-title">功能区</h3>
         </div>
         <div class="panel-body">
-            <input type="file" id="upload_file" style="visibility: hidden;"/>
+            <input type="file" id="upload_ann_model" style="visibility: hidden;"/>
             <input type="file" id="upload_testdata" style="visibility: hidden;" webkitdirectory directory multiple/>
             <button id="import_test_data_btn" type="button" class="btn btn-primary">导入测试数据</button>
             <br />
@@ -100,7 +100,7 @@
             <br />
             <br />
             <br />
-            <button id="upload_btn" type="button" class="btn btn-primary">ANN模型导入转换</button>
+            <button id="ann_conversion_btn" type="button" class="btn btn-primary">ANN模型导入转换</button>
             <br />
             <br />
             <br />
@@ -145,13 +145,7 @@
                 <div id="arrow2" class="arrow-right" style="height: 60px;width: 60px;display: inline-block;"></div>
                 <div id="circle3" class="circle" style="height: 65px;width: 65px;display: inline-block;">
                     <span style="color: rgb(248, 252, 252); width: 65px; height: 65px;display: inline-block;text-align: center;">
-                        参数<br/>调整
-                    </span>
-                </div>
-                <div id="arrow3" class="arrow-right" style="height: 50px;width: 50px;display: inline-block;"></div>
-                <div id="circle4" class="circle" style="height: 65px;width: 65px;display: inline-block;">
-                    <span style="color: rgb(248, 252, 252); width: 65px; height: 65px;display: inline-block;text-align: center;">
-                        模型<br/>校验
+                        参数<br/>调整</br>与校验
                     </span>
                 </div>
             </article>
@@ -218,8 +212,9 @@
     // setTimeout('anime.remove("#circle1")',6000);
     let currentStage=0;
     const vscode = acquireVsCodeApi();
-    $("#upload_btn").click(function () {
-        $("#upload_file").click();
+    // 点击上传ANN 模型，启动模型加载、转换与校验
+    $("#ann_conversion_btn").click(function () {
+        $("#upload_ann_model").click();
     });
     $("#import_test_data_btn").click(function(){
         anime({
@@ -233,15 +228,15 @@
             $("#upload_testdata").click();
         }, 1000);
     });
-    let annModelPath = undefined;
-    $("#upload_file").change(function () {
-        console.log("上传文件");
-        console.log($("#upload_file").prop("files"));
-        console.log($("#upload_file").prop("files")[0].path);
-        annModelPath = $("#upload_file").prop("files")[0].path;
-        console.log("上传文件，选择的文件路径为："+annModelPath);
-        vscode.postMessage(JSON.stringify({"upload_ann_model_path":annModelPath.toString()})+"");
-    });
+    // let annModelPath = undefined;
+    // $("#upload_file").change(function () {
+    //     console.log("上传文件");
+    //     console.log($("#upload_file").prop("files"));
+    //     console.log($("#upload_file").prop("files")[0].path);
+    //     annModelPath = $("#upload_file").prop("files")[0].path;
+    //     console.log("上传文件，选择的文件路径为："+annModelPath);
+    //     vscode.postMessage(JSON.stringify({"upload_ann_model_path":annModelPath.toString()})+"");
+    // });
     $("#upload_testdata").change(function(){
         console.log("上传测试数据");
         setTimeout(()=>{
@@ -270,7 +265,8 @@
     // post message from webview to extension
     $("#start_data_preprocess_btn").click(function () {
         // 数据预处理
-        console.log("ann model path:" + annModelPath);
+        // console.log("ann model path:" + annModelPath);
+        console.log("data preprocess start!");
         anime({
                 targets:"#circle2",
                 backgroundColor:[ "rgb(14, 18, 219)","rgb(50, 205, 50)"],
@@ -279,6 +275,21 @@
                 loop:true
         });
         vscode.postMessage(JSON.stringify({"start_data_preprocess":"start"})+"");
+    });
+
+    $("#upload_ann_model").change(function(){
+        // ANN模型转换与检验
+        console.log("start ann conversion and check.");
+        anime({
+            targets:"#circle3",
+            backgroundColor:["rgb(14, 18, 219)", "rgb(50, 205, 50)"],
+            easing:"easeInOutQuad",
+            duration:1000,
+            loop:true
+        });
+        console.log($("#upload_ann_model").prop("files")[0].path);
+        let modelPath = $("#upload_ann_model").prop("files")[0].path.split("\\").join("\\\\");
+        vscode.postMessage(JSON.stringify({"start_ann_conversion":modelPath}));
     });
     window.addEventListener("message",event=>{
         console.log("event data="+event.data);
@@ -301,7 +312,22 @@
                 anime.remove("#circle2");
             }, 1500);
         }else if(recvObj.stage2Data){
-
+            console.log("Receive stage2 data.");
+            let prevContent = $("#annOutput").html();
+            prevContent += "<br/>"+recvObj.stage2Data.toString().split("\r\n").join("<br/>");
+            $("#annOutput").html(prevContent);
+            $("#annOutput").animate({scrollTop:$("#annOutput").get(0).scrollHeight},1);
+            anime.remove("#circle3");
+            anime({
+                targets:"#circle3",
+                backgroundColor:["rgb(14, 18, 219)","rgb(50, 205, 50)"],
+                easing:"easeInOutQuad",
+                duration:1000,
+                loop:false
+            });
+            setTimeout(() => {
+                anime.remove("#circle3");
+            }, 1500);
         }
     });
 </script>

@@ -55,8 +55,8 @@ export function activate(context: vscode.ExtensionContext) {
 					uploadedTestDataDirPath = data.upload_testdata_dirpath;
 				}else if(data.start_data_preprocess){
 					// 开始数据预处理
-					console.log("receive convert ann command from webview");
-					let pyScript = child_process.spawn("python",['C:\\Users\\32344\\Downloads\\nn_convertor\\stage1.py ', uploadedTestDataDirPath]);
+					console.log("receive data preprocess command from webview");
+					let pyScript = child_process.spawn("python",['E:\\courses\\ZJLab\\IDE设计相关文档\\nn_convertor\\stage1.py ', uploadedTestDataDirPath]);
 					pyScript.stdout.on("data",(data)=>{
 						console.log("python executed output:"+data);
 						currentPanel?.webview.postMessage(JSON.stringify({"stage1Data":data.toString()})+"");
@@ -64,6 +64,17 @@ export function activate(context: vscode.ExtensionContext) {
 					pyScript.stderr.on("data",(err)=>{
 						console.log("python executed err output:"+err.toString());
 						currentPanel?.webview.postMessage(JSON.stringify({"stage1Data":err.toString()})+"");
+					});
+				}else if(data.start_ann_conversion){
+					// 开始ANN模型转换与校验
+					let pyScript = child_process.spawn("python",['E:\\courses\\ZJLab\\IDE设计相关文档\\nn_convertor\\stage2.py ',data.start_ann_conversion])
+					pyScript.stdout.on("data",(data)=>{
+						console.log("python execute output:"+data);
+						currentPanel?.webview.postMessage(JSON.stringify({"stage2Data":data.toString()})+"");
+					});
+					pyScript.stderr.on("data",(err)=>{
+						console.log("python execute err output:"+err.toString());
+						currentPanel?.webview.postMessage(JSON.stringify({"stage2Data":err.toString()})+"");
 					});
 				}
 			},undefined,context.subscriptions);

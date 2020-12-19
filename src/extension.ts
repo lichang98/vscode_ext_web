@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as child_process from "child_process";
+import { exit } from 'process';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -29,7 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
 			let val = onDiskPath.with({scheme: "vscode-resource"});
 			let pathStr = val.toString();
 			// console.log("pathStr:"+pathStr);
-			pathStr="C:\\Users\\32344\\Downloads\\darwin2\\src\\resources\\index.html";
+			pathStr="E:\\courses\\ZJLab\\IDE设计相关文档\\darwin2\\src\\resources\\index.html";
 			// fs.readFile(pathStr,'UTF-8',(err,fcontent)=>{
 			// 	console.log("file content:\n"+fcontent.toString());
 			// 	console.log("error:"+err?.message);
@@ -51,6 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
 					uploadedANNModelPath = data.upload_ann_model_path;
 				}else if(data.upload_testdata_dirpath){
 					// 记录上传的测试数据所在的目录路径
+					// deprecated
 					console.log("Test data are in directory: ["+data.upload_testdata_dirpath+"]");
 					uploadedTestDataDirPath = data.upload_testdata_dirpath;
 				}else if(data.start_data_preprocess){
@@ -67,6 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
 					});
 				}else if(data.start_ann_conversion){
 					// 开始ANN模型转换与校验
+					uploadedANNModelPath = data.start_ann_conversion;
 					let pyScript = child_process.spawn("python",['E:\\courses\\ZJLab\\IDE设计相关文档\\nn_convertor\\stage2.py ',data.start_ann_conversion]);
 					pyScript.stdout.on("data",(data)=>{
 						console.log("python execute output:"+data);
@@ -75,6 +78,27 @@ export function activate(context: vscode.ExtensionContext) {
 					pyScript.stderr.on("data",(err)=>{
 						console.log("python execute err output:"+err.toString());
 						currentPanel?.webview.postMessage(JSON.stringify({"stage2Data":err.toString()})+"");
+					});
+				}else if(data.start_simulate_from_ann){
+					// 开始使用转换后的ANN 放到模拟器上运行
+					console.log("Start building SNN from ANN and running on simulator...");
+					console.log("uploaded mode path: "+uploadedANNModelPath.toString());
+					let modeName = uploadedANNModelPath.split("\\")[uploadedANNModelPath.split("\\").length-1];
+					let modeNameList = modeName.split("_");
+					modeNameList.splice(1,0,"normed");
+					modeName = modeNameList.join("_");
+					let uploadedANNModelPathList = uploadedANNModelPath.split("\\").slice(0,uploadedANNModelPath.split("\\").length-1);
+					uploadedANNModelPathList.push(modeName);
+					uploadedANNModelPath = uploadedANNModelPathList.join("\\");
+
+					let pyScript = child_process.spawn("python",["E:\\courses\\ZJLab\\IDE设计相关文档\\darwin2\\src\\module\\darsim\\main.py", "E:\\courses\\ZJLab\\IDE设计相关文档\\nn_convertor\\ann_model_descs\\fcn_normed_model.h5"]);
+					pyScript.stdout.on("data",(data)=>{
+						console.log(data.toString());
+						currentPanel?.webview.postMessage(JSON.stringify({"convertedSNNSimu":data.toString()})+"");
+					});
+					pyScript.stderr.on("data",(err)=>{
+						console.log(err.toString());
+						currentPanel?.webview.postMessage(JSON.stringify({"convertedSNNSimu":err.toString()})+"");
 					});
 				}
 			},undefined,context.subscriptions);

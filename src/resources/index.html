@@ -184,6 +184,9 @@
     </div>
     <!--运行信息输出区-->
     <div class="panel panel-default col-md-9 col-sm-9" style="height: 300px;">
+        <input type="file" id="save_log_file_select" style="visibility: hidden;" webkitdirectory directory/>
+        <button id="clear_btn" class="btn btn-warning" style="position: relative;left: 3px; top: 10px;width: 100px;height: 30px;display: inline;">清除日志</button>
+        <button id="save_log_btn" class="btn btn-info" style="position: relative;left: 3px;top: 10px;width: 100px;height: 30px;display: inline;">保存日志</button>
         <div class="panel-body" style="overflow-x: auto;overflow-y: auto;">
             <!--输出区标签-->
             <ul id="outputTab" class="nav nav-tabs">
@@ -199,11 +202,11 @@
                 </li>
             </ul>
             <!--运行信息输出区 标签页对应的数据区-->
-            <div class="tab-content" style="overflow-x: auto;overflow-y: auto; height: 240px;width: 100%;" id="outputPanel">
-                <div class="tab-pane fade in active"  style="overflow-x: auto;overflow-y: auto; height: 240px;width: 100%;" id="annOutput">
+            <div class="tab-content" style="overflow-x: auto;overflow-y: auto; height: 180px;width: 100%;" id="outputPanel">
+                <div class="tab-pane fade in active"  style="overflow-x: auto;overflow-y: auto; height: 180px;width: 100%;" id="annOutput">
                     <!-- ANN校验输出内容 -->
                 </div>
-                <div class="tab-pane fade"  style="overflow-x: auto;overflow-y: auto; height: 240px;width: 100%;" id="snnOutput">
+                <div class="tab-pane fade"  style="overflow-x: auto;overflow-y: auto; height: 180px;width: 100%;" id="snnOutput">
                     <!-- SNN校验输出内容 -->
                 </div>
             </div>
@@ -238,6 +241,30 @@
             $("#upload_testdata").click();
         }, 1000);
     });
+    // 清除日志内容
+    $("#clear_btn").click(function(){
+        $("#annOutput").html("");
+    });
+
+    // 保存日志
+    $("#save_log_btn").click(function(){
+        $("#save_log_file_select").click();
+    });
+
+    $("#save_log_file_select").change(function(){
+        console.log("save log file");
+        let dirPath = $("#save_log_file_select").prop("files")[0].path;
+        dirPath = dirPath.substring(0,dirPath.lastIndexOf("\\"));
+        console.log("目录的路径为："+dirPath);
+        dirPath = dirPath.split("\\").join("\\\\");
+        let logData = $("#annOutput").html();
+        logData = logData.split("<br/>").join("\r\n");
+        logData = logData.split("<br>").join("\r\n");
+        // 发送
+        vscode.postMessage(JSON.stringify({"saveLogFile":dirPath.toString(),"logData":logData.toString()}));
+    });
+    
+
     // let annModelPath = undefined;
     // $("#upload_file").change(function () {
     //     console.log("上传文件");

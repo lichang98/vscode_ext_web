@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 		if(currentPanel){
 			currentPanel.reveal(columnToShowIn);
 		}else{
-			currentPanel = vscode.window.createWebviewPanel("darwin2web", "Darwin IDE",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(context.extensionPath)], enableScripts:true,retainContextWhenHidden:true});
+			currentPanel = vscode.window.createWebviewPanel("darwin2web", "Darwin IDE",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(context.extensionPath),vscode.Uri.file(path.join(context.extensionPath,"resources"))], enableScripts:true,retainContextWhenHidden:true});
 			const onDiskPath = vscode.Uri.file(path.join(context.extensionPath,"src","resources","index.html"));
 			let val = onDiskPath.with({scheme: "vscode-resource"});
 			let pathStr = val.toString();
@@ -38,6 +38,9 @@ export function activate(context: vscode.ExtensionContext) {
 			let buf = fs.readFileSync(pathStr,"UTF-8");
 			// console.log("Sync read: "+buf.toString());
 			currentPanel.webview.html = buf.toString();
+			// const garbagebinImgSrc = currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"resources","garbage_bin.png")));
+			// console.log("garbage img uri:"+garbagebinImgSrc.toString());
+			// currentPanel.webview.postMessage(JSON.stringify({"garbageSrc":garbagebinImgSrc})+"");
 			let count=0;
 			let uploadedANNModelPath:string="";
 			let uploadedTestDataDirPath:string="";
@@ -90,6 +93,7 @@ export function activate(context: vscode.ExtensionContext) {
 					let uploadedANNModelPathList = uploadedANNModelPath.split("\\").slice(0,uploadedANNModelPath.split("\\").length-1);
 					uploadedANNModelPathList.push(modeName);
 					uploadedANNModelPath = uploadedANNModelPathList.join("\\");
+					console.log("normed model path:"+uploadedANNModelPath.toString());
 
 					let pyScript = child_process.spawn("python",["E:\\courses\\ZJLab\\IDE设计相关文档\\darwin2\\src\\module\\darsim\\main.py", "E:\\courses\\ZJLab\\IDE设计相关文档\\nn_convertor\\ann_model_descs\\fcn_normed_model.h5"]);
 					pyScript.stdout.on("data",(data)=>{
@@ -100,6 +104,10 @@ export function activate(context: vscode.ExtensionContext) {
 						console.log(err.toString());
 						currentPanel?.webview.postMessage(JSON.stringify({"convertedSNNSimu":err.toString()})+"");
 					});
+				}else if(data.saveLogFile){
+					console.log("保存日志文件，目标路径："+data.saveLogFile.toString());
+					console.log("保存日志文件内容："+data.logData.toString());
+					fs.writeFileSync(path.join(data.saveLogFile.toString(),"ide_log.txt"),data.logData.toString());
 				}
 			},undefined,context.subscriptions);
 

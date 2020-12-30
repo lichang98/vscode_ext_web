@@ -5,10 +5,22 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as child_process from "child_process";
 import { exit } from 'process';
+// 引入 TreeViewProvider 的类
+import { TreeViewProvider } from './TreeViewProvider';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+    // 实现树视图的初始化
+	TreeViewProvider.initTreeViewItem();
+    
+    // 还记得我们在 TreeViewProvider.ts 文件下 TreeItemNode 下创建的 command 吗？
+    // 创建了 command 就需要注册才能使用
+    // label 就是 TreeItemNode->command 里 arguments 传递过来的
+    context.subscriptions.push(vscode.commands.registerCommand('itemClick', (label) => {
+		vscode.window.showInformationMessage(label);
+	}));
+
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated

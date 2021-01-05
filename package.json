@@ -35,7 +35,7 @@
 			"treeView": [                           
 				{
 					"id": "treeView-item",          
-					"name": "item",                 
+					"name": "模型转换器",                 
 					"when": ""                      
 				}
 			]

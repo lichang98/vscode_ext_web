@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 // 引入 TreeViewProvider 的类
-import { TreeItemNode, TreeViewProvider } from './TreeViewProvider';
+import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider } from './TreeViewProvider';
 import { TreeViewProviderData } from "./TreeViewData";
 import { TreeViewProviderModel } from "./TreeViewModel";
 import {NewProj} from "./NewProjWebView";
@@ -19,6 +19,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// 实现树视图的初始化
 	let treeview = TreeViewProvider.initTreeViewItem();
 	let inMemTreeViewStruct:TreeItemNode[]=[];
+	let x_norm_data_path = undefined;
+	let x_test_data_path = undefined;
+	let y_test_data_path = undefined;
+	let model_file_path = undefined;
 	// let xiangmuItem = new TreeItemNode("项目");
 	// treeview.data.push(xiangmuItem);
 	// // treeview.data.push(new TreeItemNode("数据", [new TreeItemNode("模型")]));
@@ -251,8 +255,8 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposable2 = vscode.commands.registerCommand("treeView-item.newproj", () => {
 		console.log("创建新项目xxx");
 		inMemTreeViewStruct.push(new TreeItemNode("项目", [new TreeItemNode("数据", 
-														[new TreeItemNode("训练数据"), new TreeItemNode("测试数据"), 
-														new TreeItemNode("测试数据标签")]), new TreeItemNode("模型")]));
+														[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
+														new TreeItemNode("测试数据标签",[])]), new TreeItemNode("模型",[])]));
 							
 								
 		treeview.data = inMemTreeViewStruct;
@@ -283,6 +287,92 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let disposable_import_command = vscode.commands.registerCommand("treeView-item.import", (itemNode: TreeItemNode) => {
 		console.log("当前导入目标："+itemNode.label);
+		if(itemNode.label === "训练数据"){
+			const options:vscode.OpenDialogOptions = {
+				canSelectMany:false,
+				canSelectFolders:false,
+				openLabel:"选择训练数据集",
+				filters:{"npz":['npz']}
+			};
+			vscode.window.showOpenDialog(options).then(fileUri => {
+				if(fileUri && fileUri[0]){
+					console.log("selected path: "+fileUri[0].fsPath);
+					x_norm_data_path = fileUri[0].fsPath;
+					// 添加到treeview下
+					// FIXME
+					ITEM_ICON_MAP.set("x_norm","imgs/file.png");
+					if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children){
+						console.log("添加新的文件");
+						treeview.data[0].children[0].children[0].children.push(new TreeItemNode("x_norm"));
+						treeview.refresh();
+					}
+				}
+			});
+		}else if(itemNode.label === "测试数据"){
+			const options:vscode.OpenDialogOptions = {
+				canSelectMany:false,
+				canSelectFolders:false,
+				openLabel:"选择测试数据集",
+				filters:{"npz":['npz']}
+			};
+			vscode.window.showOpenDialog(options).then(fileUri => {
+				if(fileUri && fileUri[0]){
+					console.log("selected path: "+fileUri[0].fsPath);
+					x_test_data_path = fileUri[0].fsPath;
+					
+					// 添加到treeview下
+					// FIXME
+					ITEM_ICON_MAP.set("x_test","imgs/file.png");
+					if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[1].children){
+						console.log("添加新的文件");
+						treeview.data[0].children[0].children[1].children.push(new TreeItemNode("x_test"));
+						treeview.refresh();
+					}
+				}
+			});
+		}else if(itemNode.label === "测试数据标签"){
+			const options:vscode.OpenDialogOptions = {
+				canSelectMany:false,
+				canSelectFolders:false,
+				openLabel:"选择测试数据集标签",
+				filters:{"npz":['npz']}
+			};
+			vscode.window.showOpenDialog(options).then(fileUri => {
+				if(fileUri && fileUri[0]){
+					console.log("selected path: "+fileUri[0].fsPath);
+					y_test_data_path = fileUri[0].fsPath;
+					// 添加到treeview下
+					// FIXME
+					ITEM_ICON_MAP.set("y_test","imgs/file.png");
+					if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[2].children){
+						console.log("添加新的文件");
+						treeview.data[0].children[0].children[2].children.push(new TreeItemNode("y_test"));
+						treeview.refresh();
+					}
+				}
+			});	
+		}else if(itemNode.label === "模型"){
+			const options:vscode.OpenDialogOptions = {
+				canSelectMany:false,
+				canSelectFolders:false,
+				openLabel:"选择模型文件",
+				filters:{"模型文件":['*']}
+			};
+			vscode.window.showOpenDialog(options).then(fileUri => {
+				if(fileUri && fileUri[0]){
+					console.log("selected path: "+fileUri[0].fsPath);
+					model_file_path = fileUri[0].fsPath;
+					// 添加到treeview下
+					// FIXME
+					ITEM_ICON_MAP.set("model_file","imgs/file.png");
+					if(treeview.data[0].children && treeview.data[0].children[1].children){
+						console.log("添加新的文件");
+						treeview.data[0].children[1].children.push(new TreeItemNode("model_file"));
+						treeview.refresh();
+					}
+				}
+			});	
+		}
 	});
 	context.subscriptions.push(disposable_import_command);
 }

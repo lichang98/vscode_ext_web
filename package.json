@@ -74,7 +74,7 @@
 				},
 				{
 					"command": "treeView-item.import",
-					"when": "view == treeView-item && viewItem != 项目 && viewItem != 数据",
+					"when": "view == treeView-item && viewItem == 训练数据 || viewItem == 测试数据 || viewItem == 测试数据标签 || viewItem == 模型",
 					"group": "inline"
 				}
 			]

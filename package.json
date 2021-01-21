@@ -23,7 +23,8 @@
 		"onView:treeView-item",
 		"onCommand:treeView-item.newproj",
 		"onCommand:treeView-item.datavis",
-		"onCommand:treeView-item.import"
+		"onCommand:treeView-item.import",
+		"onCommand:convertor.new_proj"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -51,6 +52,10 @@
 				"command": "treeView-item.import",
 				"title": "导入",
 				"icon":"src/resources/import.png"
+			},
+			{
+				"command": "explorer.testright",
+				"title": "测试右键"
 			}
 		],
 		"menus": {
@@ -58,24 +63,25 @@
 				{
 					"command": "treeView-item.newproj",
 					"when": "view == treeView-item",
-					"group": "navigation"
-				},
-				{
-					"command": "multiLevelTree.newproj",
-					"when": "view == multiLevelTree",
-					"group": "navigation"
+					"group": "inline"
 				}
 			],
 			"view/item/context": [
 				{
 					"command": "treeView-item.datavis",
 					"when": "view == treeView-item && viewItem == 数据 || viewItem == 模型",
-					"group": "inline"
+					"group": "navigation"
 				},
 				{
 					"command": "treeView-item.import",
 					"when": "view == treeView-item && viewItem == 训练数据 || viewItem == 测试数据 || viewItem == 测试数据标签 || viewItem == 模型",
-					"group": "inline"
+					"group": "navigation"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "explorer.testright",
+					"group": "navigation"
 				}
 			]
 		},
@@ -83,8 +89,9 @@
 			"activitybar": [                        
 				{
 					"id": "treeView",               
-					"title": "导航栏",            
-					"icon": "src/resources/dep.png"    
+					"title": "转换器",            
+					"icon": "src/resources/dep.png",
+					"command":"convertor.new_proj"
 				},
 				{
 					"id": "convertor",
@@ -107,7 +114,7 @@
 			"treeView": [                           
 				{
 					"id": "treeView-item",          
-					"name": "模型转换器",                 
+					"name": "",                 
 					"when": ""                      
 				}
 			],

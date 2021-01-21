@@ -21,61 +21,96 @@
         </div>
       </div>
 
-      <div class="row" style="height: 100%;width: 100%;">
-          <!--左侧主面板-->
-          <div id="main_panel_parent_div" class="col-sm-10" style="width: 100%;height: 100%;float: right;right: -10px;">
-            <div id="main_panel" class="tab-content" style="display: inline-block;width: 98%;height: 100%;overflow: auto;">
-              <!--数据可视化tab页-->
-              <div id="data_vis_tab" class="tab-pane" style="width: 100%;">
-                <div class="col m3">
-                  <!-- 数据基本信息表格 -->
-                  <table id="data_general_table" style="display: none;">
-                    <caption class="white-text" style="caption-side: top;text-align: center;">导入数据统计</caption>
-                    <tr>
-                      <td>总数据大小</td>
-                      <td id="total_data_amount"></td>
-                    </tr>
-                    <tr>
-                      <td>测试数据量</td>
-                      <td id="test_data_amount"></td>
-                    </tr>
-                    <tr>
-                      <td>验证数据量</td>
-                      <td id="val_data_amount"></td>
-                    </tr>
-                  </table>
-                </div>
-                <div class="col m5">
-                  <div id="pie_chart_container" style="width: 440px; height: 360px;">
-                  </div>
-                </div>
-                <div id="sample_data_div" class="col m3" style="display: none;">
-                  <div style="text-align: center;font-weight: bold;">
-                    样例数据
-                  </div>
-                  <img id="sample_img" src="./imgs/img_1.jpg" style="width: 50px;height: 50px;display: none;margin-left: 60px;margin-top: 40px;">
-                  <div id="bar_chart_histgram" style="width: 300px;height: 300px;margin-left: 70px;"></div>
-                </div>
-              </div>
+      <!--展示的主面板-->
+      <div class="row" style="height: 45%;width: 100%;">
+          <div class="col-md-5">
+            <!-- 数据基本信息表格 -->
+            <table id="data_general_table">
+              <caption class="white-text" style="caption-side: top;text-align: center;font-size: large;">导入数据统计</caption>
+              <tr style="font-size:small;">
+                <td>总数据大小</td>
+                <td id="total_data_amount">16000</td>
+              </tr>
+              <tr style="font-size:small;">
+                <td>测试数据量</td>
+                <td id="test_data_amount">10000</td>
+              </tr>
+              <tr style="font-size:small;">
+                <td>验证数据量</td>
+                <td id="val_data_amount">6000</td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-md-5">
+            <div id="pie_chart_container" style="width: 440px; height: 240px;">
             </div>
           </div>
-          <!--右侧配置面板-->
-          <div id="config_panel" class="col-sm-2 z-depth-1">
-            <div class="row">
-              <div class="z-depth-1" style="text-align: center;margin-left: 0px;">配置面板</div>
-              <div id="toggle_config_panel_hide" class="col-sm-4">
-                <div style="width: 20px;height: 20px;float: right;"><i class="material-icons">swap_horiz</i></div>
-              </div>
-            </div>
+      </div>
+      <div class="row" style="height: 45%;width: 100%;">
+        <div id="sample_data_div" class="col-md-5">
+          <div style="text-align: center;font-weight: bold;font-size: large;">
+            样例数据
           </div>
-          <div id="toggle_config_panel_show" style="width: 20px;position: absolute;float:right; right: 5px;display: none;">
-            <div class="row">
-              <div id="hide_config_panel_img" style="width: 20px;height: 20px;float: right;"><i class="material-icons">swap_horiz</i></div>
-            </div>
-          </div>
+          <ul style="height: 60px;width: 100%;overflow: auto;">
+            <li style="list-style: none;float: left;">
+              <img id="sample_img" src="./inner_scripts/sample0.png" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;float: left;">
+              <img id="sample_img" src="./inner_scripts/sample1.png" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;float: left;">
+              <img id="sample_img" src="./inner_scripts/sample2.png" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;float: left;">
+              <img id="sample_img" src="./inner_scripts/sample3.png" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;float: left;">
+              <img id="sample_img" src="./inner_scripts/sample4.png" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;float: left;">
+              <img id="sample_img" src="./inner_scripts/sample5.png" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+          </ul>
+          <div id="bar_chart_histgram" style="width: 440px;height: 240px;margin-top: 0px;"></div>
+        </div>
+        <div id="sample_test_data_div" class="col-md-5">
+          <div id="bar_chart_testdata_container" style="width: 440px;height: 240px;margin-top: 100px;"></div>
         </div>
       </div>
     </div>
+
+    <h2>创建模态框（Modal）</h2>
+<!-- 按钮触发模态框 -->
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+	开始演示模态框
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					模态框（Modal）标题
+				</h4>
+			</div>
+			<div class="modal-body">
+				在这里添加一些文本
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary">
+					提交更改
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+
+
 </body>
 <style>
 
@@ -133,26 +168,98 @@ body {
 <script>
 
     $(document).ready(function(){
-      // 隐藏配置面板
-      $("#toggle_config_panel_hide").on("click",()=>{
-        document.getElementById("config_panel").style.display="none";
-        document.getElementById("toggle_config_panel_show").style.display = "inline-block";
-        document.getElementById("toggle_config_panel_show").style.float = "right";
-        document.getElementById("toggle_config_panel_show").style.right = "-30px";
-        document.getElementById("main_panel_parent_div").setAttribute("class","col-sm-12 row");
-      });
-
-      $("#hide_config_panel_img").on("click",()=>{
-        // 重新显示
-        document.getElementById("config_panel").style.display="inline-block";
-        document.getElementById("toggle_config_panel_show").style.display = "none";
-        document.getElementById("main_panel_parent_div").setAttribute("class","col-sm-10 row");
-      });
+      display_data_bar_chart(['0','1','2','3','4','5','6','7','8','9'],
+            [0.098,0.1135,0.1032,0.101,0.0982,0.0892,0.0958,0.1028,0.0974,0.1009],"训练数据集各类别分布", "数据占比","pie_chart_container");
+      display_data_bar_chart(["0-28","28-56","56-85","85-113","113-141","141-170","170-198","198-226","226-255"],
+              [639,8,7,1,19,18,8,9,79,0],"像素分布","该范围内像素点个数","bar_chart_histgram");
+      display_data_bar_chart(['0','1','2','3','4','5','6','7','8','9'],
+        [0.098,0.101,0.1028,0.0974,0.1009,0.1135,0.0982,0.0892,0.0958,0.1032],"测试数据集各类别分布","数据占比","bar_chart_testdata_container")
+      
     });
 
-    // const vscode = acquireVsCodeApi();
-    // $("#convertor_entrance").on("click",function(){
-    //   console.log("jump back to convertor page");
-    //   vscode.postMessage(JSON.stringify({"click":"convertor_page"}));
-    // });
+
+    function display_data_bar_chart(label_names, label_counts, title,series_name,target_id){
+      console.log("label names:"+label_names);
+      console.log("label counts:"+label_counts);
+      var option = {
+            title: {  
+                  text: title,
+                  left: 'center',
+                  textStyle:{
+                    color:"#FDFEFE",
+                    fontSize: 14
+                  }
+          },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    crossStyle: {
+                        color: '#999'
+                    }
+                }
+            },
+            backgroundColor:"#17202A",
+            xAxis: [
+                {
+                    type: 'category',
+                    data:label_names,
+                    axisPointer: {
+                        type: 'shadow'
+                    },
+                    axisLabel:{
+                        textStyle:{
+                            "color":"#FDFEFE "
+                        },
+                        rotate:30
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '',
+                    min: 0,
+                    max: Math.max(label_counts)*1.2,
+                    interval: Math.max(label_counts)*1.2 / 5,
+                    axisLabel: {
+                        formatter: '{value}'
+                    },
+                    splitLine:{show:false},
+                    axisLine: {show: false}, 
+                    axisTick: {show: false},
+                    axisLabel:{show:false}
+                },
+                {
+                    type: 'value',
+                    name: '',
+                    min: 0,
+                    max: Math.max(label_counts)*1.2,
+                    interval: Math.max(label_counts)*1.2 / 5,
+                    axisLabel: {
+                        formatter: '{value}'
+                    },
+                    splitLine:{show:false},
+                    axisLine: {show: false}, 
+                    axisTick: {show: false},
+                    axisLabel:{show:false}
+                }
+            ],
+            series: [
+                {
+                    name: series_name,
+                    type: 'bar',
+                    data: label_counts
+                },
+                {
+                    name: series_name,
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: label_counts
+                }
+            ]
+        };
+        var bar_chart_data = echarts.init(document.getElementById(target_id));
+        bar_chart_data.setOption(option);
+    }
 </script>

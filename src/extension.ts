@@ -11,7 +11,7 @@ import {NewProj} from "./NewProjWebView";
 import {ImportDataShow} from "./ImportDataView";
 import {MultiLevelTreeProvider} from "./multiLevelTree";
 import {getMainPageV2} from "./get_mainpage_v2";
-import {getConvertorPageV2} from "./get_convertor_page_v2";
+import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2} from "./get_convertor_page_v2";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -31,7 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// treeViewPro.data.push(new TreeItemNode("测试添加"));
 	// TreeViewProviderData.initTreeViewItem();
 	// TreeViewProviderModel.initTreeViewItem();
-	// vscode.window.registerTreeDataProvider("multiLevelTree", new MultiLevelTreeProvider());
+	vscode.window.registerTreeDataProvider("multiLevelTree", new MultiLevelTreeProvider());
     
     // 还记得我们在 TreeViewProvider.ts 文件下 TreeItemNode 下创建的 command 吗？
     // 创建了 command 就需要注册才能使用
@@ -280,10 +280,24 @@ export function activate(context: vscode.ExtensionContext) {
 		if(itemNode.label === "数据"){
 			if(currentPanel){
 				currentPanel.title = "数据集";
+				// 数据可视化展示
+				// TODO
+				currentPanel.webview.html = getConvertorDataPageV2(
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample0.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample1.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample2.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample3.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample4.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample5.png")))
+				);
 			}
 		}
 	});
 	context.subscriptions.push(disposable_vis_command);
+
+	vscode.commands.registerCommand("convertor.opt",()=>{
+		console.log("convertor startxxxxxxxxxxxxxxxxxxxxxxxx");
+	});
 
 	let disposable_import_command = vscode.commands.registerCommand("treeView-item.import", (itemNode: TreeItemNode) => {
 		console.log("当前导入目标："+itemNode.label);
@@ -375,6 +389,9 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 	context.subscriptions.push(disposable_import_command);
+	vscode.commands.registerCommand("convertor.new_proj", ()=>{
+		console.log("create new project");
+	});
 }
 
 // this method is called when your extension is deactivated

@@ -8,7 +8,6 @@
 
 <body>
 
-
     <div class="row card" style="margin-left: 10%;margin-right: 20%">
         <li><a id="back_to_index_page" class="btn-floating blue darken-1"><i class="material-icons">arrow_back</i></a></li>
         <span class="card-title" style="display: block;margin: 0 auto;text-align: center;">转换流程</span>
@@ -54,7 +53,11 @@
         </div>
       </div>
 
+      <input id="create_new_proj_select"  type="file" webkitdirectory/>
+      <input id="create_new_proj_btn"  type="button"/>
 
+      <button id="button">Open</button>
+<input id="file-input" type="file" name="name" style="display: none;" />
 </body>
 <style>
   @font-face {
@@ -95,17 +98,45 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 
 <script>
-    const vscode = acquireVsCodeApi();
-  document.addEventListener('DOMContentLoaded', function() {
-      var elems = document.querySelectorAll('.fixed-action-btn');
-      var instances = M.FloatingActionButton.init(elems, {"hoverEnabled":false});
-    });
+//     const vscode = acquireVsCodeApi();
+//   document.addEventListener('DOMContentLoaded', function() {
+//       var elems = document.querySelectorAll('.fixed-action-btn');
+//       var instances = M.FloatingActionButton.init(elems, {"hoverEnabled":false});
+//     });
 
-$("#back_to_index_page").on("click",function(){
-  console.log("jump back to main page");
-  vscode.postMessage(JSON.stringify({"click":"index"}));
-});
+// $("#back_to_index_page").on("click",function(){
+//   console.log("jump back to main page");
+//   vscode.postMessage(JSON.stringify({"click":"index"}));
+// });
 
+// window.addEventListener('message',function(event){
+//   const data = JSON.parse(event.data);
+//   console.log("得到请求!!!");
+// });
+
+// $("#create_new_proj_btn").on("click",function(){
+//   $("#create_new_proj_select").click();
+// });
+// const event = new MouseEvent("click",{
+//   view:window,
+//   bubbles:true,
+//   cancelable:true
+// });
+// document.getElementById("create_new_proj_select").dispatchEvent(event);
+// $("#create_new_proj_select").change(function(){
+//   console.log("files");
+//   console.log($("#create_new_proj_select"));
+// });
+
+// $('#button').on('click', function() {
+//     $('#file-input').trigger('click');
+// });
+// $('#button').click();
+
+document.getElementById("button").onclick = function(){
+  document.getElementById("file-input").click();
+};
+document.getElementById("button").click();
 
 </script>
 </html>

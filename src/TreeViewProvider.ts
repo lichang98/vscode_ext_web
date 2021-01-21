@@ -1,12 +1,18 @@
 import { TreeItem, TreeItemCollapsibleState, TreeDataProvider, Uri, window } from 'vscode';
 import { join } from 'path';
+import * as vscode from "vscode";
 
 // 创建每一项 label 对应的图片名称
 // 其实就是一个Map集合，用 ts 的写法
-const ITEM_ICON_MAP = new Map<string, string>([
-    ['pig1', 'garbage_bin.png'],
-    ['pig2', 'garbage_bin.png'],
-    ['pig3', 'garbage_bin.png']
+export let ITEM_ICON_MAP = new Map<string, string>([
+    ['项目', 'imgs/project.png'],
+    ['数据', 'imgs/import_data.png'],
+    ['模型', 'imgs/import_model.png'],
+    ['训练数据', "imgs/file.png"],
+    ['测试数据', "imgs/file.png"],
+    ['测试数据标签', "imgs/file.png"]
+    // ['转换与仿真',"imgs/simulate_run.png"],
+    // ['测试添加',"imgs/simulate_run.png"]
 ]);
 
 // 第一步：创建单项的节点(item)的类
@@ -15,9 +21,14 @@ export class TreeItemNode extends TreeItem {
     constructor(
         // readonly 只可读
         public readonly label: string,
-        public readonly collapsibleState: TreeItemCollapsibleState,
+        public children?:TreeItemNode[],
+        public readonly isRoot?:boolean
     ){
-        super(label, collapsibleState);
+        super(label, children === undefined ? vscode.TreeItemCollapsibleState.None :
+            vscode.TreeItemCollapsibleState.Expanded);
+        this.children = children ? children : [];
+        // this.contextValue = isRoot ? "TreeViewProviderContext":undefined;
+        this.contextValue = label;
     }
 
     // command: 为每项添加点击事件的命令
@@ -47,8 +58,15 @@ export class TreeItemNode extends TreeItem {
 
 export class TreeViewProvider implements TreeDataProvider<TreeItemNode>{
     // 自动弹出的可以暂不理会
-    onDidChangeTreeData?: import("vscode").Event<TreeItemNode | null | undefined> | undefined;    
     
+    data: TreeItemNode[];
+
+    constructor(){
+        this.data = [];
+        // this.data = [new TreeItemNode("项目", [new TreeItemNode("数据", 
+        // [new TreeItemNode("训练数据"), new TreeItemNode("测试数据"), new TreeItemNode("测试数据标签")]), new TreeItemNode("模型")])];
+    }
+
     // 自动弹出
     // 获取树视图中的每一项 item,所以要返回 element
     getTreeItem(element: TreeItemNode): TreeItem | Thenable<TreeItem> {
@@ -58,18 +76,30 @@ export class TreeViewProvider implements TreeDataProvider<TreeItemNode>{
     // 自动弹出，但是我们要对内容做修改
     // 给每一项都创建一个 TreeItemNode
     getChildren(element?: TreeItemNode | undefined): import("vscode").ProviderResult<TreeItemNode[]> {
-    
-        return ['pig1','pig2','pig3'].map(
+
+        if(element === undefined){
+            return this.data;
+        }else{
+            return element.children;
+        }
+        // return ['新建项目','导入数据','导入模型','转换与仿真'].map(
         
-            item => new TreeItemNode(
-                item as string,
-                TreeItemCollapsibleState.None as TreeItemCollapsibleState,
-            )
-        );
+        //     item => new TreeItemNode(
+        //         item as string,
+        //         TreeItemCollapsibleState.None as TreeItemCollapsibleState,
+        //     )
+        // );
+    }
+
+    private _onDidChangeTreeData: vscode.EventEmitter<TreeItemNode | undefined | null | void> = new vscode.EventEmitter<TreeItemNode | undefined | null | void>();
+    readonly onDidChangeTreeData: vscode.Event<TreeItemNode | undefined | null | void> = this._onDidChangeTreeData.event;
+  
+    refresh(): void {
+      this._onDidChangeTreeData.fire();
     }
 
     // 这个静态方法时自己写的，你要写到 extension.ts 也可以
-    public static initTreeViewItem(){
+    public static initTreeViewItem():TreeViewProvider{
     
         // 实例化 TreeViewProvider
         const treeViewProvider = new TreeViewProvider();
@@ -77,5 +107,6 @@ export class TreeViewProvider implements TreeDataProvider<TreeItemNode>{
         // registerTreeDataProvider：注册树视图
         // 你可以类比 registerCommand(上面注册 Hello World)
         window.registerTreeDataProvider('treeView-item',treeViewProvider);
+        return treeViewProvider;
     }
 }

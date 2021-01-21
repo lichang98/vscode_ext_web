@@ -20,7 +20,7 @@ export class TreeItemNode extends TreeItem {
 
     constructor(
         // readonly 只可读
-        public readonly label: string,
+        public label: string,
         public children?:TreeItemNode[],
         public readonly isRoot?:boolean
     ){

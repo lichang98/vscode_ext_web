@@ -255,9 +255,20 @@ export function activate(context: vscode.ExtensionContext) {
 														new TreeItemNode("测试数据标签")]), new TreeItemNode("模型")]));
 							
 								
-		let a = new TreeItemNode("项目");
-		treeview.data.push(a);
+		treeview.data = inMemTreeViewStruct;
 		treeview.refresh();
+		let options: vscode.InputBoxOptions = {
+			prompt: "Label: ",
+			placeHolder: "(placeholder)"
+		};
+		
+		vscode.window.showInputBox(options).then(value => {
+			if(value){
+				console.log("输入的值为："+value);
+				treeview.data[0].label = value;
+				treeview.refresh();
+			}
+		});
 	});
 	context.subscriptions.push(disposable2);
 	let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode: TreeItemNode) => {

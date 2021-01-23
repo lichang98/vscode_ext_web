@@ -19,10 +19,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// 实现树视图的初始化
 	let treeview = TreeViewProvider.initTreeViewItem();
 	let inMemTreeViewStruct:TreeItemNode[]=[];
-	let x_norm_data_path = undefined;
-	let x_test_data_path = undefined;
-	let y_test_data_path = undefined;
-	let model_file_path = undefined;
+	let x_norm_data_path:string|undefined = undefined;
+	let x_test_data_path:string|undefined = undefined;
+	let y_test_data_path:string|undefined = undefined;
+	let model_file_path:string|undefined = undefined;
 
 	let proj_desc_info = {
 		"project_name":"",
@@ -292,6 +292,8 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 	context.subscriptions.push(disposable2);
+
+
 	context.subscriptions.push(vscode.commands.registerCommand("treeView.proj_rename",()=>{
 		console.log("项目属性修改");
 		// 发消息到webview
@@ -299,6 +301,55 @@ export function activate(context: vscode.ExtensionContext) {
 			currentPanel.webview.postMessage({"command":"ProjectRefactor", "project_desc":proj_desc_info});
 		}
 	}));
+
+	//项目保存
+	context.subscriptions.push(vscode.commands.registerCommand("treeView.proj_save",()=>{
+		const options:vscode.SaveDialogOptions = {
+			saveLabel:"保存项目",
+			filters:{"All files":['*']}
+		};
+		vscode.window.showSaveDialog(options).then(fileUri => {
+			if(fileUri && fileUri){
+				console.log("selected path: "+fileUri.fsPath);
+				// TODO 写入项目信息
+				let data= {
+					"proj_info":proj_desc_info,
+					"x_norm_path":x_norm_data_path,
+					"x_test_path":x_test_data_path,
+					"y_test_path":y_test_data_path
+				};
+				fs.writeFileSync(fileUri.fsPath+".dar2", JSON.stringify(data));
+			}
+		});
+	}));
+
+	// 项目加载
+	context.subscriptions.push(vscode.commands.registerCommand("treeView.proj_load", ()=>{
+		const options:vscode.OpenDialogOptions = {
+			openLabel:"导入工程",
+			filters:{"Darwin2Project":['dar2']}
+		};
+		vscode.window.showOpenDialog(options).then(fileUri =>{
+			if(fileUri){
+				console.log("opened project path = "+fileUri[0].fsPath);
+				let data = fs.readFileSync(fileUri[0].fsPath);
+				console.log("读取的信息：proj_info="+data);
+				let proj_data = JSON.parse(data.toString());
+				proj_desc_info = proj_data.proj_info;
+				x_norm_data_path = proj_data.x_norm_path;
+				x_test_data_path = proj_data.x_test_path;
+				y_test_data_path = proj_data.y_test_path;
+				// 显示treeview
+				addSlfProj(proj_desc_info.project_name);
+				inMemTreeViewStruct.push(new TreeItemNode(proj_desc_info.project_name, [new TreeItemNode("数据", 
+							[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
+							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("模型",[])]));
+				treeview.data = inMemTreeViewStruct;
+				treeview.refresh();
+			}
+		});
+	}));
+
 	let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode: TreeItemNode) => {
 		console.log("当前可视化目标:"+itemNode.label);
 		if(itemNode.label === "数据"){

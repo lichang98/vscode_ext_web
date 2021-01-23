@@ -545,6 +545,8 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand("convertor.new_proj", ()=>{
 		console.log("create new project");
 	});
+
+	vscode.commands.executeCommand("darwin2.helloWorld");
 }
 
 // this method is called when your extension is deactivated

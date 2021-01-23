@@ -100,7 +100,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                 <img id="sample_img9" onclick="sample_img_click(this);" src="${sample9}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
-            <div id="bar_chart_histgram" style="width: 440px;height: 300px;margin-top: 0px;display: inline-block;"></div>
+            <div id="bar_chart_histgram" style="width: 440px;height: 320px;margin-top: 0px;display: inline-block;"></div>
           </div>
           <div id="sample_testdataset_data_div" class="col-md-6">
             <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;">
@@ -138,7 +138,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                 <img id="test_sample_img9" onclick="sample_img_click(this);" src="${test_sample9}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
-            <div id="test_bar_chart_histgram" style="width: 440px;height: 300px;margin-top: 0px;display: inline-block;"></div>
+            <div id="test_bar_chart_histgram" style="width: 440px;height: 320px;margin-top: 0px;display: inline-block;"></div>
           </div>
         </div>
       </div>

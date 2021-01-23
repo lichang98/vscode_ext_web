@@ -54,8 +54,8 @@
 				"icon":"src/resources/import.png"
 			},
 			{
-				"command": "explorer.testright",
-				"title": "测试右键"
+				"command": "treeView.proj_rename",
+				"title": "项目属性修改"
 			}
 		],
 		"menus": {
@@ -76,12 +76,10 @@
 					"command": "treeView-item.import",
 					"when": "view == treeView-item && viewItem == 训练数据 || viewItem == 测试数据 || viewItem == 测试数据标签 || viewItem == 模型",
 					"group": "navigation"
-				}
-			],
-			"explorer/context": [
+				},
 				{
-					"command": "explorer.testright",
-					"group": "navigation"
+					"command": "treeView.proj_rename",
+					"when": "view == treeView-item && viewItem != 数据 && viewItem != 模型 && viewItem != 训练数据 && viewItem != 测试数据 && viewItem != 测试数据标签 && viewItem != 模型"
 				}
 			]
 		},

@@ -23,6 +23,13 @@ export function activate(context: vscode.ExtensionContext) {
 	let x_test_data_path = undefined;
 	let y_test_data_path = undefined;
 	let model_file_path = undefined;
+
+	let proj_desc_info = {
+		"project_name":"",
+		"project_type":"",
+		"python_type":"",
+		"ann_lib_type":""
+	};
 	// let xiangmuItem = new TreeItemNode("项目");
 	// treeview.data.push(xiangmuItem);
 	// // treeview.data.push(new TreeItemNode("数据", [new TreeItemNode("模型")]));
@@ -127,11 +134,25 @@ export function activate(context: vscode.ExtensionContext) {
 					console.log("receive project create info");
 					console.log("project name: " + data.project_info.project_name+", project type="+data.project_info.project_type
 							+", python_type: "+data.project_info.python_type+", ann lib type:"+data.project_info.ann_lib_type);
-
+					proj_desc_info.project_name = data.project_info.project_name;
+					proj_desc_info.project_type = data.project_info.project_type;
+					proj_desc_info.python_type = data.project_info.python_type;
+					proj_desc_info.ann_lib_type = data.project_info.ann_lib_type;
 					addSlfProj(data.project_info.project_name);
 					inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("数据", 
 							[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
 							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("模型",[])]));
+					treeview.data = inMemTreeViewStruct;
+					treeview.refresh();
+				}else if(data.project_refac_info){
+					// 接收到webview 项目属性修改的信息
+					console.log("receive project refactor info");
+					proj_desc_info.project_name = data.project_refac_info.project_name;
+					proj_desc_info.project_type = data.project_refac_info.project_type;
+					proj_desc_info.python_type = data.project_refac_info.python_type;
+					proj_desc_info.ann_lib_type = data.project_refac_info.ann_lib_type;
+					let treeItemsSize = inMemTreeViewStruct.length;
+					inMemTreeViewStruct[treeItemsSize-1].label = proj_desc_info.project_name;
 					treeview.data = inMemTreeViewStruct;
 					treeview.refresh();
 				}
@@ -271,6 +292,13 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 	context.subscriptions.push(disposable2);
+	context.subscriptions.push(vscode.commands.registerCommand("treeView.proj_rename",()=>{
+		console.log("项目属性修改");
+		// 发消息到webview
+		if(currentPanel){
+			currentPanel.webview.postMessage({"command":"ProjectRefactor", "project_desc":proj_desc_info});
+		}
+	}));
 	let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode: TreeItemNode) => {
 		console.log("当前可视化目标:"+itemNode.label);
 		if(itemNode.label === "数据"){

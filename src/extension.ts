@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 // 引入 TreeViewProvider 的类
-import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider } from './TreeViewProvider';
+import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj } from './TreeViewProvider';
 import { TreeViewProviderData } from "./TreeViewData";
 import { TreeViewProviderModel } from "./TreeViewModel";
 import {NewProj} from "./NewProjWebView";
@@ -122,6 +122,18 @@ export function activate(context: vscode.ExtensionContext) {
 							currentPanel.title = "转换器";
 						}
 					}
+				}else if(data.project_info){
+					// 接收到webview 项目创建向导的消息，创建新的项目
+					console.log("receive project create info");
+					console.log("project name: " + data.project_info.project_name+", project type="+data.project_info.project_type
+							+", python_type: "+data.project_info.python_type+", ann lib type:"+data.project_info.ann_lib_type);
+
+					addSlfProj(data.project_info.project_name);
+					inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("数据", 
+							[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
+							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("模型",[])]));
+					treeview.data = inMemTreeViewStruct;
+					treeview.refresh();
 				}
 			});
 
@@ -250,29 +262,13 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-
 	context.subscriptions.push(disposable);
 	let disposable2 = vscode.commands.registerCommand("treeView-item.newproj", () => {
-		console.log("创建新项目xxx");
-		inMemTreeViewStruct.push(new TreeItemNode("项目", [new TreeItemNode("数据", 
-														[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
-														new TreeItemNode("测试数据标签",[])]), new TreeItemNode("模型",[])]));
-							
-								
-		treeview.data = inMemTreeViewStruct;
-		treeview.refresh();
-		let options: vscode.InputBoxOptions = {
-			prompt: "Label: ",
-			placeHolder: "(placeholder)"
-		};
-		
-		vscode.window.showInputBox(options).then(value => {
-			if(value){
-				console.log("输入的值为："+value);
-				treeview.data[0].label = value;
-				treeview.refresh();
-			}
-		});
+		console.log("创建新项目xxx");							
+		// TODO
+		if(currentPanel){
+			currentPanel.webview.postMessage({"command":"CreateNewProject"});
+		}
 	});
 	context.subscriptions.push(disposable2);
 	let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode: TreeItemNode) => {

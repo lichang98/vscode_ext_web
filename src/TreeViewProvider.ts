@@ -15,6 +15,10 @@ export let ITEM_ICON_MAP = new Map<string, string>([
     // ['测试添加',"imgs/simulate_run.png"]
 ]);
 
+export function addSlfProj(label:string){
+    ITEM_ICON_MAP.set(label, 'imgs/project.png');
+}
+
 // 第一步：创建单项的节点(item)的类
 export class TreeItemNode extends TreeItem {
 

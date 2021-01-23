@@ -89,7 +89,7 @@
 			"activitybar": [                        
 				{
 					"id": "treeView",               
-					"title": "转换器",            
+					"title": "导航栏",            
 					"icon": "src/resources/dep.png",
 					"command":"convertor.new_proj"
 				},

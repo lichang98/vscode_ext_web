@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <title>模型转换器</title>
 </head>
-<body class="dark-mode" style="height: 100%;width: 100%;overflow: hidden;">
+<body class="dark-mode" style="height: 100%;width: 100%;overflow: auto;">
     <!-- 左侧导航栏 主面板与配置面板 -->
     <div class="row" style="height: 100%;width: 100%;">
       <!-- 加载提示 -->
@@ -23,94 +23,114 @@
 
       <!--展示的主面板-->
       <div class="row" style="height: 45%;width: 100%;">
-          <div class="col-md-5">
+          <div class="col-md-6">
             <!-- 数据基本信息表格 -->
-            <table id="data_general_table">
-              <caption class="white-text" style="caption-side: top;text-align: center;font-size: large;">导入数据统计</caption>
+            <table id="data_general_table" style="width:440px; margin-left:100px;">
+              <caption class="white-text" style="caption-side: top;font-weight: bold;text-align: center;font-size: large;">导入数据统计</caption>
               <tr style="font-size:small;">
                 <td>总数据大小</td>
-                <td id="total_data_amount">16000</td>
+                <td id="total_data_amount"></td>
               </tr>
               <tr style="font-size:small;">
                 <td>测试数据量</td>
-                <td id="test_data_amount">10000</td>
+                <td id="test_data_amount"></td>
               </tr>
               <tr style="font-size:small;">
                 <td>验证数据量</td>
-                <td id="val_data_amount">6000</td>
+                <td id="val_data_amount"></td>
+              </tr>
+              <tr style="font-size: small;">
+                <td>数据类别个数</td>
+                <td id="class_counts"></td>
               </tr>
             </table>
           </div>
-          <div class="col-md-5">
-            <div id="pie_chart_container" style="width: 440px; height: 240px;">
+          <div class="col-md-6">
+            <div style="text-align: center;font-weight: bold;font-size: large;margin-bottom:20px;">
+              数据类别分布
             </div>
+            <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:100px;"></div>
           </div>
       </div>
-      <div class="row" style="height: 45%;width: 100%;">
-        <div id="sample_data_div" class="col-md-5">
-          <div style="text-align: center;font-weight: bold;font-size: large;">
-            样例数据
+      <div class="row" style="height: 45%;width: 100%;margin-top:15px;">
+        <div id="sample_data_div" class="col-md-6">
+          <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;">
+            训练集样例数据
           </div>
-          <ul style="height: 60px;width: 100%;overflow: auto;">
-            <li style="list-style: none;float: left;">
-              <img id="sample_img" src="./inner_scripts/sample0.png" style="width: 50px;height: 50px;margin-left: 20px;">
+          <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow: auto;display: inline-block;">
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="width: 50px;height: 50px;margin-left: 20px;">
             </li>
-            <li style="list-style: none;float: left;">
-              <img id="sample_img" src="./inner_scripts/sample1.png" style="width: 50px;height: 50px;margin-left: 20px;">
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="sample_img1" onclick="sample_img_click(this);" src="${sample1}" style="width: 50px;height: 50px;margin-left: 20px;">
             </li>
-            <li style="list-style: none;float: left;">
-              <img id="sample_img" src="./inner_scripts/sample2.png" style="width: 50px;height: 50px;margin-left: 20px;">
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="sample_img2" onclick="sample_img_click(this);" src="${sample2}" style="width: 50px;height: 50px;margin-left: 20px;">
             </li>
-            <li style="list-style: none;float: left;">
-              <img id="sample_img" src="./inner_scripts/sample3.png" style="width: 50px;height: 50px;margin-left: 20px;">
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="sample_img3" onclick="sample_img_click(this);" src="${sample3}" style="width: 50px;height: 50px;margin-left: 20px;">
             </li>
-            <li style="list-style: none;float: left;">
-              <img id="sample_img" src="./inner_scripts/sample4.png" style="width: 50px;height: 50px;margin-left: 20px;">
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="sample_img4" onclick="sample_img_click(this);" src="${sample4}" style="width: 50px;height: 50px;margin-left: 20px;">
             </li>
-            <li style="list-style: none;float: left;">
-              <img id="sample_img" src="./inner_scripts/sample5.png" style="width: 50px;height: 50px;margin-left: 20px;">
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="sample_img5" onclick="sample_img_click(this);" src="${sample5}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="sample_img6" onclick="sample_img_click(this);" src="${sample6}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="sample_img7" onclick="sample_img_click(this);" src="${sample7}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="sample_img8" onclick="sample_img_click(this);" src="${sample8}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="sample_img9" onclick="sample_img_click(this);" src="${sample9}" style="width: 50px;height: 50px;margin-left: 20px;">
             </li>
           </ul>
-          <div id="bar_chart_histgram" style="width: 440px;height: 240px;margin-top: 0px;"></div>
+          <div id="bar_chart_histgram" style="width: 440px;height: 300px;margin-top: 0px;display: inline-block;"></div>
         </div>
-        <div id="sample_test_data_div" class="col-md-5">
-          <div id="bar_chart_testdata_container" style="width: 440px;height: 240px;margin-top: 100px;"></div>
+        <div id="sample_testdataset_data_div" class="col-md-6">
+          <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;">
+            测试集样例数据
+          </div>
+          <ul id="test_sample_imgs_ul" style="height: 300px;width: 100px;overflow: auto;display: inline-block;">
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="test_sample_img0" onclick="sample_img_click(this);" src="${test_sample0}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="test_sample_img1" onclick="sample_img_click(this);" src="${test_sample1}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="test_sample_img2" onclick="sample_img_click(this);" src="${test_sample2}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="test_sample_img3" onclick="sample_img_click(this);" src="${test_sample3}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="test_sample_img4" onclick="sample_img_click(this);" src="${test_sample4}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="test_sample_img5" onclick="sample_img_click(this);" src="${test_sample5}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="test_sample_img6" onclick="sample_img_click(this);" src="${test_sample6}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="test_sample_img7" onclick="sample_img_click(this);" src="${test_sample7}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="test_sample_img8" onclick="sample_img_click(this);" src="${test_sample8}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+            <li style="list-style: none;margin-bottom: 10px;">
+              <img id="test_sample_img9" onclick="sample_img_click(this);" src="${test_sample9}" style="width: 50px;height: 50px;margin-left: 20px;">
+            </li>
+          </ul>
+          <div id="test_bar_chart_histgram" style="width: 440px;height: 300px;margin-top: 0px;display: inline-block;"></div>
         </div>
       </div>
     </div>
-
-    <h2>创建模态框（Modal）</h2>
-<!-- 按钮触发模态框 -->
-<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-	开始演示模态框
-</button>
-<!-- 模态框（Modal） -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title" id="myModalLabel">
-					模态框（Modal）标题
-				</h4>
-			</div>
-			<div class="modal-body">
-				在这里添加一些文本
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-				</button>
-				<button type="button" class="btn btn-primary">
-					提交更改
-				</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
-</div>
-
-
 </body>
 <style>
 
@@ -167,29 +187,84 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
 <script>
 
-    $(document).ready(function(){
-      display_data_bar_chart(['0','1','2','3','4','5','6','7','8','9'],
-            [0.098,0.1135,0.1032,0.101,0.0982,0.0892,0.0958,0.1028,0.0974,0.1009],"训练数据集各类别分布", "数据占比","pie_chart_container");
-      display_data_bar_chart(["0-28","28-56","56-85","85-113","113-141","141-170","170-198","198-226","226-255"],
-              [639,8,7,1,19,18,8,9,79,0],"像素分布","该范围内像素点个数","bar_chart_histgram");
-      display_data_bar_chart(['0','1','2','3','4','5','6','7','8','9'],
-        [0.098,0.101,0.1028,0.0974,0.1009,0.1135,0.0982,0.0892,0.0958,0.1032],"测试数据集各类别分布","数据占比","bar_chart_testdata_container")
-      
-    });
+
+
+var data_info=undefined;
+$(document).ready(function(){
+  // display_data_bar_chart(['0','1','2','3','4','5','6','7','8','9'],
+  //       [0.098,0.1135,0.1032,0.101,0.0982,0.0892,0.0958,0.1028,0.0974,0.1009],"训练数据集各类别分布", "数据占比","pie_chart_container");
+  // display_data_bar_chart(["0-28","28-56","56-85","85-113","113-141","141-170","170-198","198-226","226-255"],
+  //         [639,8,7,1,19,18,8,9,79,0],"像素分布","该范围内像素点个数","bar_chart_histgram");
+  // display_data_bar_chart(['0','1','2','3','4','5','6','7','8','9'],
+  //   [0.098,0.101,0.1028,0.0974,0.1009,0.1135,0.0982,0.0892,0.0958,0.1032],"测试数据集各类别分布","数据占比","bar_chart_testdata_container")
+    window.addEventListener("message", (event)=>{
+      const data = JSON.parse(event.data);
+      data_info = data
+      console.log("data vis webview receive data: "+data);
+      $("#total_data_amount").text(data.total_data_count);
+      $("#test_data_amount").text(data.norm_data_count);
+      $("#val_data_amount").text(data.test_data_count);
+      $("#class_counts").text(data.num_classes);
+      var sample_count = data.sample_imgs.length;
+      if(sample_count < 10){
+        for(var i=0;i<10-sample_count;++i){
+          $("#sample_img"+(10-i-1)).remove();
+        }
+      }
+      for(var i=0;i<sample_count;++i){
+        $("#sample_img"+i).hide();
+        $("#sample_img"+i).show();
+      }
+      var class_labels = new Array();
+      var class_ratios = new Array();
+      var class_total_count = 0;
+      console.log("cls_counts="+data.cls_counts);
+      console.log("num_class="+data.num_classes);
+      for(var i=0;i<data.cls_counts.length;++i){
+        class_total_count += data.cls_counts[i];
+      }
+      for(var i=0;i<data.cls_counts.length;++i){
+        class_ratios.push(data.cls_counts[i]/class_total_count);
+      }
+      for(var i=0;i<data.num_classes;++i){
+        class_labels.push(""+i);
+      }
+      // 对数处理histgram
+      for(var i=0;i<data_info.test_sample_imgs.length;++i){
+        for(var j=0;j<data_info.test_sample_imgs[i].hist_gram_bins.length;++j){
+          data_info.test_sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.test_sample_imgs[i].hist_gram_bins[j]);
+        }
+      }
+
+      for(var i=0;i<data_info.sample_imgs.length;++i){
+        for(var j=0;j<data_info.sample_imgs[i].hist_gram_bins.length;++j){
+          data_info.sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.sample_imgs[i].hist_gram_bins[j]);
+        }
+      }
+
+      console.log("display test data distribution...");
+      display_data_bar_chart(class_labels, class_ratios, "测试数据集各类别分布",  "数据占比", "bar_chart_testdata_container");
+      console.log("test data distribution bar chart displayed.");
+  });
+});
+
+function sample_img_click(e){
+  var sampleId = $(e).attr("id");
+  console.log("current click img id="+sampleId);
+  var sampleIdx = parseInt(sampleId.substring(sampleId.length-1));
+  if(sampleId.substring(0,4) === "test"){
+    display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布", "test_bar_chart_histgram");
+  }else{
+    display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布", "bar_chart_histgram");
+  }
+}
+
 
 
     function display_data_bar_chart(label_names, label_counts, title,series_name,target_id){
       console.log("label names:"+label_names);
       console.log("label counts:"+label_counts);
       var option = {
-            title: {  
-                  text: title,
-                  left: 'center',
-                  textStyle:{
-                    color:"#FDFEFE",
-                    fontSize: 14
-                  }
-          },
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {

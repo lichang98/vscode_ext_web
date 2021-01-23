@@ -19,6 +19,10 @@ export function addSlfProj(label:string){
     ITEM_ICON_MAP.set(label, 'imgs/project.png');
 }
 
+export function addSlfFile(label:string){
+    ITEM_ICON_MAP.set(label, "imgs/file.png");
+}
+
 // 第一步：创建单项的节点(item)的类
 export class TreeItemNode extends TreeItem {
 

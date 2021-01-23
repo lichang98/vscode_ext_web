@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 // 引入 TreeViewProvider 的类
-import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj } from './TreeViewProvider';
+import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile } from './TreeViewProvider';
 import { TreeViewProviderData } from "./TreeViewData";
 import { TreeViewProviderModel } from "./TreeViewModel";
 import {NewProj} from "./NewProjWebView";
@@ -12,6 +12,7 @@ import {ImportDataShow} from "./ImportDataView";
 import {MultiLevelTreeProvider} from "./multiLevelTree";
 import {getMainPageV2} from "./get_mainpage_v2";
 import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2} from "./get_convertor_page_v2";
+import {exec} from "child_process";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -316,7 +317,8 @@ export function activate(context: vscode.ExtensionContext) {
 					"proj_info":proj_desc_info,
 					"x_norm_path":x_norm_data_path,
 					"x_test_path":x_test_data_path,
-					"y_test_path":y_test_data_path
+					"y_test_path":y_test_data_path,
+					"model_path":model_file_path
 				};
 				fs.writeFileSync(fileUri.fsPath+".dar2", JSON.stringify(data));
 			}
@@ -339,11 +341,30 @@ export function activate(context: vscode.ExtensionContext) {
 				x_norm_data_path = proj_data.x_norm_path;
 				x_test_data_path = proj_data.x_test_path;
 				y_test_data_path = proj_data.y_test_path;
+				model_file_path = proj_data.model_path;
 				// 显示treeview
 				addSlfProj(proj_desc_info.project_name);
 				inMemTreeViewStruct.push(new TreeItemNode(proj_desc_info.project_name, [new TreeItemNode("数据", 
 							[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
 							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("模型",[])]));
+				addSlfFile("x_norm");
+				addSlfFile("x_test");
+				addSlfFile("y_test");
+				addSlfFile("model_file");
+				if(proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children){
+					if(inMemTreeViewStruct[0].children[0].children[0].children){
+						inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeItemNode("x_norm"));
+					}
+					if(inMemTreeViewStruct[0].children[0].children[1].children){
+						inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeItemNode("x_test"));
+					}
+					if(inMemTreeViewStruct[0].children[0].children[2].children){
+						inMemTreeViewStruct[0].children[0].children[2].children.push(new TreeItemNode("y_test"));
+					}
+				}
+				if(proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]){
+					inMemTreeViewStruct[0].children[1].children?.push(new TreeItemNode("model_file"));
+				}
 				treeview.data = inMemTreeViewStruct;
 				treeview.refresh();
 			}
@@ -365,19 +386,63 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode: TreeItemNode) => {
 		console.log("当前可视化目标:"+itemNode.label);
+		if(currentPanel){
+			// 切换webview
+			currentPanel.webview.html = getConvertorDataPageV2(
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample0.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample1.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample2.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample3.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample4.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample5.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample6.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample7.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample8.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample9.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample0.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample1.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample2.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample3.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample4.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample5.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample6.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample7.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample8.png"))),
+				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample9.png")))
+			);
+		}
 		if(itemNode.label === "数据"){
 			if(currentPanel){
 				currentPanel.title = "数据集";
 				// 数据可视化展示
 				// TODO
-				currentPanel.webview.html = getConvertorDataPageV2(
-					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample0.png"))),
-					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample1.png"))),
-					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample2.png"))),
-					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample3.png"))),
-					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample4.png"))),
-					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample5.png")))
-				);
+				// 执行后台脚本
+				let scriptPath = path.join(__dirname,"inner_scripts","data_analyze.py");
+				let command_str = "python "+scriptPath+" "+x_norm_data_path+" "+x_test_data_path + " "+y_test_data_path;
+				exec(command_str, function(err, stdout, stderr){
+					if(err){
+						console.log("execute data analyze script error, msg: "+err);
+					}else{
+						console.log("execute data analyze script....");
+						fs.readFile(path.join(__dirname, "inner_scripts", "data_info.json"), "utf-8", (err, data)=>{
+							console.log("Read data info");
+							console.log("data info : "+data);
+							// 发送到webview 处理显示
+							if(currentPanel){
+								currentPanel.webview.postMessage(data);
+							}
+						});
+					}
+				});
+
+				// currentPanel.webview.html = getConvertorDataPageV2(
+				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample0.png"))),
+				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample1.png"))),
+				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample2.png"))),
+				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample3.png"))),
+				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample4.png"))),
+				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample5.png")))
+				// );
 			}
 		}
 	});

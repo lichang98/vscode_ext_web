@@ -18,7 +18,7 @@ import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2} from
 export function activate(context: vscode.ExtensionContext) {
 	// 实现树视图的初始化
 	let treeview = TreeViewProvider.initTreeViewItem();
-	let inMemTreeViewStruct:TreeItemNode[]=[];
+	let inMemTreeViewStruct:Array<TreeItemNode>=new Array();
 	let x_norm_data_path:string|undefined = undefined;
 	let x_test_data_path:string|undefined = undefined;
 	let y_test_data_path:string|undefined = undefined;
@@ -348,6 +348,19 @@ export function activate(context: vscode.ExtensionContext) {
 				treeview.refresh();
 			}
 		});
+	}));
+
+	// 项目移除
+	context.subscriptions.push(vscode.commands.registerCommand("treeView.proj_remove", (item: TreeItemNode)=>{
+		console.log("当前需要移除的项目名称为："+item.label);
+		for(var i=0;i<inMemTreeViewStruct.length;++i){
+			if(inMemTreeViewStruct[i].label === item.label){
+				inMemTreeViewStruct.splice(i,1);
+				break;
+			}
+		}
+		treeview.data = inMemTreeViewStruct;
+		treeview.refresh();
 	}));
 
 	let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode: TreeItemNode) => {

@@ -116,7 +116,13 @@ export function activate(context: vscode.ExtensionContext) {
 				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","mapper.png"))),
 				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","darwin_os.png")))
 			);
-
+			// 启动后台资源server
+			let scriptPath = path.join(__dirname,"inner_scripts","img_server.py");
+			let command_str = "python "+scriptPath;
+			console.log("prepare to start img server.");
+			exec(command_str, function(err, stdout, stderr){
+				console.log("img server started");
+			});
 
 			currentPanel.webview.onDidReceiveMessage(function(msg){
 				console.log("Receive message: "+msg);
@@ -388,28 +394,33 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log("当前可视化目标:"+itemNode.label);
 		if(currentPanel){
 			// 切换webview
-			currentPanel.webview.html = getConvertorDataPageV2(
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample0.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample1.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample2.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample3.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample4.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample5.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample6.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample7.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample8.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample9.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample0.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample1.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample2.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample3.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample4.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample5.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample6.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample7.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample8.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample9.png")))
-			);
+			if(itemNode.label === "数据"){
+				currentPanel.webview.html = getConvertorDataPageV2(
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample0.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample1.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample2.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample3.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample4.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample5.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample6.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample7.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample8.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample9.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample0.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample1.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample2.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample3.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample4.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample5.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample6.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample7.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample8.png"))),
+					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample9.png")))
+				);
+			}else if(itemNode.label === "模型"){
+				// TODO
+				currentPanel.webview.html = getConvertorModelPageV2();
+			}
 		}
 		if(itemNode.label === "数据"){
 			if(currentPanel){
@@ -434,15 +445,38 @@ export function activate(context: vscode.ExtensionContext) {
 						});
 					}
 				});
-
-				// currentPanel.webview.html = getConvertorDataPageV2(
-				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample0.png"))),
-				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample1.png"))),
-				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample2.png"))),
-				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample3.png"))),
-				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample4.png"))),
-				// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","inner_scripts","sample5.png")))
-				// );
+			}
+		}else if(itemNode.label === "模型"){
+			if(currentPanel){
+				currentPanel.title = "ANN模型";
+				var modelVisScriptPath = path.join(__dirname, "inner_scripts", "model_desc.py");
+				var commandExe = "python "+modelVisScriptPath+" "+x_norm_data_path+" "+x_test_data_path+" "+y_test_data_path+" "+model_file_path;
+				exec(commandExe, function(err, stdout, stderr){
+					console.log("model vis script running...");
+					fs.readFile(path.join(__dirname, "inner_scripts", "model_general_info.json"), "utf-8",(evt, data)=>{
+						console.log("Read model general info data: "+data);
+						// 发送到web view 处理
+						if(currentPanel){
+							currentPanel.webview.postMessage(JSON.stringify({"model_general_info": data}));
+						}
+					});
+					// 加载模型详细信息
+					fs.readFile(path.join(__dirname, "inner_scripts","model_layers_info.json"),"utf-8",(evt,data)=>{
+						console.log("模型详细信息："+data);
+						// 发送到web view 处理
+						if(currentPanel){
+							currentPanel.webview.postMessage(JSON.stringify({"model_detail_info":data}));
+						}
+					});
+					// 加载卷积、池化的等Layer的可视化
+					fs.readFile(path.join(__dirname, "inner_scripts", "layer_vis_info.json"), "utf-8", (evt, data)=>{
+						console.log("layer output vis: "+data);
+						// 发送到webview 处理
+						if(currentPanel){
+							currentPanel.webview.postMessage(JSON.stringify({"model_layer_vis":data}));
+						}
+					});
+				});
 			}
 		}
 	});

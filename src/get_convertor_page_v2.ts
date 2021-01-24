@@ -355,7 +355,315 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
 
 export function getConvertorModelPageV2(){
   return `
+  <!DOCTYPE html>
+  <html style="height: 100%;width: 100%;">
   
+  <head>
+    <meta charset="UTF-8">
+    <title>模型转换器</title>
+  </head>
+  <body class="dark-mode" style="height: 100%;width: 100%;overflow: hidden;">
+      <!-- 左侧导航栏 主面板与配置面板 -->
+      <div class="row" style="height: 100%;width: 100%;">
+        <!-- 加载提示 -->
+        <div id="loader_tip" class="preloader-wrapper big active" style="position: absolute;margin-left: 600px;margin-top: 100px;display: none;">
+          <div class="spinner-layer spinner-green-only">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+              <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+        </div>
+  
+          <div id="main_panel" style="width: 100%;height: 100%;overflow: auto;">
+            <div class="row">
+              <!-- 模型总体信息表格 -->
+              <div class="col-md-6">
+                <table id="model_general_table">
+                  <caption class="white-text" style="caption-side: top;text-align: center;width: 160px;">ANN模型基本信息</caption>
+                  <tr>
+                    <td>总层数</td>
+                    <td id="model_total_layers"></td>
+                  </tr>
+                  <tr>
+                    <td>总参数量</td>
+                    <td id="model_total_param"></td>
+                  </tr>
+                  <tr>
+                    <td>unit数量</td>
+                    <td id="model_total_units"></td>
+                  </tr>
+                </table>
+      
+                <!-- python 绘制的模型结构简图 -->
+                <div id="ann_model_vis_img_parent_div">
+                  <img id="ann_model_vis_img" style="width: 300px;height: 300px;">
+                </div>
+              </div>
+    
+              <!--模型详细信息表格-->
+              <div class="col-sm-6">
+                <table id="model_detail_table">
+                  <caption class="white-text" style="caption-side: top;text-align: center;width: 160px;">ANN模型各层信息</caption>
+                  <thead>
+                    <tr>
+                      <td>名称</td>
+                      <td>输出形状</td>
+                      <td>参数量</td>
+                    </tr>
+                  </thead>
+                  <!--通过加载模型的信息动态创建-->
+                </table>
+                <ul class="pager" style="align-content: center;">
+                  <li class="previous" style="display: inline;"><a href="#"><span class="white-text">&larr; Older</span></a></li>
+                  <li class="next" style="display: inline;"><a href="#"><span class="white-text">Newer &rarr;</span></a></li>
+                </ul>
+              </div>
+  
+            </div>
+  
+            <!--模型各层的可视化-->
+            <div class="row">
+              <div id="model_layers_vis" class="col-md-6">
+                <div id="model_layers_vis_tab_caption" style="text-align: center;">卷积与激活层输出可视化</div>
+                <!--动态创建-->
+                <div id="layers_vis_div" class="row">
+                  <div class="col-md-2" >layer 名称</div>
+                  <div class="col-md-2">layer 编号</div>
+                  <div class="col-md-8">输出可视化</div>
+                </div>
+                <div id="tmp_peer"></div>
+              </div>
+              <!-- 显示各层的参数量占比 -->
+              <div class="col-md-6">
+                <div id="layer_param_percent_div" style="width: 440px;height: 320px;"></div>
+              </div>
+            </div>
+  
+          </div>
+      </div>
+  </body>
+  <style>
+  
+  .editor-sidenav{
+    background-color: #333;
+  }
+  
+  body {
+    padding: 25px;
+    background-color: black;
+    color: white;
+    font-size: 25px;
+  }
+  
+  .dark-mode {
+    background-color: rgb(61, 57, 57);
+    color: white;
+  }
+    @font-face {
+      font-family: 'Material Icons';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+    }
+  
+    .material-icons {
+      font-family: 'Material Icons';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      text-transform: none;
+      display: inline-block;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+  
+    .resizable {
+      resize: both;
+      overflow: scroll;
+      border: 1px solid black;
+    }
+    .dropdown-content{
+     width: max-content !important;
+     height:auto !important;
+  }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
+  <script>
+  
+      $(document).ready(function(){
+        // 接收从extension 的消息
+        window.addEventListener('message', event=>{
+            const data = JSON.parse(event.data); // JSON data from extension
+            console.log("model vis webview receive data: "+data);
+            if(data.model_general_info){
+              console.log("units count:"+JSON.parse(data.model_general_info).total_params);
+              // 模型总体信息
+              var model_general_info = JSON.parse(data.model_general_info);
+              $("#model_total_layers").text(model_general_info.total_num_layers);
+              $("#model_total_param").text(model_general_info.total_params);;
+              $("#model_total_units").text(model_general_info.total_units);
+            }else if(data.model_detail_info){
+              var detail_info = JSON.parse(data.model_detail_info);
+              var table = document.getElementById("model_detail_table");
+              var layer_uniq_names = new Array(); // layer 名称列表 layername+index
+              var layer_params_info = new Array(); // <name, value> 各layer的参数量
+              var layer_params_list = new Array();
+              var total_params=0;
+  
+              for(var i=0;i<detail_info.length;++i){
+                  var line = document.createElement("tr");
+                  var col_name = document.createElement("td");
+                  col_name.innerText = detail_info[i].name;
+                  var col_shape = document.createElement("td");
+                  col_shape.innerText = detail_info[i].shape;
+                  var col_params = document.createElement("td");
+                  col_params.innerText = detail_info[i].params;
+                  
+                  if( parseInt(detail_info[i].params, 10) > 0){
+                    layer_uniq_names.push(detail_info[i].name+"_"+(i+1));
+                    layer_params_info.push({"name": detail_info[i].name+"_"+(i+1), "value": parseInt(detail_info[i].params, 10)});
+                    layer_params_list.push(parseInt(detail_info[i].params, 10));
+                    total_params += parseInt(detail_info[i].params, 10);
+                  }
+  
+                  line.appendChild(col_name);
+                  line.appendChild(col_shape);
+                  line.appendChild(col_params);
+                  table.appendChild(line);
+              }
+              // 绘制各layer 参数分布柱状图
+              for(var i=0;i<layer_params_list.length;++i){
+                layer_params_list[i] = Math.log10(layer_params_list[i]);
+              }
+              display_layer_params_bar_chart(layer_uniq_names, layer_params_list);
+            }else if(data.model_layer_vis){
+              var layer_output_info = JSON.parse(data.model_layer_vis);
+              for(var i=0;i<layer_output_info.length;++i){
+                  layer_name = layer_output_info[i].layer_name;
+                  layer_idx = layer_output_info[i].layer_index;
+                  layer_vis_img_paths = layer_output_info[i].layer_vis_img_paths;
+                  
+                  var img_div = document.createElement("div");
+                  img_div.setAttribute("class","row");
+  
+                  var layer_name_div = document.createElement("div");
+                  layer_name_div.setAttribute("class", "col-md-2");
+                  layer_name_div.innerText = layer_name;
+                  img_div.appendChild(layer_name_div);
+  
+                  var layer_index_div = document.createElement("div");
+                  layer_index_div.setAttribute("class", "col-md-2");
+                  layer_index_div.innerText = layer_idx;
+                  img_div.append(layer_index_div);
+  
+                  var layer_vis_div = document.createElement("div");
+                  layer_vis_div.setAttribute("class", "col-md-8");
+  
+                  for(var j=0;j<layer_vis_img_paths.length;++j){
+                    var layer_img_tag = document.createElement("img");
+                    layer_img_tag.src = layer_vis_img_paths[j];
+                    layer_img_tag.style.width = "32px";
+                    layer_img_tag.style.height = "32px";
+                    layer_vis_div.appendChild(layer_img_tag);
+                    img_div.append(layer_img_tag);
+                  }
+                  // document.getElementById("model_layers_vis").appendChild(img_div);
+                  document.getElementById("model_layers_vis").insertBefore(img_div, document.getElementById("tmp_peer"));
+                }
+            }
+            console.log("ann model img displayed");
+            $("#ann_model_vis_img").attr("src", "http://127.0.0.1:6003/img/ann_model_vis.png");
+        });
+      });
+  
+      function display_layer_params_bar_chart(layer_names, layer_param_counts){
+        var option = {
+              tooltip: {
+                  trigger: 'axis',
+                  axisPointer: {
+                      type: 'cross',
+                      crossStyle: {
+                          color: '#999'
+                      }
+                  }
+              },
+              backgroundColor:"#17202A",
+              xAxis: [
+                  {
+                      type: 'category',
+                      data:layer_names,
+                      axisPointer: {
+                          type: 'shadow'
+                      },
+                      axisLabel:{
+                          textStyle:{
+                              "color":"#FDFEFE "
+                          },
+                          rotate:30
+                      }
+                  }
+              ],
+              yAxis: [
+                  {
+                      type: 'value',
+                      name: '',
+                      min: 0,
+                      max: Math.max(layer_param_counts)*1.2,
+                      interval: Math.max(layer_param_counts)*1.2 / 5,
+                      axisLabel: {
+                          formatter: '{value}'
+                      },
+                      splitLine:{show:false},
+                      axisLine: {show: false}, 
+                      axisTick: {show: false},
+                      axisLabel:{show:false}
+                  },
+                  {
+                      type: 'value',
+                      name: '',
+                      min: 0,
+                      max: Math.max(layer_param_counts)*1.2,
+                      interval: Math.max(layer_param_counts)*1.2 / 5,
+                      axisLabel: {
+                          formatter: '{value}'
+                      },
+                      splitLine:{show:false},
+                      axisLine: {show: false}, 
+                      axisTick: {show: false},
+                      axisLabel:{show:false}
+                  }
+              ],
+              series: [
+                  {
+                      name: '参数量(log_10)',
+                      type: 'bar',
+                      data: layer_param_counts
+                  },
+                  {
+                      name: '参数量(log_10)',
+                      type: 'line',
+                      yAxisIndex: 1,
+                      data: layer_param_counts
+                  }
+              ]
+          };
+          var bar_chart_layer_params = echarts.init(document.getElementById("layer_param_percent_div"));
+          bar_chart_layer_params.setOption(option);
+      }
+  </script>
   `;
 }
 

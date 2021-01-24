@@ -13,68 +13,82 @@
         <div class="spinner-layer spinner-green-only">
           <div class="circle-clipper left">
             <div class="circle"></div>
-          </div><div class="gap-patch">
+          </div>
+          <div class="gap-patch">
             <div class="circle"></div>
-          </div><div class="circle-clipper right">
+          </div>
+          <div class="circle-clipper right">
             <div class="circle"></div>
           </div>
         </div>
       </div>
 
-      <div class="row" style="height: 100%;width: 100%;">
-          <!--左侧主面板-->
-          <div id="main_panel_parent_div" class="col-sm-10" style="width: 100%;height: 100%;float: right;right: -10px;">
-            <div id="main_panel" class="tab-content" style="display: inline-block;width: 98%;height: 100%;overflow: auto;">
-              <!--数据可视化tab页-->
-              <div id="data_vis_tab" class="tab-pane" style="width: 100%;">
-                <div class="col m3">
-                  <!-- 数据基本信息表格 -->
-                  <table id="data_general_table" style="display: none;">
-                    <caption class="white-text" style="caption-side: top;text-align: center;">导入数据统计</caption>
-                    <tr>
-                      <td>总数据大小</td>
-                      <td id="total_data_amount"></td>
-                    </tr>
-                    <tr>
-                      <td>测试数据量</td>
-                      <td id="test_data_amount"></td>
-                    </tr>
-                    <tr>
-                      <td>验证数据量</td>
-                      <td id="val_data_amount"></td>
-                    </tr>
-                  </table>
-                </div>
-                <div class="col m5">
-                  <div id="pie_chart_container" style="width: 440px; height: 360px;">
-                  </div>
-                </div>
-                <div id="sample_data_div" class="col m3" style="display: none;">
-                  <div style="text-align: center;font-weight: bold;">
-                    样例数据
-                  </div>
-                  <img id="sample_img" src="./imgs/img_1.jpg" style="width: 50px;height: 50px;display: none;margin-left: 60px;margin-top: 40px;">
-                  <div id="bar_chart_histgram" style="width: 300px;height: 300px;margin-left: 70px;"></div>
-                </div>
+        <div id="main_panel" style="width: 100%;height: 100%;overflow: auto;">
+          <div class="row">
+            <!-- 模型总体信息表格 -->
+            <div class="col-md-6">
+              <table id="model_general_table">
+                <caption class="white-text" style="caption-side: top;text-align: center;width: 160px;">ANN模型基本信息</caption>
+                <tr>
+                  <td>总层数</td>
+                  <td id="model_total_layers"></td>
+                </tr>
+                <tr>
+                  <td>总参数量</td>
+                  <td id="model_total_param"></td>
+                </tr>
+                <tr>
+                  <td>unit数量</td>
+                  <td id="model_total_units"></td>
+                </tr>
+              </table>
+    
+              <!-- python 绘制的模型结构简图 -->
+              <div id="ann_model_vis_img_parent_div">
+                <img id="ann_model_vis_img" style="width: 300px;height: 300px;">
               </div>
             </div>
+  
+            <!--模型详细信息表格-->
+            <div class="col-sm-6">
+              <table id="model_detail_table">
+                <caption class="white-text" style="caption-side: top;text-align: center;width: 160px;">ANN模型各层信息</caption>
+                <thead>
+                  <tr>
+                    <td>名称</td>
+                    <td>输出形状</td>
+                    <td>参数量</td>
+                  </tr>
+                </thead>
+                <!--通过加载模型的信息动态创建-->
+              </table>
+              <ul class="pager" style="align-content: center;">
+                <li class="previous" style="display: inline;"><a href="#"><span class="white-text">&larr; Older</span></a></li>
+                <li class="next" style="display: inline;"><a href="#"><span class="white-text">Newer &rarr;</span></a></li>
+              </ul>
+            </div>
+
           </div>
-          <!--右侧配置面板-->
-          <div id="config_panel" class="col-sm-2 z-depth-1">
-            <div class="row">
-              <div class="z-depth-1" style="text-align: center;margin-left: 0px;">配置面板</div>
-              <div id="toggle_config_panel_hide" class="col-sm-4">
-                <div style="width: 20px;height: 20px;float: right;"><i class="material-icons">swap_horiz</i></div>
+
+          <!--模型各层的可视化-->
+          <div class="row">
+            <div id="model_layers_vis" class="col-md-6">
+              <div id="model_layers_vis_tab_caption" style="text-align: center;">卷积与激活层输出可视化</div>
+              <!--动态创建-->
+              <div id="layers_vis_div" class="row">
+                <div class="col-md-2" >layer 名称</div>
+                <div class="col-md-2">layer 编号</div>
+                <div class="col-md-8">输出可视化</div>
               </div>
+              <div id="tmp_peer"></div>
+            </div>
+            <!-- 显示各层的参数量占比 -->
+            <div class="col-md-6">
+              <div id="layer_param_percent_div" style="width: 440px;height: 320px;"></div>
             </div>
           </div>
-          <div id="toggle_config_panel_show" style="width: 20px;position: absolute;float:right; right: 5px;display: none;">
-            <div class="row">
-              <div id="hide_config_panel_img" style="width: 20px;height: 20px;float: right;"><i class="material-icons">swap_horiz</i></div>
-            </div>
-          </div>
+
         </div>
-      </div>
     </div>
 </body>
 <style>
@@ -133,31 +147,163 @@ body {
 <script>
 
     $(document).ready(function(){
-      // 隐藏配置面板
-      $("#toggle_config_panel_hide").on("click",()=>{
-        document.getElementById("config_panel").style.display="none";
-        document.getElementById("toggle_config_panel_show").style.display = "inline-block";
-        document.getElementById("toggle_config_panel_show").style.float = "right";
-        document.getElementById("toggle_config_panel_show").style.right = "-30px";
-        document.getElementById("main_panel_parent_div").setAttribute("class","col-sm-12 row");
-      });
+      // 接收从extension 的消息
+      window.addEventListener('message', event=>{
+          const data = JSON.parse(event.data); // JSON data from extension
+          console.log("model vis webview receive data: "+data);
+          if(data.model_general_info){
+            console.log("units count:"+JSON.parse(data.model_general_info).total_params);
+            // 模型总体信息
+            var model_general_info = JSON.parse(data.model_general_info);
+            $("#model_total_layers").text(model_general_info.total_num_layers);
+            $("#model_total_param").text(model_general_info.total_params);;
+            $("#model_total_units").text(model_general_info.total_units);
+          }else if(data.model_detail_info){
+            var detail_info = JSON.parse(data.model_detail_info);
+            var table = document.getElementById("model_detail_table");
+            var layer_uniq_names = new Array(); // layer 名称列表 layername+index
+            var layer_params_info = new Array(); // <name, value> 各layer的参数量
+            var layer_params_list = new Array();
+            var total_params=0;
 
-      $("#hide_config_panel_img").on("click",()=>{
-        // 重新显示
-        document.getElementById("config_panel").style.display="inline-block";
-        document.getElementById("toggle_config_panel_show").style.display = "none";
-        document.getElementById("main_panel_parent_div").setAttribute("class","col-sm-10 row");
+            for(var i=0;i<detail_info.length;++i){
+                var line = document.createElement("tr");
+                var col_name = document.createElement("td");
+                col_name.innerText = detail_info[i].name;
+                var col_shape = document.createElement("td");
+                col_shape.innerText = detail_info[i].shape;
+                var col_params = document.createElement("td");
+                col_params.innerText = detail_info[i].params;
+                
+                if( parseInt(detail_info[i].params, 10) > 0){
+                  layer_uniq_names.push(detail_info[i].name+"_"+(i+1));
+                  layer_params_info.push({"name": detail_info[i].name+"_"+(i+1), "value": parseInt(detail_info[i].params, 10)});
+                  layer_params_list.push(parseInt(detail_info[i].params, 10));
+                  total_params += parseInt(detail_info[i].params, 10);
+                }
+
+                line.appendChild(col_name);
+                line.appendChild(col_shape);
+                line.appendChild(col_params);
+                table.appendChild(line);
+            }
+            // 绘制各layer 参数分布柱状图
+            for(var i=0;i<layer_params_list.length;++i){
+              layer_params_list[i] = Math.log10(layer_params_list[i]);
+            }
+            display_layer_params_bar_chart(layer_uniq_names, layer_params_list);
+          }else if(data.model_layer_vis){
+            var layer_output_info = JSON.parse(data.model_layer_vis);
+            for(var i=0;i<layer_output_info.length;++i){
+                layer_name = layer_output_info[i].layer_name;
+                layer_idx = layer_output_info[i].layer_index;
+                layer_vis_img_paths = layer_output_info[i].layer_vis_img_paths;
+                
+                var img_div = document.createElement("div");
+                img_div.setAttribute("class","row");
+
+                var layer_name_div = document.createElement("div");
+                layer_name_div.setAttribute("class", "col-md-2");
+                layer_name_div.innerText = layer_name;
+                img_div.appendChild(layer_name_div);
+
+                var layer_index_div = document.createElement("div");
+                layer_index_div.setAttribute("class", "col-md-2");
+                layer_index_div.innerText = layer_idx;
+                img_div.append(layer_index_div);
+
+                var layer_vis_div = document.createElement("div");
+                layer_vis_div.setAttribute("class", "col-md-8");
+
+                for(var j=0;j<layer_vis_img_paths.length;++j){
+                  var layer_img_tag = document.createElement("img");
+                  layer_img_tag.src = layer_vis_img_paths[j];
+                  layer_img_tag.style.width = "32px";
+                  layer_img_tag.style.height = "32px";
+                  layer_vis_div.appendChild(layer_img_tag);
+                  img_div.append(layer_img_tag);
+                }
+                // document.getElementById("model_layers_vis").appendChild(img_div);
+                document.getElementById("model_layers_vis").insertBefore(img_div, document.getElementById("tmp_peer"));
+              }
+          }
+          console.log("ann model img displayed");
+          $("#ann_model_vis_img").attr("src", "http://127.0.0.1:6003/img/ann_model_vis.png");
       });
     });
 
-    // 接收从extension 的消息
-    window.addEventListener('message', event=>{
-        const message = event.data; // JSON data from extension
-        
-    });
-    // const vscode = acquireVsCodeApi();
-    // $("#convertor_entrance").on("click",function(){
-    //   console.log("jump back to convertor page");
-    //   vscode.postMessage(JSON.stringify({"click":"convertor_page"}));
-    // });
+    function display_layer_params_bar_chart(layer_names, layer_param_counts){
+      var option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    crossStyle: {
+                        color: '#999'
+                    }
+                }
+            },
+            backgroundColor:"#17202A",
+            xAxis: [
+                {
+                    type: 'category',
+                    data:layer_names,
+                    axisPointer: {
+                        type: 'shadow'
+                    },
+                    axisLabel:{
+                        textStyle:{
+                            "color":"#FDFEFE "
+                        },
+                        rotate:30
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '',
+                    min: 0,
+                    max: Math.max(layer_param_counts)*1.2,
+                    interval: Math.max(layer_param_counts)*1.2 / 5,
+                    axisLabel: {
+                        formatter: '{value}'
+                    },
+                    splitLine:{show:false},
+                    axisLine: {show: false}, 
+                    axisTick: {show: false},
+                    axisLabel:{show:false}
+                },
+                {
+                    type: 'value',
+                    name: '',
+                    min: 0,
+                    max: Math.max(layer_param_counts)*1.2,
+                    interval: Math.max(layer_param_counts)*1.2 / 5,
+                    axisLabel: {
+                        formatter: '{value}'
+                    },
+                    splitLine:{show:false},
+                    axisLine: {show: false}, 
+                    axisTick: {show: false},
+                    axisLabel:{show:false}
+                }
+            ],
+            series: [
+                {
+                    name: '参数量(log_10)',
+                    type: 'bar',
+                    data: layer_param_counts
+                },
+                {
+                    name: '参数量(log_10)',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: layer_param_counts
+                }
+            ]
+        };
+        var bar_chart_layer_params = echarts.init(document.getElementById("layer_param_percent_div"));
+        bar_chart_layer_params.setOption(option);
+    }
 </script>

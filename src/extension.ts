@@ -453,6 +453,7 @@ export function activate(context: vscode.ExtensionContext) {
 				var commandExe = "python "+modelVisScriptPath+" "+x_norm_data_path+" "+x_test_data_path+" "+y_test_data_path+" "+model_file_path;
 				exec(commandExe, function(err, stdout, stderr){
 					console.log("model vis script running...");
+					console.log("__dirname is: "+__dirname);
 					fs.readFile(path.join(__dirname, "inner_scripts", "model_general_info.json"), "utf-8",(evt, data)=>{
 						console.log("Read model general info data: "+data);
 						// 发送到web view 处理

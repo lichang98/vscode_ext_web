@@ -218,6 +218,7 @@ body {
                 for(var j=0;j<layer_vis_img_paths.length;++j){
                   var layer_img_tag = document.createElement("img");
                   layer_img_tag.src = layer_vis_img_paths[j];
+                  console.log("target layer vis path: "+layer_vis_img_paths[j]);
                   layer_img_tag.style.width = "32px";
                   layer_img_tag.style.height = "32px";
                   layer_vis_div.appendChild(layer_img_tag);

@@ -13,6 +13,7 @@ import {MultiLevelTreeProvider} from "./multiLevelTree";
 import {getMainPageV2} from "./get_mainpage_v2";
 import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage} from "./get_convertor_page_v2";
 import {exec} from "child_process";
+import { time } from 'console';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -588,6 +589,27 @@ export function activate(context: vscode.ExtensionContext) {
 			currentPanel.title = "ANN SNN模型转换";
 			// 发送消息到web view ，开始模型的转换
 			currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
+			// TODO
+			// 执行后台脚本，发送log 到webview 展示运行日志，执行结束之后发送消息通知ann_model
+			let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py");
+			let command_str = "python "+scriptPath;
+			let scriptProcess = exec(command_str,{});
+			scriptProcess.stdout?.on("data", function(data){
+				console.log(data);
+				let formatted_data = data.replace(/\r\n/g, "<br/>");
+				if(currentPanel){
+					currentPanel.webview.postMessage(JSON.stringify({"log_output":formatted_data}));
+				}
+			});
+			scriptProcess.stderr?.on("data", function(data){
+				console.log(data);
+			});
+			scriptProcess.on("exit",function(){
+				// 进程结束，发送结束消息
+				if(currentPanel){
+					currentPanel.webview.postMessage(JSON.stringify({"exec_finish":"yes"}));
+				}
+			});
 		}
 	});
 

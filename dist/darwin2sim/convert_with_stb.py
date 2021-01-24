@@ -252,14 +252,14 @@ for i in range(len(br2_neurons)):
 # for display weights distributes 
 wt_labels = set()
 for i in range(len(br2_synapses)):
-    wts = np.array(br2_synapses[i].w).flatten()[np.array(br2_synapses[i].w).flatten() >=0 ].tolist()
+    wts = np.array(br2_synapses[i].w).flatten().tolist()
     wts = [int(x) for x in wts]
     wt_labels |= set(wts)
 
 wt_counts=[0]*len(wt_labels)
-wt_labels = list(wt_labels)
+wt_labels = list(sorted(wt_labels))
 for i in range(len(br2_synapses)):
-    wts = np.array(br2_synapses[i].w).flatten()[np.array(br2_synapses[i].w).flatten() >=0 ].tolist()
+    wts = np.array(br2_synapses[i].w).flatten().tolist()
     for w in wts:
         wt_counts[wt_labels.index(w)] +=1
 

@@ -27,45 +27,59 @@
           <div class="row">
             <!-- 模型总体信息表格 -->
             <div class="col-md-6">
-              <table id="model_general_table">
-                <caption class="white-text" style="caption-side: top;text-align: center;width: 160px;">ANN模型基本信息</caption>
+              <table id="model_general_table" style="width: 440px;margin-left:40px;">
+                <caption class="white-text" style="caption-side: top;text-align: center;font-size: large;font-weight: bold;">ANN模型基本信息</caption>
                 <tr>
-                  <td>总层数</td>
-                  <td id="model_total_layers"></td>
+                  <td style="font-size: small;">总层数</td>
+                  <td id="model_total_layers" style="font-size: small;"></td>
                 </tr>
                 <tr>
-                  <td>总参数量</td>
-                  <td id="model_total_param"></td>
+                  <td style="font-size: small;">总参数量</td>
+                  <td id="model_total_param" style="font-size: small;"></td>
                 </tr>
                 <tr>
-                  <td>unit数量</td>
-                  <td id="model_total_units"></td>
+                  <td style="font-size: small;">unit数量</td>
+                  <td id="model_total_units" style="font-size: small;"></td>
                 </tr>
               </table>
     
               <!-- python 绘制的模型结构简图 -->
-              <div id="ann_model_vis_img_parent_div">
-                <img id="ann_model_vis_img" style="width: 300px;height: 300px;">
+              <div id="ann_model_vis_img_parent_div" style="margin-left: 40px;">
+                <img id="ann_model_vis_img" style="width: 440px;height: 260px;">
               </div>
             </div>
   
             <!--模型详细信息表格-->
             <div class="col-sm-6">
-              <table id="model_detail_table">
-                <caption class="white-text" style="caption-side: top;text-align: center;width: 160px;">ANN模型各层信息</caption>
-                <thead>
-                  <tr>
-                    <td>名称</td>
-                    <td>输出形状</td>
-                    <td>参数量</td>
-                  </tr>
-                </thead>
-                <!--通过加载模型的信息动态创建-->
-              </table>
-              <ul class="pager" style="align-content: center;">
-                <li class="previous" style="display: inline;"><a href="#"><span class="white-text">&larr; Older</span></a></li>
-                <li class="next" style="display: inline;"><a href="#"><span class="white-text">Newer &rarr;</span></a></li>
-              </ul>
+              <div style="text-align: center;font-size: large;font-weight: bold;">各层详细信息</div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <table id="model_detail_table">
+                    <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
+                    <thead>
+                      <tr>
+                        <td style="font-size: medium;">名称</td>
+                        <td style="font-size: medium;">输出形状</td>
+                        <td style="font-size: medium;">参数量</td>
+                      </tr>
+                    </thead>
+                    <!--通过加载模型的信息动态创建-->
+                  </table>
+                </div>
+                <div class="col-sm-6">
+                  <table id="model_detail_table_secondary">
+                    <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
+                    <thead>
+                      <tr>
+                        <td style="font-size: medium;">名称</td>
+                        <td style="font-size: medium;">输出形状</td>
+                        <td style="font-size: medium;">参数量</td>
+                      </tr>
+                    </thead>
+                    <!--通过加载模型的信息动态创建-->
+                  </table>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -73,18 +87,19 @@
           <!--模型各层的可视化-->
           <div class="row">
             <div id="model_layers_vis" class="col-md-6">
-              <div id="model_layers_vis_tab_caption" style="text-align: center;">卷积与激活层输出可视化</div>
+              <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">卷积与激活层输出可视化</div>
               <!--动态创建-->
-              <div id="layers_vis_div" class="row">
-                <div class="col-md-2" >layer 名称</div>
-                <div class="col-md-2">layer 编号</div>
-                <div class="col-md-8">输出可视化</div>
+              <div id="layers_vis_div" class="row" style="margin-left: 40px;">
+                <div class="col-md-3" style="font-size: medium;">layer 名称</div>
+                <div class="col-md-3" style="font-size: medium;">layer 编号</div>
+                <div class="col-md-6" style="font-size: medium;">输出可视化</div>
               </div>
               <div id="tmp_peer"></div>
             </div>
             <!-- 显示各层的参数量占比 -->
             <div class="col-md-6">
-              <div id="layer_param_percent_div" style="width: 440px;height: 320px;"></div>
+              <div style="font-size: large;font-weight: bold;text-align: center;">各层参数量分布</div>
+              <div id="layer_param_percent_div" style="width: 600px;height: 260px;"></div>
             </div>
           </div>
 
@@ -166,13 +181,43 @@ body {
             var layer_params_list = new Array();
             var total_params=0;
 
-            for(var i=0;i<detail_info.length;++i){
+            for(var i=0;i<detail_info.length/2;++i){
                 var line = document.createElement("tr");
                 var col_name = document.createElement("td");
+                col_name.style = "font-size: small;";
                 col_name.innerText = detail_info[i].name;
                 var col_shape = document.createElement("td");
+                col_shape.style = "font-size: small;";
                 col_shape.innerText = detail_info[i].shape;
                 var col_params = document.createElement("td");
+                col_params.style = "font-size: small;";
+                col_params.innerText = detail_info[i].params;
+                
+                if( parseInt(detail_info[i].params, 10) > 0){
+                  layer_uniq_names.push(detail_info[i].name+"_"+(i+1));
+                  layer_params_info.push({"name": detail_info[i].name+"_"+(i+1), "value": parseInt(detail_info[i].params, 10)});
+                  layer_params_list.push(parseInt(detail_info[i].params, 10));
+                  total_params += parseInt(detail_info[i].params, 10);
+                }
+
+                line.appendChild(col_name);
+                line.appendChild(col_shape);
+                line.appendChild(col_params);
+                table.appendChild(line);
+            }
+            // 另外一半数据使用副表
+            table = document.getElementById("model_detail_table_secondary");
+
+            for(var i=detail_info.length/2;i<detail_info.length;++i){
+                var line = document.createElement("tr");
+                var col_name = document.createElement("td");
+                col_name.style = "font-size: small;";
+                col_name.innerText = detail_info[i].name;
+                var col_shape = document.createElement("td");
+                col_name.style = "font-size: small;";
+                col_shape.innerText = detail_info[i].shape;
+                var col_params = document.createElement("td");
+                col_params.style = "font-size: small;";
                 col_params.innerText = detail_info[i].params;
                 
                 if( parseInt(detail_info[i].params, 10) > 0){
@@ -188,6 +233,7 @@ body {
                 table.appendChild(line);
             }
             // 绘制各layer 参数分布柱状图
+            console.log("layer params list: "+layer_params_list);
             for(var i=0;i<layer_params_list.length;++i){
               layer_params_list[i] = Math.log10(layer_params_list[i]);
             }
@@ -201,19 +247,23 @@ body {
                 
                 var img_div = document.createElement("div");
                 img_div.setAttribute("class","row");
+                img_div.style = "margin-left: 40px;";
 
                 var layer_name_div = document.createElement("div");
-                layer_name_div.setAttribute("class", "col-md-2");
+                layer_name_div.setAttribute("class", "col-md-3");
+                layer_name_div.style = "font-size: small;";
                 layer_name_div.innerText = layer_name;
                 img_div.appendChild(layer_name_div);
 
                 var layer_index_div = document.createElement("div");
-                layer_index_div.setAttribute("class", "col-md-2");
+                layer_index_div.style = "font-size: small;";
+                layer_index_div.setAttribute("class", "col-md-3");
+
                 layer_index_div.innerText = layer_idx;
                 img_div.append(layer_index_div);
 
                 var layer_vis_div = document.createElement("div");
-                layer_vis_div.setAttribute("class", "col-md-8");
+                layer_vis_div.setAttribute("class", "col-md-6");
 
                 for(var j=0;j<layer_vis_img_paths.length;++j){
                   var layer_img_tag = document.createElement("img");

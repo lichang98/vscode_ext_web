@@ -1,7 +1,8 @@
 out
-dist
 node_modules
 .vscode-test/
 *.vsix
 src/module/darsim/darwin_ii/__pycache__
 src/resources/debug.log
+**/*.npz
+**/*.model

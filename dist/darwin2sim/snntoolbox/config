@@ -1,0 +1,27 @@
+[paths]
+path_wd = E:\courses\ZJLab\IDE-related-docs\darwin2sim\target
+dataset_path = E:\courses\ZJLab\IDE-related-docs\darwin2sim\target
+filename_ann = mnist_cnn
+
+[tools]
+evaluate_ann = True
+normalize = True
+
+[simulation]
+simulator = brian2
+duration = 100
+num_to_test = 10
+batch_size = 1
+dt = 0.1
+
+[conversion]
+num_bits = 32
+
+[input]
+model_lib = keras
+dataset_format = npz
+poisson_input = False
+
+[cell]
+v_thresh = 1
+reset = Reset by subtraction

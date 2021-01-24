@@ -250,14 +250,32 @@ for i in range(len(br2_neurons)):
     neurons_info.append({"idx":i,"neuron_count":br2_neurons[i].N, "method":br2_neurons[i].method_choice, "vthresh":best_vthresh})
 
 # for display weights distributes 
-layer_weights=[]
+wt_labels = set()
 for i in range(len(br2_synapses)):
-    print("weight shape={}".format(np.shape(br2_synapses[i].w)))
-    layer_weights.append(np.array(br2_synapses[i].w).flatten()[np.array(br2_synapses[i].w).flatten() >=0 ].tolist())
+    wts = np.array(br2_synapses[i].w).flatten()[np.array(br2_synapses[i].w).flatten() >=0 ].tolist()
+    wts = [int(x) for x in wts]
+    wt_labels |= set(wts)
+
+wt_counts=[0]*len(wt_labels)
+wt_labels = list(wt_labels)
+for i in range(len(br2_synapses)):
+    wts = np.array(br2_synapses[i].w).flatten()[np.array(br2_synapses[i].w).flatten() >=0 ].tolist()
+    for w in wts:
+        wt_counts[wt_labels.index(w)] +=1
+
+wt_labels = [str(x) for x in wt_labels]
+layer_weights = {"wt_label": wt_labels, "wt_count": wt_counts}
+
 
 # Last layer spike counts info
 print("spike_monitor vals={}".format([list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]))
 last_layer_spikes =[list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]
+spike_tuples=[]
+for cls in range(len(last_layer_spikes)):
+    for i in range(len(last_layer_spikes[cls])):
+        spike_tuples.append([cls, int(last_layer_spikes[cls][i])])
+
+output_spike_info ={"cls_names":[str(x) for x in range(len(last_layer_spikes))], "spike_tuples":spike_tuples}
 
 # last layer state v info
 layer_conn_info = []
@@ -272,7 +290,7 @@ for i in range(len(br2_synapses)):
 brian2_snn_info = {
     "neurons_info":neurons_info,
     "layers_weights":layer_weights,
-    "spikes":last_layer_spikes,
+    "spikes":output_spike_info,
     "layer_conns": layer_conn_info
 }
 

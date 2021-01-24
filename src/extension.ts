@@ -11,7 +11,7 @@ import {NewProj} from "./NewProjWebView";
 import {ImportDataShow} from "./ImportDataView";
 import {MultiLevelTreeProvider} from "./multiLevelTree";
 import {getMainPageV2} from "./get_mainpage_v2";
-import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2} from "./get_convertor_page_v2";
+import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage} from "./get_convertor_page_v2";
 import {exec} from "child_process";
 
 // this method is called when your extension is activated
@@ -579,6 +579,14 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable_import_command);
 	vscode.commands.registerCommand("convertor.new_proj", ()=>{
 		console.log("create new project");
+	});
+
+	// 启动模型转换
+	vscode.commands.registerCommand("item_convertor.start_convert", ()=>{
+		if(currentPanel){
+			currentPanel.webview.html = getANNSNNConvertPage();
+			currentPanel.title = "ANN SNN模型转换";
+		}
 	});
 
 	vscode.commands.executeCommand("darwin2.helloWorld");

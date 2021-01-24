@@ -21,6 +21,9 @@
 		"onCommand:simulator.viewFunc",
 		"onView:multiLevelTree",
 		"onView:treeView-item",
+		"onView:item_convertor",
+		"onView:item_simulator",
+		"onView:item_darwinLang_convertor",
 		"onCommand:treeView-item.newproj",
 		"onCommand:treeView-item.datavis",
 		"onCommand:treeView-item.import",
@@ -69,6 +72,18 @@
 			{
 				"command": "treeView.proj_remove",
 				"title": "项目移除"
+			},
+			{
+				"command": "item_convertor.start_convert",
+				"title": "启动转换"
+			},
+			{
+				"command": "item_simulator.start_simulate",
+				"title": "启动仿真"
+			},
+			{
+				"command": "item_darwinLang_convertor.start_convert",
+				"title": "转换生成darwinLang"
 			}
 		],
 		"menus": {
@@ -81,6 +96,21 @@
 				{
 					"command": "treeView.proj_load",
 					"when": "view == treeView-item && viewItem != 数据 && viewItem != 模型 && viewItem != 训练数据 && viewItem != 测试数据 && viewItem != 测试数据标签 && viewItem != 模型",
+					"group": "inline"
+				},
+				{
+					"command": "item_convertor.start_convert",
+					"when": "view == item_convertor",
+					"group": "inline"
+				},
+				{
+					"command": "item_simulator.start_simulate",
+					"when": "view == item_simulator",
+					"group": "inline"
+				},
+				{
+					"command": "item_darwinLang_convertor.start_convert",
+					"when": "view == item_darwinLang_convertor",
 					"group": "inline"
 				}
 			],
@@ -114,22 +144,21 @@
 				{
 					"id": "treeView",               
 					"title": "导航栏",            
-					"icon": "src/resources/dep.png",
-					"command":"convertor.new_proj"
+					"icon": "src/resources/dep.png"
 				},
 				{
 					"id": "convertor",
-					"title": "转换",
+					"title": "导航栏",
 					"icon": "src/resources/convert.png"
 				},
 				{
 					"id": "simulator",
-					"title": "仿真器",
+					"title": "导航栏",
 					"icon": "src/resources/simulate_run.png"
 				},
 				{
 					"id": "lang_convertor",
-					"title": "darwinLang转换",
+					"title": "导航栏",
 					"icon": "src/resources/imgs/lang_convert.png"
 				}
 			]
@@ -145,21 +174,21 @@
 			"convertor":[
 				{
 					"id": "item_convertor",
-					"name": "item_convertor",
+					"name": "",
 					"when": ""
 				}
 			],
 			"simulator":[
 				{
 					"id": "item_simulator",
-					"name": "item_simulator",
+					"name": "",
 					"when": ""
 				}
 			],
 			"lang_convertor":[
 				{
 					"id": "item_darwinLang_convertor",
-					"name": "item_darwinLang_convertor",
+					"name": "",
 					"when": ""
 				}
 			],

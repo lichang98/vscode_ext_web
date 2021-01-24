@@ -5,6 +5,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 // 引入 TreeViewProvider 的类
 import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile } from './TreeViewProvider';
+import {ITEM_ICON_MAP_DARLANG, TreeItemNodeDarLang, TreeViewProviderDarLang} from "./TreeViewProviderDarLang";
 import { TreeViewProviderData } from "./TreeViewData";
 import { TreeViewProviderModel } from "./TreeViewModel";
 import {NewProj} from "./NewProjWebView";
@@ -32,6 +33,10 @@ export function activate(context: vscode.ExtensionContext) {
 		"python_type":"",
 		"ann_lib_type":""
 	};
+	// darwinlang 文件转换树视图
+	let treeViewDarlang = TreeViewProviderDarLang.initTreeViewItem();
+	let inMemTreeViewDarLang:Array<TreeItemNodeDarLang> = new Array();
+
 	// let xiangmuItem = new TreeItemNode("项目");
 	// treeview.data.push(xiangmuItem);
 	// // treeview.data.push(new TreeItemNode("数据", [new TreeItemNode("模型")]));
@@ -85,6 +90,19 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 			});
 		}else if(label === "导入模型"){
+
+		}else if(label.search("json") !== -1){
+			// 显示darlang文件
+			console.log("显示转换后的darwinLang");
+			let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out","snn_digit_darlang.json"));
+			vscode.workspace.openTextDocument(file_target).then((doc:vscode.TextDocument)=>{
+				vscode.window.showTextDocument(doc, 1,false).then(ed=>{
+					ed.edit(edit=>{
+					});
+				});
+			}, (err)=>{
+				console.log(err);
+			});
 
 		}
 	}));
@@ -625,6 +643,19 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 			});
 		}
+	});
+
+	// 启动转换为DarwinLang的操作
+	vscode.commands.registerCommand("item_darwinLang_convertor.start_convert", ()=>{
+		inMemTreeViewDarLang = [];
+		fs.readdir(path.join(__dirname, "darwin2sim","model_out"), (err, files) => {
+			files.forEach(file => {
+			  ITEM_ICON_MAP_DARLANG.set(file, "imgs/file.png");
+			  inMemTreeViewDarLang.push(new TreeItemNodeDarLang(file));
+			});
+		});
+		treeViewDarlang.data = inMemTreeViewDarLang;
+		treeViewDarlang.refresh();
 	});
 
 	vscode.commands.executeCommand("darwin2.helloWorld");

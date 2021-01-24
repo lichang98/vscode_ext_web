@@ -15,6 +15,7 @@ const path = __webpack_require__(2);
 const fs = __webpack_require__(3);
 // 引入 TreeViewProvider 的类
 const TreeViewProvider_1 = __webpack_require__(4);
+const TreeViewProviderDarLang_1 = __webpack_require__(11);
 const NewProjWebView_1 = __webpack_require__(5);
 const ImportDataView_1 = __webpack_require__(6);
 const multiLevelTree_1 = __webpack_require__(7);
@@ -37,6 +38,9 @@ function activate(context) {
         "python_type": "",
         "ann_lib_type": ""
     };
+    // darwinlang 文件转换树视图
+    let treeViewDarlang = TreeViewProviderDarLang_1.TreeViewProviderDarLang.initTreeViewItem();
+    let inMemTreeViewDarLang = new Array();
     // let xiangmuItem = new TreeItemNode("项目");
     // treeview.data.push(xiangmuItem);
     // // treeview.data.push(new TreeItemNode("数据", [new TreeItemNode("模型")]));
@@ -85,6 +89,19 @@ function activate(context) {
             });
         }
         else if (label === "导入模型") {
+        }
+        else if (label.search("json") !== -1) {
+            // 显示darlang文件
+            console.log("显示转换后的darwinLang");
+            let file_target = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "snn_digit_darlang.json"));
+            vscode.workspace.openTextDocument(file_target).then((doc) => {
+                vscode.window.showTextDocument(doc, 1, false).then(ed => {
+                    ed.edit(edit => {
+                    });
+                });
+            }, (err) => {
+                console.log(err);
+            });
         }
     }));
     // Use the console to output diagnostic information (console.log) and errors (console.error)
@@ -580,6 +597,18 @@ function activate(context) {
                 }
             });
         }
+    });
+    // 启动转换为DarwinLang的操作
+    vscode.commands.registerCommand("item_darwinLang_convertor.start_convert", () => {
+        inMemTreeViewDarLang = [];
+        fs.readdir(path.join(__dirname, "darwin2sim", "model_out"), (err, files) => {
+            files.forEach(file => {
+                TreeViewProviderDarLang_1.ITEM_ICON_MAP_DARLANG.set(file, "imgs/file.png");
+                inMemTreeViewDarLang.push(new TreeViewProviderDarLang_1.TreeItemNodeDarLang(file));
+            });
+        });
+        treeViewDarlang.data = inMemTreeViewDarLang;
+        treeViewDarlang.refresh();
     });
     vscode.commands.executeCommand("darwin2.helloWorld");
 }
@@ -2583,6 +2612,103 @@ exports.getSNNSimuPage = getSNNSimuPage;
 /***/ ((module) => {
 
 module.exports = require("child_process");;
+
+/***/ }),
+/* 11 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TreeViewProviderDarLang = exports.TreeItemNodeDarLang = exports.ITEM_ICON_MAP_DARLANG = void 0;
+const vscode_1 = __webpack_require__(1);
+const path_1 = __webpack_require__(2);
+const vscode = __webpack_require__(1);
+// 创建每一项 label 对应的图片名称
+// 其实就是一个Map集合，用 ts 的写法
+exports.ITEM_ICON_MAP_DARLANG = new Map([
+    ['darwinlang文件', "imgs/file.png"]
+    // ['转换与仿真',"imgs/simulate_run.png"],
+    // ['测试添加',"imgs/simulate_run.png"]
+]);
+// 第一步：创建单项的节点(item)的类
+class TreeItemNodeDarLang extends vscode_1.TreeItem {
+    constructor(
+    // readonly 只可读
+    label, children, isRoot) {
+        super(label, children === undefined ? vscode.TreeItemCollapsibleState.None :
+            vscode.TreeItemCollapsibleState.Expanded);
+        this.label = label;
+        this.children = children;
+        this.isRoot = isRoot;
+        // command: 为每项添加点击事件的命令
+        this.command = {
+            title: this.label,
+            command: 'itemClick',
+            // tooltip: this.label,        // 鼠标覆盖时的小小提示框
+            arguments: [
+                this.label,
+            ]
+        };
+        // iconPath： 为该项的图标因为我们是通过上面的 Map 获取的，所以我额外写了一个方法，放在下面
+        this.iconPath = TreeItemNodeDarLang.getIconUriForLabel(this.label);
+        this.children = children ? children : [];
+        // this.contextValue = isRoot ? "TreeViewProviderContext":undefined;
+        this.contextValue = label;
+    }
+    // __filename：当前文件的路径
+    // 重点讲解 Uri.file(join(__filename,'..', '..') 算是一种固定写法
+    // Uri.file(join(__filename,'..','assert', ITEM_ICON_MAP.get(label)+''));   写成这样图标出不来
+    // 所以小伙伴们就以下面这种写法编写
+    static getIconUriForLabel(label) {
+        console.log("path:" + vscode_1.Uri.file(path_1.join(__filename, '..', "resources", exports.ITEM_ICON_MAP_DARLANG.get(label) + '')).toString());
+        return vscode_1.Uri.file(path_1.join(__filename, '..', "..", "src", "resources", exports.ITEM_ICON_MAP_DARLANG.get(label) + ''));
+    }
+}
+exports.TreeItemNodeDarLang = TreeItemNodeDarLang;
+class TreeViewProviderDarLang {
+    constructor() {
+        this._onDidChangeTreeData = new vscode.EventEmitter();
+        this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+        this.data = [];
+        // this.data = [new TreeItemNode("项目", [new TreeItemNode("数据", 
+        // [new TreeItemNode("训练数据"), new TreeItemNode("测试数据"), new TreeItemNode("测试数据标签")]), new TreeItemNode("模型")])];
+    }
+    // 自动弹出
+    // 获取树视图中的每一项 item,所以要返回 element
+    getTreeItem(element) {
+        return element;
+    }
+    // 自动弹出，但是我们要对内容做修改
+    // 给每一项都创建一个 TreeItemNode
+    getChildren(element) {
+        if (element === undefined) {
+            return this.data;
+        }
+        else {
+            return element.children;
+        }
+        // return ['新建项目','导入数据','导入模型','转换与仿真'].map(
+        //     item => new TreeItemNode(
+        //         item as string,
+        //         TreeItemCollapsibleState.None as TreeItemCollapsibleState,
+        //     )
+        // );
+    }
+    refresh() {
+        this._onDidChangeTreeData.fire();
+    }
+    // 这个静态方法时自己写的，你要写到 extension.ts 也可以
+    static initTreeViewItem() {
+        // 实例化 TreeViewProvider
+        const treeViewProvider = new TreeViewProviderDarLang();
+        // registerTreeDataProvider：注册树视图
+        // 你可以类比 registerCommand(上面注册 Hello World)
+        vscode_1.window.registerTreeDataProvider('item_darwinLang_convertor', treeViewProvider);
+        return treeViewProvider;
+    }
+}
+exports.TreeViewProviderDarLang = TreeViewProviderDarLang;
+
 
 /***/ })
 /******/ 	]);

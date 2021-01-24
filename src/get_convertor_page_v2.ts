@@ -963,64 +963,101 @@ export function getConvertorPageV2(){
 export function getANNSNNConvertPage(){
   return `
   <!DOCTYPE html>
-<html style="height: 640px;width: 100%;">
-
-<head>
-  <meta charset="UTF-8">
-  <title>模型转换器</title>
-</head>
-
-<body class="dark-mode" style="height: 100%;width: 100%;">
-
-</body>
-<style>
-
-.titlebar {
-  -webkit-user-select: none;
-  -webkit-app-region: drag;
-}
-
-.titlebar-button {
-  -webkit-app-region: no-drag;
-}
-
-.dark-mode {
-  background-color: rgb(61, 57, 57);
-  color: white;
-}
-
-  @font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
-  }
-
-  .material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    text-transform: none;
-    display: inline-block;
-    -webkit-font-feature-settings: 'liga';
-    -webkit-font-smoothing: antialiased;
-  }
-</style>
-<!-- Compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-
-<!-- Compiled and minified JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-<script>
+  <html style="height: 640px;width: 100%;">
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>模型转换器</title>
+  </head>
+  
+  <body class="dark-mode" style="height: 100%;width: 100%;">
+  
+      <!-- 按钮触发模态框 -->
+      <button id="modal_dialog" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#convertorModal" style="display: none;">
+          转换进度
+      </button>
       
-</script>
-
-</html>
+      </button>
+      <!-- 模态框（Modal） -->
+      <div class="modal fade" id="convertorModal" tabindex="-1" role="dialog" aria-labelledby="convertorModalLabel" aria-hidden="true" style="background-color: #333;">
+          <div class="modal-dialog" style="background-color: #333;">
+              <div class="modal-content" style="background-color: #333;">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: antiquewhite;">
+                          &times;
+                      </button>
+                      <h4 class="modal-title" id="convertorModalLabel">
+                          转换进度
+                      </h4>
+                  </div>
+                  <div class="modal-body">
+                      <div class="progress progress-striped active">
+                          <div id="task_progress_div" class="progress-bar progress-bar-success" role="progressbar"
+                               aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                               style="width: 80%;">
+                              <span class="sr-only">40% 完成</span>
+                          </div>
+                      </div>
+                  </div>
+              </div><!-- /.modal-content -->
+          </div><!-- /.modal -->
+      </div>
+  
+  </body>
+  <style>
+  
+  .titlebar {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+  }
+  
+  .titlebar-button {
+    -webkit-app-region: no-drag;
+  }
+  
+  .dark-mode {
+    background-color: rgb(61, 57, 57);
+    color: white;
+  }
+  
+    @font-face {
+      font-family: 'Material Icons';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+    }
+  
+    .material-icons {
+      font-family: 'Material Icons';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      text-transform: none;
+      display: inline-block;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <script>
+        $(document).ready(function(){
+            window.addEventListener("message", function(evt){
+              console.log("ANN 转SNN 模型接收到extension 消息："+evt.data);
+                const data = JSON.parse(evt.data);
+                if(data.ann_model_start_convert){
+                    console.log("启动转换进度条");
+                    $("#modal_dialog").click();
+                }
+            });
+        });
+  </script>
+  
+  </html>
   `;
 }

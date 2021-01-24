@@ -586,6 +586,8 @@ export function activate(context: vscode.ExtensionContext) {
 		if(currentPanel){
 			currentPanel.webview.html = getANNSNNConvertPage();
 			currentPanel.title = "ANN SNN模型转换";
+			// 发送消息到web view ，开始模型的转换
+			currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
 		}
 	});
 

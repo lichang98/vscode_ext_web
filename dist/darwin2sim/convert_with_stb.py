@@ -204,7 +204,7 @@ for i in range(1, len(spiking_model.layers)-1):
         "leakMode":0,
         "leakValue":0,
         "resetMode":1,
-        "vThreshold":20
+        "vThreshold":best_vthresh
     })
 
 snn_model_darlang["neuronGroups"].append({
@@ -214,7 +214,7 @@ snn_model_darlang["neuronGroups"].append({
     "leakMode":0,
     "leakValue":0,
     "resetMode":1,
-    "vThreshold":20
+    "vThreshold":best_vthresh
 })
 # add connection config
 for i in range(len(br2_synapses)):
@@ -299,3 +299,5 @@ with open(os.path.join(baseDirPath, "brian2_snn_info.json"), "w+") as f:
 
 # move to ../inner_scripts directory
 shutil.move(os.path.join(baseDirPath, "brian2_snn_info.json"), os.path.join(baseDirPath, "..", "inner_scripts","brian2_snn_info.json"))
+
+# TODO add darwinlang

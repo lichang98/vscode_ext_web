@@ -30,6 +30,10 @@ export function activate(context: vscode.ExtensionContext) {
 	let y_test_data_path:string|undefined = undefined;
 	let model_file_path:string|undefined = undefined;
 
+	let panelDataVis:vscode.WebviewPanel|undefined = undefined;
+	let panelAnnModelVis:vscode.WebviewPanel|undefined = undefined;
+	let panelSNNModelVis:vscode.WebviewPanel|undefined = undefined;
+
 	let proj_desc_info = {
 		"project_name":"",
 		"project_type":"",
@@ -445,7 +449,11 @@ export function activate(context: vscode.ExtensionContext) {
 		if(currentPanel){
 			// 切换webview
 			if(itemNode.label === "数据"){
-				currentPanel.webview.html = getConvertorDataPageV2(
+				if(!panelDataVis){
+					panelDataVis = vscode.window.createWebviewPanel("datavis", "数据集",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+				}
+				// currentPanel.webview.html = getConvertorDataPageV2(
+					panelDataVis.webview.html = getConvertorDataPageV2(
 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample0.png"))),
 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample1.png"))),
 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample2.png"))),
@@ -469,12 +477,15 @@ export function activate(context: vscode.ExtensionContext) {
 				);
 			}else if(itemNode.label === "模型"){
 				// TODO
-				currentPanel.webview.html = getConvertorModelPageV2();
+				if(!panelAnnModelVis){
+					panelAnnModelVis = vscode.window.createWebviewPanel("datavis", "ANN模型",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+				}
+				panelAnnModelVis.webview.html = getConvertorModelPageV2();
 			}
 		}
 		if(itemNode.label === "数据"){
-			if(currentPanel){
-				currentPanel.title = "数据集";
+			if(panelDataVis){
+				panelDataVis.title = "数据集";
 				// 数据可视化展示
 				// TODO
 				// 执行后台脚本
@@ -489,16 +500,16 @@ export function activate(context: vscode.ExtensionContext) {
 							console.log("Read data info");
 							console.log("data info : "+data);
 							// 发送到webview 处理显示
-							if(currentPanel){
-								currentPanel.webview.postMessage(data);
+							if(panelDataVis){
+								panelDataVis.webview.postMessage(data);
 							}
 						});
 					}
 				});
 			}
 		}else if(itemNode.label === "模型"){
-			if(currentPanel){
-				currentPanel.title = "ANN模型";
+			if(panelAnnModelVis){
+				panelAnnModelVis.title = "ANN模型";
 				var modelVisScriptPath = path.join(__dirname, "inner_scripts", "model_desc.py");
 				var commandExe = "python "+modelVisScriptPath+" "+x_norm_data_path+" "+x_test_data_path+" "+y_test_data_path+" "+model_file_path;
 				exec(commandExe, function(err, stdout, stderr){
@@ -507,24 +518,24 @@ export function activate(context: vscode.ExtensionContext) {
 					fs.readFile(path.join(__dirname, "inner_scripts", "model_general_info.json"), "utf-8",(evt, data)=>{
 						console.log("Read model general info data: "+data);
 						// 发送到web view 处理
-						if(currentPanel){
-							currentPanel.webview.postMessage(JSON.stringify({"model_general_info": data}));
+						if(panelAnnModelVis){
+							panelAnnModelVis.webview.postMessage(JSON.stringify({"model_general_info": data}));
 						}
 					});
 					// 加载模型详细信息
 					fs.readFile(path.join(__dirname, "inner_scripts","model_layers_info.json"),"utf-8",(evt,data)=>{
 						console.log("模型详细信息："+data);
 						// 发送到web view 处理
-						if(currentPanel){
-							currentPanel.webview.postMessage(JSON.stringify({"model_detail_info":data}));
+						if(panelAnnModelVis){
+							panelAnnModelVis.webview.postMessage(JSON.stringify({"model_detail_info":data}));
 						}
 					});
 					// 加载卷积、池化的等Layer的可视化
 					fs.readFile(path.join(__dirname, "inner_scripts", "layer_vis_info.json"), "utf-8", (evt, data)=>{
 						console.log("layer output vis: "+data);
 						// 发送到webview 处理
-						if(currentPanel){
-							currentPanel.webview.postMessage(JSON.stringify({"model_layer_vis":data}));
+						if(panelAnnModelVis){
+							panelAnnModelVis.webview.postMessage(JSON.stringify({"model_layer_vis":data}));
 						}
 					});
 				});
@@ -664,16 +675,17 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// 启动仿真
 	vscode.commands.registerCommand("item_simulator.start_simulate", ()=>{
-		if(currentPanel){
-			currentPanel.webview.html = getSNNSimuPage();
-			currentPanel.title = "SNN";
-			// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
-			fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
-				if(currentPanel){
-					currentPanel.webview.postMessage(JSON.stringify({"snn_info":data}));
-				}
-			});
+		if(!panelSNNModelVis){
+			panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN模型",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 		}
+		panelSNNModelVis.webview.html = getSNNSimuPage();
+		panelSNNModelVis.title = "SNN模型";
+		// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
+		fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
+			if(panelSNNModelVis){
+				panelSNNModelVis.webview.postMessage(JSON.stringify({"snn_info":data}));
+			}
+		});
 	});
 
 	// 启动转换为DarwinLang的操作

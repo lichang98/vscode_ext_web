@@ -15,18 +15,19 @@ const path = __webpack_require__(2);
 const fs = __webpack_require__(3);
 // 引入 TreeViewProvider 的类
 const TreeViewProvider_1 = __webpack_require__(4);
-const TreeViewProviderDarLang_1 = __webpack_require__(11);
-const NewProjWebView_1 = __webpack_require__(5);
-const ImportDataView_1 = __webpack_require__(6);
-const multiLevelTree_1 = __webpack_require__(7);
-const get_mainpage_v2_1 = __webpack_require__(8);
+const NewProjWebView_1 = __webpack_require__(6);
+const ImportDataView_1 = __webpack_require__(7);
+const multiLevelTree_1 = __webpack_require__(8);
 const get_convertor_page_v2_1 = __webpack_require__(9);
 const child_process_1 = __webpack_require__(10);
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
     // 实现树视图的初始化
-    let treeview = TreeViewProvider_1.TreeViewProvider.initTreeViewItem();
+    let treeview = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("treeView-item");
+    let treeviewConvertor = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_convertor");
+    let treeViewSimulator = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_simulator");
+    let treeViewConvertDarLang = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
     let inMemTreeViewStruct = new Array();
     let x_norm_data_path = undefined;
     let x_test_data_path = undefined;
@@ -39,8 +40,8 @@ function activate(context) {
         "ann_lib_type": ""
     };
     // darwinlang 文件转换树视图
-    let treeViewDarlang = TreeViewProviderDarLang_1.TreeViewProviderDarLang.initTreeViewItem();
-    let inMemTreeViewDarLang = new Array();
+    // let treeViewDarlang = TreeViewProviderDarLang.initTreeViewItem();
+    // let inMemTreeViewDarLang:Array<TreeItemNodeDarLang> = new Array();
     // let xiangmuItem = new TreeItemNode("项目");
     // treeview.data.push(xiangmuItem);
     // // treeview.data.push(new TreeItemNode("数据", [new TreeItemNode("模型")]));
@@ -119,8 +120,20 @@ function activate(context) {
             currentPanel.reveal(columnToShowIn);
         }
         else {
-            currentPanel = vscode.window.createWebviewPanel("darwin2web", "达尔文集成开发环境", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
-            currentPanel.webview.html = get_mainpage_v2_1.getMainPageV2(currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "arrow_down.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "arrow_leftdown.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "arrow_right.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "convertor_log.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "train_snn.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "model_pool.svg"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "mapper.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "darwin_os.png"))));
+            currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+            // currentPanel.webview.html = getMainPageV2(
+            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_down.png"))),
+            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_leftdown.png"))),
+            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_right.png"))),
+            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","convertor_log.png"))),
+            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","train_snn.png"))),
+            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","model_pool.svg"))),
+            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","mapper.png"))),
+            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","darwin_os.png")))
+            // );
+            // FIXME
+            // 主界面由electron 应用启动
+            currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
             // 启动后台资源server
             let scriptPath = path.join(__dirname, "inner_scripts", "img_server.py");
             let command_str = "python " + scriptPath;
@@ -154,7 +167,13 @@ function activate(context) {
                     inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(data.project_info.project_name, [new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []),
                             new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("模型", [])]));
                     treeview.data = inMemTreeViewStruct;
+                    treeviewConvertor.data = inMemTreeViewStruct;
+                    treeViewSimulator.data = inMemTreeViewStruct;
+                    treeViewConvertDarLang.data = inMemTreeViewStruct;
                     treeview.refresh();
+                    treeviewConvertor.refresh();
+                    treeViewSimulator.refresh();
+                    treeViewConvertDarLang.refresh();
                 }
                 else if (data.project_refac_info) {
                     // 接收到webview 项目属性修改的信息
@@ -166,7 +185,13 @@ function activate(context) {
                     let treeItemsSize = inMemTreeViewStruct.length;
                     inMemTreeViewStruct[treeItemsSize - 1].label = proj_desc_info.project_name;
                     treeview.data = inMemTreeViewStruct;
+                    treeviewConvertor.data = inMemTreeViewStruct;
+                    treeViewSimulator.data = inMemTreeViewStruct;
+                    treeViewConvertDarLang.data = inMemTreeViewStruct;
                     treeview.refresh();
+                    treeviewConvertor.refresh();
+                    treeViewSimulator.refresh();
+                    treeViewConvertDarLang.refresh();
                 }
             });
             // currentPanel.webview.html = getIndexPage(
@@ -366,7 +391,13 @@ function activate(context) {
                     (_a = inMemTreeViewStruct[0].children[1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("model_file"));
                 }
                 treeview.data = inMemTreeViewStruct;
+                treeviewConvertor.data = inMemTreeViewStruct;
+                treeViewSimulator.data = inMemTreeViewStruct;
+                treeViewConvertDarLang.data = inMemTreeViewStruct;
                 treeview.refresh();
+                treeviewConvertor.refresh();
+                treeViewSimulator.refresh();
+                treeViewConvertDarLang.refresh();
             }
         });
     }));
@@ -380,7 +411,13 @@ function activate(context) {
             }
         }
         treeview.data = inMemTreeViewStruct;
+        treeviewConvertor.data = inMemTreeViewStruct;
+        treeViewSimulator.data = inMemTreeViewStruct;
+        treeViewConvertDarLang.data = inMemTreeViewStruct;
         treeview.refresh();
+        treeviewConvertor.refresh();
+        treeViewSimulator.refresh();
+        treeViewConvertDarLang.refresh();
     }));
     let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode) => {
         console.log("当前可视化目标:" + itemNode.label);
@@ -600,15 +637,30 @@ function activate(context) {
     });
     // 启动转换为DarwinLang的操作
     vscode.commands.registerCommand("item_darwinLang_convertor.start_convert", () => {
-        inMemTreeViewDarLang = [];
-        fs.readdir(path.join(__dirname, "darwin2sim", "model_out"), (err, files) => {
-            files.forEach(file => {
-                TreeViewProviderDarLang_1.ITEM_ICON_MAP_DARLANG.set(file, "imgs/file.png");
-                inMemTreeViewDarLang.push(new TreeViewProviderDarLang_1.TreeItemNodeDarLang(file));
+        var _a;
+        // inMemTreeViewDarLang = [];
+        TreeViewProvider_1.ITEM_ICON_MAP.set("Darwin模型", "imgs/file.png");
+        (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("Darwin模型", []));
+        if (inMemTreeViewStruct[0].children) {
+            var child_len = inMemTreeViewStruct[0].children.length;
+            fs.readdir(path.join(__dirname, "darwin2sim", "model_out"), (err, files) => {
+                files.forEach(file => {
+                    var _a;
+                    TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
+                    if (inMemTreeViewStruct[0].children) {
+                        (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
+                    }
+                    //   ITEM_ICON_MAP_DARLANG.set(file, "imgs/file.png");
+                    //   inMemTreeViewDarLang.push(new TreeItemNodeDarLang(file));
+                });
             });
-        });
-        treeViewDarlang.data = inMemTreeViewDarLang;
-        treeViewDarlang.refresh();
+        }
+        treeview.refresh();
+        treeviewConvertor.refresh();
+        treeViewSimulator.refresh();
+        treeViewConvertDarLang.refresh();
+        // treeViewDarlang.data = inMemTreeViewDarLang;
+        // treeViewDarlang.refresh();
     });
     vscode.commands.executeCommand("darwin2.helloWorld");
 }
@@ -734,12 +786,12 @@ class TreeViewProvider {
         this._onDidChangeTreeData.fire();
     }
     // 这个静态方法时自己写的，你要写到 extension.ts 也可以
-    static initTreeViewItem() {
+    static initTreeViewItem(target_view) {
         // 实例化 TreeViewProvider
         const treeViewProvider = new TreeViewProvider();
         // registerTreeDataProvider：注册树视图
         // 你可以类比 registerCommand(上面注册 Hello World)
-        vscode_1.window.registerTreeDataProvider('treeView-item', treeViewProvider);
+        vscode_1.window.registerTreeDataProvider(target_view, treeViewProvider);
         return treeViewProvider;
     }
 }
@@ -747,7 +799,8 @@ exports.TreeViewProvider = TreeViewProvider;
 
 
 /***/ }),
-/* 5 */
+/* 5 */,
+/* 6 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -797,7 +850,7 @@ exports.NewProj = NewProj;
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1095,7 +1148,7 @@ exports.ImportDataShow = ImportDataShow;
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1127,172 +1180,6 @@ class TreeItem extends vscode.TreeItem {
         this.children = children;
     }
 }
-
-
-/***/ }),
-/* 8 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getMainPageV2 = void 0;
-function getMainPageV2(arrow_down, arrow_leftdown, arrow_right, convertor_log, train_snn, model_pool, mapper, darwin_os) {
-    return `
-    <!DOCTYPE html>
-    <html style="height: 640px;width: 100%;">
-    
-    <head>
-      <meta charset="UTF-8">
-      <title>模型转换器</title>
-    </head>
-    
-    <body class="dark-mode" style="height: 100%;width: 100%;">
-    
-      <!-- <div class="titlebar" style="width: 100%;height:30px;">
-        <img src="./resources/favicon.ico" style="width: 30px;height: 30px;display: inline-block;">
-        <div style="text-align: center;display: inline-block;margin-left: 280px;">Darwin IDE</div>
-        <img id="main_window_minimize" src="./resources/min_window.png" style="width: 30px;height: 30px;display: inline-block;margin-left: 220px;">
-        <img id="main_window_close" src="./resources/close_window.png" style="width: 30px;height: 30px;display: inline-block;margin-left: 10px;">
-      </div> -->
-      <div style="margin-left:180px;position:absolute;margin-top: 360px;width: 60px;height: 60px;">
-        <img src="${arrow_down}" style="height: 60px;width: 40px;margin-left: 340px;">
-      </div>
-      <div style="margin-left:680px;position:absolute;margin-top: 360px;width: 60px;height: 60px;">
-        <img src="${arrow_leftdown}" style="height: 60px;width: 80px;margin-left: 220px;">
-      </div>
-      <div style="margin-left:500px;position:absolute;margin-top: 600px;width: 60px;height: 60px;margin-left: 670px;">
-        <img src="${arrow_right}" style="height: 40px;width: 60px;">
-      </div>
-      <div class="row" style="height:200px;width:600px;">
-        <div id="convertor_entrance" class="col m5 s5 z-depth-4">
-          <div class="card">
-            <div class="card-image">
-              <img src="${convertor_log}">
-              <span class="card-title teal-text text-darken-4 green accent-1" style="font-size: medium;">模型转换器</span>
-            </div>
-            <div class="card-content blue-text text-darken-3" style="font-size: smaller;">
-              提供从ANN转换到SNN的功能
-            </div>
-          </div>
-        </div>
-    
-        <div class="col m5 s5 offset-s1 offset-m1 z-depth-4">
-          <div class="card">
-            <div class="card-image">
-              <img src="${train_snn}">
-              <span class="card-title teal-text text-darken-4 green accent-1" style="font-size:medium">SNN训练器</span>
-            </div>
-            <div class="card-content blue-text text-darken-3" style="font-size: smaller;">
-              提供构建以及训练SNN的功能
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <div class="row" style="height: 240px;">
-          <div class="col-sm-12" style="margin-left: 440px;">
-              <img src="${model_pool}" style="width: 200px;height: 160px;margin-left: -360px;"/>
-              <div class="white" style="width: 200px;margin-left: 180px;">
-                <div class="green accent-1 teal-text text-darken-4" style="font-size: medium">模型池</div>
-                <div class="blue-text text-darken-3" style="font-size: smaller;">提供统一的模型存储</div>          
-              </div>
-          </div>
-      </div>
-    
-      <div class="row" style="width:600px; height:600px;">
-        <div class="col m5 s5 z-depth-4">
-          <div class="card">
-            <div class="card-image">
-              <img src="${mapper}">
-              <span class="card-title teal-text text-darken-4 green accent-1" style="font-size:medium">SNN映射器</span>
-            </div>
-            <div class="card-content blue-text text-darken-3" style="font-size: smaller;">
-              提供SNN模型转换为可运行在达尔文类脑芯片上文件的功能
-            </div>
-          </div>
-        </div>
-    
-        <div class="col m5 s5 offset-s1 offset-m1 z-depth-4">
-          <div class="card">
-            <div class="card-image">
-              <img src="${darwin_os}">
-              <span class="card-title teal-text text-darken-4 green accent-1" style="font-size: medium">类脑操作系统</span>
-            </div>
-            <div class="card-content blue-text text-darken-3" style="font-size: smaller;">
-              提供达尔文类脑芯片硬件与应用运行管理功能
-            </div>
-          </div>
-        </div>
-      </div>
-    </body>
-    <style>
-    
-    .titlebar {
-      -webkit-user-select: none;
-      -webkit-app-region: drag;
-    }
-    
-    .titlebar-button {
-      -webkit-app-region: no-drag;
-    }
-    
-    .dark-mode {
-      background-color: rgb(61, 57, 57);
-      color: white;
-    }
-    
-      @font-face {
-        font-family: 'Material Icons';
-        font-style: normal;
-        font-weight: 400;
-        src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
-      }
-    
-      .material-icons {
-        font-family: 'Material Icons';
-        font-weight: normal;
-        font-style: normal;
-        font-size: 24px;
-        line-height: 1;
-        text-transform: none;
-        display: inline-block;
-        -webkit-font-feature-settings: 'liga';
-        -webkit-font-smoothing: antialiased;
-      }
-    </style>
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
-    <script>
-        // const {ipcRenderer} = require('electron');
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     document.getElementById("convertor_entrance").onclick = function(){
-        //         console.log("jump_to_convertor_page");
-        //         ipcRenderer.send("jump_to_convertor_page");
-        //     }
-        // });
-        // document.getElementById("main_window_minimize").addEventListener("click",()=>{
-        //   ipcRenderer.send("main-window-minimize");
-        // });
-        // document.getElementById("main_window_close").addEventListener("click",()=>{
-        //   ipcRenderer.send("main-window-close");
-        // });
-        const vscode = acquireVsCodeApi();
-        $("#convertor_entrance").on("click",function(){
-          console.log("jump back to convertor page");
-          vscode.postMessage(JSON.stringify({"click":"convertor_page"}));
-        });
-          
-    </script>
-    
-    </html>
-    `;
-}
-exports.getMainPageV2 = getMainPageV2;
 
 
 /***/ }),
@@ -1358,7 +1245,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
               <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:100px;"></div>
             </div>
         </div>
-        <div class="row" style="height: 45%;width: 100%;margin-top:15px;">
+        <div class="row" style="height: 45%;width: 100%;margin-top:35px;">
           <div id="sample_data_div" class="col-md-6">
             <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;">
               训练集样例数据
@@ -2612,103 +2499,6 @@ exports.getSNNSimuPage = getSNNSimuPage;
 /***/ ((module) => {
 
 module.exports = require("child_process");;
-
-/***/ }),
-/* 11 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TreeViewProviderDarLang = exports.TreeItemNodeDarLang = exports.ITEM_ICON_MAP_DARLANG = void 0;
-const vscode_1 = __webpack_require__(1);
-const path_1 = __webpack_require__(2);
-const vscode = __webpack_require__(1);
-// 创建每一项 label 对应的图片名称
-// 其实就是一个Map集合，用 ts 的写法
-exports.ITEM_ICON_MAP_DARLANG = new Map([
-    ['darwinlang文件', "imgs/file.png"]
-    // ['转换与仿真',"imgs/simulate_run.png"],
-    // ['测试添加',"imgs/simulate_run.png"]
-]);
-// 第一步：创建单项的节点(item)的类
-class TreeItemNodeDarLang extends vscode_1.TreeItem {
-    constructor(
-    // readonly 只可读
-    label, children, isRoot) {
-        super(label, children === undefined ? vscode.TreeItemCollapsibleState.None :
-            vscode.TreeItemCollapsibleState.Expanded);
-        this.label = label;
-        this.children = children;
-        this.isRoot = isRoot;
-        // command: 为每项添加点击事件的命令
-        this.command = {
-            title: this.label,
-            command: 'itemClick',
-            // tooltip: this.label,        // 鼠标覆盖时的小小提示框
-            arguments: [
-                this.label,
-            ]
-        };
-        // iconPath： 为该项的图标因为我们是通过上面的 Map 获取的，所以我额外写了一个方法，放在下面
-        this.iconPath = TreeItemNodeDarLang.getIconUriForLabel(this.label);
-        this.children = children ? children : [];
-        // this.contextValue = isRoot ? "TreeViewProviderContext":undefined;
-        this.contextValue = label;
-    }
-    // __filename：当前文件的路径
-    // 重点讲解 Uri.file(join(__filename,'..', '..') 算是一种固定写法
-    // Uri.file(join(__filename,'..','assert', ITEM_ICON_MAP.get(label)+''));   写成这样图标出不来
-    // 所以小伙伴们就以下面这种写法编写
-    static getIconUriForLabel(label) {
-        console.log("path:" + vscode_1.Uri.file(path_1.join(__filename, '..', "resources", exports.ITEM_ICON_MAP_DARLANG.get(label) + '')).toString());
-        return vscode_1.Uri.file(path_1.join(__filename, '..', "..", "src", "resources", exports.ITEM_ICON_MAP_DARLANG.get(label) + ''));
-    }
-}
-exports.TreeItemNodeDarLang = TreeItemNodeDarLang;
-class TreeViewProviderDarLang {
-    constructor() {
-        this._onDidChangeTreeData = new vscode.EventEmitter();
-        this.onDidChangeTreeData = this._onDidChangeTreeData.event;
-        this.data = [];
-        // this.data = [new TreeItemNode("项目", [new TreeItemNode("数据", 
-        // [new TreeItemNode("训练数据"), new TreeItemNode("测试数据"), new TreeItemNode("测试数据标签")]), new TreeItemNode("模型")])];
-    }
-    // 自动弹出
-    // 获取树视图中的每一项 item,所以要返回 element
-    getTreeItem(element) {
-        return element;
-    }
-    // 自动弹出，但是我们要对内容做修改
-    // 给每一项都创建一个 TreeItemNode
-    getChildren(element) {
-        if (element === undefined) {
-            return this.data;
-        }
-        else {
-            return element.children;
-        }
-        // return ['新建项目','导入数据','导入模型','转换与仿真'].map(
-        //     item => new TreeItemNode(
-        //         item as string,
-        //         TreeItemCollapsibleState.None as TreeItemCollapsibleState,
-        //     )
-        // );
-    }
-    refresh() {
-        this._onDidChangeTreeData.fire();
-    }
-    // 这个静态方法时自己写的，你要写到 extension.ts 也可以
-    static initTreeViewItem() {
-        // 实例化 TreeViewProvider
-        const treeViewProvider = new TreeViewProviderDarLang();
-        // registerTreeDataProvider：注册树视图
-        // 你可以类比 registerCommand(上面注册 Hello World)
-        vscode_1.window.registerTreeDataProvider('item_darwinLang_convertor', treeViewProvider);
-        return treeViewProvider;
-    }
-}
-exports.TreeViewProviderDarLang = TreeViewProviderDarLang;
-
 
 /***/ })
 /******/ 	]);

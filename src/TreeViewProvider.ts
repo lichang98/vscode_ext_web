@@ -107,14 +107,14 @@ export class TreeViewProvider implements TreeDataProvider<TreeItemNode>{
     }
 
     // 这个静态方法时自己写的，你要写到 extension.ts 也可以
-    public static initTreeViewItem():TreeViewProvider{
+    public static initTreeViewItem(target_view:string):TreeViewProvider{
     
         // 实例化 TreeViewProvider
         const treeViewProvider = new TreeViewProvider();
         
         // registerTreeDataProvider：注册树视图
         // 你可以类比 registerCommand(上面注册 Hello World)
-        window.registerTreeDataProvider('treeView-item',treeViewProvider);
+        window.registerTreeDataProvider(target_view,treeViewProvider);
         return treeViewProvider;
     }
 }

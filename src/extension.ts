@@ -20,7 +20,10 @@ import { time } from 'console';
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	// 实现树视图的初始化
-	let treeview = TreeViewProvider.initTreeViewItem();
+	let treeview = TreeViewProvider.initTreeViewItem("treeView-item");
+	let treeviewConvertor = TreeViewProvider.initTreeViewItem("item_convertor");
+	let treeViewSimulator = TreeViewProvider.initTreeViewItem("item_simulator");
+	let treeViewConvertDarLang = TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
 	let inMemTreeViewStruct:Array<TreeItemNode>=new Array();
 	let x_norm_data_path:string|undefined = undefined;
 	let x_test_data_path:string|undefined = undefined;
@@ -34,8 +37,8 @@ export function activate(context: vscode.ExtensionContext) {
 		"ann_lib_type":""
 	};
 	// darwinlang 文件转换树视图
-	let treeViewDarlang = TreeViewProviderDarLang.initTreeViewItem();
-	let inMemTreeViewDarLang:Array<TreeItemNodeDarLang> = new Array();
+	// let treeViewDarlang = TreeViewProviderDarLang.initTreeViewItem();
+	// let inMemTreeViewDarLang:Array<TreeItemNodeDarLang> = new Array();
 
 	// let xiangmuItem = new TreeItemNode("项目");
 	// treeview.data.push(xiangmuItem);
@@ -123,18 +126,22 @@ export function activate(context: vscode.ExtensionContext) {
 		if(currentPanel){
 			currentPanel.reveal(columnToShowIn);
 		}else{
-			currentPanel = vscode.window.createWebviewPanel("darwin2web", "达尔文集成开发环境",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+			currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 
-			currentPanel.webview.html = getMainPageV2(
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_down.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_leftdown.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_right.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","convertor_log.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","train_snn.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","model_pool.svg"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","mapper.png"))),
-				currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","darwin_os.png")))
-			);
+			// currentPanel.webview.html = getMainPageV2(
+			// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_down.png"))),
+			// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_leftdown.png"))),
+			// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_right.png"))),
+			// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","convertor_log.png"))),
+			// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","train_snn.png"))),
+			// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","model_pool.svg"))),
+			// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","mapper.png"))),
+			// 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","darwin_os.png")))
+			// );
+			// FIXME
+			// 主界面由electron 应用启动
+			currentPanel.webview.html =getConvertorPageV2();
+
 			// 启动后台资源server
 			let scriptPath = path.join(__dirname,"inner_scripts","img_server.py");
 			let command_str = "python "+scriptPath;
@@ -169,7 +176,13 @@ export function activate(context: vscode.ExtensionContext) {
 							[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
 							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("模型",[])]));
 					treeview.data = inMemTreeViewStruct;
+					treeviewConvertor.data = inMemTreeViewStruct;
+					treeViewSimulator.data = inMemTreeViewStruct;
+					treeViewConvertDarLang.data = inMemTreeViewStruct;
 					treeview.refresh();
+					treeviewConvertor.refresh();
+					treeViewSimulator.refresh();
+					treeViewConvertDarLang.refresh();
 				}else if(data.project_refac_info){
 					// 接收到webview 项目属性修改的信息
 					console.log("receive project refactor info");
@@ -180,7 +193,13 @@ export function activate(context: vscode.ExtensionContext) {
 					let treeItemsSize = inMemTreeViewStruct.length;
 					inMemTreeViewStruct[treeItemsSize-1].label = proj_desc_info.project_name;
 					treeview.data = inMemTreeViewStruct;
+					treeviewConvertor.data = inMemTreeViewStruct;
+					treeViewSimulator.data = inMemTreeViewStruct;
+					treeViewConvertDarLang.data = inMemTreeViewStruct;
 					treeview.refresh();
+					treeviewConvertor.refresh();
+					treeViewSimulator.refresh();
+					treeViewConvertDarLang.refresh();
 				}
 			});
 
@@ -391,7 +410,13 @@ export function activate(context: vscode.ExtensionContext) {
 					inMemTreeViewStruct[0].children[1].children?.push(new TreeItemNode("model_file"));
 				}
 				treeview.data = inMemTreeViewStruct;
+				treeviewConvertor.data = inMemTreeViewStruct;
+				treeViewSimulator.data = inMemTreeViewStruct;
+				treeViewConvertDarLang.data = inMemTreeViewStruct;
 				treeview.refresh();
+				treeviewConvertor.refresh();
+				treeViewSimulator.refresh();
+				treeViewConvertDarLang.refresh();
 			}
 		});
 	}));
@@ -406,7 +431,13 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		}
 		treeview.data = inMemTreeViewStruct;
+		treeviewConvertor.data = inMemTreeViewStruct;
+		treeViewSimulator.data = inMemTreeViewStruct;
+		treeViewConvertDarLang.data = inMemTreeViewStruct;
 		treeview.refresh();
+		treeviewConvertor.refresh();
+		treeViewSimulator.refresh();
+		treeViewConvertDarLang.refresh();
 	}));
 
 	let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode: TreeItemNode) => {
@@ -647,15 +678,28 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// 启动转换为DarwinLang的操作
 	vscode.commands.registerCommand("item_darwinLang_convertor.start_convert", ()=>{
-		inMemTreeViewDarLang = [];
-		fs.readdir(path.join(__dirname, "darwin2sim","model_out"), (err, files) => {
-			files.forEach(file => {
-			  ITEM_ICON_MAP_DARLANG.set(file, "imgs/file.png");
-			  inMemTreeViewDarLang.push(new TreeItemNodeDarLang(file));
+		// inMemTreeViewDarLang = [];
+		ITEM_ICON_MAP.set("Darwin模型","imgs/file.png");
+		inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin模型",[]));
+		if(inMemTreeViewStruct[0].children){
+			var child_len = inMemTreeViewStruct[0].children.length;
+			fs.readdir(path.join(__dirname, "darwin2sim","model_out"), (err, files) => {
+				files.forEach(file => {
+					ITEM_ICON_MAP.set(file, "imgs/file.png");
+					if(inMemTreeViewStruct[0].children){
+						inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
+					}
+				//   ITEM_ICON_MAP_DARLANG.set(file, "imgs/file.png");
+				//   inMemTreeViewDarLang.push(new TreeItemNodeDarLang(file));
+				});
 			});
-		});
-		treeViewDarlang.data = inMemTreeViewDarLang;
-		treeViewDarlang.refresh();
+		}
+		treeview.refresh();
+		treeviewConvertor.refresh();
+		treeViewSimulator.refresh();
+		treeViewConvertDarLang.refresh();
+		// treeViewDarlang.data = inMemTreeViewDarLang;
+		// treeViewDarlang.refresh();
 	});
 
 	vscode.commands.executeCommand("darwin2.helloWorld");

@@ -63,7 +63,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
               <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:100px;"></div>
             </div>
         </div>
-        <div class="row" style="height: 45%;width: 100%;margin-top:15px;">
+        <div class="row" style="height: 45%;width: 100%;margin-top:35px;">
           <div id="sample_data_div" class="col-md-6">
             <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;">
               训练集样例数据

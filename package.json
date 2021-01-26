@@ -23,6 +23,7 @@
 		"onView:treeView-item",
 		"onView:item_convertor",
 		"onView:item_simulator",
+		"onView:item_bin_darwinlang_convertor",
 		"onView:item_darwinLang_convertor",
 		"onCommand:treeView-item.newproj",
 		"onCommand:treeView-item.datavis",
@@ -84,6 +85,10 @@
 			{
 				"command": "item_darwinLang_convertor.start_convert",
 				"title": "转换生成darwinLang"
+			},
+			{
+				"command": "bin_darlang_convertor.start_convert",
+				"title": "转换生成二进制DarwinLang文件"
 			}
 		],
 		"menus": {
@@ -111,6 +116,11 @@
 				{
 					"command": "item_darwinLang_convertor.start_convert",
 					"when": "view == item_darwinLang_convertor",
+					"group": "inline"
+				},
+				{
+					"command": "bin_darlang_convertor.start_convert",
+					"when": "view == item_bin_darwinlang_convertor",
 					"group": "inline"
 				}
 			],
@@ -160,6 +170,11 @@
 					"id": "lang_convertor",
 					"title": "导航栏",
 					"icon": "src/resources/imgs/lang_convert.png"
+				},
+				{
+					"id": "bin_darlang_convertor",
+					"title": "导航栏",
+					"icon": "src/resources/imgs/darwin_binary.png"
 				}
 			]
 		},
@@ -188,6 +203,13 @@
 			"lang_convertor":[
 				{
 					"id": "item_darwinLang_convertor",
+					"name": "",
+					"when": ""
+				}
+			],
+			"bin_darlang_convertor":[
+				{
+					"id": "item_bin_darwinlang_convertor",
 					"name": "",
 					"when": ""
 				}

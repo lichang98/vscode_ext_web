@@ -15,11 +15,11 @@ const path = __webpack_require__(2);
 const fs = __webpack_require__(3);
 // 引入 TreeViewProvider 的类
 const TreeViewProvider_1 = __webpack_require__(4);
-const NewProjWebView_1 = __webpack_require__(6);
-const ImportDataView_1 = __webpack_require__(7);
-const multiLevelTree_1 = __webpack_require__(8);
-const get_convertor_page_v2_1 = __webpack_require__(9);
-const child_process_1 = __webpack_require__(10);
+const NewProjWebView_1 = __webpack_require__(5);
+const ImportDataView_1 = __webpack_require__(6);
+const multiLevelTree_1 = __webpack_require__(7);
+const get_convertor_page_v2_1 = __webpack_require__(8);
+const child_process_1 = __webpack_require__(9);
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
@@ -28,7 +28,9 @@ function activate(context) {
     let treeviewConvertor = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_convertor");
     let treeViewSimulator = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_simulator");
     let treeViewConvertDarLang = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
+    let treeViewBinConvertDarLang = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_bin_darwinlang_convertor");
     let inMemTreeViewStruct = new Array();
+    treeViewBinConvertDarLang.data = inMemTreeViewStruct;
     let x_norm_data_path = undefined;
     let x_test_data_path = undefined;
     let y_test_data_path = undefined;
@@ -97,7 +99,20 @@ function activate(context) {
         else if (label.search("json") !== -1) {
             // 显示darlang文件
             console.log("显示转换后的darwinLang");
-            let file_target = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "snn_digit_darlang.json"));
+            let file_target = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "darlang_out", label));
+            vscode.workspace.openTextDocument(file_target).then((doc) => {
+                vscode.window.showTextDocument(doc, 1, false).then(ed => {
+                    ed.edit(edit => {
+                    });
+                });
+            }, (err) => {
+                console.log(err);
+            });
+        }
+        else if (label.search("txt") !== -1) {
+            // 显示二进制的darlang文件
+            console.log("显示二进制的darwinLang");
+            let file_target = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", label));
             vscode.workspace.openTextDocument(file_target).then((doc) => {
                 vscode.window.showTextDocument(doc, 1, false).then(ed => {
                     ed.edit(edit => {
@@ -177,6 +192,7 @@ function activate(context) {
                     treeviewConvertor.refresh();
                     treeViewSimulator.refresh();
                     treeViewConvertDarLang.refresh();
+                    treeViewBinConvertDarLang.refresh();
                 }
                 else if (data.project_refac_info) {
                     // 接收到webview 项目属性修改的信息
@@ -195,6 +211,7 @@ function activate(context) {
                     treeviewConvertor.refresh();
                     treeViewSimulator.refresh();
                     treeViewConvertDarLang.refresh();
+                    treeViewBinConvertDarLang.refresh();
                 }
             });
             // currentPanel.webview.html = getIndexPage(
@@ -401,6 +418,7 @@ function activate(context) {
                 treeviewConvertor.refresh();
                 treeViewSimulator.refresh();
                 treeViewConvertDarLang.refresh();
+                treeViewBinConvertDarLang.refresh();
             }
         });
     }));
@@ -421,6 +439,7 @@ function activate(context) {
         treeviewConvertor.refresh();
         treeViewSimulator.refresh();
         treeViewConvertDarLang.refresh();
+        treeViewBinConvertDarLang.refresh();
     }));
     let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode) => {
         console.log("当前可视化目标:" + itemNode.label);
@@ -654,7 +673,7 @@ function activate(context) {
         (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("Darwin模型", []));
         if (inMemTreeViewStruct[0].children) {
             var child_len = inMemTreeViewStruct[0].children.length;
-            fs.readdir(path.join(__dirname, "darwin2sim", "model_out"), (err, files) => {
+            fs.readdir(path.join(__dirname, "darwin2sim", "model_out", "darlang_out"), (err, files) => {
                 files.forEach(file => {
                     var _a;
                     TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
@@ -670,8 +689,32 @@ function activate(context) {
         treeviewConvertor.refresh();
         treeViewSimulator.refresh();
         treeViewConvertDarLang.refresh();
+        treeViewBinConvertDarLang.refresh();
         // treeViewDarlang.data = inMemTreeViewDarLang;
         // treeViewDarlang.refresh();
+    });
+    // 启动将darwinlang 文件转换为二进制文件的操作
+    vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function () {
+        var _a;
+        TreeViewProvider_1.ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
+        (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("Darwin二进制模型", []));
+        if (inMemTreeViewStruct[0].children) {
+            var child_len = inMemTreeViewStruct[0].children.length;
+            fs.readdir(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out"), (err, files) => {
+                files.forEach(file => {
+                    var _a;
+                    TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
+                    if (inMemTreeViewStruct[0].children) {
+                        (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
+                    }
+                });
+            });
+        }
+        treeview.refresh();
+        treeviewConvertor.refresh();
+        treeViewSimulator.refresh();
+        treeViewConvertDarLang.refresh();
+        treeViewBinConvertDarLang.refresh();
     });
     vscode.commands.executeCommand("darwin2.helloWorld");
 }
@@ -810,8 +853,7 @@ exports.TreeViewProvider = TreeViewProvider;
 
 
 /***/ }),
-/* 5 */,
-/* 6 */
+/* 5 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -861,7 +903,7 @@ exports.NewProj = NewProj;
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1159,7 +1201,7 @@ exports.ImportDataShow = ImportDataShow;
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1194,7 +1236,7 @@ class TreeItem extends vscode.TreeItem {
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2506,7 +2548,7 @@ exports.getSNNSimuPage = getSNNSimuPage;
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ ((module) => {
 
 module.exports = require("child_process");;

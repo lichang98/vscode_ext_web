@@ -20,7 +20,7 @@ model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "target", 
 
 config_path = os.path.join(baseDirPath, "snntoolbox","config")
 dir_name = baseDirPath
-outputPath = os.path.join(baseDirPath, "model_out")
+outputPath = os.path.join(baseDirPath, "model_out", "darlang_out")
 
 from snntoolbox.parsing.model_libs.keras_input_lib import load
 from snntoolbox.bin.utils import import_target_sim, update_setup
@@ -137,31 +137,30 @@ br2_net.store()
 
 br2_net.store(filename=os.path.join(baseDirPath, "snn_brian2.model"))
 
-# all_accus=[]
-# v_th_range=list(range(1,33))
-# for v_th in v_th_range:
-#     acc = 0
-#     for i in range(20):
-#         sample = testX[i].flatten()/brian2.ms
-#         br2_neurons[0].bias = sample
-#         br2_net.run(100*brian2.ms,namespace={'v_thresh': v_th})
-#         output_spike = br2_monitor.spike_trains()
-#         print("Processing sample #{}".format(i))
-#         counts=[len(list(x)) for x in output_spike.values()]
-#         print("counts={}, one hot labels={}".format(counts,testY[i]))
-#         if np.argmax(counts) == np.argmax(testY[i]):
-#             acc +=1
-#         br2_net.restore()
 
-#     print("searching={}".format(acc/20))
-#     all_accus.append([v_th, acc/20])
+all_accus=[]
+v_th_range=list(range(1,33))
+for v_th in v_th_range:
+    acc = 0
+    for i in range(20):
+        sample = testX[i].flatten()/brian2.ms
+        br2_neurons[0].bias = sample
+        br2_net.run(100*brian2.ms,namespace={'v_thresh': v_th})
+        output_spike = br2_monitor.spike_trains()
+        print("Processing sample #{}".format(i))
+        counts=[len(list(x)) for x in output_spike.values()]
+        print("counts={}, one hot labels={}".format(counts,testY[i]))
+        if np.argmax(counts) == np.argmax(testY[i]):
+            acc +=1
+        br2_net.restore()
 
-# print(all_accus)
+    print("searching={}".format(acc/20))
+    all_accus.append([v_th, acc/20])
 
-# best_vthresh = all_accus[np.argmax([e[1] for e in all_accus])][0]
-# print("choose best vthreshold={}".format(best_vthresh))
+print(all_accus)
 
-best_vthresh = 17
+best_vthresh = all_accus[np.argmax([e[1] for e in all_accus])][0]
+print("choose best vthreshold={}".format(best_vthresh))
 
 acc = 0
 for i in range(20):
@@ -222,7 +221,7 @@ for i in range(len(br2_synapses)):
         "name":snn_model_darlang["neuronGroups"][i]["layerName"],
         "src":snn_model_darlang["neuronGroups"][i]["layerName"],
         "dst":snn_model_darlang["neuronGroups"][i+1]["layerName"],
-        "synapses":"{}_to_{}".format(snn_model_darlang["neuronGroups"][i]["layerName"], \
+        "synapses":"{}_to_{}.pickle".format(snn_model_darlang["neuronGroups"][i]["layerName"], \
                                     snn_model_darlang["neuronGroups"][i+1]["layerName"])
     })
 
@@ -239,7 +238,7 @@ for i in range(len(br2_synapses)):
     # with open(os.path.join(outputPath, "{}.txt".format(snn_model_darlang["connectConfig"][i]["synapses"])), "w+") as f:
     #     # f.write(json.dumps(info.tolist()))
     #     pickle.dump(json.dumps(info.tolist()), f)
-    with open(os.path.join(outputPath, "{}.pickle".format(snn_model_darlang["connectConfig"][i]["synapses"])), "wb") as f:
+    with open(os.path.join(outputPath, "{}".format(snn_model_darlang["connectConfig"][i]["synapses"])), "wb") as f:
         pickle.dump(info.tolist(), f)
 
 
@@ -300,4 +299,7 @@ with open(os.path.join(baseDirPath, "brian2_snn_info.json"), "w+") as f:
 # move to ../inner_scripts directory
 shutil.move(os.path.join(baseDirPath, "brian2_snn_info.json"), os.path.join(baseDirPath, "..", "inner_scripts","brian2_snn_info.json"))
 
-# TODO add darwinlang
+print("running darwinlang")
+sys.path.append(os.path.join(baseDirPath, "..", "darlang"))
+import darlang
+darlang.run_darlang(os.path.join(outputPath, "snn_digit_darlang.json"),os.path.join(outputPath,"..", "bin_darwin_out"))

@@ -6,3 +6,6 @@ src/module/darsim/darwin_ii/__pycache__
 src/resources/debug.log
 **/*.npz
 **/*.model
+**/*.pickle
+**/*.h5
+.vscode

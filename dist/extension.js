@@ -15,8 +15,6 @@ const path = __webpack_require__(2);
 const fs = __webpack_require__(3);
 // 引入 TreeViewProvider 的类
 const TreeViewProvider_1 = __webpack_require__(4);
-const NewProjWebView_1 = __webpack_require__(5);
-const ImportDataView_1 = __webpack_require__(6);
 const multiLevelTree_1 = __webpack_require__(7);
 const get_convertor_page_v2_1 = __webpack_require__(8);
 const child_process_1 = __webpack_require__(9);
@@ -35,6 +33,8 @@ function activate(context) {
     let x_test_data_path = undefined;
     let y_test_data_path = undefined;
     let model_file_path = undefined;
+    let darwinlang_file_paths = new Array();
+    let darwinlang_bin_paths = new Array();
     let panelDataVis = undefined;
     let panelAnnModelVis = undefined;
     let panelSNNModelVis = undefined;
@@ -44,59 +44,11 @@ function activate(context) {
         "python_type": "",
         "ann_lib_type": ""
     };
-    // darwinlang 文件转换树视图
-    // let treeViewDarlang = TreeViewProviderDarLang.initTreeViewItem();
-    // let inMemTreeViewDarLang:Array<TreeItemNodeDarLang> = new Array();
-    // let xiangmuItem = new TreeItemNode("项目");
-    // treeview.data.push(xiangmuItem);
-    // // treeview.data.push(new TreeItemNode("数据", [new TreeItemNode("模型")]));
-    // treeview.data[0].children?.push(new TreeItemNode("数据"));
-    // treeViewPro.data.push(new TreeItemNode("测试添加"));
-    // TreeViewProviderData.initTreeViewItem();
-    // TreeViewProviderModel.initTreeViewItem();
     vscode.window.registerTreeDataProvider("multiLevelTree", new multiLevelTree_1.MultiLevelTreeProvider());
-    // 还记得我们在 TreeViewProvider.ts 文件下 TreeItemNode 下创建的 command 吗？
-    // 创建了 command 就需要注册才能使用
-    // label 就是 TreeItemNode->command 里 arguments 传递过来的
     context.subscriptions.push(vscode.commands.registerCommand('itemClick', (label) => {
         vscode.window.showInformationMessage(label);
         console.log("label is :[" + label + "]");
-        if (label === "项目") {
-            const options = {
-                canSelectMany: false,
-                canSelectFolders: true,
-                openLabel: "选择文件夹",
-                filters: { "All files": ['*'] }
-            };
-            vscode.window.showOpenDialog(options).then(fileUri => {
-                if (fileUri && fileUri[0]) {
-                    console.log("selected path: " + fileUri[0].fsPath);
-                    fs.writeFileSync(path.join(fileUri[0].fsPath, "new.dar2proj"), "");
-                }
-            });
-            if (currentPanel) {
-                currentPanel.webview.html = NewProjWebView_1.NewProj.getNewProjView();
-            }
-        }
-        else if (label === "导入数据") {
-            const options = {
-                canSelectMany: false,
-                canSelectFolders: true,
-                openLabel: "选择数据",
-                filters: { "All files": ['*', "*.npz"] }
-            };
-            vscode.window.showOpenDialog(options).then(fileUri => {
-                if (fileUri && fileUri[0]) {
-                    console.log("selected path: " + fileUri[0].fsPath);
-                    if (currentPanel) {
-                        currentPanel.webview.html = ImportDataView_1.ImportDataShow.getView(currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "img_1.jpg"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "img_2.jpg"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "img_3.jpg"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "imgs", "img_4.jpg"))));
-                    }
-                }
-            });
-        }
-        else if (label === "导入模型") {
-        }
-        else if (label.search("json") !== -1) {
+        if (label.search("json") !== -1) {
             // 显示darlang文件
             console.log("显示转换后的darwinLang");
             let file_target = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "darlang_out", label));
@@ -139,17 +91,6 @@ function activate(context) {
         }
         else {
             currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
-            // currentPanel.webview.html = getMainPageV2(
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_down.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_leftdown.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","arrow_right.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","convertor_log.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","train_snn.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","model_pool.svg"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","mapper.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","darwin_os.png")))
-            // );
-            // FIXME
             // 主界面由electron 应用启动
             currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
             // 启动后台资源server
@@ -214,129 +155,11 @@ function activate(context) {
                     treeViewBinConvertDarLang.refresh();
                 }
             });
-            // currentPanel.webview.html = getIndexPage(
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","convertor_log.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","train_snn.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","model_pool.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","mapper.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","darwin_os.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","left_up_arrow.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","left_btm_arrow.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","right_up_arrow.png"))),
-            // 	currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","right_btm_arrow.png")))
-            // );
-            // currentPanel.webview.onDidReceiveMessage(function(msg){
-            // 	console.log("extension receive msg:"+JSON.parse(msg));
-            // 	var data = JSON.parse(msg);
-            // 	if(data.click){
-            // 		console.log("click msg, val is "+data.click);
-            // 		if(data.click === "convertor"){
-            // 			console.log("prepare jump to convertor page...");
-            // 			if(currentPanel){
-            // 				currentPanel.webview.html = getConvertorPage();
-            // 			}
-            // 		}else if(data.click === "index"){
-            // 			console.log("prepare jump to index page...");;
-            // 			if(currentPanel){
-            // 				currentPanel.webview.html = getIndexPage(
-            // 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","convertor_log.png"))),
-            // 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","train_snn.png"))),
-            // 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","model_pool.png"))),
-            // 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","mapper.png"))),
-            // 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","darwin_os.png"))),
-            // 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","left_up_arrow.png"))),
-            // 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","left_btm_arrow.png"))),
-            // 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","right_up_arrow.png"))),
-            // 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","right_btm_arrow.png")))
-            // 				);
-            // 			}
-            // 		}
-            // 	}
-            // });
-            // currentPanel.webview.postMessage({"image_logo_convertor":JSON.stringify(currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","imgs","convertor_log.png"))))});
-            // console.log("Sync read: "+buf.toString());
-            // currentPanel.webview.html = buf.toString();
-            // const pathImg = vscode.Uri.file(path.join(context.extensionPath,"src","resources","main_page.png"));
-            // currentPanel.webview.html = get_main_page(currentPanel.webview.asWebviewUri(pathImg));
-            // const img = currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","main_page.png")));
-            // const garbagebinImgSrc = currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"resources","garbage_bin.png")));
-            // console.log("garbage img uri:"+garbagebinImgSrc.toString());
-            // currentPanel.webview.postMessage(JSON.stringify({"garbageSrc":garbagebinImgSrc})+"");
-            // let count=0;
-            // let uploadedANNModelPath:string="";
-            // let uploadedTestDataDirPath:string="";
-            // let msgReceiver = currentPanel.webview.onDidReceiveMessage(message =>{
-            // 	console.log("extension receive msg: "+message);
-            // 	count++;
-            // 	console.log("This is "+count+" th message");
-            // 	let data = JSON.parse(message);
-            // 	if(data.upload_ann_model_path){
-            // 		console.log("uploaded ann model path is:["+data.upload_ann_model_path+"]");
-            // 		// 记录上传的ANN模型，等待接收开始转换的指令
-            // 		uploadedANNModelPath = data.upload_ann_model_path;
-            // 	}else if(data.upload_testdata_dirpath){
-            // 		// 记录上传的测试数据所在的目录路径
-            // 		// deprecated
-            // 		console.log("Test data are in directory: ["+data.upload_testdata_dirpath+"]");
-            // 		uploadedTestDataDirPath = data.upload_testdata_dirpath;
-            // 	}else if(data.start_data_preprocess){
-            // 		// 开始数据预处理
-            // 		console.log("receive data preprocess command from webview");
-            // 		let pyScript = child_process.spawn("python",['E:\\courses\\ZJLab\\IDE设计相关文档\\nn_convertor\\stage1.py ', uploadedTestDataDirPath]);
-            // 		pyScript.stdout.on("data",(data)=>{
-            // 			console.log("python executed output:"+data);
-            // 			currentPanel?.webview.postMessage(JSON.stringify({"stage1Data":data.toString()})+"");
-            // 		});
-            // 		pyScript.stderr.on("data",(err)=>{
-            // 			console.log("python executed err output:"+err.toString());
-            // 			currentPanel?.webview.postMessage(JSON.stringify({"stage1Data":err.toString()})+"");
-            // 		});
-            // 	}else if(data.start_ann_conversion){
-            // 		// 开始ANN模型转换与校验
-            // 		uploadedANNModelPath = data.start_ann_conversion;
-            // 		let pyScript = child_process.spawn("python",['E:\\courses\\ZJLab\\IDE设计相关文档\\nn_convertor\\stage2.py ',data.start_ann_conversion]);
-            // 		pyScript.stdout.on("data",(data)=>{
-            // 			console.log("python execute output:"+data);
-            // 			currentPanel?.webview.postMessage(JSON.stringify({"stage2Data":data.toString()})+"");
-            // 		});
-            // 		pyScript.stderr.on("data",(err)=>{
-            // 			console.log("python execute err output:"+err.toString());
-            // 			currentPanel?.webview.postMessage(JSON.stringify({"stage2Data":err.toString()})+"");
-            // 		});
-            // 	}else if(data.start_simulate_from_ann){
-            // 		// 开始使用转换后的ANN 放到模拟器上运行
-            // 		console.log("Start building SNN from ANN and running on simulator...");
-            // 		console.log("uploaded mode path: "+uploadedANNModelPath.toString());
-            // 		let modeName = uploadedANNModelPath.split("\\")[uploadedANNModelPath.split("\\").length-1];
-            // 		let modeNameList = modeName.split("_");
-            // 		modeNameList.splice(1,0,"normed");
-            // 		modeName = modeNameList.join("_");
-            // 		let uploadedANNModelPathList = uploadedANNModelPath.split("\\").slice(0,uploadedANNModelPath.split("\\").length-1);
-            // 		uploadedANNModelPathList.push(modeName);
-            // 		uploadedANNModelPath = uploadedANNModelPathList.join("\\");
-            // 		console.log("normed model path:"+uploadedANNModelPath.toString());
-            // 		let pyScript = child_process.spawn("python",["E:\\courses\\ZJLab\\IDE设计相关文档\\darwin2\\src\\module\\darsim\\main.py", "E:\\courses\\ZJLab\\IDE设计相关文档\\nn_convertor\\ann_model_descs\\fcn_normed_model.h5"]);
-            // 		pyScript.stdout.on("data",(data)=>{
-            // 			console.log(data.toString());
-            // 			currentPanel?.webview.postMessage(JSON.stringify({"convertedSNNSimu":data.toString()})+"");
-            // 		});
-            // 		pyScript.stderr.on("data",(err)=>{
-            // 			console.log(err.toString());
-            // 			currentPanel?.webview.postMessage(JSON.stringify({"convertedSNNSimu":err.toString()})+"");
-            // 		});
-            // 	}else if(data.saveLogFile){
-            // 		console.log("保存日志文件，目标路径："+data.saveLogFile.toString());
-            // 		console.log("保存日志文件内容："+data.logData.toString());
-            // 		fs.writeFileSync(path.join(data.saveLogFile.toString(),"ide_log.txt"),data.logData.toString());
-            // 	}
-            // },undefined,context.subscriptions);
-            // currentPanel.onDidDispose(()=> {currentPanel=undefined;}, null,context.subscriptions);
         }
     });
     context.subscriptions.push(disposable);
     let disposable2 = vscode.commands.registerCommand("treeView-item.newproj", () => {
         console.log("创建新项目xxx");
-        // TODO
         if (currentPanel) {
             currentPanel.webview.postMessage({ "command": "CreateNewProject" });
         }
@@ -353,7 +176,7 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand("treeView.proj_save", () => {
         const options = {
             saveLabel: "保存项目",
-            filters: { "All files": ['*'] }
+            filters: { "Darwin2 Project": ['dar2'] }
         };
         vscode.window.showSaveDialog(options).then(fileUri => {
             if (fileUri && fileUri) {
@@ -364,9 +187,11 @@ function activate(context) {
                     "x_norm_path": x_norm_data_path,
                     "x_test_path": x_test_data_path,
                     "y_test_path": y_test_data_path,
-                    "model_path": model_file_path
+                    "model_path": model_file_path,
+                    "darwinlang_file_paths": darwinlang_file_paths,
+                    "darwinlang_bin_paths": darwinlang_bin_paths
                 };
-                fs.writeFileSync(fileUri.fsPath + ".dar2", JSON.stringify(data));
+                fs.writeFileSync(fileUri.fsPath, JSON.stringify(data));
             }
         });
     }));
@@ -377,7 +202,7 @@ function activate(context) {
             filters: { "Darwin2Project": ['dar2'] }
         };
         vscode.window.showOpenDialog(options).then(fileUri => {
-            var _a;
+            var _a, _b, _c, _d, _e;
             if (fileUri) {
                 console.log("opened project path = " + fileUri[0].fsPath);
                 let data = fs.readFileSync(fileUri[0].fsPath);
@@ -388,6 +213,25 @@ function activate(context) {
                 x_test_data_path = proj_data.x_test_path;
                 y_test_data_path = proj_data.y_test_path;
                 model_file_path = proj_data.model_path;
+                darwinlang_file_paths = proj_data.darwinlang_file_paths;
+                darwinlang_bin_paths = proj_data.darwinlang_bin_paths;
+                console.log("导入工程的x_norm 文件路径为：" + x_norm_data_path);
+                if (x_norm_data_path) {
+                    fs.copyFile(path.join(x_norm_data_path), path.join(__dirname, "darwin2sim", "target", "x_norm.npz"), function (err) {
+                    });
+                }
+                if (x_test_data_path) {
+                    fs.copyFile(path.join(x_test_data_path), path.join(__dirname, "darwin2sim", "target", "x_test.npz"), function (err) {
+                    });
+                }
+                if (y_test_data_path) {
+                    fs.copyFile(path.join(y_test_data_path), path.join(__dirname, "darwin2sim", "target", "y_test.npz"), function (err) {
+                    });
+                }
+                if (model_file_path) {
+                    fs.copyFile(path.join(model_file_path), path.join(__dirname, "darwin2sim", "target", "mnist_cnn.h5"), function (err) {
+                    });
+                }
                 // 显示treeview
                 TreeViewProvider_1.addSlfProj(proj_desc_info.project_name);
                 inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(proj_desc_info.project_name, [new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []),
@@ -409,6 +253,25 @@ function activate(context) {
                 }
                 if (proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]) {
                     (_a = inMemTreeViewStruct[0].children[1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("model_file"));
+                }
+                // add darwinlang and bin files
+                TreeViewProvider_1.ITEM_ICON_MAP.set("Darwin模型", "imgs/file.png");
+                (_b = inMemTreeViewStruct[0].children) === null || _b === void 0 ? void 0 : _b.push(new TreeViewProvider_1.TreeItemNode("Darwin模型", []));
+                for (let i = 0; i < darwinlang_file_paths.length; ++i) {
+                    TreeViewProvider_1.ITEM_ICON_MAP.set(path.basename(darwinlang_file_paths[i].toString()), "imgs/file.png");
+                    if (inMemTreeViewStruct[0].children) {
+                        var child_len = inMemTreeViewStruct[0].children.length;
+                        (_c = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _c === void 0 ? void 0 : _c.push(new TreeViewProvider_1.TreeItemNode(path.basename(darwinlang_file_paths[i].toString())));
+                    }
+                }
+                TreeViewProvider_1.ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
+                (_d = inMemTreeViewStruct[0].children) === null || _d === void 0 ? void 0 : _d.push(new TreeViewProvider_1.TreeItemNode("Darwin二进制模型", []));
+                for (let i = 0; i < darwinlang_bin_paths.length; ++i) {
+                    if (inMemTreeViewStruct[0].children) {
+                        var child_len = inMemTreeViewStruct[0].children.length;
+                        TreeViewProvider_1.ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
+                        (_e = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _e === void 0 ? void 0 : _e.push(new TreeViewProvider_1.TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
+                    }
                 }
                 treeview.data = inMemTreeViewStruct;
                 treeviewConvertor.data = inMemTreeViewStruct;
@@ -448,15 +311,22 @@ function activate(context) {
             if (itemNode.label === "数据") {
                 if (!panelDataVis) {
                     panelDataVis = vscode.window.createWebviewPanel("datavis", "数据集", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+                    panelDataVis.onDidDispose(function () {
+                        panelDataVis = undefined;
+                    }, null, context.subscriptions);
                 }
+                panelDataVis.reveal();
                 // currentPanel.webview.html = getConvertorDataPageV2(
                 panelDataVis.webview.html = get_convertor_page_v2_1.getConvertorDataPageV2(currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample0.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample1.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample2.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample3.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample4.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample5.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample6.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample7.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample8.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample9.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample0.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample1.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample2.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample3.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample4.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample5.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample6.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample7.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample8.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample9.png"))));
             }
             else if (itemNode.label === "模型") {
-                // TODO
                 if (!panelAnnModelVis) {
                     panelAnnModelVis = vscode.window.createWebviewPanel("datavis", "ANN模型", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+                    panelAnnModelVis.onDidDispose(() => {
+                        panelAnnModelVis = undefined;
+                    }, null, context.subscriptions);
                 }
+                panelAnnModelVis.reveal();
                 panelAnnModelVis.webview.html = get_convertor_page_v2_1.getConvertorModelPageV2();
             }
         }
@@ -464,7 +334,6 @@ function activate(context) {
             if (panelDataVis) {
                 panelDataVis.title = "数据集";
                 // 数据可视化展示
-                // TODO
                 // 执行后台脚本
                 let scriptPath = path.join(__dirname, "inner_scripts", "data_analyze.py");
                 let command_str = "python " + scriptPath + " " + x_norm_data_path + " " + x_test_data_path + " " + y_test_data_path;
@@ -539,12 +408,16 @@ function activate(context) {
                     console.log("selected path: " + fileUri[0].fsPath);
                     x_norm_data_path = fileUri[0].fsPath;
                     // 添加到treeview下
-                    // FIXME
                     TreeViewProvider_1.ITEM_ICON_MAP.set("x_norm", "imgs/file.png");
                     if (treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children) {
                         console.log("添加新的文件");
                         treeview.data[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("x_norm"));
                         treeview.refresh();
+                    }
+                    // 拷贝文件到项目并重命名
+                    if (x_norm_data_path) {
+                        fs.copyFile(path.join(x_norm_data_path), path.join(__dirname, "darwin2sim", "target", "x_norm.npz"), function (err) {
+                        });
                     }
                 }
             });
@@ -561,12 +434,16 @@ function activate(context) {
                     console.log("selected path: " + fileUri[0].fsPath);
                     x_test_data_path = fileUri[0].fsPath;
                     // 添加到treeview下
-                    // FIXME
                     TreeViewProvider_1.ITEM_ICON_MAP.set("x_test", "imgs/file.png");
                     if (treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[1].children) {
                         console.log("添加新的文件");
                         treeview.data[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("x_test"));
                         treeview.refresh();
+                    }
+                    // 拷贝文件到项目并重命名
+                    if (x_test_data_path) {
+                        fs.copyFile(path.join(x_test_data_path), path.join(__dirname, "darwin2sim", "target", "x_test.npz"), function (err) {
+                        });
                     }
                 }
             });
@@ -590,6 +467,11 @@ function activate(context) {
                         treeview.data[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode("y_test"));
                         treeview.refresh();
                     }
+                    // 拷贝文件到项目并重命名
+                    if (y_test_data_path) {
+                        fs.copyFile(path.join(y_test_data_path), path.join(__dirname, "darwin2sim", "target", "y_test.npz"), function (err) {
+                        });
+                    }
                 }
             });
         }
@@ -605,12 +487,16 @@ function activate(context) {
                     console.log("selected path: " + fileUri[0].fsPath);
                     model_file_path = fileUri[0].fsPath;
                     // 添加到treeview下
-                    // FIXME
                     TreeViewProvider_1.ITEM_ICON_MAP.set("model_file", "imgs/file.png");
                     if (treeview.data[0].children && treeview.data[0].children[1].children) {
                         console.log("添加新的文件");
                         treeview.data[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("model_file"));
                         treeview.refresh();
+                    }
+                    // 拷贝文件到项目并重命名
+                    if (model_file_path) {
+                        fs.copyFile(path.join(model_file_path), path.join(__dirname, "darwin2sim", "target", "mnist_cnn.h5"), function (err) {
+                        });
                     }
                 }
             });
@@ -625,10 +511,10 @@ function activate(context) {
         var _a, _b;
         if (currentPanel) {
             currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
+            currentPanel.reveal();
             currentPanel.title = "ANN SNN模型转换";
             // 发送消息到web view ，开始模型的转换
             currentPanel.webview.postMessage(JSON.stringify({ "ann_model_start_convert": "yes" }));
-            // TODO
             // 执行后台脚本，发送log 到webview 展示运行日志，执行结束之后发送消息通知ann_model
             let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py");
             let command_str = "python " + scriptPath;
@@ -655,7 +541,11 @@ function activate(context) {
     vscode.commands.registerCommand("item_simulator.start_simulate", () => {
         if (!panelSNNModelVis) {
             panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN模型", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+            panelSNNModelVis.onDidDispose(() => {
+                panelSNNModelVis = undefined;
+            }, null, context.subscriptions);
         }
+        panelSNNModelVis.reveal();
         panelSNNModelVis.webview.html = get_convertor_page_v2_1.getSNNSimuPage();
         panelSNNModelVis.title = "SNN模型";
         // 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
@@ -671,17 +561,17 @@ function activate(context) {
         // inMemTreeViewDarLang = [];
         TreeViewProvider_1.ITEM_ICON_MAP.set("Darwin模型", "imgs/file.png");
         (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("Darwin模型", []));
+        darwinlang_file_paths.splice(0);
         if (inMemTreeViewStruct[0].children) {
             var child_len = inMemTreeViewStruct[0].children.length;
             fs.readdir(path.join(__dirname, "darwin2sim", "model_out", "darlang_out"), (err, files) => {
                 files.forEach(file => {
                     var _a;
+                    darwinlang_file_paths.push(path.join(__dirname, "darwin2sim", "model_out", "darlang_out", file));
                     TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
                     if (inMemTreeViewStruct[0].children) {
                         (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
                     }
-                    //   ITEM_ICON_MAP_DARLANG.set(file, "imgs/file.png");
-                    //   inMemTreeViewDarLang.push(new TreeItemNodeDarLang(file));
                 });
             });
         }
@@ -690,19 +580,19 @@ function activate(context) {
         treeViewSimulator.refresh();
         treeViewConvertDarLang.refresh();
         treeViewBinConvertDarLang.refresh();
-        // treeViewDarlang.data = inMemTreeViewDarLang;
-        // treeViewDarlang.refresh();
     });
     // 启动将darwinlang 文件转换为二进制文件的操作
     vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function () {
         var _a;
         TreeViewProvider_1.ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
         (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("Darwin二进制模型", []));
+        darwinlang_bin_paths.splice(0);
         if (inMemTreeViewStruct[0].children) {
             var child_len = inMemTreeViewStruct[0].children.length;
             fs.readdir(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out"), (err, files) => {
                 files.forEach(file => {
                     var _a;
+                    darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", file));
                     TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
                     if (inMemTreeViewStruct[0].children) {
                         (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
@@ -853,354 +743,8 @@ exports.TreeViewProvider = TreeViewProvider;
 
 
 /***/ }),
-/* 5 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.NewProj = void 0;
-class NewProj {
-    static getNewProjView() {
-        return `<!DOCTYPE html>
-        <html>
-        <!-- Latest 点击新建项目后的页面 -->
-        <head>
-          <meta charset="UTF-8">
-          <title>Darwin IDE</title>
-        </head>
-        
-        <body>
-        
-        </body>
-        <style>
-          @font-face {
-            font-family: 'Material Icons';
-            font-style: normal;
-            font-weight: 400;
-            src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
-          }
-        
-          .material-icons {
-            font-family: 'Material Icons';
-            font-weight: normal;
-            font-style: normal;
-            font-size: 24px;
-            line-height: 1;
-            text-transform: none;
-            display: inline-block;
-            -webkit-font-feature-settings: 'liga';
-            -webkit-font-smoothing: antialiased;
-          }
-        
-          body {
-          background-color: #E6E6FA;
-        }
-        </style>
-        </html>`;
-    }
-}
-exports.NewProj = NewProj;
-
-
-/***/ }),
-/* 6 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ImportDataShow = void 0;
-class ImportDataShow {
-    static getView(img1, img2, img3, img4) {
-        return `<!DOCTYPE html>
-        <html>
-        <!-- Latest 点击新建项目后的页面 -->
-        <head>
-          <meta charset="UTF-8">
-          <title>Darwin IDE</title>
-        </head>
-        
-        <body>
-             <!-- 数据可视化区域 -->
-             <div class="col m6 z-depth-1">
-                <!-- <img src="./resources/img_1.jpg" style="width: 100px;height: 100px; padding: 1px;">
-                <img src="./resources/img_3.jpg" style="width: 100px;height: 100px; padding: 1px;">
-                <img src="./resources/img_5.jpg" style="width: 100px;height: 100px; padding: 1px;">
-                <img src="./resources/img_7.jpg" style="width: 100px;height: 100px; padding: 1px;"> -->
-                <div id="img_carousel" class="carousel" style="height: 300px; width: 400px;">
-                  <a class="carousel-item" href="#one!"><img src="${img1}"></a>
-                  <a class="carousel-item" href="#two!"><img src="${img2}"></a>
-                  <a class="carousel-item" href="#three!"><img src="${img3}"></a>
-                  <a class="carousel-item" href="#four!"><img src="${img4}"></a>
-                </div>
-                <div id="histgram" style="width: 400px; height: 300px;margin-top: 30px;"></div>
-                <div id="dist_pie" style="width: 400px;height: 300px; margin-top: 30px;"></div>
-                <div id="data_heatmap" style="width: 400px; height: 300px; margin-top: 30px;"></div>
-              </div>
-        
-              <!--模型可视化区域-->
-              <div class="col m4 z-depth-1">
-                <div id="sankey" style="width: 400px; height: 300px;margin-top: 30px;"></div>
-              </div>
-            </div>
-        
-        </body>
-        <style>
-          @font-face {
-            font-family: 'Material Icons';
-            font-style: normal;
-            font-weight: 400;
-            src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
-          }
-        
-          .material-icons {
-            font-family: 'Material Icons';
-            font-weight: normal;
-            font-style: normal;
-            font-size: 24px;
-            line-height: 1;
-            text-transform: none;
-            display: inline-block;
-            -webkit-font-feature-settings: 'liga';
-            -webkit-font-smoothing: antialiased;
-          }
-        
-          body {
-          background-color: #E6E6FA;
-        }
-        </style>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.0/echarts.min.js" integrity="sha512-ZRdjJAYP8Kij8Lkln9uiGj0jIrMDLAALm1ZB2b3VfV9XJ0nR4zbJmHKB42/A4tgMlZS4DTPnSAmcYRoS0dginA==" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-        <script>
-        
-        document.addEventListener('DOMContentLoaded', function() {
-              var carouselDiv = document.getElementById("img_carousel");
-              var carouselInst = M.Carousel.init(carouselDiv,{});
-            });
-        
-        
-                // 图片直方图绘制
-                var echartHistgram = echarts.init(document.getElementById("histgram"));
-            // 指定图表的配置项和数据
-            var option = {
-              title: {
-                  text: '像素灰度直方图'
-              },
-              tooltip: {},
-              legend: {
-                  data:['累计个数']
-              },
-              xAxis: {
-                  data: ["0~41","42~83","84~125","126~167","168~209","201~255"],
-                  axisLabel:{
-                    rotate: 30,
-                    interval: 0
-                  }
-              },
-              yAxis: {},
-              series: [{
-                  name: '像素累计',
-                  type: 'bar',
-                  data: [5, 20, 36, 10, 10, 20]
-              }]
-            };
-            echartHistgram.setOption(option);
-            // 数据类别分布饼图
-            var echartDistPie = echarts.init(document.getElementById("dist_pie"));
-            option = {
-                  title: {
-                      text: '数据分布',
-                      left: 'center',
-                      top: 20,
-                      textStyle: {
-                          color: '#34495E'
-                      }
-                  },
-        
-                  tooltip: {
-                      trigger: 'item',
-                      formatter: '{a} <br/>{b} : {c} ({d}%)'
-                  },
-        
-                  visualMap: {
-                      show: false,
-                      min: 80,
-                      max: 600,
-                      inRange: {
-                          colorLightness: [0, 1]
-                      }
-                  },
-                  series: [
-                      {
-                          name: '数据占比',
-                          type: 'pie',
-                          radius: '55%',
-                          center: ['50%', '50%'],
-                          data: [
-                              {value: 335, name: '类别1'},
-                              {value: 310, name: '类别2'},
-                              {value: 274, name: '类别3'},
-                              {value: 235, name: '类别4'},
-                              {value: 400, name: '类别5'}
-                          ].sort(function (a, b) { return a.value - b.value; }),
-                          roseType: 'radius',
-                          label: {
-                              color: '#34495E'
-                          },
-                          labelLine: {
-                              lineStyle: {
-                                  color: '#34495E'
-                              },
-                              smooth: 0.2,
-                              length: 10,
-                              length2: 20
-                          },
-                          itemStyle: {
-                              color: '#c23531',
-                              shadowBlur: 200,
-                              shadowColor: 'rgba(0, 0, 0, 0.5)'
-                          },
-        
-                          animationType: 'scale',
-                          animationEasing: 'elasticOut',
-                          animationDelay: function (idx) {
-                              return Math.random() * 200;
-                          }
-                      }
-                  ]
-            };
-            echartDistPie.setOption(option);
-            // 数据热力图
-            var echartHeatMap = echarts.init(document.getElementById("data_heatmap"));
-            var xAxis = ['0','1','2','3','4','5','6','7','8','9'];
-            var yAxis = ['0','1','2','3','4','5','6','7','8','9'];
-            var data=[[0, 0, 48], [0, 1, 51], [0, 2, 95], [0, 3, 21], [0, 4, 97], [0, 5, 15], [0, 6, 41], [0, 7,
-         82], [0, 8, 40], [0, 9, 31], [1, 0, 11], [1, 1, 90], [1, 2, 52], [1, 3, 15], [1, 4, 71], [
-        1, 5, 14], [1, 6, 58], [1, 7, 30], [1, 8, 29], [1, 9, 31], [2, 0, 21], [2, 1, 49], [2, 2, 2
-        ], [2, 3, 8], [2, 4, 19], [2, 5, 17], [2, 6, 53], [2, 7, 35], [2, 8, 93], [2, 9, 29], [3,
-        0, 23], [3, 1, 16], [3, 2, 72], [3, 3, 57], [3, 4, 50], [3, 5, 38], [3, 6, 48], [3, 7, 39],
-         [3, 8, 94], [3, 9, 72], [4, 0, 59], [4, 1, 14], [4, 2, 78], [4, 3, 31], [4, 4, 93], [4, 5,
-         27], [4, 6, 23], [4, 7, 27], [4, 8, 85], [4, 9, 42], [5, 0, 23], [5, 1, 73], [5, 2, 70], [
-        5, 3, 31], [5, 4, 88], [5, 5, 69], [5, 6, 98], [5, 7, 97], [5, 8, 22], [5, 9, 3], [6, 0, 63
-        ], [6, 1, 52], [6, 2, 57], [6, 3, 30], [6, 4, 42], [6, 5, 83], [6, 6, 40], [6, 7, 39], [6,
-        8, 93], [6, 9, 35], [7, 0, 52], [7, 1, 46], [7, 2, 84], [7, 3, 99], [7, 4, 68], [7, 5, 41],
-         [7, 6, 3], [7, 7, 41], [7, 8, 99], [7, 9, 97], [8, 0, 81], [8, 1, 41], [8, 2, 13], [8, 3,
-        33], [8, 4, 36], [8, 5, 37], [8, 6, 96], [8, 7, 92], [8, 8, 34], [8, 9, 5], [9, 0, 18], [9,
-         1, 81], [9, 2, 59], [9, 3, 72], [9, 4, 54], [9, 5, 96], [9, 6, 73], [9, 7, 77], [9, 8, 79]
-        , [9, 9, 61]];
-        
-          data = data.map(function (item) {
-              return [item[1], item[0], item[2] || '-'];
-          });
-        
-          option = {
-            title: {
-                      text: '热力图',
-                      left: 'center',
-                      top: 0,
-                      textStyle: {
-                          color: '#ccc'
-                      }
-              },
-              tooltip: {
-                  position: 'top'
-              },
-              animation: false,
-              grid: {
-                  height: '50%',
-                  top: '10%'
-              },
-              xAxis: {
-                  type: 'category',
-                  data: xAxis,
-                  splitArea: {
-                      show: true
-                  }
-              },
-              yAxis: {
-                  type: 'category',
-                  data: yAxis,
-                  splitArea: {
-                      show: true
-                  }
-              },
-              visualMap: {
-                  min: 0,
-                  max: 100,
-                  calculable: true,
-                  orient: 'horizontal',
-                  left: 'center',
-                  bottom: '15%'
-              },
-              series: [{
-                  name: 'Punch Card',
-                  type: 'heatmap',
-                  data: data,
-                  label: {
-                      show: true
-                  },
-                  emphasis: {
-                      itemStyle: {
-                          shadowBlur: 10,
-                          shadowColor: 'rgba(0, 0, 0, 0.5)'
-                      }
-                  }
-              }]
-          };
-            echartHeatMap.setOption(option);
-        
-            // 模型桑基图
-            var echartSankey = echarts.init(document.getElementById("sankey"));
-            var nodeList = [
-              {"name":"Input Layer"},
-              {"name":"Dense Layer 1024"},
-              {"name":"Dense Layer 512"},
-              {"name":"Dense Layer 256"},
-              {"name":"Dense Layer 32"},
-              {"name":"Dense Layer 10"}
-            ];
-        
-            var linkList = [
-              {"source":"Input Layer","target":"Dense Layer 1024", value:4560},
-              {"source":"Dense Layer 1024","target":"Dense Layer 512", value:2345},
-              {"source":"Dense Layer 512","target":"Dense Layer 256", value:1245},
-              {"source":"Dense Layer 256","target":"Dense Layer 32", value:978},
-              {"source":"Dense Layer 32","target":"Dense Layer 10", value:900},
-            ];
-            option = {
-                title: {
-                    text: ''
-                },
-                tooltip: {
-                    trigger: 'item',
-                    triggerOn: 'mousemove'
-                },
-                series: [
-                    {
-                        type: 'sankey',
-                        data: nodeList,
-                        links: linkList,
-                        focusNodeAdjacency: 'allEdges',
-                        itemStyle: {
-                            borderWidth: 1,
-                            borderColor: '#aaa'
-                        },
-                        lineStyle: {
-                            color: 'source',
-                            curveness: 0.5
-                        }
-                    }
-                ]
-            };
-            echartSankey.setOption(option);
-        </script>
-        </html>`;
-    }
-}
-exports.ImportDataShow = ImportDataShow;
-
-
-/***/ }),
+/* 5 */,
+/* 6 */,
 /* 7 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 

@@ -61,7 +61,7 @@ def fixpt(weights,bit_width=8):
 model_lib = import_module("snntoolbox.parsing.model_libs.keras_input_lib")
 input_model = model_lib.load(os.path.dirname(model_path), os.path.basename(model_path))
 
-acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=20, x_test=testX[:20],y_test=testY[:20])
+acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=testX[:50],y_test=testY[:50])
 
 config = update_setup(config_path)
 config.set("paths", "path_wd", os.path.dirname(model_path))
@@ -75,7 +75,7 @@ parsed_model = model_parser.build_parsed_model()
 norm_data = {'x_norm':testX}
 normalize_parameters(parsed_model, config,**norm_data)
 
-score_norm = model_parser.evaluate(batch_size=1,num_to_test=20,x_test=testX[:20],y_test=testY[:20])
+score_norm = model_parser.evaluate(batch_size=1,num_to_test=50,x_test=testX[:50],y_test=testY[:50])
 
 print("score norm = {}".format(score_norm))
 parsed_model.save(os.path.join(dir_name, "parsed_model.h5"))
@@ -87,7 +87,7 @@ spiking_model.build(parsed_model)
 spiking_model.save(dir_name, "spike_snn")
 
 # simulate
-test_set = {"x_test":testX[:20],"y_test":testY[:20]}
+test_set = {"x_test":testX[:50],"y_test":testY[:50]}
 accu = spiking_model.run(**test_set)
 
 spiking_model.end_sim()
@@ -107,7 +107,7 @@ for i in range(len(spiking_model.layers)):
     num_neuron = spiking_model.layers[i].N
     model_eqs = spiking_model.layers[i].equations
     print("build layer={}, num neurons={}, model eqs={}".format(i, num_neuron, model_eqs))
-    br2_neurons.append(brian2.NeuronGroup(num_neuron, model_eqs, method="euler",threshold="v >= v_thresh", reset="v = v - v_thresh",dt=0.1*brian2.ms))
+    br2_neurons.append(brian2.NeuronGroup(num_neuron, model_eqs, method="euler",threshold="v >= v_thresh", reset="v = v - v_thresh",dt=1*brian2.ms))
 
 br2_synapses=[]
 all_wts=[]
@@ -139,13 +139,13 @@ br2_net.store(filename=os.path.join(baseDirPath, "snn_brian2.model"))
 
 
 all_accus=[]
-v_th_range=list(range(1,33))
+v_th_range=list(range(1,100,3))
 for v_th in v_th_range:
     acc = 0
-    for i in range(20):
+    for i in range(50):
         sample = testX[i].flatten()/brian2.ms
         br2_neurons[0].bias = sample
-        br2_net.run(100*brian2.ms,namespace={'v_thresh': v_th})
+        br2_net.run(100*brian2.ms,namespace={'v_thresh': v_th},report=None)
         output_spike = br2_monitor.spike_trains()
         print("Processing sample #{}".format(i))
         counts=[len(list(x)) for x in output_spike.values()]
@@ -154,8 +154,8 @@ for v_th in v_th_range:
             acc +=1
         br2_net.restore()
 
-    print("searching={}".format(acc/20))
-    all_accus.append([v_th, acc/20])
+    print("searching={}".format(acc/50))
+    all_accus.append([v_th, acc/50])
 
 print(all_accus)
 
@@ -163,11 +163,11 @@ best_vthresh = all_accus[np.argmax([e[1] for e in all_accus])][0]
 print("choose best vthreshold={}".format(best_vthresh))
 
 acc = 0
-for i in range(20):
+for i in range(50):
     br2_net.restore()
     sample = valX[i].flatten()/brian2.ms
     br2_neurons[0].bias = sample
-    br2_net.run(100*brian2.ms,namespace={'v_thresh': best_vthresh})
+    br2_net.run(100*brian2.ms,namespace={'v_thresh': best_vthresh},report=None)
     output_spike = br2_monitor.spike_trains()
     print("Processing sample #{}".format(i))
     counts=[len(list(x)) for x in output_spike.values()]
@@ -175,7 +175,7 @@ for i in range(20):
     if np.argmax(counts) == np.argmax(valY[i]):
         acc +=1
 
-print("Accuracy={}".format(acc/20))
+print("Accuracy={}".format(acc/50))
 
 # save snn model as the DarwinLang format
 snn_model_darlang = {

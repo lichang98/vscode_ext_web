@@ -11,6 +11,7 @@ from sklearn.utils import shuffle
 import json
 import pickle
 import shutil
+from PIL import Image
 
 baseDirPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(baseDirPath, "snntoolbox"))
@@ -131,8 +132,9 @@ for i in range(len(br2_synapses)):
     print("wweights={}".format(all_wts[i]))
     
 br2_monitor = brian2.SpikeMonitor(br2_neurons[-1])
+br2_input_monitor = brian2.SpikeMonitor(br2_neurons[0]) # monitor for input
 br2_state_mon = brian2.StateMonitor(br2_neurons[-1], 'v', record=0)
-br2_net = brian2.Network(br2_neurons, br2_synapses, br2_monitor, br2_state_mon)
+br2_net = brian2.Network(br2_neurons, br2_synapses, br2_monitor, br2_input_monitor,br2_state_mon)
 br2_net.store()
 
 br2_net.store(filename=os.path.join(baseDirPath, "snn_brian2.model"))
@@ -154,7 +156,7 @@ for v_th in v_th_range:
             acc +=1
         br2_net.restore()
 
-    print("searching={}".format(acc/50))
+    print("searching v_thres={}, {}".format(v_th, acc/50))
     all_accus.append([v_th, acc/50])
 
 print(all_accus)
@@ -168,7 +170,18 @@ for i in range(50):
     sample = valX[i].flatten()/brian2.ms
     br2_neurons[0].bias = sample
     br2_net.run(100*brian2.ms,namespace={'v_thresh': best_vthresh},report=None)
+    input_spike = br2_input_monitor.spike_trains()
     output_spike = br2_monitor.spike_trains()
+    input_spike_arrs=[]
+    for k,v in input_spike.items():
+        input_spike_arrs.append([k,np.array(v/brian2.ms, dtype="int32").tolist()])
+    # save input and corresponding img
+    with open(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "input_{}.txt".format(i)), "w+") as f:
+        f.write(json.dumps(input_spike_arrs))
+    img = np.array(np.squeeze(valX[i])*255, dtype="uint8")
+    Image.fromarray(img).save(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "img_idx_{}_label_{}.png"
+                                .format(i, np.argmax(valY[i]))))
+
     print("Processing sample #{}".format(i))
     counts=[len(list(x)) for x in output_spike.values()]
     print("counts={}, one hot labels={}".format(counts,valY[i]))
@@ -176,7 +189,6 @@ for i in range(50):
         acc +=1
 
 print("Accuracy={}".format(acc/50))
-
 # save snn model as the DarwinLang format
 snn_model_darlang = {
     "projectName":"snn_digit",

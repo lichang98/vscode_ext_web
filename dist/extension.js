@@ -15,9 +15,9 @@ const path = __webpack_require__(2);
 const fs = __webpack_require__(3);
 // 引入 TreeViewProvider 的类
 const TreeViewProvider_1 = __webpack_require__(4);
-const multiLevelTree_1 = __webpack_require__(7);
-const get_convertor_page_v2_1 = __webpack_require__(8);
-const child_process_1 = __webpack_require__(9);
+const multiLevelTree_1 = __webpack_require__(5);
+const get_convertor_page_v2_1 = __webpack_require__(6);
+const child_process_1 = __webpack_require__(7);
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
@@ -743,9 +743,7 @@ exports.TreeViewProvider = TreeViewProvider;
 
 
 /***/ }),
-/* 5 */,
-/* 6 */,
-/* 7 */
+/* 5 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -780,7 +778,7 @@ class TreeItem extends vscode.TreeItem {
 
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2092,7 +2090,7 @@ exports.getSNNSimuPage = getSNNSimuPage;
 
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ ((module) => {
 
 module.exports = require("child_process");;

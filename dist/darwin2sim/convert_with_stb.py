@@ -176,8 +176,8 @@ for i in range(50):
     for k,v in input_spike.items():
         input_spike_arrs.append([k,np.array(v/brian2.ms, dtype="int32").tolist()])
     # save input and corresponding img
-    with open(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "input_{}.txt".format(i)), "w+") as f:
-        f.write(json.dumps(input_spike_arrs))
+    with open(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "input_{}.pickle".format(i)), "wb+") as f:
+        pickle.dump(input_spike_arrs, f)
     img = np.array(np.squeeze(valX[i])*255, dtype="uint8")
     Image.fromarray(img).save(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "img_idx_{}_label_{}.png"
                                 .format(i, np.argmax(valY[i]))))

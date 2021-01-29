@@ -244,7 +244,7 @@ with open(os.path.join(outputPath, "snn_digit_darlang.json"),"w+") as f:
 # save weights files, each synapses a file, [(src index, dest index, weight, delay),...]
 print("save weights file, total {} synapses".format(len(br2_synapses)))
 for i in range(len(br2_synapses)):
-    info = list(zip(br2_synapses[i].i, br2_synapses[i].j, br2_synapses[i].w, [0.1]*len(br2_synapses[i].w)))
+    info = list(zip(br2_synapses[i].i, br2_synapses[i].j, br2_synapses[i].w, [1]*len(br2_synapses[i].w)))
     info = np.array(info)
     # np.save("{}.txt".format(snn_model_darlang["connectConfig"][i]["synapses"]), info)
     # with open(os.path.join(outputPath, "{}.txt".format(snn_model_darlang["connectConfig"][i]["synapses"])), "w+") as f:

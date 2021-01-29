@@ -74,6 +74,29 @@ function activate(context) {
                 console.log(err);
             });
         }
+        else if (label.search(".pickle") !== -1) {
+            // 显示pickle 文件的原始内容
+            console.log("解析并显示pickle 文件内容");
+            // let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", "inputs",label));
+            let target_file_path = path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", "inputs", label);
+            var modelVisScriptPath = path.join(__dirname, "inner_scripts", "parse_pickle.py");
+            var command_str = "python " + modelVisScriptPath + " " + target_file_path;
+            child_process_1.exec(command_str, function (err, stdout, stderr) {
+                console.log("pickle 文件解析结束");
+                let file_target = vscode.Uri.file(path.join(__dirname, "inner_scripts", label));
+                vscode.workspace.openTextDocument(file_target).then((doc) => {
+                    vscode.window.showTextDocument(doc, 1, false).then(ed => {
+                        ed.edit(edit => { });
+                    });
+                });
+                vscode.workspace.onDidCloseTextDocument(evt => {
+                    console.log(evt.fileName + " [is closed");
+                    let target_file = evt.fileName;
+                    target_file = target_file.replace("\.git", "");
+                    fs.unlink(target_file, () => { });
+                });
+            });
+        }
     }));
     // Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated
@@ -202,7 +225,7 @@ function activate(context) {
             filters: { "Darwin2Project": ['dar2'] }
         };
         vscode.window.showOpenDialog(options).then(fileUri => {
-            var _a, _b, _c, _d, _e;
+            var _a, _b, _c, _d, _e, _f;
             if (fileUri) {
                 console.log("opened project path = " + fileUri[0].fsPath);
                 let data = fs.readFileSync(fileUri[0].fsPath);
@@ -273,6 +296,32 @@ function activate(context) {
                         (_e = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _e === void 0 ? void 0 : _e.push(new TreeViewProvider_1.TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
                     }
                 }
+                // 挂载二进制模型的inputs 数据
+                if (inMemTreeViewStruct[0].children) {
+                    let par_dir_idx = inMemTreeViewStruct[0].children.length - 1;
+                    TreeViewProvider_1.ITEM_ICON_MAP.set("输入数据", "imgs/file.png");
+                    (_f = inMemTreeViewStruct[0].children[par_dir_idx].children) === null || _f === void 0 ? void 0 : _f.push(new TreeViewProvider_1.TreeItemNode("输入数据", []));
+                    let sub_dir_idx = inMemTreeViewStruct[0].children[par_dir_idx].children.length - 1;
+                    fs.readdir(path.join(path.dirname(darwinlang_bin_paths[0].toString()), "inputs"), (err, files) => {
+                        files.forEach(file => {
+                            var _a;
+                            TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
+                            (_a = inMemTreeViewStruct[0].children[par_dir_idx].children[sub_dir_idx].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
+                        });
+                    });
+                }
+                // if(inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children){
+                // 	inMemTreeViewStruct[0].children[0].children.push(new TreeItemNode("输入数据", []));
+                // 	ITEM_ICON_MAP.set("输入数据", "imgs/file.png");
+                // 	fs.readdir(path.join(path.dirname(darwinlang_bin_paths[0].toString()), "inputs"), (err, files)=>{
+                // 		files.forEach(file => {
+                // 			ITEM_ICON_MAP.set(file, "imgs/file.png");
+                // 			if(inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children){
+                // 				inMemTreeViewStruct[0].children[0].children[0].children?.push(new TreeItemNode(file));
+                // 			}
+                // 		});
+                // 	});
+                // }
                 treeview.data = inMemTreeViewStruct;
                 treeviewConvertor.data = inMemTreeViewStruct;
                 treeViewSimulator.data = inMemTreeViewStruct;

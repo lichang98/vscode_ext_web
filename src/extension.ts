@@ -75,6 +75,28 @@ export function activate(context: vscode.ExtensionContext) {
 			}, (err)=>{
 				console.log(err);
 			});
+		}else if(label.search(".pickle") !== -1){
+			// 显示pickle 文件的原始内容
+			console.log("解析并显示pickle 文件内容");
+			// let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", "inputs",label));
+			let target_file_path = path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", "inputs",label);
+			var modelVisScriptPath = path.join(__dirname, "inner_scripts", "parse_pickle.py");
+			var command_str = "python "+modelVisScriptPath + " "+ target_file_path;
+			exec(command_str, function(err, stdout, stderr){
+				console.log("pickle 文件解析结束");
+				let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "inner_scripts", label));
+				vscode.workspace.openTextDocument(file_target).then((doc:vscode.TextDocument)=>{
+					vscode.window.showTextDocument(doc, 1, false).then(ed=>{
+						ed.edit(edit=>{});
+					});
+				});
+				vscode.workspace.onDidCloseTextDocument(evt=>{
+					console.log(evt.fileName+" [is closed");
+					let target_file = evt.fileName;
+					target_file = target_file.replace("\.git","");
+					fs.unlink(target_file,()=>{});
+				});
+			});
 		}
 	}));
 
@@ -283,6 +305,31 @@ export function activate(context: vscode.ExtensionContext) {
 						inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
 					}
 				}
+				// 挂载二进制模型的inputs 数据
+				if(inMemTreeViewStruct[0].children){
+					let par_dir_idx = inMemTreeViewStruct[0].children.length-1;
+					ITEM_ICON_MAP.set("输入数据", "imgs/file.png");
+					inMemTreeViewStruct[0].children[par_dir_idx].children?.push(new TreeItemNode("输入数据",[]));
+					let sub_dir_idx = inMemTreeViewStruct[0].children[par_dir_idx].children!.length-1;
+					fs.readdir(path.join(path.dirname(darwinlang_bin_paths[0].toString()), "inputs"), (err, files)=>{
+						files.forEach(file => {
+							ITEM_ICON_MAP.set(file, "imgs/file.png");
+							inMemTreeViewStruct[0].children![par_dir_idx].children![sub_dir_idx].children?.push(new TreeItemNode(file));
+						});
+					});
+				}
+				// if(inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children){
+				// 	inMemTreeViewStruct[0].children[0].children.push(new TreeItemNode("输入数据", []));
+				// 	ITEM_ICON_MAP.set("输入数据", "imgs/file.png");
+				// 	fs.readdir(path.join(path.dirname(darwinlang_bin_paths[0].toString()), "inputs"), (err, files)=>{
+				// 		files.forEach(file => {
+				// 			ITEM_ICON_MAP.set(file, "imgs/file.png");
+				// 			if(inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children){
+				// 				inMemTreeViewStruct[0].children[0].children[0].children?.push(new TreeItemNode(file));
+				// 			}
+				// 		});
+				// 	});
+				// }
 
 				treeview.data = inMemTreeViewStruct;
 				treeviewConvertor.data = inMemTreeViewStruct;

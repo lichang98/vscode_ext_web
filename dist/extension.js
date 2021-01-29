@@ -97,6 +97,38 @@ function activate(context) {
                 });
             });
         }
+        else if (label.search(".png") !== -1) {
+            console.log("显示图片");
+            let imgPreviewPanel = vscode.window.createWebviewPanel("darwin2web", label, vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+            imgPreviewPanel.webview.html = `
+			<!DOCTYPE html>
+			<html style="height: 100%;width: 100%;">
+
+			<head>
+			<meta charset="UTF-8">
+			</head>
+
+			<body>
+				<img id="sample_img" style="margin:auto;position: absolute;top: 0;left: 0;right: 0;bottom: 0;" 
+				src="${imgPreviewPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "dist", "darwin2sim", "model_out", "bin_darwin_out", "inputs", label)))}" onmousewheel="return bigimg(this)">
+			</body>
+			<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+			<script>
+			function bigimg(obj){
+				var zoom = parseInt(obj.style.zoom,10)||100;
+				zoom += event.wheelDelta / 12;
+				if(zoom > 0 )
+					obj.style.zoom=zoom+'%';
+				return false;
+			}
+			</script>
+			</html>
+			`;
+            imgPreviewPanel.onDidDispose(() => {
+                imgPreviewPanel = undefined;
+            }, null, context.subscriptions);
+            imgPreviewPanel.reveal();
+        }
     }));
     // Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated

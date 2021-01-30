@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from flask import Flask,Response
+from flask import Flask,Response,request
 from os import path
 import socket
 app = Flask(__name__)
@@ -28,6 +28,17 @@ def getSnnTestImg(imgres):
     with open(path.join(base_path, "..", "darwin2sim", "model_out", "bin_darwin_out", "inputs", imgres), "rb") as f:
         img = f.read()
         return Response(img, mimetype="image/png")
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
+@app.route('/shutdown', methods=['POST'])
+def shutdown():
+    shutdown_server()
+    return 'Server shutting down...'
 
 if __name__ == "__main__":
     if not isUse("127.0.0.1",6003):

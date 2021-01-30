@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as child_process from 'child_process';
+import * as axios from 'axios';
 // 引入 TreeViewProvider 的类
 import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile } from './TreeViewProvider';
 import {ITEM_ICON_MAP_DARLANG, TreeItemNodeDarLang, TreeViewProviderDarLang} from "./TreeViewProviderDarLang";
@@ -734,4 +735,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+	// shutdown local server
+	axios.default.post("http://localhost:6003/shutdown");
+}

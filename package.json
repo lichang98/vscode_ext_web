@@ -41,22 +41,22 @@
 			{
 				"command": "multiLevelTree.newproj",
 				"title": "new_proj",
-				"icon":"src/resources/project.png"
+				"icon": "src/resources/project.png"
 			},
 			{
 				"command": "treeView-item.datavis",
 				"title": "可视化",
-				"icon":"src/resources/vis.png"
+				"icon": "src/resources/vis.png"
 			},
 			{
 				"command": "treeView-item.newproj",
 				"title": "创建新的项目",
-				"icon":"src/resources/project.png"
+				"icon": "src/resources/project.png"
 			},
 			{
 				"command": "treeView-item.import",
 				"title": "导入",
-				"icon":"src/resources/import.png"
+				"icon": "src/resources/import.png"
 			},
 			{
 				"command": "treeView.proj_rename",
@@ -68,7 +68,7 @@
 			},
 			{
 				"command": "treeView.proj_load",
-				"title":"项目加载"
+				"title": "项目加载"
 			},
 			{
 				"command": "treeView.proj_remove",
@@ -149,11 +149,11 @@
 				}
 			]
 		},
-		"viewsContainers": {                        
-			"activitybar": [                        
+		"viewsContainers": {
+			"activitybar": [
 				{
-					"id": "treeView",               
-					"title": "导航栏",            
+					"id": "treeView",
+					"title": "导航栏",
 					"icon": "src/resources/dep.png"
 				},
 				{
@@ -178,36 +178,36 @@
 				}
 			]
 		},
-		"views": {                                  
-			"treeView": [                           
+		"views": {
+			"treeView": [
 				{
-					"id": "treeView-item",          
-					"name": "",                 
-					"when": ""                      
+					"id": "treeView-item",
+					"name": "",
+					"when": ""
 				}
 			],
-			"convertor":[
+			"convertor": [
 				{
 					"id": "item_convertor",
 					"name": "",
 					"when": ""
 				}
 			],
-			"simulator":[
+			"simulator": [
 				{
 					"id": "item_simulator",
 					"name": "",
 					"when": ""
 				}
 			],
-			"lang_convertor":[
+			"lang_convertor": [
 				{
 					"id": "item_darwinLang_convertor",
 					"name": "",
 					"when": ""
 				}
 			],
-			"bin_darlang_convertor":[
+			"bin_darlang_convertor": [
 				{
 					"id": "item_bin_darwinlang_convertor",
 					"name": "",
@@ -248,5 +248,8 @@
 		"ts-loader": "^8.0.11",
 		"webpack": "^5.10.0",
 		"webpack-cli": "^4.2.0"
+	},
+	"dependencies": {
+		"axios": "^0.21.1"
 	}
 }

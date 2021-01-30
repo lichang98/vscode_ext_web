@@ -617,8 +617,8 @@ function activate(context) {
             let scriptProcess = child_process_1.exec(command_str, {});
             (_a = scriptProcess.stdout) === null || _a === void 0 ? void 0 : _a.on("data", function (data) {
                 console.log(data);
-                let formatted_data = data.replace(/\r\n/g, "<br/>");
                 if (currentPanel) {
+                    let formatted_data = data.split("\r\n").join("<br/>");
                     currentPanel.webview.postMessage(JSON.stringify({ "log_output": formatted_data }));
                 }
             });
@@ -1919,6 +1919,9 @@ function getANNSNNConvertPage() {
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   
   <script>
+  
+  let log_output_lists = new Array();
+  
         $(document).ready(function(){
           let interval_counter = undefined;
             window.addEventListener("message", function(evt){
@@ -1927,14 +1930,16 @@ function getANNSNNConvertPage() {
                 if(data.ann_model_start_convert){
                     console.log("启动转换进度条");
                     $("#modal_dialog").click();
+                    // 初始化显示
+                    $("#modal_header").text("转换进度(处理中......)");
+                    document.getElementById("task_progress_div").style.width = ""+0+"%";
+                    log_output_lists = new Array();
                 }else if(data.log_output){
-                  let prevData = $("#log_output_div").text();
-                  prevData += data.log_output;
-                  if(prevData.length >= 10000){
-                    prevData = prevData.substring(prevData.length-10000, prevData.length);
-                  }
-                  $("#log_output_div").html(prevData);
-                  document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight();
+                  log_output_lists = log_output_lists.concat(data.log_output.split("<br/>"));
+                  console.log("data.logoutput=["+data.log_output+"]");
+                  console.log("data split list len="+log_output_lists.length);
+                  $("#log_output_div").html(log_output_lists.join("<br/>"));
+                  document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
                 }else if(data.exec_finish){
                   document.getElementById("task_progress_div").style.width = ""+100+"%";
                   $("#modal_header").text("转换结束！");

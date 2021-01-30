@@ -646,8 +646,8 @@ export function activate(context: vscode.ExtensionContext) {
 			let scriptProcess = exec(command_str,{});
 			scriptProcess.stdout?.on("data", function(data){
 				console.log(data);
-				let formatted_data = data.replace(/\r\n/g, "<br/>");
 				if(currentPanel){
+					let formatted_data = data.split("\r\n").join("<br/>");
 					currentPanel.webview.postMessage(JSON.stringify({"log_output":formatted_data}));
 				}
 			});

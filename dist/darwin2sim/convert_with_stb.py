@@ -108,7 +108,7 @@ for i in range(len(spiking_model.layers)):
     num_neuron = spiking_model.layers[i].N
     model_eqs = spiking_model.layers[i].equations
     print("build layer={}, num neurons={}, model eqs={}".format(i, num_neuron, model_eqs))
-    br2_neurons.append(brian2.NeuronGroup(num_neuron, model_eqs, method="euler",threshold="v >= v_thresh", reset="v = v - v_thresh",dt=1*brian2.ms))
+    br2_neurons.append(brian2.NeuronGroup(num_neuron, model_eqs, method="euler",threshold="v >= v_thresh", reset="v = v - v_thresh",dt=0.1*brian2.ms))
 
 br2_synapses=[]
 all_wts=[]
@@ -140,31 +140,29 @@ br2_net.store()
 br2_net.store(filename=os.path.join(baseDirPath, "snn_brian2.model"))
 
 
-# all_accus=[]
-# v_th_range=list(range(1,100,3))
-# for v_th in v_th_range:
-#     acc = 0
-#     for i in range(50):
-#         sample = testX[i].flatten()/brian2.ms
-#         br2_neurons[0].bias = sample
-#         br2_net.run(100*brian2.ms,namespace={'v_thresh': v_th},report=None)
-#         output_spike = br2_monitor.spike_trains()
-#         print("Processing sample #{}".format(i))
-#         counts=[len(list(x)) for x in output_spike.values()]
-#         print("counts={}, one hot labels={}".format(counts,testY[i]))
-#         if np.argmax(counts) == np.argmax(testY[i]):
-#             acc +=1
-#         br2_net.restore()
+all_accus=[]
+v_th_range=list(range(1,100,3))
+for v_th in v_th_range:
+    acc = 0
+    for i in range(50):
+        sample = testX[i].flatten()/brian2.ms
+        br2_neurons[0].bias = sample
+        br2_net.run(100*brian2.ms,namespace={'v_thresh': v_th},report=None)
+        output_spike = br2_monitor.spike_trains()
+        print("Processing sample #{}".format(i))
+        counts=[len(list(x)) for x in output_spike.values()]
+        print("counts={}, one hot labels={}".format(counts,testY[i]))
+        if np.argmax(counts) == np.argmax(testY[i]):
+            acc +=1
+        br2_net.restore()
 
-#     print("searching v_thres={}, {}".format(v_th, acc/50))
-#     all_accus.append([v_th, acc/50])
+    print("searching v_thres={}, {}".format(v_th, acc/50))
+    all_accus.append([v_th, acc/50])
 
-# print(all_accus)
+print(all_accus)
 
-# best_vthresh = all_accus[np.argmax([e[1] for e in all_accus])][0]
-# print("choose best vthreshold={}".format(best_vthresh))
-
-best_vthresh = 16
+best_vthresh = all_accus[np.argmax([e[1] for e in all_accus])][0]
+print("choose best vthreshold={}".format(best_vthresh))
 
 snn_test_img_uris = []
 snn_test_output_spikes = []

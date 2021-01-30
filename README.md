@@ -1,65 +1,25 @@
 # darwin2 README
 
-This is the README for your extension "darwin2". After writing up a brief description, we recommend including the following sections.
-
-## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+A `VSCode` extension for converting ANN model built by `Keras` into SNN model that can be run on `brian2` simulator. This extension also have other features, such as image preview, pickle file preview, visualization for data and model(ANN and SNN) and generate necessary files.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- nodejs
+- python3.7
 
-## Extension Settings
+There may exists some problems when choosing versions of these three libraries below, the following are the recommended versions.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+- tensorflow==2.3.2
+- Keras==2.4.3
+- Brian2==2.4.2
 
-For example:
+## ANN Model Requirements
 
-This extension contributes the following settings:
+- Individual `InputLayer`
+- Only use `ReLU` as activation, and use it in an individual layer, such as `keras.layers.Activation("relu")`
+- Recommend using `AveragePooling2D` instead of `MaxPooling2D`
+- Model for classification
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+### Acknowledgement
+- SNNtoolbox
+- DarwinLang for parsing and generating binary files

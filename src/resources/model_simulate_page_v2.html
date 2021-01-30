@@ -49,7 +49,9 @@
         </div>
         <div class="col-md-6">
             <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
-            <div id="spike_charts" style="width: 640px;height: 320px;margin-left: 25px;"></div>
+            <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
+            </ul>
+            <div id="spike_charts" style="width: 420px;height: 340px;margin-left: 25px;display: inline-block;"></div>
         </div>
     </div>
 </body>
@@ -164,8 +166,41 @@
                   display_weight_chart(infos.layers_weights.wt_label, infos.layers_weights.wt_count);
                   
                   // 绘制脉冲时间序列图
-                  console.log("脉冲数据:"+infos.spikes.cls_names);
-                  display_spike_scatter_chart(infos.spikes.cls_names, infos.spikes.spike_tuples);
+                  // console.log("脉冲数据:"+infos.spikes.cls_names);
+                  // display_spike_scatter_chart(infos.spikes.cls_names, infos.spikes.spike_tuples);
+                  // function sample_img_click(evt){
+                  //   var sampleId = $(evt).attr("id");
+                  //   if(sampleId === undefined){
+                  //     return;
+                  //   }
+                  //   console.log("current click sample img_id:" + sampleId);
+                  //   var idx = parseInt(sampleId.split("_")[2]);
+                  //   display_spike_scatter_chart(infos.spikes.snn_test_spikes[idx].cls_names, infos.spikes.snn_test_spikes[idx].spike_tuples);
+                  // }
+                  var test_img_uls = document.getElementById("sample_imgs_ul");
+                  var test_img_uris = infos.spikes.snn_test_imgs;
+                  var test_img_spikes = infos.spikes.snn_test_spikes;
+                  console.log("spiking img uris[0]"+test_img_uris[0]);
+                  console.log("spiking spike infos[0]="+test_img_spikes[0].cls_names);
+                  console.log("spike tuples[0]="+test_img_spikes[0].spike_tuples);
+
+                  for(let i=0;i<test_img_uris.length;++i){
+                    var img_li = document.createElement("li");
+                    img_li.style.listStyle = "none";
+                    img_li.style.marginBottom = "10px";
+                    var img_tag = document.createElement("img");
+                    img_tag.id = "sample_img_"+i;
+                    img_tag.onclick = function(){
+                      console.log("draw NO."+i+" img and spikes");
+                      display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
+                    }
+                    img_tag.src = test_img_uris[i];
+                    img_tag.style.width = "50px";
+                    img_tag.style.height = "50px";
+
+                    img_li.appendChild(img_tag);
+                    test_img_uls.appendChild(img_li);
+                  }
               }
           });
       });

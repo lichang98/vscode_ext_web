@@ -23,6 +23,12 @@ def getImg(imgres):
         img = f.read()
         return Response(img, mimetype="image/png")
 
+@app.route("/snn_imgs/<imgres>")
+def getSnnTestImg(imgres):
+    with open(path.join(base_path, "..", "darwin2sim", "model_out", "bin_darwin_out", "inputs", imgres), "rb") as f:
+        img = f.read()
+        return Response(img, mimetype="image/png")
+
 if __name__ == "__main__":
     if not isUse("127.0.0.1",6003):
         app.run(host="0.0.0.0", port=6003)

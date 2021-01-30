@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as child_process from 'child_process';
 // 引入 TreeViewProvider 的类
 import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile } from './TreeViewProvider';
 import {ITEM_ICON_MAP_DARLANG, TreeItemNodeDarLang, TreeViewProviderDarLang} from "./TreeViewProviderDarLang";
@@ -13,9 +14,11 @@ import {ImportDataShow} from "./ImportDataView";
 import {MultiLevelTreeProvider} from "./multiLevelTree";
 import {getMainPageV2} from "./get_mainpage_v2";
 import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage} from "./get_convertor_page_v2";
-import {exec} from "child_process";
+import {ChildProcess, exec, spawn} from "child_process";
 import { time } from 'console';
 
+
+let local_server:ChildProcess|undefined = undefined;
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -156,10 +159,9 @@ export function activate(context: vscode.ExtensionContext) {
 			let scriptPath = path.join(__dirname,"inner_scripts","img_server.py");
 			let command_str = "python "+scriptPath;
 			console.log("prepare to start img server.");
-			exec(command_str, function(err, stdout, stderr){
+			local_server = exec(command_str, function(err, stdout, stderr){
 				console.log("img server started");
 			});
-
 			currentPanel.webview.onDidReceiveMessage(function(msg){
 				console.log("Receive message: "+msg);
 				let data = JSON.parse(msg);

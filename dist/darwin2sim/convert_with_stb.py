@@ -164,6 +164,8 @@ print(all_accus)
 best_vthresh = all_accus[np.argmax([e[1] for e in all_accus])][0]
 print("choose best vthreshold={}".format(best_vthresh))
 
+snn_test_img_uris = []
+snn_test_output_spikes = []
 acc = 0
 for i in range(50):
     br2_net.restore()
@@ -181,6 +183,17 @@ for i in range(50):
     img = np.array(np.squeeze(valX[i])*255, dtype="uint8")
     Image.fromarray(img).save(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "img_idx_{}_label_{}.png"
                                 .format(i, np.argmax(valY[i]))))
+    snn_test_img_uris.append("http://localhost:6003/snn_imgs/img_idx_{}_label_{}.png".format(i,np.argmax(valY[i])))
+    last_layer_spikes = [list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]
+    spike_tuples = []
+    for cls in range(len(last_layer_spikes)):
+        for j in range(len(last_layer_spikes[cls])):
+            spike_tuples.append([cls, int(last_layer_spikes[cls][j])])
+    
+    snn_test_output_spikes.append({
+        "cls_names":[str(x) for x in range(len(last_layer_spikes))],
+        "spike_tuples": spike_tuples
+    })
 
     print("Processing sample #{}".format(i))
     counts=[len(list(x)) for x in output_spike.values()]
@@ -279,14 +292,14 @@ layer_weights = {"wt_label": wt_labels, "wt_count": wt_counts}
 
 
 # Last layer spike counts info
-print("spike_monitor vals={}".format([list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]))
-last_layer_spikes =[list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]
-spike_tuples=[]
-for cls in range(len(last_layer_spikes)):
-    for i in range(len(last_layer_spikes[cls])):
-        spike_tuples.append([cls, int(last_layer_spikes[cls][i])])
+# print("spike_monitor vals={}".format([list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]))
+# last_layer_spikes =[list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]
+# spike_tuples=[]
+# for cls in range(len(last_layer_spikes)):
+#     for i in range(len(last_layer_spikes[cls])):
+#         spike_tuples.append([cls, int(last_layer_spikes[cls][i])])
 
-output_spike_info ={"cls_names":[str(x) for x in range(len(last_layer_spikes))], "spike_tuples":spike_tuples}
+# output_spike_info ={"cls_names":[str(x) for x in range(len(last_layer_spikes))], "spike_tuples":spike_tuples}
 
 # last layer state v info
 layer_conn_info = []
@@ -301,7 +314,11 @@ for i in range(len(br2_synapses)):
 brian2_snn_info = {
     "neurons_info":neurons_info,
     "layers_weights":layer_weights,
-    "spikes":output_spike_info,
+    # "spikes":output_spike_info,
+    "spikes":{
+        "snn_test_imgs": snn_test_img_uris,
+        "snn_test_spikes": snn_test_output_spikes
+    },
     "layer_conns": layer_conn_info
 }
 
@@ -315,3 +332,6 @@ print("running darwinlang")
 sys.path.append(os.path.join(baseDirPath, "..", "darlang"))
 import darlang
 darlang.run_darlang(os.path.join(outputPath, "snn_digit_darlang.json"),os.path.join(outputPath,"..", "bin_darwin_out"))
+
+
+

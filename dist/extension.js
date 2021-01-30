@@ -75,7 +75,7 @@ function activate(context) {
                 console.log(err);
             });
         }
-        else if (label.search(".pickle") !== -1) {
+        else if (label.search(".pickle") !== -1 && label.search("layer") === -1) {
             // 显示pickle 文件的原始内容
             console.log("解析并显示pickle 文件内容");
             // let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", "inputs",label));
@@ -95,6 +95,20 @@ function activate(context) {
                     let target_file = evt.fileName;
                     target_file = target_file.replace("\.git", "");
                     fs.unlink(target_file, () => { });
+                });
+            });
+        }
+        else if (label.search("layer") !== -1) {
+            // 显示layer之间连接pickle文件的原始内容
+            console.log("显示layer 连接pickle文件");
+            let target_file_path = path.join(__dirname, "darwin2sim", "model_out", "darlang_out", label);
+            let modelVisScriptPath = path.join(__dirname, "inner_scripts", "parse_pickle.py");
+            let command_str = "python " + modelVisScriptPath + " " + target_file_path;
+            child_process_1.exec(command_str, function (err, stdout, stderr) {
+                console.log("layer 连接pickle 文件 " + label + " 解析结束");
+                let file_target = vscode.Uri.file(path.join(__dirname, "inner_scripts", label));
+                vscode.workspace.openTextDocument(file_target).then((doc) => {
+                    vscode.window.showTextDocument(doc, 1, false);
                 });
             });
         }

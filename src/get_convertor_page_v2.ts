@@ -1133,6 +1133,13 @@ export function getANNSNNConvertPage(){
   
               <div style="margin-top: 100px;">
                   <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
+                  <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;">统计计数</div>
+                  <table id="spike_out_count_table" style="margin-left: 125px;">
+                      <tr id="out_labels">
+                      </tr>
+                      <tr id="out_counts_tr">
+                      </tr>
+                  </table>
                   <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
                       <!-- <li style="list-style: none;margin-bottom: 10px;">
                           <img style="height: 50px;width: 50px;">
@@ -1250,6 +1257,49 @@ export function getANNSNNConvertPage(){
                         document.getElementById("img_li_"+i).style.backgroundColor = "chocolate";
                         prev_clicked_img_li_id = "img_li_"+i;
                         display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
+  
+                        // display counts in table
+                        let cls_idx = test_img_spikes[i].spike_tuples[0][0];
+                        let curr_count=1;
+                        let spike_counts = new Array();
+                        for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
+                            spike_counts.push(0);
+                        }
+                        for(let j=1;j<test_img_spikes[i].spike_tuples.length;++j){
+                            if(cls_idx === test_img_spikes[i].spike_tuples[j][0]){
+                                curr_count = curr_count+1;
+                            }else{
+                                spike_counts[cls_idx] = curr_count;
+                                curr_count=1;
+                                cls_idx = test_img_spikes[i].spike_tuples[j][0];
+                            }
+                        }
+                        spike_counts[spike_counts.length-1] = curr_count;
+                        document.getElementById("out_labels").innerHTML = "";
+                        let td_child = document.createElement("td");
+                        td_child.innerText = "计数值:";
+                        td_child.style.width = "60px";
+                        document.getElementById("out_labels").appendChild(td_child);
+  
+                        document.getElementById("out_counts_tr").innerHTML = '';
+                        td_child = document.createElement("td");
+                        td_child.innerText = "标签名称:";
+                        td_child.style.width = "60px";
+                        document.getElementById("out_counts_tr").appendChild(td_child);
+  
+                        for(let j=0;j<spike_counts.length;++j){
+                          let td_child = document.createElement("td");
+                          td_child.innerText = spike_counts[j];
+                          td_child.style.width = "33px";
+                          document.getElementById("out_counts_tr").appendChild(td_child);
+  
+                          td_child = document.createElement("td");
+                          td_child.innerText = test_img_spikes[i].cls_names[j];
+                          td_child.style.width = "33px";
+                          document.getElementById("out_labels").appendChild(td_child);
+  
+  
+                        }
                       }
                     }
                 }

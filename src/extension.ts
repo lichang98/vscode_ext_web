@@ -228,6 +228,40 @@ export function activate(context: vscode.ExtensionContext) {
 					treeViewSimulator.refresh();
 					treeViewConvertDarLang.refresh();
 					treeViewBinConvertDarLang.refresh();
+				}else if(data.model_convert_params){
+					// 接收到模型转换与仿真的参数配置，启动脚本
+					console.log("Extension 接收到 webview的消息，启动脚本......");
+					let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py");
+					let command_str = "python "+scriptPath;
+					let scriptProcess = exec(command_str,{});
+					
+					scriptProcess.stdout?.on("data", function(data){
+						console.log(data);
+						if(currentPanel){
+							let formatted_data = data.split("\r\n").join("<br/>");
+							currentPanel.webview.postMessage(JSON.stringify({"log_output":formatted_data}));
+						}
+					});
+					scriptProcess.stderr?.on("data", function(data){
+						console.log(data);
+					});
+					scriptProcess.on("exit",function(){
+						// 进程结束，发送结束消息
+						if(currentPanel){
+							// currentPanel.webview.postMessage(JSON.stringify({"exec_finish":"yes"}));
+							fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
+								if(currentPanel){
+									currentPanel.webview.postMessage(JSON.stringify({"snn_info":data}));
+								}
+							});
+									// 							// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
+									// fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
+									// 	if(panelSNNModelVis){
+									// 		panelSNNModelVis.webview.postMessage(JSON.stringify({"snn_info":data}));
+									// 	}
+									// });
+						}
+					});
 				}
 			});
 		}
@@ -344,28 +378,28 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				}
 
-				ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
-				inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin二进制模型",[]));
-				for(let i=0;i<darwinlang_bin_paths.length;++i){
-					if(inMemTreeViewStruct[0].children){
-						var child_len = inMemTreeViewStruct[0].children.length;
-						ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
-						inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
-					}
-				}
-				// 挂载二进制模型的inputs 数据
-				if(inMemTreeViewStruct[0].children){
-					let par_dir_idx = inMemTreeViewStruct[0].children.length-1;
-					ITEM_ICON_MAP.set("输入数据", "imgs/file.png");
-					inMemTreeViewStruct[0].children[par_dir_idx].children?.push(new TreeItemNode("输入数据",[]));
-					let sub_dir_idx = inMemTreeViewStruct[0].children[par_dir_idx].children!.length-1;
-					fs.readdir(path.join(path.dirname(darwinlang_bin_paths[0].toString()), "inputs"), (err, files)=>{
-						files.forEach(file => {
-							ITEM_ICON_MAP.set(file, "imgs/file.png");
-							inMemTreeViewStruct[0].children![par_dir_idx].children![sub_dir_idx].children?.push(new TreeItemNode(file));
-						});
-					});
-				}
+				// ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
+				// inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin二进制模型",[]));
+				// for(let i=0;i<darwinlang_bin_paths.length;++i){
+				// 	if(inMemTreeViewStruct[0].children){
+				// 		var child_len = inMemTreeViewStruct[0].children.length;
+				// 		ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
+				// 		inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
+				// 	}
+				// }
+				// // 挂载二进制模型的inputs 数据
+				// if(inMemTreeViewStruct[0].children){
+				// 	let par_dir_idx = inMemTreeViewStruct[0].children.length-1;
+				// 	ITEM_ICON_MAP.set("输入数据", "imgs/file.png");
+				// 	inMemTreeViewStruct[0].children[par_dir_idx].children?.push(new TreeItemNode("输入数据",[]));
+				// 	let sub_dir_idx = inMemTreeViewStruct[0].children[par_dir_idx].children!.length-1;
+				// 	fs.readdir(path.join(path.dirname(darwinlang_bin_paths[0].toString()), "inputs"), (err, files)=>{
+				// 		files.forEach(file => {
+				// 			ITEM_ICON_MAP.set(file, "imgs/file.png");
+				// 			inMemTreeViewStruct[0].children![par_dir_idx].children![sub_dir_idx].children?.push(new TreeItemNode(file));
+				// 		});
+				// 	});
+				// }
 				// if(inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children){
 				// 	inMemTreeViewStruct[0].children[0].children.push(new TreeItemNode("输入数据", []));
 				// 	ITEM_ICON_MAP.set("输入数据", "imgs/file.png");
@@ -642,25 +676,25 @@ export function activate(context: vscode.ExtensionContext) {
 			// 发送消息到web view ，开始模型的转换
 			currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
 			// 执行后台脚本，发送log 到webview 展示运行日志，执行结束之后发送消息通知ann_model
-			let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py");
-			let command_str = "python "+scriptPath;
-			let scriptProcess = exec(command_str,{});
-			scriptProcess.stdout?.on("data", function(data){
-				console.log(data);
-				if(currentPanel){
-					let formatted_data = data.split("\r\n").join("<br/>");
-					currentPanel.webview.postMessage(JSON.stringify({"log_output":formatted_data}));
-				}
-			});
-			scriptProcess.stderr?.on("data", function(data){
-				console.log(data);
-			});
-			scriptProcess.on("exit",function(){
-				// 进程结束，发送结束消息
-				if(currentPanel){
-					currentPanel.webview.postMessage(JSON.stringify({"exec_finish":"yes"}));
-				}
-			});
+			// let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py");
+			// let command_str = "python "+scriptPath;
+			// let scriptProcess = exec(command_str,{});
+			// scriptProcess.stdout?.on("data", function(data){
+			// 	console.log(data);
+			// 	if(currentPanel){
+			// 		let formatted_data = data.split("\r\n").join("<br/>");
+			// 		currentPanel.webview.postMessage(JSON.stringify({"log_output":formatted_data}));
+			// 	}
+			// });
+			// scriptProcess.stderr?.on("data", function(data){
+			// 	console.log(data);
+			// });
+			// scriptProcess.on("exit",function(){
+			// 	// 进程结束，发送结束消息
+			// 	if(currentPanel){
+			// 		currentPanel.webview.postMessage(JSON.stringify({"exec_finish":"yes"}));
+			// 	}
+			// });
 		}
 	});
 
@@ -708,29 +742,29 @@ export function activate(context: vscode.ExtensionContext) {
 		treeViewBinConvertDarLang.refresh();
 	});
 
-	// 启动将darwinlang 文件转换为二进制文件的操作
-	vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function(){
-		ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
-		inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin二进制模型",[]));
-		darwinlang_bin_paths.splice(0);
-		if(inMemTreeViewStruct[0].children){
-			var child_len = inMemTreeViewStruct[0].children.length;
-			fs.readdir(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out"), (err, files)=>{
-				files.forEach(file =>{
-					darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", file));
-					ITEM_ICON_MAP.set(file, "imgs/file.png");
-					if(inMemTreeViewStruct[0].children){
-						inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
-					}
-				});
-			});
-		}
-		treeview.refresh();
-		treeviewConvertor.refresh();
-		treeViewSimulator.refresh();
-		treeViewConvertDarLang.refresh();
-		treeViewBinConvertDarLang.refresh();
-	});
+	// // 启动将darwinlang 文件转换为二进制文件的操作
+	// vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function(){
+	// 	ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
+	// 	inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin二进制模型",[]));
+	// 	darwinlang_bin_paths.splice(0);
+	// 	if(inMemTreeViewStruct[0].children){
+	// 		var child_len = inMemTreeViewStruct[0].children.length;
+	// 		fs.readdir(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out"), (err, files)=>{
+	// 			files.forEach(file =>{
+	// 				darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", file));
+	// 				ITEM_ICON_MAP.set(file, "imgs/file.png");
+	// 				if(inMemTreeViewStruct[0].children){
+	// 					inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
+	// 				}
+	// 			});
+	// 		});
+	// 	}
+	// 	treeview.refresh();
+	// 	treeviewConvertor.refresh();
+	// 	treeViewSimulator.refresh();
+	// 	treeViewConvertDarLang.refresh();
+	// 	treeViewBinConvertDarLang.refresh();
+	// });
 	vscode.commands.executeCommand("darwin2.helloWorld");
 }
 

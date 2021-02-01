@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html style="height: 640px;width: 100%;">
+
+<head>
+  <meta charset="UTF-8">
+  <title>模型转换器</title>
+</head>
+
+<body class="dark-mode" style="height: 100%;width: 100%;">
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="row" style="margin-left: 30px;">
+                <div class="col-md-3">
+                    <div>ANN转换SNN模型</div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" role="progressbar"
+                             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                             style="width: 30%;">
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="col-md-1" style="margin-top: 15px;">
+                    <i class="material-icons">arrow_forward</i>
+                </div>
+            
+                <div class="col-md-4">
+                    <div>SNN配置参数调优</div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" role="progressbar"
+                             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                             style="width: 30%;">
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="col-md-1" style="margin-top: 15px;">
+                    <i class="material-icons">arrow_forward</i>
+                </div>
+            
+                <div class="col-md-3">
+                    <div>Darlang文件生成</div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" role="progressbar"
+                             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                             style="width: 30%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="row">
+                <span>启动</span>
+                <i id="start_convert_btn" class="large material-icons" style="margin-left: 0px;cursor: pointer;">play_circle_outline</i>
+                <div class="progress" style="width: 90%;display: inline-block;margin-bottom: 0;">
+                    <div class="progress-bar progress-bar-success" role="progressbar"
+                         aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                         style="width: 90%;">
+                        <span class="sr-only">90% 完成（成功）</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-5">
+            <form role="form" class="row" style="margin-right: 10px;" id="project_info_form">
+                <div class="col-md-3">
+                    <label for="select_vthresh">膜电压阈值</label>
+                    <select class="form-control" id="select_vthresh">
+                        <option>16</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                        <option>17</option>
+                        <option>18</option>
+                        <option>19</option>
+                        <option>20</option>
+                        <option>21</option>
+                        <option>22</option>
+                        <option>23</option>
+                        <option>24</option>
+                        <option>25</option>
+                        <option>26</option>
+                        <option>27</option>
+                        <option>28</option>
+                        <option>29</option>
+                        <option>30</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="select_dt">神经元dt</label>
+                    <select class="form-control" id="select_dt">
+                        <option>1ms</option>
+                        <option>0.1ms</option>
+                    </select>
+                </div>
+    
+                <div class="col-md-3">
+                    <label for="select_synapse_dt">突触dt</label>
+                    <select class="form-control" id="select_synapse_dt">
+                        <option>0.1ms</option>
+                        <option>1ms</option>
+                    </select>
+                </div>
+    
+                <div class="col-md-3">
+                    <label for="select_delay">delay</label>
+                    <select class="form-control" id="select_delay">
+                        <option>1ms</option>
+                        <option>0.1ms</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="select_dura">总时间</label>
+                    <select class="form-control" id="select_dura">
+                        <option>100ms</option>
+                        <option>200ms</option>
+                        <option>500ms</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="row" style="height: 100%; margin-top: 50px;">
+        <div id="log_output_div" class="col-md-5" style="margin-left: 50px;height: calc(100vh - 200px); overflow: auto;">
+
+        </div>
+        <div class="col-md-6" style="height:calc(100vh - 200px);">
+            <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络突触连接信息</div>
+            <table id="info_simu_table" style="margin-left: auto;margin-right: auto;">
+                <tr style="margin-top: 15px;">
+                    <td style="width: 300px;">准确率</td>
+                    <td id="accuracy_val" style="font-size: medium;font-weight: bold;">xxxx</td>
+                </tr>
+                <tr style="margin-top: 15px;">
+                    <td>转换总耗时</td>
+                    <td id="total_use_time" style="font-size: medium;font-weight: bold;">xxx</td>
+                </tr>
+                <tr style="margin-top: 15px;">
+                    <td>神经元平均激发脉冲次数</td>
+                    <td id="avg_spike" style="font-size: medium;font-weight: bold;">xxx</td>
+                </tr>
+                <tr style="margin-top: 15px;">
+                    <td>神经元激发脉冲次数方差</td>
+                    <td id="std_spike" style="font-size: medium;font-weight: bold;">xxx</td>
+                </tr>
+            </table>
+
+            <div style="margin-top: 100px;">
+                <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
+                <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
+                </ul>
+                <div id="spike_charts" style="width: 420px;height: 340px;margin-left: 25px;display: inline-block;"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<style>
+
+.titlebar {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
+.titlebar-button {
+  -webkit-app-region: no-drag;
+}
+
+.dark-mode {
+  background-color: rgb(61, 57, 57);
+  color: white;
+}
+
+  @font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+  }
+
+  .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    text-transform: none;
+    display: inline-block;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+</style>
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
+
+<script>
+
+const vscode = acquireVsCodeApi();
+
+let log_output_lists = new Array();
+
+      $(document).ready(function(){
+          window.addEventListener("message", function(evt){
+              console.log("ANN 转SNN 模型接收到extension 消息："+evt.data);
+              const data = JSON.parse(evt.data);
+              if(data.log_output){
+                log_output_lists = log_output_lists.concat(data.log_output.split("<br/>"));
+                console.log("data.logoutput=["+data.log_output+"]");
+                console.log("data split list len="+log_output_lists.length);
+                $("#log_output_div").html(log_output_lists.join("<br/>"));
+                document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
+              }else if(data.exec_finish){
+                  // 结束
+              }else if(data.snn_info){
+                  // snn 相关数据
+                  const infos = JSON.parse(data.snn_info);
+                  var test_img_uls = document.getElementById("sample_imgs_ul");
+                  var test_img_uris = infos.spikes.snn_test_imgs;
+                  var test_img_spikes = infos.spikes.snn_test_spikes;
+                  console.log("spiking img uris[0]"+test_img_uris[0]);
+                  console.log("spiking spike infos[0]="+test_img_spikes[0].cls_names);
+                  console.log("spike tuples[0]="+test_img_spikes[0].spike_tuples);
+
+                  for(let i=0;i<test_img_uris.length;++i){
+                    var img_li = document.createElement("li");
+                    img_li.style.listStyle = "none";
+                    img_li.style.marginBottom = "10px";
+                    var img_tag = document.createElement("img");
+                    img_tag.id = "sample_img_"+i;
+                    img_tag.onclick = function(){
+                      console.log("draw NO."+i+" img and spikes");
+                      display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
+                    }
+                    img_tag.src = test_img_uris[i];
+                    img_tag.style.width = "50px";
+                    img_tag.style.height = "50px";
+
+                    img_li.appendChild(img_tag);
+                    test_img_uls.appendChild(img_li);
+                  }
+              }
+          });
+
+          $("#start_convert_btn").on("click", ()=>{
+              let v_thresh = $("#select_vthresh").val().replace("ms","");
+              let neuron_dt = $("#select_dt").val().replace("ms","");
+              let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
+              let delay = $("#select_delay").val().replace("ms", "");
+              let dura = $("#select_dura").val().replace("ms","");
+              console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay);
+              vscode.postMessage(JSON.stringify({"model_convert_params":{
+                  "vthresh": v_thresh,
+                  "neuron_dt": neuron_dt,
+                  "synapse_dt":synapse_dt,
+                  "delay":delay,
+                  "dura":dura
+              }}));
+          });
+
+      });
+
+
+      function display_spike_scatter_chart(labels, datas){
+          var opt={
+                xAxis: {
+                    type:'category',
+                    data: labels
+                },
+                yAxis: {
+                    splitLine:{show:false},
+                    axisLine: {show: false}, 
+                    axisTick: {show: false},
+                    axisLabel:{show:false}
+                },
+                series: [{
+                    symbolSize: 5,
+                    data: datas,
+                    type: 'scatter'
+                }]
+            };
+            var spike_chart = echarts.init(document.getElementById("spike_charts"));
+            spike_chart.setOption(opt);
+      }
+</script>
+
+</html>

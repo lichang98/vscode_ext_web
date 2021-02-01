@@ -248,7 +248,7 @@ export function activate(context: vscode.ExtensionContext) {
 					scriptProcess.on("exit",function(){
 						// 进程结束，发送结束消息
 						if(currentPanel){
-							// currentPanel.webview.postMessage(JSON.stringify({"exec_finish":"yes"}));
+							currentPanel.webview.postMessage(JSON.stringify({"exec_finish":"yes"}));
 							fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
 								if(currentPanel){
 									currentPanel.webview.postMessage(JSON.stringify({"snn_info":data}));

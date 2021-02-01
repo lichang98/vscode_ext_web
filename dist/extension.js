@@ -245,7 +245,7 @@ function activate(context) {
                     scriptProcess.on("exit", function () {
                         // 进程结束，发送结束消息
                         if (currentPanel) {
-                            // currentPanel.webview.postMessage(JSON.stringify({"exec_finish":"yes"}));
+                            currentPanel.webview.postMessage(JSON.stringify({ "exec_finish": "yes" }));
                             fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
                                 if (currentPanel) {
                                     currentPanel.webview.postMessage(JSON.stringify({ "snn_info": data }));
@@ -4765,34 +4765,34 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
               训练集样例数据
             </div>
             <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow: auto;display: inline-block;">
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img0_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img1_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="sample_img1" onclick="sample_img_click(this);" src="${sample1}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img2_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="sample_img2" onclick="sample_img_click(this);" src="${sample2}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img3_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="sample_img3" onclick="sample_img_click(this);" src="${sample3}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img4_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="sample_img4" onclick="sample_img_click(this);" src="${sample4}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img5_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="sample_img5" onclick="sample_img_click(this);" src="${sample5}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img6_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="sample_img6" onclick="sample_img_click(this);" src="${sample6}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img7_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="sample_img7" onclick="sample_img_click(this);" src="${sample7}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img8_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="sample_img8" onclick="sample_img_click(this);" src="${sample8}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img9_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="sample_img9" onclick="sample_img_click(this);" src="${sample9}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
@@ -4803,34 +4803,34 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
               测试集样例数据
             </div>
             <ul id="test_sample_imgs_ul" style="height: 300px;width: 100px;overflow: auto;display: inline-block;">
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img0_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="test_sample_img0" onclick="sample_img_click(this);" src="${test_sample0}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img1_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="test_sample_img1" onclick="sample_img_click(this);" src="${test_sample1}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img2_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="test_sample_img2" onclick="sample_img_click(this);" src="${test_sample2}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img3_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="test_sample_img3" onclick="sample_img_click(this);" src="${test_sample3}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img4_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="test_sample_img4" onclick="sample_img_click(this);" src="${test_sample4}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img5_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="test_sample_img5" onclick="sample_img_click(this);" src="${test_sample5}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img6_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="test_sample_img6" onclick="sample_img_click(this);" src="${test_sample6}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img7_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="test_sample_img7" onclick="sample_img_click(this);" src="${test_sample7}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img8_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="test_sample_img8" onclick="sample_img_click(this);" src="${test_sample8}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img9_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="test_sample_img9" onclick="sample_img_click(this);" src="${test_sample9}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
@@ -4893,9 +4893,10 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
   <script>
-
-
-
+  
+  
+  var prev_click_img_li_id = undefined;
+  var prev_click_img_li_test_id = undefined;
   var data_info=undefined;
   $(document).ready(function(){
     // display_data_bar_chart(['0','1','2','3','4','5','6','7','8','9'],
@@ -4942,21 +4943,34 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
             data_info.test_sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.test_sample_imgs[i].hist_gram_bins[j]);
           }
         }
-
+  
         for(var i=0;i<data_info.sample_imgs.length;++i){
           for(var j=0;j<data_info.sample_imgs[i].hist_gram_bins.length;++j){
             data_info.sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.sample_imgs[i].hist_gram_bins[j]);
           }
         }
-
+  
         console.log("display test data distribution...");
         display_data_bar_chart(class_labels, class_ratios, "测试数据集各类别分布",  "数据占比", "bar_chart_testdata_container");
         console.log("test data distribution bar chart displayed.");
     });
   });
-
+  
   function sample_img_click(e){
     var sampleId = $(e).attr("id");
+    if(sampleId.substring(0,4) === "test"){
+      if(prev_click_img_li_test_id !== undefined){
+        document.getElementById(prev_click_img_li_test_id).style.backgroundColor="";
+      }
+      prev_click_img_li_test_id = sampleId+"_li";
+      document.getElementById(prev_click_img_li_test_id).style.backgroundColor = "chocolate";
+    }else{
+      if(prev_click_img_li_id !== undefined){
+        document.getElementById(prev_click_img_li_id).style.backgroundColor = "";
+      }
+      prev_click_img_li_id = sampleId+"_li";
+      document.getElementById(prev_click_img_li_id).style.backgroundColor = "chocolate";
+    }
     console.log("current click img id="+sampleId);
     var sampleIdx = parseInt(sampleId.substring(sampleId.length-1));
     if(sampleId.substring(0,4) === "test"){
@@ -4965,8 +4979,8 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
       display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布", "bar_chart_histgram");
     }
   }
-
-
+  
+  
   
       function display_data_bar_chart(label_names, label_counts, title,series_name,target_id){
         console.log("label names:"+label_names);
@@ -5787,10 +5801,10 @@ function getANNSNNConvertPage() {
   
   
       <div class="row" style="height: 100%; margin-top: 50px;">
-          <div id="log_output_div" class="col-md-5" style="margin-left: 50px;height: calc(100vh - 160px); overflow: auto;">
+          <div id="log_output_div" class="col-md-5" style="margin-left: 50px;height: calc(100vh - 200px); overflow: auto;">
   
           </div>
-          <div class="col-md-6" style="height:calc(100vh - 160px);">
+          <div class="col-md-6" style="height:calc(100vh - 200px);">
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络突触连接信息</div>
               <table id="info_simu_table" style="margin-left: auto;margin-right: auto;">
                   <tr style="margin-top: 15px;">
@@ -5814,6 +5828,14 @@ function getANNSNNConvertPage() {
               <div style="margin-top: 100px;">
                   <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
                   <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
+                      <!-- <li style="list-style: none;margin-bottom: 10px;">
+                          <img style="height: 50px;width: 50px;">
+                          <span style="text-align: center;">测试标签</span>
+                      </li>
+                      <li style="list-style: none;margin-bottom: 10px;background-color: chocolate;">
+                          <img style="height: 50px;width: 50px;">
+                          <span style="text-align: center;">测试标签</span>
+                      </li> -->
                   </ul>
                   <div id="spike_charts" style="width: 420px;height: 340px;margin-left: 25px;display: inline-block;"></div>
               </div>
@@ -5869,6 +5891,8 @@ function getANNSNNConvertPage() {
   
   let log_output_lists = new Array();
   
+      let prev_clicked_img_li_id=undefined;
+  
         $(document).ready(function(){
             window.addEventListener("message", function(evt){
                 console.log("ANN 转SNN 模型接收到extension 消息："+evt.data);
@@ -5881,6 +5905,7 @@ function getANNSNNConvertPage() {
                   document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
                 }else if(data.exec_finish){
                     // 结束
+                    document.getElementById("start_convert_btn").style.backgroundColor = "";
                 }else if(data.snn_info){
                     // snn 相关数据
                     const infos = JSON.parse(data.snn_info);
@@ -5893,20 +5918,33 @@ function getANNSNNConvertPage() {
   
                     for(let i=0;i<test_img_uris.length;++i){
                       var img_li = document.createElement("li");
+                      img_li.id = "img_li_"+i;
                       img_li.style.listStyle = "none";
                       img_li.style.marginBottom = "10px";
                       var img_tag = document.createElement("img");
                       img_tag.id = "sample_img_"+i;
-                      img_tag.onclick = function(){
-                        console.log("draw NO."+i+" img and spikes");
-                        display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
-                      }
                       img_tag.src = test_img_uris[i];
                       img_tag.style.width = "50px";
                       img_tag.style.height = "50px";
   
                       img_li.appendChild(img_tag);
                       test_img_uls.appendChild(img_li);
+  
+                      var label_span = document.createElement("span");
+                      label_span.innerText = "标签: "+test_img_uris[i].split("_")[5].split(".")[0];
+                      img_li.appendChild(label_span);
+  
+                      img_tag.onclick = function(){
+                        console.log("draw NO."+i+" img and spikes");
+                        console.log("reset background color of prev:"+prev_clicked_img_li_id);
+                        if(prev_clicked_img_li_id !== undefined){
+                            document.getElementById(prev_clicked_img_li_id).style.backgroundColor = "";
+                        }
+                        console.log("set background color of li: "+ "img_li_"+i);
+                        document.getElementById("img_li_"+i).style.backgroundColor = "chocolate";
+                        prev_clicked_img_li_id = "img_li_"+i;
+                        display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
+                      }
                     }
                 }
             });
@@ -5917,6 +5955,7 @@ function getANNSNNConvertPage() {
                 let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
                 let delay = $("#select_delay").val().replace("ms", "");
                 let dura = $("#select_dura").val().replace("ms","");
+                document.getElementById("start_convert_btn").style.backgroundColor = "chocolate";
                 console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay);
                 vscode.postMessage(JSON.stringify({"model_convert_params":{
                     "vthresh": v_thresh,

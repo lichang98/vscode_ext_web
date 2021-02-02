@@ -200,7 +200,7 @@ export function activate(context: vscode.ExtensionContext) {
 					addSlfProj(data.project_info.project_name);
 					inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("数据", 
 							[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
-							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("模型",[])]));
+							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("ANN模型",[])]));
 					treeview.data = inMemTreeViewStruct;
 					treeviewConvertor.data = inMemTreeViewStruct;
 					treeViewSimulator.data = inMemTreeViewStruct;
@@ -237,6 +237,19 @@ export function activate(context: vscode.ExtensionContext) {
 					
 					scriptProcess.stdout?.on("data", function(data){
 						console.log(data);
+						if(data.indexOf("CONVERT_FINISH") !== -1){
+							if(currentPanel){
+								currentPanel.webview.postMessage(JSON.stringify({"progress":"convert_finish"}));
+							}
+						}else if(data.indexOf("PREPROCESS_FINISH") !== -1){
+							if(currentPanel){
+								currentPanel.webview.postMessage(JSON.stringify({"progress":"preprocess_finish"}));
+							}
+						}else if(data.indexOf("SEARCH_FINISH") !== -1){
+							if(currentPanel){
+								currentPanel.webview.postMessage(JSON.stringify({"progress":"search_finish"}));
+							}
+						}
 						if(currentPanel){
 							let formatted_data = data.split("\r\n").join("<br/>");
 							currentPanel.webview.postMessage(JSON.stringify({"log_output":formatted_data}));
@@ -348,7 +361,7 @@ export function activate(context: vscode.ExtensionContext) {
 				addSlfProj(proj_desc_info.project_name);
 				inMemTreeViewStruct.push(new TreeItemNode(proj_desc_info.project_name, [new TreeItemNode("数据", 
 							[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
-							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("模型",[])]));
+							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("ANN模型",[])]));
 				addSlfFile("x_norm");
 				addSlfFile("x_test");
 				addSlfFile("y_test");
@@ -481,7 +494,7 @@ export function activate(context: vscode.ExtensionContext) {
 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample8.png"))),
 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample9.png")))
 				);
-			}else if(itemNode.label === "模型"){
+			}else if(itemNode.label === "ANN模型"){
 				if(!panelAnnModelVis){
 					panelAnnModelVis = vscode.window.createWebviewPanel("datavis", "ANN模型",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 					panelAnnModelVis.onDidDispose(()=>{
@@ -515,7 +528,7 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				});
 			}
-		}else if(itemNode.label === "模型"){
+		}else if(itemNode.label === "ANN模型"){
 			if(panelAnnModelVis){
 				panelAnnModelVis.title = "ANN模型";
 				var modelVisScriptPath = path.join(__dirname, "inner_scripts", "model_desc.py");
@@ -635,7 +648,7 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				}
 			});	
-		}else if(itemNode.label === "模型"){
+		}else if(itemNode.label === "ANN模型"){
 			const options:vscode.OpenDialogOptions = {
 				canSelectMany:false,
 				canSelectFolders:false,

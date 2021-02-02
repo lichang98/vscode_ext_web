@@ -127,25 +127,25 @@
 			"view/item/context": [
 				{
 					"command": "treeView-item.datavis",
-					"when": "view == treeView-item && viewItem == 数据 || viewItem == 模型",
+					"when": "view == treeView-item && viewItem == 数据 || viewItem == ANN模型",
 					"group": "navigation"
 				},
 				{
 					"command": "treeView-item.import",
-					"when": "view == treeView-item && viewItem == 训练数据 || viewItem == 测试数据 || viewItem == 测试数据标签 || viewItem == 模型",
+					"when": "view == treeView-item && viewItem == 训练数据 || viewItem == 测试数据 || viewItem == 测试数据标签 || viewItem == ANN模型",
 					"group": "navigation"
 				},
 				{
 					"command": "treeView.proj_rename",
-					"when": "view == treeView-item && viewItem != 数据 && viewItem != 模型 && viewItem != 训练数据 && viewItem != 测试数据 && viewItem != 测试数据标签 && viewItem != 模型"
+					"when": "view == treeView-item && viewItem != 数据 && viewItem != ANN模型 && viewItem != 训练数据 && viewItem != 测试数据 && viewItem != 测试数据标签 && viewItem != 模型"
 				},
 				{
 					"command": "treeView.proj_save",
-					"when": "view == treeView-item && viewItem != 数据 && viewItem != 模型 && viewItem != 训练数据 && viewItem != 测试数据 && viewItem != 测试数据标签 && viewItem != 模型"
+					"when": "view == treeView-item && viewItem != 数据 && viewItem != ANN模型 && viewItem != 训练数据 && viewItem != 测试数据 && viewItem != 测试数据标签 && viewItem != 模型"
 				},
 				{
 					"command": "treeView.proj_remove",
-					"when": "view == treeView-item && viewItem != 数据 && viewItem != 模型 && viewItem != 训练数据 && viewItem != 测试数据 && viewItem != 测试数据标签 && viewItem != 模型"
+					"when": "view == treeView-item && viewItem != 数据 && viewItem != ANN模型 && viewItem != 训练数据 && viewItem != 测试数据 && viewItem != 测试数据标签 && viewItem != 模型"
 				}
 			]
 		},

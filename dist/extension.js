@@ -196,7 +196,7 @@ function activate(context) {
                     proj_desc_info.ann_lib_type = data.project_info.ann_lib_type;
                     TreeViewProvider_1.addSlfProj(data.project_info.project_name);
                     inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(data.project_info.project_name, [new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []),
-                            new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("模型", [])]));
+                            new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("ANN模型", [])]));
                     treeview.data = inMemTreeViewStruct;
                     treeviewConvertor.data = inMemTreeViewStruct;
                     treeViewSimulator.data = inMemTreeViewStruct;
@@ -234,6 +234,21 @@ function activate(context) {
                     let scriptProcess = child_process_1.exec(command_str, {});
                     (_a = scriptProcess.stdout) === null || _a === void 0 ? void 0 : _a.on("data", function (data) {
                         console.log(data);
+                        if (data.indexOf("CONVERT_FINISH") !== -1) {
+                            if (currentPanel) {
+                                currentPanel.webview.postMessage(JSON.stringify({ "progress": "convert_finish" }));
+                            }
+                        }
+                        else if (data.indexOf("PREPROCESS_FINISH") !== -1) {
+                            if (currentPanel) {
+                                currentPanel.webview.postMessage(JSON.stringify({ "progress": "preprocess_finish" }));
+                            }
+                        }
+                        else if (data.indexOf("SEARCH_FINISH") !== -1) {
+                            if (currentPanel) {
+                                currentPanel.webview.postMessage(JSON.stringify({ "progress": "search_finish" }));
+                            }
+                        }
                         if (currentPanel) {
                             let formatted_data = data.split("\r\n").join("<br/>");
                             currentPanel.webview.postMessage(JSON.stringify({ "log_output": formatted_data }));
@@ -341,7 +356,7 @@ function activate(context) {
                 // 显示treeview
                 TreeViewProvider_1.addSlfProj(proj_desc_info.project_name);
                 inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(proj_desc_info.project_name, [new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []),
-                        new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("模型", [])]));
+                        new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("ANN模型", [])]));
                 TreeViewProvider_1.addSlfFile("x_norm");
                 TreeViewProvider_1.addSlfFile("x_test");
                 TreeViewProvider_1.addSlfFile("y_test");
@@ -450,7 +465,7 @@ function activate(context) {
                 // currentPanel.webview.html = getConvertorDataPageV2(
                 panelDataVis.webview.html = get_convertor_page_v2_1.getConvertorDataPageV2(currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample0.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample1.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample2.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample3.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample4.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample5.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample6.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample7.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample8.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample9.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample0.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample1.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample2.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample3.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample4.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample5.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample6.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample7.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample8.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample9.png"))));
             }
-            else if (itemNode.label === "模型") {
+            else if (itemNode.label === "ANN模型") {
                 if (!panelAnnModelVis) {
                     panelAnnModelVis = vscode.window.createWebviewPanel("datavis", "ANN模型", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
                     panelAnnModelVis.onDidDispose(() => {
@@ -486,7 +501,7 @@ function activate(context) {
                 });
             }
         }
-        else if (itemNode.label === "模型") {
+        else if (itemNode.label === "ANN模型") {
             if (panelAnnModelVis) {
                 panelAnnModelVis.title = "ANN模型";
                 var modelVisScriptPath = path.join(__dirname, "inner_scripts", "model_desc.py");
@@ -606,7 +621,7 @@ function activate(context) {
                 }
             });
         }
-        else if (itemNode.label === "模型") {
+        else if (itemNode.label === "ANN模型") {
             const options = {
                 canSelectMany: false,
                 canSelectFolders: false,
@@ -4564,7 +4579,7 @@ const vscode = __webpack_require__(1);
 exports.ITEM_ICON_MAP = new Map([
     ['项目', 'imgs/project.png'],
     ['数据', 'imgs/import_data.png'],
-    ['模型', 'imgs/import_model.png'],
+    ['ANN模型', 'imgs/import_model.png'],
     ['训练数据', "imgs/file.png"],
     ['测试数据', "imgs/file.png"],
     ['测试数据标签', "imgs/file.png"]
@@ -5681,14 +5696,15 @@ function getANNSNNConvertPage() {
   <body class="dark-mode" style="height: 100%;width: 100%;">
   
       <div class="row">
-          <div class="col-md-7">
+          <div class="col-md-10 col-md-offset-1">
+              <div style="font-size: large;font-weight: bold;text-align: center;">转换进度</div>
               <div class="row" style="margin-left: 30px;">
-                  <div class="col-md-3">
-                      <div>ANN转换SNN模型</div>
-                      <div class="progress">
-                          <div class="progress-bar progress-bar-info" role="progressbar"
+                  <div class="col-md-2">
+                      <div>模型转换</div>
+                      <div class="progress progress-striped active">
+                          <div id="model_convert_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                               style="width: 30%;">
+                               style="width: 0%;">
                           </div>
                       </div>
                   </div>
@@ -5697,12 +5713,26 @@ function getANNSNNConvertPage() {
                       <i class="material-icons">arrow_forward</i>
                   </div>
               
-                  <div class="col-md-4">
-                      <div>SNN配置参数调优</div>
-                      <div class="progress">
-                          <div class="progress-bar progress-bar-info" role="progressbar"
+                  <div class="col-md-2">
+                      <div>预处理</div>
+                      <div class="progress  progress-striped active">
+                          <div id="preprocess_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                               style="width: 30%;">
+                               style="width: 0%;">
+                          </div>
+                      </div>
+                  </div>
+  
+                  <div class="col-md-1" style="margin-top: 15px;">
+                      <i class="material-icons">arrow_forward</i>
+                  </div>
+  
+                  <div class="col-md-2">
+                      <div>参数调优</div>
+                      <div class="progress progress-striped active">
+                          <div id="search_progress_div" class="progress-bar progress-bar-info" role="progressbar"
+                               aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                               style="width: 0%;">
                           </div>
                       </div>
                   </div>
@@ -5711,12 +5741,12 @@ function getANNSNNConvertPage() {
                       <i class="material-icons">arrow_forward</i>
                   </div>
               
-                  <div class="col-md-3">
-                      <div>Darlang文件生成</div>
-                      <div class="progress">
-                          <div class="progress-bar progress-bar-info" role="progressbar"
+                  <div class="col-md-2">
+                      <div>Darlang生成</div>
+                      <div class="progress progress-striped active">
+                          <div id="darlang_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                               style="width: 30%;">
+                               style="width: 0%;">
                           </div>
                       </div>
                   </div>
@@ -5725,19 +5755,21 @@ function getANNSNNConvertPage() {
               <div class="row">
                   <span>启动</span>
                   <i id="start_convert_btn" class="large material-icons" style="margin-left: 0px;cursor: pointer;">play_circle_outline</i>
-                  <div class="progress" style="width: 90%;display: inline-block;margin-bottom: 0;">
-                      <div class="progress-bar progress-bar-success" role="progressbar"
+                  <div class="progress progress-striped active" style="width: 90%;display: inline-block;margin-bottom: 0;">
+                      <div id="total_progress_div" class="progress-bar progress-bar-success" role="progressbar"
                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                           style="width: 90%;">
-                          <span class="sr-only">90% 完成（成功）</span>
+                           style="width: 0%;">
                       </div>
                   </div>
               </div>
           </div>
-      
-          <div class="col-md-5">
+      </div>
+  
+      <div class="row" style="margin-top: 30px;">
+          <div class="col-md-10 col-md-offset-1">
+              <div style="font-size: large;font-weight: bold;text-align: center;">参数配置</div>
               <form role="form" class="row" style="margin-right: 10px;" id="project_info_form">
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                       <label for="select_vthresh">膜电压阈值</label>
                       <select class="form-control" id="select_vthresh">
                           <option>16</option>
@@ -5763,7 +5795,7 @@ function getANNSNNConvertPage() {
                           <option>30</option>
                       </select>
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                       <label for="select_dt">神经元dt</label>
                       <select class="form-control" id="select_dt">
                           <option>1ms</option>
@@ -5771,7 +5803,7 @@ function getANNSNNConvertPage() {
                       </select>
                   </div>
       
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                       <label for="select_synapse_dt">突触dt</label>
                       <select class="form-control" id="select_synapse_dt">
                           <option>0.1ms</option>
@@ -5779,15 +5811,15 @@ function getANNSNNConvertPage() {
                       </select>
                   </div>
       
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                       <label for="select_delay">delay</label>
                       <select class="form-control" id="select_delay">
                           <option>1ms</option>
                           <option>0.1ms</option>
                       </select>
                   </div>
-  
-                  <div class="col-md-3">
+      
+                  <div class="col-md-2">
                       <label for="select_dura">总时间</label>
                       <select class="form-control" id="select_dura">
                           <option>100ms</option>
@@ -5801,31 +5833,42 @@ function getANNSNNConvertPage() {
   
   
       <div class="row" style="height: 100%; margin-top: 50px;">
-          <div id="log_output_div" class="col-md-5" style="margin-left: 50px;height: calc(100vh - 200px); overflow: auto;">
-  
+          <div class="col-md-3">
+              <div style="font-size: large;font-weight: bold;text-align: center;">日志输出</div>
+              <div id="log_output_div" style="margin-left: 50px;height: calc(100vh - 240px); overflow: auto;">
+      
+              </div>
+          </div>
+          <div class="col-md-3">
+              <div style="font-size: large;font-weight: bold;text-align: center;">转换性能分析</div>
+              <div id="use_time_bar_chart" style="width: 400px;height: 300px;margin-top: 30px;"></div>
           </div>
           <div class="col-md-6" style="height:calc(100vh - 200px);">
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络突触连接信息</div>
               <table id="info_simu_table" style="margin-left: auto;margin-right: auto;">
                   <tr style="margin-top: 15px;">
-                      <td style="width: 300px;">准确率</td>
-                      <td id="accuracy_val" style="font-size: medium;font-weight: bold;">xxxx</td>
-                  </tr>
-                  <tr style="margin-top: 15px;">
-                      <td>转换总耗时</td>
+                      <td style="width: 200px;">转换总耗时</td>
                       <td id="total_use_time" style="font-size: medium;font-weight: bold;">xxx</td>
                   </tr>
                   <tr style="margin-top: 15px;">
-                      <td>神经元平均激发脉冲次数</td>
+                      <td>平均激发脉冲次数</td>
                       <td id="avg_spike" style="font-size: medium;font-weight: bold;">xxx</td>
                   </tr>
                   <tr style="margin-top: 15px;">
-                      <td>神经元激发脉冲次数方差</td>
+                      <td>激发脉冲次数方差</td>
                       <td id="std_spike" style="font-size: medium;font-weight: bold;">xxx</td>
+                  </tr>
+                  <tr style="margin-top: 15px;">
+                      <td>连接权重均值</td>
+                      <td id="avg_conn_wt" style="font-size: medium;font-weight: bold;">xxx</td>
+                  </tr>
+                  <tr style="margin-top: 15px;">
+                      <td>连接权重方差</td>
+                      <td id="std_conn_wt" style="font-size: medium;font-weight: bold;">xxx</td>
                   </tr>
               </table>
   
-              <div style="margin-top: 100px;">
+              <div style="margin-top: 30px;">
                   <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
                   <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;">统计计数</div>
                   <table id="spike_out_count_table" style="margin-left: 125px;">
@@ -5910,9 +5953,56 @@ function getANNSNNConvertPage() {
                   console.log("data split list len="+log_output_lists.length);
                   $("#log_output_div").html(log_output_lists.join("<br/>"));
                   document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
+                  if($("#model_convert_progress_div").css("width") !== "100%"){
+                      if(log_output_lists.length <= 150){
+                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/150*100)+"%";
+                      }
+                  }
+                  if(log_output_lists.length > 200){
+                      if($("#preprocess_progress_div").css("width") !== "100%"){
+                          if(log_output_lists.length < 3000){
+                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-200)/2800*100)+"%";
+                          }
+                      }
+                  }
+                  if(log_output_lists.length > 3000){
+                      if($("search_progress_div").css("width") !== "100%"){
+                          if(log_output_lists.length < 3200){
+                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-3000)/134*100)+"%";
+                          }
+                      }
+                  }
+                  if(log_output_lists.length > 3200){
+                      if($("darlang_progress_div") !== "100%"){
+                          if(log_output_lists.length < 3230){
+                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-3200)/80*100)+"%";
+                          }
+                      }
+                  }
+                  if($("#total_progress_div").css("width") !== "100%"){
+                      document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/3300*100)+"%";
+                  }
                 }else if(data.exec_finish){
                     // 结束
                     document.getElementById("start_convert_btn").style.backgroundColor = "";
+                    document.getElementById("model_convert_progress_div").style.width = "100%";
+                    document.getElementById("preprocess_progress_div").style.width = "100%";
+                    document.getElementById("search_progress_div").style.width = "100%";
+                    document.getElementById("darlang_progress_div").style.width = "100%";
+                    document.getElementById("total_progress_div").style.width = "100%";
+                    console.log("LINE COUNT all_finish="+log_output_lists.length);
+                }else if(data.progress){
+                    // 处理进度信息
+                    if(data.progress === "convert_finish"){
+                        document.getElementById("model_convert_progress_div").style.width = "100%";
+                        console.log("LINE COUNT convert_finish="+log_output_lists.length);
+                    }else if(data.progress === "preprocess_finish"){
+                        document.getElementById("preprocess_progress_div").style.width = "100%";
+                        console.log("LINE COUNT preprocess_progress_div="+log_output_lists.length);
+                    }else if(data.progress === "search_finish"){
+                        document.getElementById("search_progress_div").style.width = "100%";
+                        console.log("LINE COUNT search_progress_div="+log_output_lists.length);
+                    }
                 }else if(data.snn_info){
                     // snn 相关数据
                     const infos = JSON.parse(data.snn_info);
@@ -5991,8 +6081,6 @@ function getANNSNNConvertPage() {
                           td_child.innerText = test_img_spikes[i].cls_names[j];
                           td_child.style.width = "33px";
                           document.getElementById("out_labels").appendChild(td_child);
-  
-  
                         }
                       }
                     }
@@ -6014,6 +6102,12 @@ function getANNSNNConvertPage() {
                     "delay":delay,
                     "dura":dura
                 }}));
+                document.getElementById("model_convert_progress_div").style.width = "0%";
+                document.getElementById("preprocess_progress_div").style.width = "0%";
+                document.getElementById("search_progress_div").style.width = "0%";
+                document.getElementById("darlang_progress_div").style.width = "0%";
+                document.getElementById("total_progress_div").style.width = "0%";
+  
             });
   
         });

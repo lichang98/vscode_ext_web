@@ -9,14 +9,15 @@
 <body class="dark-mode" style="height: 100%;width: 100%;">
 
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-10 col-md-offset-1">
+            <div style="font-size: large;font-weight: bold;text-align: center;">转换进度</div>
             <div class="row" style="margin-left: 30px;">
-                <div class="col-md-3">
-                    <div>ANN转换SNN模型</div>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-info" role="progressbar"
+                <div class="col-md-2">
+                    <div>模型转换</div>
+                    <div class="progress progress-striped active">
+                        <div id="model_convert_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                              aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                             style="width: 30%;">
+                             style="width: 0%;">
                         </div>
                     </div>
                 </div>
@@ -25,12 +26,26 @@
                     <i class="material-icons">arrow_forward</i>
                 </div>
             
-                <div class="col-md-4">
-                    <div>SNN配置参数调优</div>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-info" role="progressbar"
+                <div class="col-md-2">
+                    <div>预处理</div>
+                    <div class="progress  progress-striped active">
+                        <div id="preprocess_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                              aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                             style="width: 30%;">
+                             style="width: 0%;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-1" style="margin-top: 15px;">
+                    <i class="material-icons">arrow_forward</i>
+                </div>
+
+                <div class="col-md-2">
+                    <div>参数调优</div>
+                    <div class="progress progress-striped active">
+                        <div id="search_progress_div" class="progress-bar progress-bar-info" role="progressbar"
+                             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                             style="width: 0%;">
                         </div>
                     </div>
                 </div>
@@ -39,12 +54,12 @@
                     <i class="material-icons">arrow_forward</i>
                 </div>
             
-                <div class="col-md-3">
-                    <div>Darlang文件生成</div>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-info" role="progressbar"
+                <div class="col-md-2">
+                    <div>Darlang生成</div>
+                    <div class="progress progress-striped active">
+                        <div id="darlang_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                              aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                             style="width: 30%;">
+                             style="width: 0%;">
                         </div>
                     </div>
                 </div>
@@ -53,19 +68,21 @@
             <div class="row">
                 <span>启动</span>
                 <i id="start_convert_btn" class="large material-icons" style="margin-left: 0px;cursor: pointer;">play_circle_outline</i>
-                <div class="progress" style="width: 90%;display: inline-block;margin-bottom: 0;">
-                    <div class="progress-bar progress-bar-success" role="progressbar"
+                <div class="progress progress-striped active" style="width: 90%;display: inline-block;margin-bottom: 0;">
+                    <div id="total_progress_div" class="progress-bar progress-bar-success" role="progressbar"
                          aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                         style="width: 90%;">
-                        <span class="sr-only">90% 完成（成功）</span>
+                         style="width: 0%;">
                     </div>
                 </div>
             </div>
         </div>
-    
-        <div class="col-md-5">
+    </div>
+
+    <div class="row" style="margin-top: 30px;">
+        <div class="col-md-10 col-md-offset-1">
+            <div style="font-size: large;font-weight: bold;text-align: center;">参数配置</div>
             <form role="form" class="row" style="margin-right: 10px;" id="project_info_form">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="select_vthresh">膜电压阈值</label>
                     <select class="form-control" id="select_vthresh">
                         <option>16</option>
@@ -91,7 +108,7 @@
                         <option>30</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="select_dt">神经元dt</label>
                     <select class="form-control" id="select_dt">
                         <option>1ms</option>
@@ -99,7 +116,7 @@
                     </select>
                 </div>
     
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="select_synapse_dt">突触dt</label>
                     <select class="form-control" id="select_synapse_dt">
                         <option>0.1ms</option>
@@ -107,15 +124,15 @@
                     </select>
                 </div>
     
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="select_delay">delay</label>
                     <select class="form-control" id="select_delay">
                         <option>1ms</option>
                         <option>0.1ms</option>
                     </select>
                 </div>
-
-                <div class="col-md-3">
+    
+                <div class="col-md-2">
                     <label for="select_dura">总时间</label>
                     <select class="form-control" id="select_dura">
                         <option>100ms</option>
@@ -129,31 +146,42 @@
 
 
     <div class="row" style="height: 100%; margin-top: 50px;">
-        <div id="log_output_div" class="col-md-5" style="margin-left: 50px;height: calc(100vh - 200px); overflow: auto;">
-
+        <div class="col-md-3">
+            <div style="font-size: large;font-weight: bold;text-align: center;">日志输出</div>
+            <div id="log_output_div" style="margin-left: 50px;height: calc(100vh - 240px); overflow: auto;">
+    
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div style="font-size: large;font-weight: bold;text-align: center;">转换性能分析</div>
+            <div id="use_time_bar_chart" style="width: 400px;height: 300px;margin-top: 30px;"></div>
         </div>
         <div class="col-md-6" style="height:calc(100vh - 200px);">
             <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络突触连接信息</div>
             <table id="info_simu_table" style="margin-left: auto;margin-right: auto;">
                 <tr style="margin-top: 15px;">
-                    <td style="width: 300px;">准确率</td>
-                    <td id="accuracy_val" style="font-size: medium;font-weight: bold;">xxxx</td>
-                </tr>
-                <tr style="margin-top: 15px;">
-                    <td>转换总耗时</td>
+                    <td style="width: 200px;">转换总耗时</td>
                     <td id="total_use_time" style="font-size: medium;font-weight: bold;">xxx</td>
                 </tr>
                 <tr style="margin-top: 15px;">
-                    <td>神经元平均激发脉冲次数</td>
+                    <td>平均激发脉冲次数</td>
                     <td id="avg_spike" style="font-size: medium;font-weight: bold;">xxx</td>
                 </tr>
                 <tr style="margin-top: 15px;">
-                    <td>神经元激发脉冲次数方差</td>
+                    <td>激发脉冲次数方差</td>
                     <td id="std_spike" style="font-size: medium;font-weight: bold;">xxx</td>
+                </tr>
+                <tr style="margin-top: 15px;">
+                    <td>连接权重均值</td>
+                    <td id="avg_conn_wt" style="font-size: medium;font-weight: bold;">xxx</td>
+                </tr>
+                <tr style="margin-top: 15px;">
+                    <td>连接权重方差</td>
+                    <td id="std_conn_wt" style="font-size: medium;font-weight: bold;">xxx</td>
                 </tr>
             </table>
 
-            <div style="margin-top: 100px;">
+            <div style="margin-top: 30px;">
                 <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
                 <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;">统计计数</div>
                 <table id="spike_out_count_table" style="margin-left: 125px;">
@@ -238,9 +266,56 @@ let log_output_lists = new Array();
                 console.log("data split list len="+log_output_lists.length);
                 $("#log_output_div").html(log_output_lists.join("<br/>"));
                 document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
+                if($("#model_convert_progress_div").css("width") !== "100%"){
+                    if(log_output_lists.length <= 150){
+                        document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/150*100)+"%";
+                    }
+                }
+                if(log_output_lists.length > 200){
+                    if($("#preprocess_progress_div").css("width") !== "100%"){
+                        if(log_output_lists.length < 3000){
+                            document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-200)/2800*100)+"%";
+                        }
+                    }
+                }
+                if(log_output_lists.length > 3000){
+                    if($("search_progress_div").css("width") !== "100%"){
+                        if(log_output_lists.length < 3200){
+                            document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-3000)/134*100)+"%";
+                        }
+                    }
+                }
+                if(log_output_lists.length > 3200){
+                    if($("darlang_progress_div") !== "100%"){
+                        if(log_output_lists.length < 3230){
+                            document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-3200)/80*100)+"%";
+                        }
+                    }
+                }
+                if($("#total_progress_div").css("width") !== "100%"){
+                    document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/3300*100)+"%";
+                }
               }else if(data.exec_finish){
                   // 结束
                   document.getElementById("start_convert_btn").style.backgroundColor = "";
+                  document.getElementById("model_convert_progress_div").style.width = "100%";
+                  document.getElementById("preprocess_progress_div").style.width = "100%";
+                  document.getElementById("search_progress_div").style.width = "100%";
+                  document.getElementById("darlang_progress_div").style.width = "100%";
+                  document.getElementById("total_progress_div").style.width = "100%";
+                  console.log("LINE COUNT all_finish="+log_output_lists.length);
+              }else if(data.progress){
+                  // 处理进度信息
+                  if(data.progress === "convert_finish"){
+                      document.getElementById("model_convert_progress_div").style.width = "100%";
+                      console.log("LINE COUNT convert_finish="+log_output_lists.length);
+                  }else if(data.progress === "preprocess_finish"){
+                      document.getElementById("preprocess_progress_div").style.width = "100%";
+                      console.log("LINE COUNT preprocess_progress_div="+log_output_lists.length);
+                  }else if(data.progress === "search_finish"){
+                      document.getElementById("search_progress_div").style.width = "100%";
+                      console.log("LINE COUNT search_progress_div="+log_output_lists.length);
+                  }
               }else if(data.snn_info){
                   // snn 相关数据
                   const infos = JSON.parse(data.snn_info);
@@ -319,8 +394,6 @@ let log_output_lists = new Array();
                         td_child.innerText = test_img_spikes[i].cls_names[j];
                         td_child.style.width = "33px";
                         document.getElementById("out_labels").appendChild(td_child);
-
-
                       }
                     }
                   }
@@ -342,6 +415,12 @@ let log_output_lists = new Array();
                   "delay":delay,
                   "dura":dura
               }}));
+              document.getElementById("model_convert_progress_div").style.width = "0%";
+              document.getElementById("preprocess_progress_div").style.width = "0%";
+              document.getElementById("search_progress_div").style.width = "0%";
+              document.getElementById("darlang_progress_div").style.width = "0%";
+              document.getElementById("total_progress_div").style.width = "0%";
+
           });
 
       });

@@ -87,6 +87,7 @@ spiking_model = target_sim.SNN(config)
 spiking_model.build(parsed_model)
 spiking_model.save(dir_name, "spike_snn")
 
+print("CONVERT_FINISH...")
 # simulate
 test_set = {"x_test":testX[:50],"y_test":testY[:50]}
 accu = spiking_model.run(**test_set)
@@ -139,7 +140,7 @@ br2_net.store()
 
 br2_net.store(filename=os.path.join(baseDirPath, "snn_brian2.model"))
 
-
+print("PREPROCESS_FINISH...")
 all_accus=[]
 # v_th_range=list(range(10,20,1))
 # for v_th in v_th_range:
@@ -204,6 +205,7 @@ for i in range(50):
         acc +=1
 
 print("Accuracy={}".format(acc/50))
+print("SEARCH_FINISH...")
 # save snn model as the DarwinLang format
 snn_model_darlang = {
     "projectName":"snn_digit",

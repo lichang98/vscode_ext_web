@@ -7,7 +7,7 @@ import * as vscode from "vscode";
 export let ITEM_ICON_MAP = new Map<string, string>([
     ['项目', 'imgs/project.png'],
     ['数据', 'imgs/import_data.png'],
-    ['模型', 'imgs/import_model.png'],
+    ['ANN模型', 'imgs/import_model.png'],
     ['训练数据', "imgs/file.png"],
     ['测试数据', "imgs/file.png"],
     ['测试数据标签', "imgs/file.png"]

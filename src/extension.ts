@@ -267,6 +267,11 @@ export function activate(context: vscode.ExtensionContext) {
 									currentPanel.webview.postMessage(JSON.stringify({"snn_info":data}));
 								}
 							});
+							fs.readFile(path.join(__dirname, "inner_scripts", "convert_statistic_info.json"), "utf-8", (evt,data)=>{
+								if(currentPanel){
+									currentPanel.webview.postMessage(JSON.stringify({"convert_info":data}));
+								}
+							});
 									// 							// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
 									// fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
 									// 	if(panelSNNModelVis){

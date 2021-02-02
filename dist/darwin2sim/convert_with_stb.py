@@ -12,6 +12,8 @@ import json
 import pickle
 import shutil
 from PIL import Image
+import time
+import copy
 
 baseDirPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(baseDirPath, "snntoolbox"))
@@ -37,6 +39,17 @@ testY = np.load(os.path.join(os.path.dirname(model_path), "y_test.npz"))["arr_0"
 valX = np.load(os.path.join(os.path.dirname(model_path), "x_test.npz"))["arr_0"]
 valY = np.load(os.path.join(os.path.dirname(model_path), "y_test.npz"))["arr_0"]
 
+
+start_time = time.time()
+wt_statics=[]
+spike_statics=[0]*len(valY[0])
+
+stage1_time_use=0
+stage2_time_use=0
+stage3_time_use=0
+stage4_time_use=0
+
+
 def fixpt(weights,bit_width=8):
     range_pos = (2**(bit_width-1))-1
     range_neg = -(2**(bit_width-1))
@@ -54,6 +67,7 @@ def fixpt(weights,bit_width=8):
         weights[i] = np.floor(weights[i])
         # weights[i][weights[i] >=0] = np.floor(weights[i][weights[i] >=0])
         # weights[i][weights[i] <0] = np.ceil(weights[i][weights[i] <0])
+        wt_statics.extend(np.array(copy.deepcopy(weights[i]), dtype="int32").flatten())
 
     return weights
 
@@ -88,6 +102,7 @@ spiking_model.build(parsed_model)
 spiking_model.save(dir_name, "spike_snn")
 
 print("CONVERT_FINISH...")
+stage1_time_use = time.time()
 # simulate
 test_set = {"x_test":testX[:50],"y_test":testY[:50]}
 accu = spiking_model.run(**test_set)
@@ -141,6 +156,7 @@ br2_net.store()
 br2_net.store(filename=os.path.join(baseDirPath, "snn_brian2.model"))
 
 print("PREPROCESS_FINISH...")
+stage2_time_use = time.time()
 all_accus=[]
 # v_th_range=list(range(10,20,1))
 # for v_th in v_th_range:
@@ -181,13 +197,16 @@ for i in range(50):
     for k,v in input_spike.items():
         input_spike_arrs.append([k,np.array(v/brian2.ms, dtype="int32").tolist()])
     # save input and corresponding img
-    with open(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "input_{}.pickle".format(i)), "wb+") as f:
-        pickle.dump(input_spike_arrs, f)
+    with open(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "input_{}.txt".format(i)), "w+") as f:
+        # pickle.dump(input_spike_arrs, f)
+        f.write(json.dumps(input_spike_arrs))
     img = np.array(np.squeeze(valX[i])*255, dtype="uint8")
     Image.fromarray(img).save(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "img_idx_{}_label_{}.png"
                                 .format(i, np.argmax(valY[i]))))
     snn_test_img_uris.append("http://localhost:6003/snn_imgs/img_idx_{}_label_{}.png".format(i,np.argmax(valY[i])))
     last_layer_spikes = [list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]
+    for idx_, spk_lst_ in enumerate(last_layer_spikes):
+        spike_statics[idx_] += len(spk_lst_)
     spike_tuples = []
     for cls in range(len(last_layer_spikes)):
         for j in range(len(last_layer_spikes[cls])):
@@ -206,6 +225,7 @@ for i in range(50):
 
 print("Accuracy={}".format(acc/50))
 print("SEARCH_FINISH...")
+stage3_time_use = time.time()
 # save snn model as the DarwinLang format
 snn_model_darlang = {
     "projectName":"snn_digit",
@@ -329,6 +349,7 @@ brian2_snn_info = {
 with open(os.path.join(baseDirPath, "brian2_snn_info.json"), "w+") as f:
     f.write(json.dumps(brian2_snn_info))
 
+stage4_time_use = time.time()
 # move to ../inner_scripts directory
 shutil.move(os.path.join(baseDirPath, "brian2_snn_info.json"), os.path.join(baseDirPath, "..", "inner_scripts","brian2_snn_info.json"))
 
@@ -338,4 +359,30 @@ import darlang
 darlang.run_darlang(os.path.join(outputPath, "snn_digit_darlang.json"),os.path.join(outputPath,"..", "bin_darwin_out"))
 
 
+stage4_time_use = "%.2f" % (stage4_time_use - stage3_time_use)
+stage3_time_use = "%.2f" % (stage3_time_use - stage2_time_use)
+stage2_time_use = "%.2f" % (stage2_time_use - stage1_time_use)
+stage1_time_use = "%.2f" % (stage1_time_use - start_time)
+
+end_time = time.time()
+total_use_time = "%.2f seconds" % (end_time-start_time)
+wt_mean = np.mean(wt_statics)
+wt_std = np.std(wt_statics)
+spk_mean = np.mean(spike_statics)/50
+spk_std = np.std(spike_statics)
+
+convert_info = {
+    "total_use_time": total_use_time,
+    "wt_mean": wt_mean,
+    "wt_std": wt_std,
+    "spk_mean": spk_mean,
+    "spk_std": spk_std,
+    "stage1_time_use":stage1_time_use,
+    "stage2_time_use":stage2_time_use,
+    "stage3_time_use":stage3_time_use,
+    "stage4_time_use":stage4_time_use
+}
+
+with open(os.path.join(baseDirPath, "..", "inner_scripts", "convert_statistic_info.json"), "w+") as f:
+    f.write(json.dumps(convert_info))
 

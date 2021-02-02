@@ -266,6 +266,11 @@ function activate(context) {
                                     currentPanel.webview.postMessage(JSON.stringify({ "snn_info": data }));
                                 }
                             });
+                            fs.readFile(path.join(__dirname, "inner_scripts", "convert_statistic_info.json"), "utf-8", (evt, data) => {
+                                if (currentPanel) {
+                                    currentPanel.webview.postMessage(JSON.stringify({ "convert_info": data }));
+                                }
+                            });
                             // 							// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
                             // fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
                             // 	if(panelSNNModelVis){
@@ -5841,7 +5846,7 @@ function getANNSNNConvertPage() {
           </div>
           <div class="col-md-3">
               <div style="font-size: large;font-weight: bold;text-align: center;">转换性能分析</div>
-              <div id="use_time_bar_chart" style="width: 400px;height: 300px;margin-top: 30px;"></div>
+              <div id="use_time_bar_chart" style="width: 330px;height: 300px;margin-top: 30px;"></div>
           </div>
           <div class="col-md-6" style="height:calc(100vh - 200px);">
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络突触连接信息</div>
@@ -5966,14 +5971,14 @@ function getANNSNNConvertPage() {
                       }
                   }
                   if(log_output_lists.length > 3000){
-                      if($("search_progress_div").css("width") !== "100%"){
+                      if($("#search_progress_div").css("width") !== "100%"){
                           if(log_output_lists.length < 3200){
                               document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-3000)/134*100)+"%";
                           }
                       }
                   }
                   if(log_output_lists.length > 3200){
-                      if($("darlang_progress_div") !== "100%"){
+                      if($("#darlang_progress_div") !== "100%"){
                           if(log_output_lists.length < 3230){
                               document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-3200)/80*100)+"%";
                           }
@@ -6084,6 +6089,18 @@ function getANNSNNConvertPage() {
                         }
                       }
                     }
+                }else if(data.convert_info){
+                    const convert_infos = JSON.parse(data.convert_info);
+                    $("#total_use_time").text(convert_infos.total_use_time);
+                    $("#avg_spike").text(convert_infos.spk_mean);
+                    $("#std_spike").text(convert_infos.spk_std);
+                    $("#avg_conn_wt").text(convert_infos.wt_mean);
+                    $("#std_conn_wt").text(convert_infos.wt_std);
+  
+                    let bar_chart_label_names = ["模型转换用时", "参数调整用时", "后处理用时", "达尔文文件生成用时"];
+                    let bar_chart_label_counts = [parseFloat(convert_infos.stage1_time_use), parseFloat(convert_infos.stage2_time_use),
+                                  parseFloat(convert_infos.stage3_time_use), parseFloat(convert_infos.stage4_time_use)];
+                    display_bar_chart(bar_chart_label_names, bar_chart_label_counts, "","秒","use_time_bar_chart");
                 }
             });
   
@@ -6134,6 +6151,84 @@ function getANNSNNConvertPage() {
               var spike_chart = echarts.init(document.getElementById("spike_charts"));
               spike_chart.setOption(opt);
         }
+  
+  
+        function display_bar_chart(label_names, label_counts, title,series_name,target_id){
+          console.log("label names:"+label_names);
+          console.log("label counts:"+label_counts);
+          var option = {
+              tooltip: {
+                  trigger: 'axis',
+                  axisPointer: {
+                      type: 'cross',
+                      crossStyle: {
+                          color: '#999'
+                      }
+                  }
+              },
+              backgroundColor:"#17202A",
+              xAxis: [
+                  {
+                      type: 'category',
+                      data:label_names,
+                      axisPointer: {
+                          type: 'shadow'
+                      },
+                      axisLabel:{
+                          textStyle:{
+                              "color":"#FDFEFE "
+                          },
+                          rotate:30
+                      }
+                  }
+              ],
+              yAxis: [
+                  {
+                      type: 'value',
+                      name: '',
+                      min: 0,
+                      max: Math.max(label_counts)*1.2,
+                      interval: Math.max(label_counts)*1.2 / 5,
+                      axisLabel: {
+                          formatter: '{value}'
+                      },
+                      splitLine:{show:false},
+                      axisLine: {show: false}, 
+                      axisTick: {show: false},
+                      axisLabel:{show:false}
+                  },
+                  {
+                      type: 'value',
+                      name: '',
+                      min: 0,
+                      max: Math.max(label_counts)*1.2,
+                      interval: Math.max(label_counts)*1.2 / 5,
+                      axisLabel: {
+                          formatter: '{value}'
+                      },
+                      splitLine:{show:false},
+                      axisLine: {show: false}, 
+                      axisTick: {show: false},
+                      axisLabel:{show:false}
+                  }
+              ],
+              series: [
+                  {
+                      name: series_name,
+                      type: 'bar',
+                      data: label_counts
+                  },
+                  {
+                      name: series_name,
+                      type: 'line',
+                      yAxisIndex: 1,
+                      data: label_counts
+                  }
+              ]
+          };
+          var bar_chart_data = echarts.init(document.getElementById(target_id));
+          bar_chart_data.setOption(option);
+      }
   </script>
   
   </html>

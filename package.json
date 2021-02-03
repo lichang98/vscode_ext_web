@@ -220,7 +220,13 @@
 					"name": "multiLevelTree"
 				}
 			]
-		}
+		},
+		"viewsWelcome": [
+			{
+				"view": "treeView-item",
+				"contents": "Welcome to my custom view! [learn more](https://google.com/).\n[Get Start](command:myExtension.myCommand)"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",

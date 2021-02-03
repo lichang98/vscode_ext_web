@@ -13,7 +13,7 @@
             <div style="font-size: large;font-weight: bold;text-align: center;">转换进度</div>
             <div class="row" style="margin-left: 30px;">
                 <div class="col-md-2">
-                    <div>模型转换</div>
+                    <div>ANN转SNN</div>
                     <div class="progress progress-striped active">
                         <div id="model_convert_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                              aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
@@ -55,7 +55,7 @@
                 </div>
             
                 <div class="col-md-2">
-                    <div>Darlang生成</div>
+                    <div>DarwinLang文件生成</div>
                     <div class="progress progress-striped active">
                         <div id="darlang_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                              aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
@@ -154,7 +154,7 @@
         </div>
         <div class="col-md-3">
             <div style="font-size: large;font-weight: bold;text-align: center;">转换性能分析</div>
-            <div id="use_time_bar_chart" style="width: 330px;height: 300px;margin-top: 30px;"></div>
+            <div id="use_time_bar_chart" style="width: 400px;height: 460px;margin-top: 15px;margin-left: -50px;"></div>
         </div>
         <div class="col-md-6" style="height:calc(100vh - 200px);">
             <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">转换过程信息</div>
@@ -405,7 +405,7 @@ let log_output_lists = new Array();
                   $("#avg_conn_wt").text(convert_infos.wt_mean);
                   $("#std_conn_wt").text(convert_infos.wt_std);
 
-                  let bar_chart_label_names = ["模型转换用时", "参数调整用时", "后处理用时", "达尔文文件生成用时"];
+                  let bar_chart_label_names = ["ANN转SNN用时", "预处理用时", "参数调优用时", "DarwinLang文件生成用时"];
                   let bar_chart_label_counts = [parseFloat(convert_infos.stage1_time_use), parseFloat(convert_infos.stage2_time_use),
                                 parseFloat(convert_infos.stage3_time_use), parseFloat(convert_infos.stage4_time_use)];
                   display_bar_chart(bar_chart_label_names, bar_chart_label_counts, "","秒","use_time_bar_chart");
@@ -474,7 +474,6 @@ let log_output_lists = new Array();
                     }
                 }
             },
-            backgroundColor:"#17202A",
             xAxis: [
                 {
                     type: 'category',
@@ -483,54 +482,37 @@ let log_output_lists = new Array();
                         type: 'shadow'
                     },
                     axisLabel:{
-                        textStyle:{
-                            "color":"#FDFEFE "
-                        },
-                        rotate:30
+                        rotate:18
                     }
                 }
             ],
             yAxis: [
                 {
                     type: 'value',
-                    name: '',
-                    min: 0,
-                    max: Math.max(label_counts)*1.2,
-                    interval: Math.max(label_counts)*1.2 / 5,
+                    name: '时长(秒)',
+                    scale:true,
                     axisLabel: {
                         formatter: '{value}'
-                    },
-                    splitLine:{show:false},
-                    axisLine: {show: false}, 
-                    axisTick: {show: false},
-                    axisLabel:{show:false}
-                },
-                {
-                    type: 'value',
-                    name: '',
-                    min: 0,
-                    max: Math.max(label_counts)*1.2,
-                    interval: Math.max(label_counts)*1.2 / 5,
-                    axisLabel: {
-                        formatter: '{value}'
-                    },
-                    splitLine:{show:false},
-                    axisLine: {show: false}, 
-                    axisTick: {show: false},
-                    axisLabel:{show:false}
+                    }
                 }
             ],
             series: [
                 {
                     name: series_name,
                     type: 'bar',
-                    data: label_counts
-                },
-                {
-                    name: series_name,
-                    type: 'line',
-                    yAxisIndex: 1,
-                    data: label_counts
+                    data: label_counts,                    
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: true, //开启显示
+                                position: 'top', //在上方显示
+                                textStyle: { //数值样式
+                                    color: 'white',
+                                    fontSize: 16
+                                }
+                            }
+                        }
+                    }
                 }
             ]
         };

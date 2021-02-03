@@ -383,7 +383,7 @@ stage2_time_use = "%.2f" % (stage2_time_use - stage1_time_use)
 stage1_time_use = "%.2f" % (stage1_time_use - start_time)
 
 end_time = time.time()
-total_use_time = "%.2f seconds" % (end_time-start_time)
+total_use_time = "%.2f 秒" % (end_time-start_time)
 wt_mean = np.mean(wt_statics)
 wt_std = np.std(wt_statics)
 spk_mean = np.mean(spike_statics)/50

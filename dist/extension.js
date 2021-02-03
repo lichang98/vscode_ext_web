@@ -5849,7 +5849,7 @@ function getANNSNNConvertPage() {
               <div id="use_time_bar_chart" style="width: 330px;height: 300px;margin-top: 30px;"></div>
           </div>
           <div class="col-md-6" style="height:calc(100vh - 200px);">
-              <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络突触连接信息</div>
+              <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">转换过程信息</div>
               <table id="info_simu_table" style="margin-left: auto;margin-right: auto;">
                   <tr style="margin-top: 15px;">
                       <td style="width: 200px;">转换总耗时</td>

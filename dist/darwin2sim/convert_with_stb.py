@@ -153,7 +153,6 @@ br2_state_mon = brian2.StateMonitor(br2_neurons[-1], 'v', record=0)
 br2_net = brian2.Network(br2_neurons, br2_synapses, br2_monitor, br2_input_monitor,br2_state_mon)
 br2_net.store()
 
-br2_net.store(filename=os.path.join(baseDirPath, "snn_brian2.model"))
 
 print("PREPROCESS_FINISH...")
 stage2_time_use = time.time()
@@ -182,6 +181,17 @@ all_accus=[]
 # print("choose best vthreshold={}".format(best_vthresh))
 
 best_vthresh = 16
+
+br2_model = {
+    "neurons":[e.N for e in br2_neurons],
+    "synapses_i":[list(e.i) for e in br2_synapses],
+    "synapses_j":[list(e.j) for e in br2_synapses],
+    "synapses_w":[list(e.w) for e in br2_synapses],
+    "v_thresh": best_vthresh,
+    "run_dura": 100
+}
+with open(os.path.join(baseDirPath, "br2_models", "br2.pkl"), "wb+") as f:
+    pickle.dump(br2_model, f)
 
 snn_test_img_uris = []
 snn_test_output_spikes = []

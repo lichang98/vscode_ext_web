@@ -6345,10 +6345,12 @@ function getSNNSimuPage() {
   
   <script>
     let prev_clicked_li = undefined;
+    let need_red_img_li = new Array();
   
         $(document).ready(function(){
             window.addEventListener("message", function(evt){
               console.log("SNN 仿真接收到extension 消息");
+              need_red_img_li.splice(0);
                 const data = JSON.parse(evt.data);
                 if(data.snn_info){
                     var infos =JSON.parse(data.snn_info);
@@ -6432,6 +6434,8 @@ function getSNNSimuPage() {
                     console.log("spiking spike infos[0]="+test_img_spikes[0].cls_names);
                     console.log("spike tuples[0]="+test_img_spikes[0].spike_tuples);
   
+                    calc_need_red(test_img_spikes);
+  
                     for(let i=0;i<test_img_uris.length;++i){
                       var img_li = document.createElement("li");
                       img_li.style.listStyle = "none";
@@ -6450,8 +6454,8 @@ function getSNNSimuPage() {
                         prev_clicked_li = "img_li_"+i;
                         display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
   
-                                              // display counts in table
-                                              let cls_idx = test_img_spikes[i].spike_tuples[0][0];
+                        // display counts in table
+                        let cls_idx = test_img_spikes[i].spike_tuples[0][0];
                         let curr_count=1;
                         let spike_counts = new Array();
                         for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
@@ -6469,13 +6473,13 @@ function getSNNSimuPage() {
                         spike_counts[spike_counts.length-1] = curr_count;
                         document.getElementById("out_labels").innerHTML = "";
                         let td_child = document.createElement("td");
-                        td_child.innerText = "计数值:";
+                        td_child.innerText = "标签名称:";
                         td_child.style.width = "60px";
                         document.getElementById("out_labels").appendChild(td_child);
   
                         document.getElementById("out_counts_tr").innerHTML = '';
                         td_child = document.createElement("td");
-                        td_child.innerText = "标签名称:";
+                        td_child.innerText = "计数值:";
                         td_child.style.width = "60px";
                         document.getElementById("out_counts_tr").appendChild(td_child);
   
@@ -6490,6 +6494,16 @@ function getSNNSimuPage() {
                           td_child.style.width = "33px";
                           document.getElementById("out_labels").appendChild(td_child);
                         }
+  
+                        console.log("check spike_counts of "+i+", ="+spike_counts);
+                        // mark reds
+                        for(let k=0;k<need_red_img_li.length;++k){
+                          if(prev_clicked_li === need_red_img_li[k]){
+                            document.getElementById(need_red_img_li[k]).style.backgroundColor = "yellow";  
+                          }else{
+                            document.getElementById(need_red_img_li[k]).style.backgroundColor = "red";
+                          }
+                        }
                       }
                       img_tag.src = test_img_uris[i];
                       img_tag.style.width = "50px";
@@ -6501,8 +6515,15 @@ function getSNNSimuPage() {
                       var label_span = document.createElement("span");
                       label_span.innerText = "标签: "+test_img_uris[i].split("_")[5].split(".")[0];
                       img_li.appendChild(label_span);
+                    }
   
-  
+                    // mark reds
+                    for(let i=0;i<need_red_img_li.length;++i){
+                      if(prev_clicked_li === need_red_img_li[i]){
+                        document.getElementById(need_red_img_li[i]).style.backgroundColor = "yellow";  
+                      }else{
+                        document.getElementById(need_red_img_li[i]).style.backgroundColor = "red";
+                      }
                     }
                 }
             });
@@ -6528,6 +6549,45 @@ function getSNNSimuPage() {
               };
               var weights_chart = echarts.init(document.getElementById("weight_dist_chart"));
               weights_chart.setOption(opt);
+        }
+  
+        function multiple_argmax(lst){
+          tmp_lst = new Array();
+          for(let i=0;i<lst.length;++i){
+            tmp_lst.push(parseInt(lst[i]));
+          }
+          tmp_lst.sort((a,b)=>{return a-b;}).reverse()
+          if(tmp_lst[0] === tmp_lst[1]){
+            return true;
+          }else{
+            return false;
+          }
+        }
+  
+        function calc_need_red(test_img_spikes){
+          for(let i=0;i<test_img_spikes.length;++i){
+            let cls_idx = test_img_spikes[i].spike_tuples[0][0];
+            let curr_count=1;
+            let spike_counts = new Array();
+            for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
+                spike_counts.push(0);
+            }
+            for(let j=1;j<test_img_spikes[i].spike_tuples.length;++j){
+                if(cls_idx === test_img_spikes[i].spike_tuples[j][0]){
+                    curr_count = curr_count+1;
+                }else{
+                    spike_counts[cls_idx] = curr_count;
+                    curr_count=1;
+                    cls_idx = test_img_spikes[i].spike_tuples[j][0];
+                }
+            }
+            spike_counts[spike_counts.length-1] = curr_count;
+            console.log("current check img:"+i+", spike_counts="+spike_counts);
+            if(multiple_argmax(spike_counts)){
+              need_red_img_li.push("img_li_"+i);
+              console.log("img: "+i+" need mark.");
+            }
+          }
         }
   
         function display_spike_scatter_chart(labels, datas){

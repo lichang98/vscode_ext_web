@@ -6238,258 +6238,322 @@ exports.getANNSNNConvertPage = getANNSNNConvertPage;
 function getSNNSimuPage() {
     return `
   <!DOCTYPE html>
-<html style="height: 640px;width: 100%;">
-
-<head>
-  <meta charset="UTF-8">
-  <title>模型转换器</title>
-</head>
-
-<body class="dark-mode" style="height: 100%;width: 100%;">
-
-    <div class="row" style="margin-top: 40px;">
-        <!-- SNN神经元信息 -->
-        <div class="col-md-6">
-            <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络神经元组信息</div>
-            <table id="snn_neurons_table" style="width: 540px;margin-left:80px;">
-                <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                <thead>
-                  <tr style="margin-top: 15px;">
-                    <td style="font-size: medium;font-weight: bold;">layer编号</td>
-                    <td style="font-size: medium;font-weight: bold;">神经元个数</td>
-                    <td style="font-size: medium;font-weight: bold;">求解方法</td>
-                    <td style="font-size: medium;font-weight: bold;">电压阈值</td>
+  <html style="height: 640px;width: 100%;">
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>模型转换器</title>
+  </head>
+  
+  <body class="dark-mode" style="height: 100%;width: 100%;">
+  
+      <div class="row" style="margin-top: 40px;">
+          <!-- SNN神经元信息 -->
+          <div class="col-md-6">
+              <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络神经元组信息</div>
+              <table id="snn_neurons_table" style="width: 540px;margin-left:80px;">
+                  <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
+                  <thead>
+                    <tr style="margin-top: 15px;">
+                      <td style="font-size: medium;font-weight: bold;">layer编号</td>
+                      <td style="font-size: medium;font-weight: bold;">神经元个数</td>
+                      <td style="font-size: medium;font-weight: bold;">求解方法</td>
+                      <td style="font-size: medium;font-weight: bold;">电压阈值</td>
+                    </tr>
+                    <!-- 动态加载 -->
+                  </thead>
+              </table>
+          </div>
+          <!--  -->
+          <div class="col-md-6">
+              <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络突触连接信息</div>
+              <table id="layer_conns_table" style="width: 420px;margin-left:120px;">
+                  <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
+                  <thead>
+                    <tr style="margin-top: 15px;">
+                      <td style="font-size: medium;font-weight: bold;">layer编号</td>
+                      <td style="font-size: medium;font-weight: bold;">连接稠密度</td>
+                      <td style="font-size: medium;font-weight: bold;">平均连接个数</td>
+                    </tr>
+                    <!-- 动态加载 -->
+                  </thead>
+              </table>
+          </div>
+      </div>
+      <div class="row" style="margin-top: 150px;">
+          <!--权重分布图-->
+          <div class="col-md-6">
+              <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络权重分布</div>
+              <div id="weight_dist_chart" style="width: 640px;height: 320px;margin-left: -35px;"></div>
+          </div>
+          <div class="col-md-6">
+              <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
+              <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;">统计计数</div>
+              <table id="spike_out_count_table" style="margin-left: 125px;">
+                  <tr id="out_labels">
                   </tr>
-                  <!-- 动态加载 -->
-                </thead>
-            </table>
-        </div>
-        <!--  -->
-        <div class="col-md-6">
-            <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络突触连接信息</div>
-            <table id="layer_conns_table" style="width: 620px;margin-left:80px;">
-                <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                <thead>
-                  <tr style="margin-top: 15px;">
-                    <td style="font-size: medium;font-weight: bold;">layer编号</td>
-                    <td style="font-size: medium;font-weight: bold;">连接稠密度</td>
-                    <td style="font-size: medium;font-weight: bold;">平均每个神经元的连接数</td>
+                  <tr id="out_counts_tr">
                   </tr>
-                  <!-- 动态加载 -->
-                </thead>
-            </table>
-        </div>
-    </div>
-    <div class="row" style="margin-top: 150px;">
-        <!--权重分布图-->
-        <div class="col-md-6">
-            <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络权重分布</div>
-            <div id="weight_dist_chart" style="width: 640px;height: 320px;margin-left: 25px;"></div>
-        </div>
-        <div class="col-md-6">
-            <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
-            <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
-            </ul>
-            <div id="spike_charts" style="width: 420px;height: 340px;margin-left: 25px;display: inline-block;"></div>
-        </div>
-    </div>
-</body>
-<style>
-
-.titlebar {
-  -webkit-user-select: none;
-  -webkit-app-region: drag;
-}
-
-.titlebar-button {
-  -webkit-app-region: no-drag;
-}
-
-.dark-mode {
-  background-color: rgb(61, 57, 57);
-  color: white;
-}
-
-  @font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+              </table>
+              <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
+              </ul>
+              <div id="spike_charts" style="width: 420px;height: 340px;margin-left: 25px;display: inline-block;"></div>
+          </div>
+      </div>
+  </body>
+  <style>
+  
+  .titlebar {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
   }
-
-  .material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    text-transform: none;
-    display: inline-block;
-    -webkit-font-feature-settings: 'liga';
-    -webkit-font-smoothing: antialiased;
+  
+  .titlebar-button {
+    -webkit-app-region: no-drag;
   }
-</style>
-<!-- Compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-
-<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
-
-<script>
-      $(document).ready(function(){
-          window.addEventListener("message", function(evt){
-            console.log("SNN 仿真接收到extension 消息");
-              const data = JSON.parse(evt.data);
-              if(data.snn_info){
-                  var infos =JSON.parse(data.snn_info);
-                  // 构建neurons info 表格
-                  var neurons_info = infos.neurons_info;
-                  var neurons_table = document.getElementById("snn_neurons_table");
-                  for(var i=0;i<neurons_info.length;++i){
-                      var line = document.createElement("tr");
-                      line.style = "margin-top: 15px;"
-                      var col_1 = document.createElement("td");
-                      col_1.style = "font-size: medium";
-                      col_1.innerText = neurons_info[i].idx;
-
-                      var col_2 = document.createElement("td");
-                      col_2.style = "font-size: medium";
-                      col_2.innerText = neurons_info[i].neuron_count;
-
-                      var col_3 = document.createElement("td");
-                      col_3.style = "font-size: medium";
-                      col_3.innerText = neurons_info[i].method;
-
-                      var col_4 = document.createElement("td");
-                      col_4.style = "font-size: medium";
-                      col_4.innerText = neurons_info[i].vthresh;
-
-                      line.appendChild(col_1);
-                      line.appendChild(col_2);
-                      line.appendChild(col_3);
-                      line.appendChild(col_4);
-
-                      neurons_table.appendChild(line);
-                  }
-                  // 构建突触表格
-                  var synaps_info = infos.layer_conns;
-                  var synaps_table = document.getElementById("layer_conns_table");
-                  for(var i=0;i<synaps_info.length;++i){
-                      var line = document.createElement("tr");
-                      line.style = "margin-top: 15px;";
-                      var col_1 = document.createElement("td");
-                      col_1.style = "font-size: medium";
-                      col_1.innerText = synaps_info[i].idx;
-
-                      var col_2 = document.createElement("td");
-                      col_2.style = "font-size: medium";
-                      col_2.innerText = synaps_info[i].ratio;
-
-                      var col_3 = document.createElement("td");
-                      col_3.style = "font-size: medium";
-                      col_3.innerText = synaps_info[i].avg_conn;
-
-                      line.appendChild(col_1);
-                      line.appendChild(col_2);
-                      line.appendChild(col_3);
-                      synaps_table.appendChild(line);
-                  }
-
-                  // 绘制权重分布图
-                  for(var i=0;i<infos.layers_weights.wt_count.length;++i){
-                      infos.layers_weights.wt_count[i] = Math.log10(infos.layers_weights.wt_count[i]);
-                  }
-                  console.log("权重数据："+infos.layers_weights.wt_label);
-                  console.log("数值:"+infos.layers_weights.wt_count)
-                  display_weight_chart(infos.layers_weights.wt_label, infos.layers_weights.wt_count);
-                  
-                  // 绘制脉冲时间序列图
-                  // console.log("脉冲数据:"+infos.spikes.cls_names);
-                  // display_spike_scatter_chart(infos.spikes.cls_names, infos.spikes.spike_tuples);
-                  // function sample_img_click(evt){
-                  //   var sampleId = $(evt).attr("id");
-                  //   if(sampleId === undefined){
-                  //     return;
-                  //   }
-                  //   console.log("current click sample img_id:" + sampleId);
-                  //   var idx = parseInt(sampleId.split("_")[2]);
-                  //   display_spike_scatter_chart(infos.spikes.snn_test_spikes[idx].cls_names, infos.spikes.snn_test_spikes[idx].spike_tuples);
-                  // }
-                  var test_img_uls = document.getElementById("sample_imgs_ul");
-                  var test_img_uris = infos.spikes.snn_test_imgs;
-                  var test_img_spikes = infos.spikes.snn_test_spikes;
-                  console.log("spiking img uris[0]"+test_img_uris[0]);
-                  console.log("spiking spike infos[0]="+test_img_spikes[0].cls_names);
-                  console.log("spike tuples[0]="+test_img_spikes[0].spike_tuples);
-
-                  for(let i=0;i<test_img_uris.length;++i){
-                    var img_li = document.createElement("li");
-                    img_li.style.listStyle = "none";
-                    img_li.style.marginBottom = "10px";
-                    var img_tag = document.createElement("img");
-                    img_tag.id = "sample_img_"+i;
-                    img_tag.onclick = function(){
-                      console.log("draw NO."+i+" img and spikes");
-                      display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
+  
+  .dark-mode {
+    background-color: rgb(61, 57, 57);
+    color: white;
+  }
+  
+    @font-face {
+      font-family: 'Material Icons';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+    }
+  
+    .material-icons {
+      font-family: 'Material Icons';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      text-transform: none;
+      display: inline-block;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
+  
+  <script>
+    let prev_clicked_li = undefined;
+  
+        $(document).ready(function(){
+            window.addEventListener("message", function(evt){
+              console.log("SNN 仿真接收到extension 消息");
+                const data = JSON.parse(evt.data);
+                if(data.snn_info){
+                    var infos =JSON.parse(data.snn_info);
+                    // 构建neurons info 表格
+                    var neurons_info = infos.neurons_info;
+                    var neurons_table = document.getElementById("snn_neurons_table");
+                    for(var i=0;i<neurons_info.length;++i){
+                        var line = document.createElement("tr");
+                        line.style = "margin-top: 15px;"
+                        var col_1 = document.createElement("td");
+                        col_1.style = "font-size: medium";
+                        col_1.innerText = neurons_info[i].idx;
+  
+                        var col_2 = document.createElement("td");
+                        col_2.style = "font-size: medium";
+                        col_2.innerText = neurons_info[i].neuron_count;
+  
+                        var col_3 = document.createElement("td");
+                        col_3.style = "font-size: medium";
+                        col_3.innerText = neurons_info[i].method;
+  
+                        var col_4 = document.createElement("td");
+                        col_4.style = "font-size: medium";
+                        col_4.innerText = neurons_info[i].vthresh;
+  
+                        line.appendChild(col_1);
+                        line.appendChild(col_2);
+                        line.appendChild(col_3);
+                        line.appendChild(col_4);
+  
+                        neurons_table.appendChild(line);
                     }
-                    img_tag.src = test_img_uris[i];
-                    img_tag.style.width = "50px";
-                    img_tag.style.height = "50px";
-
-                    img_li.appendChild(img_tag);
-                    test_img_uls.appendChild(img_li);
-                  }
-              }
-          });
-      });
-
-      function display_weight_chart(label_names, label_counts){
-          var opt = {
-                xAxis: {
-                    type: 'category',
-                    data: label_names
-                },
-                yAxis: {
-                    type: 'value',
-                    splitLine:{show:false},
-                    axisLine: {show: false}, 
-                    axisTick: {show: false},
-                    axisLabel:{show:false}
-                },
-                series: [{
-                    data: label_counts,
-                    type: 'bar'
-                }]
-            };
-            var weights_chart = echarts.init(document.getElementById("weight_dist_chart"));
-            weights_chart.setOption(opt);
-      }
-
-      function display_spike_scatter_chart(labels, datas){
-          var opt={
-                xAxis: {
-                    type:'category',
-                    data: labels
-                },
-                yAxis: {
-                    splitLine:{show:false},
-                    axisLine: {show: false}, 
-                    axisTick: {show: false},
-                    axisLabel:{show:false}
-                },
-                series: [{
-                    symbolSize: 5,
-                    data: datas,
-                    type: 'scatter'
-                }]
-            };
-            var spike_chart = echarts.init(document.getElementById("spike_charts"));
-            spike_chart.setOption(opt);
-      }
-</script>
-
-</html>
+                    // 构建突触表格
+                    var synaps_info = infos.layer_conns;
+                    var synaps_table = document.getElementById("layer_conns_table");
+                    for(var i=0;i<synaps_info.length;++i){
+                        var line = document.createElement("tr");
+                        line.style = "margin-top: 15px;";
+                        var col_1 = document.createElement("td");
+                        col_1.style = "font-size: medium";
+                        col_1.innerText = synaps_info[i].idx;
+  
+                        var col_2 = document.createElement("td");
+                        col_2.style = "font-size: medium";
+                        col_2.innerText = synaps_info[i].ratio;
+  
+                        var col_3 = document.createElement("td");
+                        col_3.style = "font-size: medium";
+                        col_3.innerText = synaps_info[i].avg_conn;
+  
+                        line.appendChild(col_1);
+                        line.appendChild(col_2);
+                        line.appendChild(col_3);
+                        synaps_table.appendChild(line);
+                    }
+  
+                    // 绘制权重分布图
+                    for(var i=0;i<infos.layers_weights.wt_count.length;++i){
+                        infos.layers_weights.wt_count[i] = Math.log10(infos.layers_weights.wt_count[i]);
+                    }
+                    console.log("权重数据："+infos.layers_weights.wt_label);
+                    console.log("数值:"+infos.layers_weights.wt_count)
+                    display_weight_chart(infos.layers_weights.wt_label, infos.layers_weights.wt_count);
+                    
+                    // 绘制脉冲时间序列图
+                    // console.log("脉冲数据:"+infos.spikes.cls_names);
+                    // display_spike_scatter_chart(infos.spikes.cls_names, infos.spikes.spike_tuples);
+                    // function sample_img_click(evt){
+                    //   var sampleId = $(evt).attr("id");
+                    //   if(sampleId === undefined){
+                    //     return;
+                    //   }
+                    //   console.log("current click sample img_id:" + sampleId);
+                    //   var idx = parseInt(sampleId.split("_")[2]);
+                    //   display_spike_scatter_chart(infos.spikes.snn_test_spikes[idx].cls_names, infos.spikes.snn_test_spikes[idx].spike_tuples);
+                    // }
+                    var test_img_uls = document.getElementById("sample_imgs_ul");
+                    var test_img_uris = infos.spikes.snn_test_imgs;
+                    var test_img_spikes = infos.spikes.snn_test_spikes;
+                    console.log("spiking img uris[0]"+test_img_uris[0]);
+                    console.log("spiking spike infos[0]="+test_img_spikes[0].cls_names);
+                    console.log("spike tuples[0]="+test_img_spikes[0].spike_tuples);
+  
+                    for(let i=0;i<test_img_uris.length;++i){
+                      var img_li = document.createElement("li");
+                      img_li.style.listStyle = "none";
+                      img_li.id = "img_li_"+i;
+                      img_li.style.width = "53px";
+                      img_li.style.height = "53px";
+                      img_li.style.marginBottom = "16px";
+                      var img_tag = document.createElement("img");
+                      img_tag.id = "sample_img_"+i;
+                      img_tag.onclick = function(){
+                        console.log("draw NO."+i+" img and spikes");
+                        if(prev_clicked_li !== undefined){
+                          document.getElementById(prev_clicked_li).style.backgroundColor = "";
+                        }
+                        document.getElementById("img_li_"+i).style.backgroundColor = "chocolate";
+                        prev_clicked_li = "img_li_"+i;
+                        display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
+  
+                                              // display counts in table
+                                              let cls_idx = test_img_spikes[i].spike_tuples[0][0];
+                        let curr_count=1;
+                        let spike_counts = new Array();
+                        for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
+                            spike_counts.push(0);
+                        }
+                        for(let j=1;j<test_img_spikes[i].spike_tuples.length;++j){
+                            if(cls_idx === test_img_spikes[i].spike_tuples[j][0]){
+                                curr_count = curr_count+1;
+                            }else{
+                                spike_counts[cls_idx] = curr_count;
+                                curr_count=1;
+                                cls_idx = test_img_spikes[i].spike_tuples[j][0];
+                            }
+                        }
+                        spike_counts[spike_counts.length-1] = curr_count;
+                        document.getElementById("out_labels").innerHTML = "";
+                        let td_child = document.createElement("td");
+                        td_child.innerText = "计数值:";
+                        td_child.style.width = "60px";
+                        document.getElementById("out_labels").appendChild(td_child);
+  
+                        document.getElementById("out_counts_tr").innerHTML = '';
+                        td_child = document.createElement("td");
+                        td_child.innerText = "标签名称:";
+                        td_child.style.width = "60px";
+                        document.getElementById("out_counts_tr").appendChild(td_child);
+  
+                        for(let j=0;j<spike_counts.length;++j){
+                          let td_child = document.createElement("td");
+                          td_child.innerText = spike_counts[j];
+                          td_child.style.width = "33px";
+                          document.getElementById("out_counts_tr").appendChild(td_child);
+  
+                          td_child = document.createElement("td");
+                          td_child.innerText = test_img_spikes[i].cls_names[j];
+                          td_child.style.width = "33px";
+                          document.getElementById("out_labels").appendChild(td_child);
+                        }
+                      }
+                      img_tag.src = test_img_uris[i];
+                      img_tag.style.width = "50px";
+                      img_tag.style.height = "50px";
+  
+                      img_li.appendChild(img_tag);
+                      test_img_uls.appendChild(img_li);
+  
+                      var label_span = document.createElement("span");
+                      label_span.innerText = "标签: "+test_img_uris[i].split("_")[5].split(".")[0];
+                      img_li.appendChild(label_span);
+  
+  
+                    }
+                }
+            });
+        });
+  
+        function display_weight_chart(label_names, label_counts){
+            var opt = {
+                  xAxis: {
+                      type: 'category',
+                      data: label_names
+                  },
+                  yAxis: {
+                      type: 'value',
+                      splitLine:{show:false},
+                      axisLine: {show: false}, 
+                      axisTick: {show: false},
+                      axisLabel:{show:false}
+                  },
+                  series: [{
+                      data: label_counts,
+                      type: 'bar'
+                  }]
+              };
+              var weights_chart = echarts.init(document.getElementById("weight_dist_chart"));
+              weights_chart.setOption(opt);
+        }
+  
+        function display_spike_scatter_chart(labels, datas){
+            var opt={
+                  xAxis: {
+                      type:'category',
+                      data: labels
+                  },
+                  yAxis: {
+                      splitLine:{show:false},
+                      axisLine: {show: false}, 
+                      axisTick: {show: false},
+                      axisLabel:{show:false}
+                  },
+                  series: [{
+                      symbolSize: 5,
+                      data: datas,
+                      type: 'scatter'
+                  }]
+              };
+              var spike_chart = echarts.init(document.getElementById("spike_charts"));
+              spike_chart.setOption(opt);
+        }
+  </script>
+  
+  </html>
   `;
 }
 exports.getSNNSimuPage = getSNNSimuPage;

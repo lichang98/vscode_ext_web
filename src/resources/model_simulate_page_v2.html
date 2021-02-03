@@ -28,13 +28,13 @@
         <!--  -->
         <div class="col-md-6">
             <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络突触连接信息</div>
-            <table id="layer_conns_table" style="width: 620px;margin-left:80px;">
+            <table id="layer_conns_table" style="width: 420px;margin-left:120px;">
                 <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                 <thead>
                   <tr style="margin-top: 15px;">
                     <td style="font-size: medium;font-weight: bold;">layer编号</td>
                     <td style="font-size: medium;font-weight: bold;">连接稠密度</td>
-                    <td style="font-size: medium;font-weight: bold;">平均每个神经元的连接数</td>
+                    <td style="font-size: medium;font-weight: bold;">平均连接个数</td>
                   </tr>
                   <!-- 动态加载 -->
                 </thead>
@@ -45,10 +45,17 @@
         <!--权重分布图-->
         <div class="col-md-6">
             <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络权重分布</div>
-            <div id="weight_dist_chart" style="width: 640px;height: 320px;margin-left: 25px;"></div>
+            <div id="weight_dist_chart" style="width: 640px;height: 320px;margin-left: -35px;"></div>
         </div>
         <div class="col-md-6">
             <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
+            <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;">统计计数</div>
+            <table id="spike_out_count_table" style="margin-left: 125px;">
+                <tr id="out_labels">
+                </tr>
+                <tr id="out_counts_tr">
+                </tr>
+            </table>
             <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
             </ul>
             <div id="spike_charts" style="width: 420px;height: 340px;margin-left: 25px;display: inline-block;"></div>
@@ -98,6 +105,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
 
 <script>
+  let prev_clicked_li = undefined;
+
       $(document).ready(function(){
           window.addEventListener("message", function(evt){
             console.log("SNN 仿真接收到extension 消息");
@@ -187,12 +196,61 @@
                   for(let i=0;i<test_img_uris.length;++i){
                     var img_li = document.createElement("li");
                     img_li.style.listStyle = "none";
-                    img_li.style.marginBottom = "10px";
+                    img_li.id = "img_li_"+i;
+                    img_li.style.width = "53px";
+                    img_li.style.height = "53px";
+                    img_li.style.marginBottom = "16px";
                     var img_tag = document.createElement("img");
                     img_tag.id = "sample_img_"+i;
                     img_tag.onclick = function(){
                       console.log("draw NO."+i+" img and spikes");
+                      if(prev_clicked_li !== undefined){
+                        document.getElementById(prev_clicked_li).style.backgroundColor = "";
+                      }
+                      document.getElementById("img_li_"+i).style.backgroundColor = "chocolate";
+                      prev_clicked_li = "img_li_"+i;
                       display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
+
+                                            // display counts in table
+                                            let cls_idx = test_img_spikes[i].spike_tuples[0][0];
+                      let curr_count=1;
+                      let spike_counts = new Array();
+                      for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
+                          spike_counts.push(0);
+                      }
+                      for(let j=1;j<test_img_spikes[i].spike_tuples.length;++j){
+                          if(cls_idx === test_img_spikes[i].spike_tuples[j][0]){
+                              curr_count = curr_count+1;
+                          }else{
+                              spike_counts[cls_idx] = curr_count;
+                              curr_count=1;
+                              cls_idx = test_img_spikes[i].spike_tuples[j][0];
+                          }
+                      }
+                      spike_counts[spike_counts.length-1] = curr_count;
+                      document.getElementById("out_labels").innerHTML = "";
+                      let td_child = document.createElement("td");
+                      td_child.innerText = "计数值:";
+                      td_child.style.width = "60px";
+                      document.getElementById("out_labels").appendChild(td_child);
+
+                      document.getElementById("out_counts_tr").innerHTML = '';
+                      td_child = document.createElement("td");
+                      td_child.innerText = "标签名称:";
+                      td_child.style.width = "60px";
+                      document.getElementById("out_counts_tr").appendChild(td_child);
+
+                      for(let j=0;j<spike_counts.length;++j){
+                        let td_child = document.createElement("td");
+                        td_child.innerText = spike_counts[j];
+                        td_child.style.width = "33px";
+                        document.getElementById("out_counts_tr").appendChild(td_child);
+
+                        td_child = document.createElement("td");
+                        td_child.innerText = test_img_spikes[i].cls_names[j];
+                        td_child.style.width = "33px";
+                        document.getElementById("out_labels").appendChild(td_child);
+                      }
                     }
                     img_tag.src = test_img_uris[i];
                     img_tag.style.width = "50px";
@@ -200,6 +258,12 @@
 
                     img_li.appendChild(img_tag);
                     test_img_uls.appendChild(img_li);
+
+                    var label_span = document.createElement("span");
+                    label_span.innerText = "标签: "+test_img_uris[i].split("_")[5].split(".")[0];
+                    img_li.appendChild(label_span);
+
+
                   }
               }
           });

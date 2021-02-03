@@ -353,7 +353,15 @@ brian2_snn_info = {
         "snn_test_imgs": snn_test_img_uris,
         "snn_test_spikes": snn_test_output_spikes
     },
-    "layer_conns": layer_conn_info
+    "layer_conns": layer_conn_info,
+    "extra_simu_info":{
+        "simulate_vthresh": best_vthresh,
+        "simulate_neuron_dt": "1ms",
+        "simulate_synapse_dt": "0.1ms",
+        "simulate_delay": "1ms",
+        "simulate_dura": "100ms",
+        "simulate_acc": "{:.2%}".format(acc/50)
+    }
 }
 
 with open(os.path.join(baseDirPath, "brian2_snn_info.json"), "w+") as f:

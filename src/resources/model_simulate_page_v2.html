@@ -10,9 +10,9 @@
 
     <div class="row" style="margin-top: 40px;">
         <!-- SNN神经元信息 -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络神经元组信息</div>
-            <table id="snn_neurons_table" style="width: 540px;margin-left:80px;">
+            <table id="snn_neurons_table" style="width: 400px;margin-left:10px;">
                 <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                 <thead>
                   <tr style="margin-top: 15px;">
@@ -26,9 +26,9 @@
             </table>
         </div>
         <!--  -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络突触连接信息</div>
-            <table id="layer_conns_table" style="width: 420px;margin-left:120px;">
+            <table id="layer_conns_table" style="width: 420px;margin-left:20px;">
                 <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                 <thead>
                   <tr style="margin-top: 15px;">
@@ -40,12 +40,45 @@
                 </thead>
             </table>
         </div>
+
+        <div class="col-md-4">
+          <div>
+            <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">仿真配置结果评估</div>
+            <table id="layer_conns_table" style="width: 360px;margin-left:60px;">
+                <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
+                <tr style="height: 30px;">
+                  <td style="font-size: medium;font-weight: bold;">膜电压阈值</td>
+                  <td id="simulate_vthresh"></td>
+                </tr>
+                <tr style="height: 30px;">
+                  <td style="font-size: medium;font-weight: bold;">神经元时间步长</td>
+                  <td id="simulate_neuron_dt"></td>
+                </tr>
+                <tr style="height: 30px;">
+                  <td style="font-size: medium;font-weight: bold;">突触时间步长</td>
+                  <td id="simulate_synapse_dt"></td>
+                </tr>
+                <tr style="height: 30px;">
+                  <td  style="font-size: medium;font-weight: bold;">延迟</td>
+                  <td id="simulate_delay"></td>
+                </tr>
+                <tr style="height: 30px;">
+                  <td style="font-size: medium;font-weight: bold;">仿真时长</td>
+                  <td id="simulate_dura"></td>
+                </tr>
+                <tr style="height: 30px;">
+                  <td style="font-size: medium;font-weight: bold;">准确率</td>
+                  <td id="simulate_acc"></td>
+                </tr>    
+            </table>
+          </div>
+        </div>
     </div>
-    <div class="row" style="margin-top: 150px;">
+    <div class="row" style="margin-top: 50px;">
         <!--权重分布图-->
         <div class="col-md-6">
             <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络权重分布</div>
-            <div id="weight_dist_chart" style="width: 640px;height: 320px;margin-left: -35px;"></div>
+            <div id="weight_dist_chart" style="width: 640px;height: 320px;margin-left: -35px;margin-top: 80px;"></div>
         </div>
         <div class="col-md-6">
             <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
@@ -175,6 +208,14 @@
                   console.log("权重数据："+infos.layers_weights.wt_label);
                   console.log("数值:"+infos.layers_weights.wt_count)
                   display_weight_chart(infos.layers_weights.wt_label, infos.layers_weights.wt_count);
+
+                  // 仿真配置与结果表格
+                  $("#simulate_vthresh").text(infos.extra_simu_info.simulate_vthresh);
+                  $("#simulate_neuron_dt").text(infos.extra_simu_info.simulate_neuron_dt);
+                  $("#simulate_synapse_dt").text(infos.extra_simu_info.simulate_synapse_dt);
+                  $("#simulate_delay").text(infos.extra_simu_info.simulate_delay);
+                  $("#simulate_dura").text(infos.extra_simu_info.simulate_dura);
+                  $("#simulate_acc").text(infos.extra_simu_info.simulate_acc);
                   
                   // 绘制脉冲时间序列图
                   // console.log("脉冲数据:"+infos.spikes.cls_names);

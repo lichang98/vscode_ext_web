@@ -10,7 +10,7 @@
 
     <div class="row" style="margin-top: 30px;">
         <div class="col-md-12">
-            <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -160px;">参数配置</div>
+            <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -160px;">转换参数配置</div>
             <form role="form" class="row" style="margin-left: 40px;margin-top: 15px;" id="project_info_form">
                 <div class="col-md-2" style="text-align: center;">
                     <label for="select_vthresh">膜电压阈值</label>
@@ -133,9 +133,9 @@
             </div>
         
             <div class="row">
-                <span>启动</span>
-                <i id="start_convert_btn" class="large material-icons" style="margin-left: 0px;cursor: pointer;">play_circle_outline</i>
-                <div class="progress progress-striped active" style="width: 85%;display: inline-block;margin-bottom: 0;">
+                <!-- <span>启动</span> -->
+                <!-- <i id="start_convert_btn" class="large material-icons" style="margin-left: 0px;cursor: pointer;">play_circle_outline</i> -->
+                <div class="progress progress-striped active" style="width: 85%;display: inline-block;margin-bottom: 0;margin-left: 60px;">
                     <div id="total_progress_div" class="progress-bar progress-bar-success" role="progressbar"
                          aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
                          style="width: 0%;">
@@ -283,36 +283,36 @@ let log_output_lists = new Array();
                 document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
                 if($("#model_convert_progress_div").css("width") !== "100%"){
                     if(log_output_lists.length <= 150){
-                        document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/150*100)+"%";
+                        document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/150*95)+"%";
                     }
                 }
                 if(log_output_lists.length > 200){
                     if($("#preprocess_progress_div").css("width") !== "100%"){
                         if(log_output_lists.length < 3000){
-                            document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-200)/2800*100)+"%";
+                            document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-200)/2800*95)+"%";
                         }
                     }
                 }
                 if(log_output_lists.length > 3000){
                     if($("#search_progress_div").css("width") !== "100%"){
                         if(log_output_lists.length < 3200){
-                            document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-3000)/134*100)+"%";
+                            document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-3000)/134*95)+"%";
                         }
                     }
                 }
                 if(log_output_lists.length > 3200){
                     if($("#darlang_progress_div") !== "100%"){
                         if(log_output_lists.length < 3230){
-                            document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-3200)/80*100)+"%";
+                            document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-3200)/80*95)+"%";
                         }
                     }
                 }
                 if($("#total_progress_div").css("width") !== "100%"){
-                    document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/3300*100)+"%";
+                    document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/3300*95)+"%";
                 }
               }else if(data.exec_finish){
                   // 结束
-                  document.getElementById("start_convert_btn").style.backgroundColor = "";
+                //   document.getElementById("start_convert_btn").style.backgroundColor = "";
                   document.getElementById("model_convert_progress_div").style.width = "100%";
                   document.getElementById("preprocess_progress_div").style.width = "100%";
                   document.getElementById("search_progress_div").style.width = "100%";
@@ -428,31 +428,51 @@ let log_output_lists = new Array();
                   let bar_chart_label_counts = [parseFloat(convert_infos.stage1_time_use), parseFloat(convert_infos.stage2_time_use),
                                 parseFloat(convert_infos.stage3_time_use), parseFloat(convert_infos.stage4_time_use)];
                   display_bar_chart(bar_chart_label_names, bar_chart_label_counts, "","秒","use_time_bar_chart");
+              }else if(data.ann_model_start_convert){
+                  // 接收到启动转换的命令，初始化
+                let v_thresh = $("#select_vthresh").val().replace("ms","");
+                let neuron_dt = $("#select_dt").val().replace("ms","");
+                let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
+                let delay = $("#select_delay").val().replace("ms", "");
+                let dura = $("#select_dura").val().replace("ms","");
+                console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay);
+                vscode.postMessage(JSON.stringify({"model_convert_params":{
+                    "vthresh": v_thresh,
+                    "neuron_dt": neuron_dt,
+                    "synapse_dt":synapse_dt,
+                    "delay":delay,
+                    "dura":dura
+                }}));
+                document.getElementById("model_convert_progress_div").style.width = "0%";
+                document.getElementById("preprocess_progress_div").style.width = "0%";
+                document.getElementById("search_progress_div").style.width = "0%";
+                document.getElementById("darlang_progress_div").style.width = "0%";
+                document.getElementById("total_progress_div").style.width = "0%";
               }
           });
 
-          $("#start_convert_btn").on("click", ()=>{
-              let v_thresh = $("#select_vthresh").val().replace("ms","");
-              let neuron_dt = $("#select_dt").val().replace("ms","");
-              let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
-              let delay = $("#select_delay").val().replace("ms", "");
-              let dura = $("#select_dura").val().replace("ms","");
-              document.getElementById("start_convert_btn").style.backgroundColor = "chocolate";
-              console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay);
-              vscode.postMessage(JSON.stringify({"model_convert_params":{
-                  "vthresh": v_thresh,
-                  "neuron_dt": neuron_dt,
-                  "synapse_dt":synapse_dt,
-                  "delay":delay,
-                  "dura":dura
-              }}));
-              document.getElementById("model_convert_progress_div").style.width = "0%";
-              document.getElementById("preprocess_progress_div").style.width = "0%";
-              document.getElementById("search_progress_div").style.width = "0%";
-              document.getElementById("darlang_progress_div").style.width = "0%";
-              document.getElementById("total_progress_div").style.width = "0%";
+        //   $("#start_convert_btn").on("click", ()=>{
+        //       let v_thresh = $("#select_vthresh").val().replace("ms","");
+        //       let neuron_dt = $("#select_dt").val().replace("ms","");
+        //       let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
+        //       let delay = $("#select_delay").val().replace("ms", "");
+        //       let dura = $("#select_dura").val().replace("ms","");
+        //       document.getElementById("start_convert_btn").style.backgroundColor = "chocolate";
+        //       console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay);
+        //       vscode.postMessage(JSON.stringify({"model_convert_params":{
+        //           "vthresh": v_thresh,
+        //           "neuron_dt": neuron_dt,
+        //           "synapse_dt":synapse_dt,
+        //           "delay":delay,
+        //           "dura":dura
+        //       }}));
+        //       document.getElementById("model_convert_progress_div").style.width = "0%";
+        //       document.getElementById("preprocess_progress_div").style.width = "0%";
+        //       document.getElementById("search_progress_div").style.width = "0%";
+        //       document.getElementById("darlang_progress_div").style.width = "0%";
+        //       document.getElementById("total_progress_div").style.width = "0%";
 
-          });
+        //   });
 
       });
 

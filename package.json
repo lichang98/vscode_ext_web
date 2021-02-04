@@ -28,6 +28,7 @@
 		"onCommand:treeView-item.datavis",
 		"onCommand:treeView-item.import",
 		"onCommand:convertor.new_proj",
+		"onCommand:item_convertor.start_convert",
 		"*"
 	],
 	"main": "./dist/extension.js",
@@ -117,12 +118,17 @@
 			"view/item/context": [
 				{
 					"command": "treeView-item.datavis",
-					"when": "view == treeView-item && viewItem == 数据 || viewItem == ANN模型",
+					"when": "viewItem == 数据 || viewItem == ANN模型",
+					"group": "navigation"
+				},
+				{
+					"command": "item_convertor.start_convert",
+					"when": "viewItem == ANN模型",
 					"group": "navigation"
 				},
 				{
 					"command": "treeView-item.import",
-					"when": "view == treeView-item && viewItem == 训练数据 || viewItem == 测试数据 || viewItem == 测试数据标签 || viewItem == ANN模型",
+					"when": "viewItem == 训练数据 || viewItem == 测试数据 || viewItem == 测试数据标签 || viewItem == ANN模型",
 					"group": "navigation"
 				},
 				{

@@ -207,9 +207,9 @@ for i in range(50):
     for k,v in input_spike.items():
         input_spike_arrs.append([k,np.array(v/brian2.ms, dtype="int32").tolist()])
     # save input and corresponding img
-    with open(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "input_{}.txt".format(i)), "w+") as f:
-        # pickle.dump(input_spike_arrs, f)
-        f.write(json.dumps(input_spike_arrs))
+    with open(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "input_{}.pickle".format(i)), "wb+") as f:
+        pickle.dump(input_spike_arrs, f)
+        # f.write(json.dumps(input_spike_arrs))
     img = np.array(np.squeeze(valX[i])*255, dtype="uint8")
     Image.fromarray(img).save(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "img_idx_{}_label_{}.png"
                                 .format(i, np.argmax(valY[i]))))
@@ -377,13 +377,13 @@ import darlang
 darlang.run_darlang(os.path.join(outputPath, "snn_digit_darlang.json"),os.path.join(outputPath,"..", "bin_darwin_out"))
 
 
-stage4_time_use = "%.2f" % (stage4_time_use - stage3_time_use)
-stage3_time_use = "%.2f" % (stage3_time_use - stage2_time_use)
-stage2_time_use = "%.2f" % (stage2_time_use - stage1_time_use)
-stage1_time_use = "%.2f" % (stage1_time_use - start_time)
+stage4_time_use = "{:.3f}".format(stage4_time_use - stage3_time_use)
+stage3_time_use = "{:.3f}".format(stage3_time_use - stage2_time_use)
+stage2_time_use = "{:.3f}".format(stage2_time_use - stage1_time_use)
+stage1_time_use = "{:.3f}".format(stage1_time_use - start_time)
 
 end_time = time.time()
-total_use_time = "%.2f 秒" % (end_time-start_time)
+total_use_time = "{:.3f} 秒".format(end_time-start_time)
 wt_mean = np.mean(wt_statics)
 wt_std = np.std(wt_statics)
 spk_mean = np.mean(spike_statics)/50
@@ -391,10 +391,10 @@ spk_std = np.std(spike_statics)
 
 convert_info = {
     "total_use_time": total_use_time,
-    "wt_mean": wt_mean,
-    "wt_std": wt_std,
-    "spk_mean": spk_mean,
-    "spk_std": spk_std,
+    "wt_mean": "{:.3f}".format(float(wt_mean)),
+    "wt_std": "{:.3f}".format(float(wt_std)),
+    "spk_mean": "{:.3f}".format(float(spk_mean)),
+    "spk_std": "{:.3f}".format(float(spk_std)),
     "stage1_time_use":stage1_time_use,
     "stage2_time_use":stage2_time_use,
     "stage3_time_use":stage3_time_use,

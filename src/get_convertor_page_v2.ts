@@ -1626,7 +1626,7 @@ export function getSNNSimuPage(){
               </table>
               <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
               </ul>
-              <div id="spike_charts" style="width: 420px;height: 340px;margin-left: 25px;display: inline-block;"></div>
+              <div id="spike_charts" style="width: 440px;height: 340px;margin-left: 5px;display: inline-block;"></div>
           </div>
       </div>
   </body>
@@ -1868,16 +1868,41 @@ export function getSNNSimuPage(){
   
         function display_weight_chart(label_names, label_counts){
             var opt = {
+                  tooltip: {
+                      trigger: 'axis',
+                      axisPointer: {
+                          type: 'cross',
+                          crossStyle: {
+                              color: '#999'
+                          }
+                      }
+                  },
                   xAxis: {
                       type: 'category',
-                      data: label_names
+                      data: label_names,
+                      name:"权重",
+                      nameTextStyle:{
+                        color:"white"
+                      },
+                      axisLabel:{
+                        textStyle:{
+                            color:"white"
+                        }
+                     }
                   },
                   yAxis: {
                       type: 'value',
-                      splitLine:{show:false},
-                      axisLine: {show: false}, 
-                      axisTick: {show: false},
-                      axisLabel:{show:false}
+                      name:"连接个数(log_10)",
+                      nameTextStyle:{
+                        color:"white"
+                      },
+                      scale:true,
+                      axisLabel: {
+                          formatter: '{value}',
+                          textStyle:{
+                              color:"white"
+                          }
+                      }
                   },
                   series: [{
                       data: label_counts,
@@ -1929,15 +1954,41 @@ export function getSNNSimuPage(){
   
         function display_spike_scatter_chart(labels, datas){
             var opt={
+                  tooltip: {
+                      trigger: 'axis',
+                      axisPointer: {
+                          type: 'cross',
+                          crossStyle: {
+                              color: '#999'
+                          }
+                      }
+                  },
                   xAxis: {
                       type:'category',
-                      data: labels
+                      data: labels,
+                      name: "类别",
+                      nameTextStyle:{
+                        color:"white"
+                      },
+                      axisLabel:{
+                        textStyle:{
+                            color:"white"
+                        }
+                     }
                   },
                   yAxis: {
-                      splitLine:{show:false},
-                      axisLine: {show: false}, 
-                      axisTick: {show: false},
-                      axisLabel:{show:false}
+                      type: 'value',
+                      scale:true,
+                      name:"时间(brian2 ms)",
+                      nameTextStyle:{
+                        color:"white"
+                      },
+                      axisLabel: {
+                          formatter: '{value}',
+                          textStyle:{
+                              color:"white"
+                          }
+                      }
                   },
                   series: [{
                       symbolSize: 5,

@@ -404,3 +404,10 @@ convert_info = {
 with open(os.path.join(baseDirPath, "..", "inner_scripts", "convert_statistic_info.json"), "w+") as f:
     f.write(json.dumps(convert_info))
 
+# Add timestamp to config txt file
+with open(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.txt"), "r") as f:
+    content = f.read()
+
+content = time.strftime("%Y/%m/%d/%H:%M:%S")+"\n"+content
+with open(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.txt"), "w+") as f:
+    f.write(content)

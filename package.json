@@ -23,7 +23,6 @@
 		"onView:treeView-item",
 		"onView:item_convertor",
 		"onView:item_simulator",
-		"onView:item_bin_darwinlang_convertor",
 		"onView:item_darwinLang_convertor",
 		"onCommand:treeView-item.newproj",
 		"onCommand:treeView-item.datavis",
@@ -85,10 +84,6 @@
 			{
 				"command": "item_darwinLang_convertor.start_convert",
 				"title": "转换生成darwinLang"
-			},
-			{
-				"command": "bin_darlang_convertor.start_convert",
-				"title": "转换生成二进制DarwinLang文件"
 			}
 		],
 		"menus": {
@@ -116,11 +111,6 @@
 				{
 					"command": "item_darwinLang_convertor.start_convert",
 					"when": "view == item_darwinLang_convertor",
-					"group": "inline"
-				},
-				{
-					"command": "bin_darlang_convertor.start_convert",
-					"when": "view == item_bin_darwinlang_convertor",
 					"group": "inline"
 				}
 			],
@@ -170,11 +160,6 @@
 					"id": "lang_convertor",
 					"title": "导航栏",
 					"icon": "src/resources/imgs/lang_convert.png"
-				},
-				{
-					"id": "bin_darlang_convertor",
-					"title": "导航栏",
-					"icon": "src/resources/imgs/darwin_binary.png"
 				}
 			]
 		},
@@ -207,13 +192,6 @@
 					"when": ""
 				}
 			],
-			"bin_darlang_convertor": [
-				{
-					"id": "item_bin_darwinlang_convertor",
-					"name": "",
-					"when": ""
-				}
-			],
 			"explorer": [
 				{
 					"id": "multiLevelTree",
@@ -224,7 +202,7 @@
 		"viewsWelcome": [
 			{
 				"view": "treeView-item",
-				"contents": "Welcome to my custom view! [learn more](https://google.com/).\n[Get Start](command:myExtension.myCommand)"
+				"contents": "欢迎使用达尔文IDE模型转换器!\n创建新的项目或者加载已有项目\n[创建新项目](command:treeView-item.newproj)\n[加载已有项目](command:treeView.proj_load)"
 			}
 		]
 	},

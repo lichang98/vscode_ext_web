@@ -28,10 +28,39 @@ export function activate(context: vscode.ExtensionContext) {
 	let treeviewConvertor = TreeViewProvider.initTreeViewItem("item_convertor");
 	let treeViewSimulator = TreeViewProvider.initTreeViewItem("item_simulator");
 	let treeViewConvertDarLang = TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
-	let treeViewBinConvertDarLang = TreeViewProvider.initTreeViewItem("item_bin_darwinlang_convertor");
+	// let treeViewBinConvertDarLang = TreeViewProvider.initTreeViewItem("item_bin_darwinlang_convertor");
+
+	let treeviewHome = vscode.window.createTreeView("treeView-item", {treeDataProvider: treeview});
+	let treeViewCvtor = vscode.window.createTreeView("item_convertor", {treeDataProvider: treeviewConvertor});
+	let treeViewSim = vscode.window.createTreeView("item_simulator", {treeDataProvider:treeViewSimulator});
+	let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", {treeDataProvider:treeViewConvertDarLang});
+
+	treeViewCvtor.onDidChangeVisibility((evt)=>{
+		if(evt.visible){
+			console.log("转换器页面可用!");
+			// 点击转换器快捷方式，启动模型转换
+			vscode.commands.executeCommand("item_convertor.start_convert");
+		}
+	});
+
+	treeViewSim.onDidChangeVisibility((evt)=>{
+		if(evt.visible){
+			console.log("模拟页面可用！");
+		}
+		// 点击仿真器快捷方式，启动仿真
+		vscode.commands.executeCommand("item_simulator.start_simulate");
+	});
+
+	treeViewCvtDarLang.onDidChangeVisibility((evt)=>{
+		if(evt.visible){
+			console.log("转换darwinlang页面可用!");
+		}
+		//启动转换生成darwinlang
+		vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
+	});
 
 	let inMemTreeViewStruct:Array<TreeItemNode>=new Array();
-	treeViewBinConvertDarLang.data = inMemTreeViewStruct;
+	// treeViewBinConvertDarLang.data = inMemTreeViewStruct;
 	let x_norm_data_path:string|undefined = undefined;
 	let x_test_data_path:string|undefined = undefined;
 	let y_test_data_path:string|undefined = undefined;
@@ -162,6 +191,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('darwin2.helloWorld', () => {
 		// The code you place here will be executed every time your command is executed
 		const columnToShowIn = vscode.window.activeTextEditor? vscode.window.activeTextEditor.viewColumn:undefined;
+		treeviewHome.reveal(treeview.data[0]);
 		if(currentPanel){
 			currentPanel.reveal(columnToShowIn);
 		}else{
@@ -209,7 +239,7 @@ export function activate(context: vscode.ExtensionContext) {
 					treeviewConvertor.refresh();
 					treeViewSimulator.refresh();
 					treeViewConvertDarLang.refresh();
-					treeViewBinConvertDarLang.refresh();
+					// treeViewBinConvertDarLang.refresh();
 				}else if(data.project_refac_info){
 					// 接收到webview 项目属性修改的信息
 					console.log("receive project refactor info");
@@ -227,7 +257,7 @@ export function activate(context: vscode.ExtensionContext) {
 					treeviewConvertor.refresh();
 					treeViewSimulator.refresh();
 					treeViewConvertDarLang.refresh();
-					treeViewBinConvertDarLang.refresh();
+					// treeViewBinConvertDarLang.refresh();
 				}else if(data.model_convert_params){
 					// 接收到模型转换与仿真的参数配置，启动脚本
 					console.log("Extension 接收到 webview的消息，启动脚本......");
@@ -439,7 +469,7 @@ export function activate(context: vscode.ExtensionContext) {
 				treeviewConvertor.refresh();
 				treeViewSimulator.refresh();
 				treeViewConvertDarLang.refresh();
-				treeViewBinConvertDarLang.refresh();
+				// treeViewBinConvertDarLang.refresh();
 			}
 		});
 	}));
@@ -461,7 +491,7 @@ export function activate(context: vscode.ExtensionContext) {
 		treeviewConvertor.refresh();
 		treeViewSimulator.refresh();
 		treeViewConvertDarLang.refresh();
-		treeViewBinConvertDarLang.refresh();
+		// treeViewBinConvertDarLang.refresh();
 	}));
 
 	let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode: TreeItemNode) => {
@@ -718,6 +748,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// 启动仿真
 	vscode.commands.registerCommand("item_simulator.start_simulate", ()=>{
+		if(panelSNNModelVis){
+			panelSNNModelVis.dispose();
+			panelSNNModelVis = undefined;
+		}
 		if(!panelSNNModelVis){
 			panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN模型",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 			panelSNNModelVis.onDidDispose(()=>{
@@ -738,26 +772,28 @@ export function activate(context: vscode.ExtensionContext) {
 	// 启动转换为DarwinLang的操作
 	vscode.commands.registerCommand("item_darwinLang_convertor.start_convert", ()=>{
 		// inMemTreeViewDarLang = [];
-		ITEM_ICON_MAP.set("Darwin模型","imgs/file.png");
-		inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin模型",[]));
-		darwinlang_file_paths.splice(0);
-		if(inMemTreeViewStruct[0].children){
-			var child_len = inMemTreeViewStruct[0].children.length;
-			fs.readdir(path.join(__dirname, "darwin2sim","model_out", "darlang_out"), (err, files) => {
-				files.forEach(file => {
-					darwinlang_file_paths.push(path.join(__dirname, "darwin2sim","model_out", "darlang_out", file));
-					ITEM_ICON_MAP.set(file, "imgs/file.png");
-					if(inMemTreeViewStruct[0].children){
-						inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
-					}
+		if(!ITEM_ICON_MAP.has("Darwin模型")){
+			ITEM_ICON_MAP.set("Darwin模型","imgs/file.png");
+			inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin模型",[]));
+			darwinlang_file_paths.splice(0);
+			if(inMemTreeViewStruct[0].children){
+				var child_len = inMemTreeViewStruct[0].children.length;
+				fs.readdir(path.join(__dirname, "darwin2sim","model_out", "darlang_out"), (err, files) => {
+					files.forEach(file => {
+						darwinlang_file_paths.push(path.join(__dirname, "darwin2sim","model_out", "darlang_out", file));
+						ITEM_ICON_MAP.set(file, "imgs/file.png");
+						if(inMemTreeViewStruct[0].children){
+							inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
+						}
+					});
 				});
-			});
+			}
+			treeview.refresh();
+			treeviewConvertor.refresh();
+			treeViewSimulator.refresh();
+			treeViewConvertDarLang.refresh();
 		}
-		treeview.refresh();
-		treeviewConvertor.refresh();
-		treeViewSimulator.refresh();
-		treeViewConvertDarLang.refresh();
-		treeViewBinConvertDarLang.refresh();
+		// treeViewBinConvertDarLang.refresh();
 	});
 
 	// // 启动将darwinlang 文件转换为二进制文件的操作

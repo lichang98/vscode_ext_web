@@ -99,6 +99,30 @@ export class TreeViewProvider implements TreeDataProvider<TreeItemNode>{
         // );
     }
 
+    getParent(element? : TreeItemNode | undefined): import("vscode").ProviderResult<TreeItemNode>{
+        if(this.data.length === 0 || element === this.data[0]){
+            return undefined;
+        }else{
+            let parentNode= this.data[0];
+            let stack = new Array();
+            stack.push(parentNode);
+            while(stack.length > 0){
+                let tmp_head:TreeItemNode = stack[0];
+                stack.splice(0,1);
+                if(tmp_head.children){
+                    for(let i=0;i<tmp_head.children.length;++i){
+                        stack.push(tmp_head.children[i]);
+                        if(tmp_head.children[i] === element){
+                            return parentNode;
+                        }
+                    }
+                }
+                parentNode = tmp_head;
+            }
+            return undefined;
+        }
+    }
+
     private _onDidChangeTreeData: vscode.EventEmitter<TreeItemNode | undefined | null | void> = new vscode.EventEmitter<TreeItemNode | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<TreeItemNode | undefined | null | void> = this._onDidChangeTreeData.event;
   

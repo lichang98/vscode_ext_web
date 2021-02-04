@@ -1067,8 +1067,8 @@ export function getANNSNNConvertPage(){
                       </div>
                   </div>
               
-                  <div class="col-md-1" style="margin-top: 15px;">
-                      <i class="material-icons">arrow_forward</i>
+                  <div class="col-md-1" style="margin-top: -10px;">
+                      <i class="material-icons" style="font-size: 80px;transform: scaleY(0.4);">arrow_forward</i>
                   </div>
               
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
@@ -1081,8 +1081,8 @@ export function getANNSNNConvertPage(){
                       </div>
                   </div>
   
-                  <div class="col-md-1" style="margin-top: 15px;">
-                      <i class="material-icons">arrow_forward</i>
+                  <div class="col-md-1" style="margin-top: -10px;">
+                      <i class="material-icons" style="font-size: 80px;transform: scaleY(0.4);">arrow_forward</i>
                   </div>
   
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
@@ -1095,8 +1095,8 @@ export function getANNSNNConvertPage(){
                       </div>
                   </div>
               
-                  <div class="col-md-1" style="margin-top: 15px;">
-                      <i class="material-icons">arrow_forward</i>
+                  <div class="col-md-1" style="margin-top: -10px;">
+                      <i class="material-icons" style="font-size: 80px;transform: scaleY(0.4);">arrow_forward</i>
                   </div>
               
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
@@ -1504,7 +1504,8 @@ export function getANNSNNConvertPage(){
                   {
                       name: series_name,
                       type: 'bar',
-                      data: label_counts,                    
+                      data: label_counts,
+                      barWidth:"30px",
                       itemStyle: {
                           normal: {
                               label: {

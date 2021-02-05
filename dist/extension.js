@@ -757,14 +757,14 @@ function activate(context) {
             panelSNNModelVis = undefined;
         }
         if (!panelSNNModelVis) {
-            panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN模型", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+            panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN仿真", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
             panelSNNModelVis.onDidDispose(() => {
                 panelSNNModelVis = undefined;
             }, null, context.subscriptions);
         }
         panelSNNModelVis.reveal();
         panelSNNModelVis.webview.html = get_convertor_page_v2_1.getSNNSimuPage();
-        panelSNNModelVis.title = "SNN模型";
+        panelSNNModelVis.title = "SNN仿真";
         // 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
         fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
             if (panelSNNModelVis) {
@@ -6375,29 +6375,29 @@ function getSNNSimuPage() {
           <div class="col-md-6">
             <div>
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">仿真配置结果评估</div>
-              <table id="layer_conf_val" style="width: 360px;margin-left:60px;">
+              <table id="layer_conf_val" style="width: 360px;margin-left:140px;margin-top: 40px;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                  <tr style="height: 30px;">
+                  <tr style="height: 45px;">
                     <td style="font-size: medium;font-weight: bold;">膜电压阈值</td>
                     <td id="simulate_vthresh"></td>
                   </tr>
-                  <tr style="height: 30px;">
+                  <tr style="height: 45px;">
                     <td style="font-size: medium;font-weight: bold;">神经元时间步长</td>
                     <td id="simulate_neuron_dt"></td>
                   </tr>
-                  <tr style="height: 30px;">
+                  <tr style="height: 45px;">
                     <td style="font-size: medium;font-weight: bold;">突触时间步长</td>
                     <td id="simulate_synapse_dt"></td>
                   </tr>
-                  <tr style="height: 30px;">
+                  <tr style="height: 45px;">
                     <td  style="font-size: medium;font-weight: bold;">延迟</td>
                     <td id="simulate_delay"></td>
                   </tr>
-                  <tr style="height: 30px;">
+                  <tr style="height: 45px;">
                     <td style="font-size: medium;font-weight: bold;">仿真时长</td>
                     <td id="simulate_dura"></td>
                   </tr>
-                  <tr style="height: 30px;">
+                  <tr style="height: 45px;">
                     <td style="font-size: medium;font-weight: bold;">准确率</td>
                     <td id="simulate_acc"></td>
                   </tr>    
@@ -6408,15 +6408,29 @@ function getSNNSimuPage() {
           <div class="col-md-6">
             <div>
               <div id="neurons_v_out_div" style="font-size: large;font-weight: bold;text-align: center;">神经元放电</div>
+              <div style="width: 360px;margin-left: 40px;">
+                <form class="form-horizontal" role="form">
+                  <div class="form-group">
+                    <label class="control-label col-md-8" for="select_which_layer">选择神经元层</label>
+                    <div class="col-md-4">
+                      <select class="form-control" id="select_which_layer">
+                        <option>输入层</option>
+                        <option>输出层</option>
+                    </select>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div id="neurons_v_chart" style="width: 520px;height: 340px;margin-left: 25px;margin-top: 40px;"></div>
             </div>
           </div>
       </div>
       <div class="row" style="margin-top: 50px;">
           <div class="col-md-6">
             <div id="model_input_spike_cap" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输入层脉冲</div>
-            <ul id="input_spike_sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
+            <ul id="input_spike_sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;margin-left: 15px;margin-top: 100px;">
             </ul>
-            <div id="input_spike_charts" style="width: 440px;height: 340px;margin-left: 5px;display: inline-block;"></div>
+            <div id="input_spike_charts" style="width: 440px;height: 340px;margin-left: 15px;display: inline-block;margin-top: -40px;"></div>
           </div>
           <div class="col-md-6">
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
@@ -6429,7 +6443,7 @@ function getSNNSimuPage() {
               </table>
               <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
               </ul>
-              <div id="spike_charts" style="width: 520px;height: 340px;margin-left: 5px;display: inline-block;"></div>
+              <div id="spike_charts" style="width: 440px;height: 340px;margin-left: 5px;display: inline-block;"></div>
           </div>
       </div>
   </body>
@@ -6626,6 +6640,50 @@ function getSNNSimuPage() {
                       }
                     }
   
+                    
+                    // 神经元放电图
+                    let tms = infos.record_layer_v.tms;
+                    let v_vals = infos.record_layer_v.vals;
+                    let data_series_input = new Array();
+                    let data_series_output = new Array();
+  
+                    data_series_input.push({
+                      "data": v_vals[0],
+                      "type":"line",
+                      "smooth":true,
+                      "name":"脉冲激发次数最少的神经元膜电压"
+                    });
+                    data_series_input.push({
+                      "data":v_vals[1],
+                      "type":"line",
+                      "smooth":true,
+                      "name":"脉冲激发次数最多的神经元膜电压"
+                    });
+  
+                    data_series_output.push({
+                      "data": v_vals[2],
+                      "type": "line",
+                      "smooth":true,
+                      "name": "脉冲激发次数最少的神经元膜电压"
+                    });
+  
+                    data_series_output.push({
+                      "data": v_vals[3],
+                      "type":"line",
+                      "smooth":true,
+                      "name":"脉冲激发次数最多的神经元膜电压"
+                    });
+  
+                    display_neuron_v_linechart(tms[0], data_series_input);
+  
+                    $("#select_which_layer").change(()=>{
+                      let select_layer_val = $("#select_which_layer").val();
+                      if(select_layer_val === "输入层"){
+                        display_neuron_v_linechart(tms[0], data_series_input);
+                      }else{
+                        display_neuron_v_linechart(tms[0], data_series_output);
+                      }
+                    });
   
                     // fill tables
                     $("#simulate_vthresh").text(infos.extra_simu_info.simulate_vthresh);
@@ -6773,6 +6831,51 @@ function getSNNSimuPage() {
               };
               var spike_chart = echarts.init(document.getElementById("input_spike_charts"));
               spike_chart.setOption(opt);
+        }
+  
+        function display_neuron_v_linechart(labels, series_vals){
+            let option = {
+                tooltip:{
+                  trigger:"axis"
+                },
+                legend:{
+                  data:["脉冲激发次数最少的神经元膜电压", "脉冲激发次数最多的神经元膜电压"],
+                  textStyle:{
+                    color:"white"
+                  }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: labels,
+                    scale:true,
+                    name:"时间",
+                    nameTextStyle:{
+                      color:"white"
+                    },
+                    axisLabel:{
+                      textStyle:{
+                        color:"white"
+                      }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    scale:true,
+                    name:"膜电压",
+                    nameTextStyle:{
+                      color:"white"
+                    },
+                    axisLabel:{
+                      textStyle:{
+                        color:"white"
+                      }
+                    }
+                },
+                series: series_vals
+            };
+  
+            var v_val_chart = echarts.init(document.getElementById("neurons_v_chart"));
+            v_val_chart.setOption(option);
         }
   </script>
   

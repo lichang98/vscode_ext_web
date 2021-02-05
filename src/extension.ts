@@ -795,14 +795,14 @@ export function activate(context: vscode.ExtensionContext) {
 			panelSNNModelVis = undefined;
 		}
 		if(!panelSNNModelVis){
-			panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN模型",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+			panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN仿真",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 			panelSNNModelVis.onDidDispose(()=>{
 				panelSNNModelVis = undefined;
 			},null, context.subscriptions);
 		}
 		panelSNNModelVis.reveal();
 		panelSNNModelVis.webview.html = getSNNSimuPage();
-		panelSNNModelVis.title = "SNN模型";
+		panelSNNModelVis.title = "SNN仿真";
 		// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
 		fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
 			if(panelSNNModelVis){

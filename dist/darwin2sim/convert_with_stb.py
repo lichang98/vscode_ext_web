@@ -150,7 +150,10 @@ for i in range(len(br2_synapses)):
 br2_monitor = brian2.SpikeMonitor(br2_neurons[-1])
 br2_input_monitor = brian2.SpikeMonitor(br2_neurons[0]) # monitor for input
 br2_state_mon = brian2.StateMonitor(br2_neurons[-1], 'v', record=0)
+all_layer_state_mon = [brian2.StateMonitor(br2_neurons[e], 'v', record=True) for e in range(len(br2_neurons))]
 br2_net = brian2.Network(br2_neurons, br2_synapses, br2_monitor, br2_input_monitor,br2_state_mon)
+for i in range(len(all_layer_state_mon)):
+    br2_net.add(all_layer_state_mon[i])
 br2_net.store()
 
 
@@ -196,6 +199,8 @@ with open(os.path.join(baseDirPath, "br2_models", "br2.pkl"), "wb+") as f:
 snn_test_img_uris = []
 snn_test_output_spikes = []
 snn_test_input_spikes = []
+last_layer_spikes= []
+first_layer_spikes=[]
 acc = 0
 for i in range(50):
     br2_net.restore()
@@ -248,6 +253,24 @@ for i in range(50):
 print("Accuracy={}".format(acc/50))
 print("SEARCH_FINISH...")
 stage3_time_use = time.time()
+
+# get state monitor of layers
+record_layer_v_vals=[]
+record_layer_v_tms=[]
+min_spike_input_idx = np.argmin([len(e) for e in first_layer_spikes])
+max_spike_input_idx = np.argmax([len(e) for e in first_layer_spikes])
+
+record_layer_v_tms.append(list(all_layer_state_mon[0].t/brian2.ms))
+record_layer_v_vals.append(list(all_layer_state_mon[0].v[min_spike_input_idx]))
+record_layer_v_vals.append(list(all_layer_state_mon[0].v[max_spike_input_idx]))
+
+min_spike_output_idx = np.argmin([len(e) for e in last_layer_spikes])
+max_spike_output_idx = np.argmax([len(e) for e in last_layer_spikes])
+
+record_layer_v_tms.append(list(all_layer_state_mon[-1].t/brian2.ms))
+record_layer_v_vals.append(list(all_layer_state_mon[-1].v[min_spike_output_idx]))
+record_layer_v_vals.append(list(all_layer_state_mon[-1].v[max_spike_output_idx]))
+
 # save snn model as the DarwinLang format
 snn_model_darlang = {
     "projectName":"snn_digit",
@@ -374,6 +397,10 @@ brian2_snn_info = {
         "simulate_delay": "1ms",
         "simulate_dura": "100ms",
         "simulate_acc": "{:.2%}".format(acc/50)
+    },
+    "record_layer_v":{
+        "tms": record_layer_v_tms,
+        "vals": record_layer_v_vals
     }
 }
 

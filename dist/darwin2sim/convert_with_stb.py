@@ -150,10 +150,17 @@ for i in range(len(br2_synapses)):
 br2_monitor = brian2.SpikeMonitor(br2_neurons[-1])
 br2_input_monitor = brian2.SpikeMonitor(br2_neurons[0]) # monitor for input
 br2_state_mon = brian2.StateMonitor(br2_neurons[-1], 'v', record=0)
-all_layer_state_mon = [brian2.StateMonitor(br2_neurons[e], 'v', record=True) for e in range(len(br2_neurons))]
+# all_layer_state_mon = [brian2.StateMonitor(br2_neurons[e], 'v', record=True) for e in range(len(br2_neurons))]
+# only record state of input and output state
+all_layer_state_mon = []
+all_layer_state_mon.append(brian2.StateMonitor(br2_neurons[0], 'v',record=True))
+all_layer_state_mon.append(brian2.StateMonitor(br2_neurons[1], 'v', record=True))
+all_layer_spike_mon = [brian2.SpikeMonitor(br2_neurons[e]) for e in range(len(br2_neurons))]
 br2_net = brian2.Network(br2_neurons, br2_synapses, br2_monitor, br2_input_monitor,br2_state_mon)
 for i in range(len(all_layer_state_mon)):
     br2_net.add(all_layer_state_mon[i])
+for i in range(len(all_layer_spike_mon)):
+    br2_net.add(all_layer_spike_mon[i])
 br2_net.store()
 
 
@@ -270,6 +277,15 @@ max_spike_output_idx = np.argmax([len(e) for e in last_layer_spikes])
 record_layer_v_tms.append(list(all_layer_state_mon[-1].t/brian2.ms))
 record_layer_v_vals.append(list(all_layer_state_mon[-1].v[min_spike_output_idx]))
 record_layer_v_vals.append(list(all_layer_state_mon[-1].v[max_spike_output_idx]))
+
+
+# calc avg and std of spike out for each layer
+record_layers_spike_avg=[]
+record_layers_spike_std=[]
+for i in range(len(all_layer_spike_mon)):
+    counts = [len(e) for e in all_layer_spike_mon[i].spike_trains().values()]
+    record_layers_spike_avg.append("{:.3f}".format(np.mean(counts)))
+    record_layers_spike_std.append("{:.3f}".format(np.std(counts)))
 
 # save snn model as the DarwinLang format
 snn_model_darlang = {
@@ -401,6 +417,10 @@ brian2_snn_info = {
     "record_layer_v":{
         "tms": record_layer_v_tms,
         "vals": record_layer_v_vals
+    },
+    "record_spike_out_info":{
+        "spike_count_avgs":record_layers_spike_avg,
+        "spike_count_stds":record_layers_spike_std
     }
 }
 

@@ -30,6 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let treeViewSimulator = TreeViewProvider.initTreeViewItem("item_simulator");
 	let treeViewConvertDarLang = TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
 	let treeViewSNNModelView = TreeViewProvider.initTreeViewItem("item_snn_model_view");
+	let treeViewNewProj = TreeViewProvider.initTreeViewItem("new_project_act_view-item");
 	// let treeViewBinConvertDarLang = TreeViewProvider.initTreeViewItem("item_bin_darwinlang_convertor");
 
 	let treeviewHome = vscode.window.createTreeView("treeView-item", {treeDataProvider: treeview});
@@ -37,12 +38,21 @@ export function activate(context: vscode.ExtensionContext) {
 	let treeViewSim = vscode.window.createTreeView("item_simulator", {treeDataProvider:treeViewSimulator});
 	let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", {treeDataProvider:treeViewConvertDarLang});
 	let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
+	let treeViewNPView = vscode.window.createTreeView("new_project_act_view-item", {treeDataProvider: treeViewNewProj});
 
 	treeViewCvtor.onDidChangeVisibility((evt)=>{
 		if(evt.visible){
 			console.log("转换器页面可用!");
 			// 点击转换器快捷方式，启动模型转换
 			vscode.commands.executeCommand("item_convertor.start_convert");
+		}
+	});
+
+	treeViewNPView.onDidChangeVisibility((evt)=>{
+		if(evt.visible){
+			console.log("新项目创建...");
+		}else{
+			treeViewNPView.reveal(treeViewNewProj.data[0]);
 		}
 	});
 

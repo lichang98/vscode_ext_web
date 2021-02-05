@@ -13,6 +13,10 @@
 		"onCommand:darwin2.helloWorld",
 		"onWebviewPanel:darwin2web",
 		"onCommand:itemClick",
+		"onCommand:new_project_act_view.opt",
+		"onCommand:new_project_act_view.viewFunc",
+		"onCommand:load_proj_act_view.opt",
+		"onCommand:load_proj_act_view.viewFunc",
 		"onCommand:treeView.opt",
 		"onCommand:treeView.viewFunc",
 		"onCommand:convertor.opt",
@@ -23,6 +27,8 @@
 		"onCommand:simulator.viewFunc",
 		"onView:multiLevelTree",
 		"onView:treeView-item",
+		"onView:new_project_act_view-item",
+		"onView:load_proj_act_view-item",
 		"onView:item_convertor",
 		"onView:item_simulator",
 		"onView:item_darwinLang_convertor",
@@ -160,6 +166,16 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
+					"id": "new_project_act_view",
+					"title": "导航栏",
+					"icon": "src/resources/new_proj_act_icon.png"
+				},
+				{
+					"id": "load_proj_act_view",
+					"title": "导航栏",
+					"icon": "src/resources/load_proj_act_icon.png"
+				},
+				{
 					"id": "treeView",
 					"title": "导航栏",
 					"icon": "src/resources/dep.png"
@@ -187,6 +203,20 @@
 			]
 		},
 		"views": {
+			"new_project_act_view":[
+				{
+					"id": "new_project_act_view-item",
+					"name": "",
+					"when": ""
+				}
+			],
+			"load_proj_act_view":[
+				{
+					"id": "load_proj_act_view-item",
+					"name": "",
+					"when": ""
+				}
+			],
 			"treeView": [
 				{
 					"id": "treeView-item",

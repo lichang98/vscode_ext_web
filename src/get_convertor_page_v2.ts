@@ -1563,39 +1563,51 @@ export function getSNNSimuPage(){
   
   <body class="dark-mode" style="height: 100%;width: 100%;">
   
-      <div class="row" style="margin-top: 40px;">
+      <div class="row" style="margin-top: 20px;">
   
-          <div class="col-md-6">
+          <div class="col-md-3">
             <div>
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">仿真配置结果评估</div>
-              <table id="layer_conf_val" style="width: 360px;margin-left:140px;margin-top: 40px;">
+              <table id="layer_conf_val" style="width: 260px;margin-left:19px;margin-top: 70px;border: solid 3px;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                  <tr style="height: 45px;">
-                    <td style="font-size: medium;font-weight: bold;">膜电压阈值</td>
+                  <tr style="height: 25px; border: solid 2px;">
+                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;">膜电压阈值</td>
                     <td id="simulate_vthresh"></td>
                   </tr>
-                  <tr style="height: 45px;">
-                    <td style="font-size: medium;font-weight: bold;">神经元时间步长</td>
+                  <tr style="height: 25px;border: solid 2px;">
+                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;">神经元时间步长</td>
                     <td id="simulate_neuron_dt"></td>
                   </tr>
-                  <tr style="height: 45px;">
-                    <td style="font-size: medium;font-weight: bold;">突触时间步长</td>
+                  <tr style="height: 25px;border: solid 2px;">
+                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;">突触时间步长</td>
                     <td id="simulate_synapse_dt"></td>
                   </tr>
-                  <tr style="height: 45px;">
-                    <td  style="font-size: medium;font-weight: bold;">延迟</td>
+                  <tr style="height: 25px;border: solid 2px;">
+                    <td  style="font-size: medium;font-weight: bold;padding-left: 15px;">延迟</td>
                     <td id="simulate_delay"></td>
                   </tr>
-                  <tr style="height: 45px;">
-                    <td style="font-size: medium;font-weight: bold;">仿真时长</td>
+                  <tr style="height: 25px;border: solid 2px;">
+                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;">仿真时长</td>
                     <td id="simulate_dura"></td>
                   </tr>
-                  <tr style="height: 45px;">
-                    <td style="font-size: medium;font-weight: bold;">准确率</td>
-                    <td id="simulate_acc"></td>
+                  <tr style="height: 25px;border: solid 2px;">
+                    <td style="font-size: medium;font-weight: bold;color: rgb(11, 247, 247);padding-left: 15px;">准确率</td>
+                    <td id="simulate_acc" style="color: rgb(11, 247, 247);"></td>
                   </tr>    
               </table>
             </div>
+          </div>
+  
+          <div class="col-md-3">
+            <div style="font-size: large;font-weight: bold;text-align: center;margin-left: 40px;">放电次数均值方差统计</div>
+            <table id="snn_layers_spike_table" style="width: 360px;margin-left:10px;margin-top: 70px;border: solid 3px;">
+              <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
+              <tr style="height: 25px; border: solid 2px;">
+                <td style="font-size: medium;font-weight: bold;padding-left: 15px;">层编号</td>
+                <td style="font-size: medium;font-weight: bold;padding-left: 15px;">放电次数均值</td>
+                <td style="font-size: medium;font-weight: bold;padding-left: 15px;">放电次数方差</td>
+              </tr>
+            </table>
           </div>
   
           <div class="col-md-6">
@@ -1614,29 +1626,30 @@ export function getSNNSimuPage(){
                   </div>
                 </form>
               </div>
-              <div id="neurons_v_chart" style="width: 520px;height: 340px;margin-left: 25px;margin-top: 40px;"></div>
+              <div id="neurons_v_chart" style="width: 420px;height: 240px;margin-left: 125px;margin-top: 40px;"></div>
             </div>
           </div>
       </div>
-      <div class="row" style="margin-top: 50px;">
+      <div class="row" style="margin-top: -10px;">
           <div class="col-md-6">
             <div id="model_input_spike_cap" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输入层脉冲</div>
-            <ul id="input_spike_sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;margin-left: 15px;margin-top: 100px;">
+            <ul id="input_spike_sample_imgs_ul" style="height: 280px;width: 100px;overflow-x: hidden;display: inline-block;margin-left: 15px;margin-top: 80px;">
             </ul>
-            <div id="input_spike_charts" style="width: 440px;height: 340px;margin-left: 15px;display: inline-block;margin-top: -40px;"></div>
+            <div id="input_spike_charts" style="width: 440px;height: 320px;margin-left: 15px;display: inline-block;margin-top: -40px;"></div>
           </div>
           <div class="col-md-6">
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
+              <span style="font-size: smaller;margin-left: 160px;color: aquamarine;">红色标记图像为输出层出现激发次数相同</span>
               <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;">统计计数</div>
-              <table id="spike_out_count_table" style="margin-left: 125px;">
+              <table id="spike_out_count_table" style="margin-left: 100px;border: solid 3px;">
                   <tr id="out_labels">
                   </tr>
                   <tr id="out_counts_tr">
                   </tr>
               </table>
-              <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
+              <ul id="sample_imgs_ul" style="height: 280px;width: 100px;overflow-x: hidden;display: inline-block;">
               </ul>
-              <div id="spike_charts" style="width: 440px;height: 340px;margin-left: 5px;display: inline-block;"></div>
+              <div id="spike_charts" style="width: 440px;height: 320px;margin-left: 5px;display: inline-block;"></div>
           </div>
       </div>
   </body>
@@ -1744,13 +1757,13 @@ export function getSNNSimuPage(){
                         document.getElementById("out_labels").innerHTML = "";
                         let td_child = document.createElement("td");
                         td_child.innerText = "标签名称:";
-                        td_child.style.width = "60px";
+                        td_child.style.width = "80px";
                         document.getElementById("out_labels").appendChild(td_child);
   
                         document.getElementById("out_counts_tr").innerHTML = '';
                         td_child = document.createElement("td");
                         td_child.innerText = "计数值:";
-                        td_child.style.width = "60px";
+                        td_child.style.width = "80px";
                         document.getElementById("out_counts_tr").appendChild(td_child);
   
                         for(let j=0;j<spike_counts.length;++j){
@@ -1885,6 +1898,35 @@ export function getSNNSimuPage(){
                     $("#simulate_delay").text(infos.extra_simu_info.simulate_delay);
                     $("#simulate_dura").text(infos.extra_simu_info.simulate_dura);
                     $("#simulate_acc").text(infos.extra_simu_info.simulate_acc);
+  
+  
+                    // fill layers spike info table
+                    // $("#snn_layers_spike_table")
+                    for(let j=0;j<infos.record_spike_out_info.spike_count_avgs.length;++j){
+                      let table_line = document.createElement("tr");
+                      table_line.style.height = "25px";
+                      table_line.style.border = "solid 2px";
+  
+                      let td_id = document.createElement("td");
+                      td_id.style.fontSize = "medium";
+                      td_id.style.paddingLeft= "15px";
+                      td_id.innerText = "layer_"+j;
+                      table_line.appendChild(td_id);
+  
+                      let td_spike_avg = document.createElement("td");
+                      td_spike_avg.style.fontSize = "medium";
+                      td_spike_avg.style.paddingLeft = "15px";
+                      td_spike_avg.innerText = infos.record_spike_out_info.spike_count_avgs[j];
+                      table_line.appendChild(td_spike_avg);
+  
+                      let td_spike_std = document.createElement("td");
+                      td_spike_std.style.fontSize = "medium";
+                      td_spike_std.style.paddingLeft = "15px";
+                      td_spike_std.innerText = infos.record_spike_out_info.spike_count_stds[j];
+                      table_line.appendChild(td_spike_std);
+  
+                      document.getElementById("snn_layers_spike_table").appendChild(table_line);
+                    }
                 }
             });
         });

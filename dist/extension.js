@@ -6954,8 +6954,8 @@ function getSNNModelPage() {
               <table id="snn_neurons_table" style="width: 400px;margin-left:10px;margin-left: 100px;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                   <thead>
-                    <tr style="margin-top: 15px;">
-                      <td style="font-size: medium;font-weight: bold;width: 120px;">layer编号</td>
+                    <tr style="margin-top: 15px;border: solid 3px;">
+                      <td style="font-size: medium;font-weight: bold;width: 120px;padding-left: 10px;">layer编号</td>
                       <td style="font-size: medium;font-weight: bold;width: 120px;">神经元个数</td>
                       <td style="font-size: medium;font-weight: bold;width: 120px;">求解方法</td>
                       <td style="font-size: medium;font-weight: bold;width: 120px;">电压阈值</td>
@@ -6970,8 +6970,8 @@ function getSNNModelPage() {
               <table id="layer_conns_table" style="width: 420px;margin-left:100px;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                   <thead>
-                    <tr style="margin-top: 15px;">
-                      <td style="font-size: medium;font-weight: bold;width: 120px;">layer编号</td>
+                    <tr style="margin-top: 15px;border: solid 3px;">
+                      <td style="font-size: medium;font-weight: bold;width: 120px;padding-left: 10px;">layer编号</td>
                       <td style="font-size: medium;font-weight: bold;width: 120px;">连接稠密度</td>
                       <td style="font-size: medium;font-weight: bold;width: 120px;">平均连接个数</td>
                     </tr>
@@ -7046,9 +7046,9 @@ function getSNNModelPage() {
                     var neurons_table = document.getElementById("snn_neurons_table");
                     for(var i=0;i<neurons_info.length;++i){
                         var line = document.createElement("tr");
-                        line.style = "margin-top: 15px;"
+                        line.style = "margin-top: 15px;border: solid 3px;"
                         var col_1 = document.createElement("td");
-                        col_1.style = "font-size: medium";
+                        col_1.style = "font-size: medium; padding-left:20px;";
                         col_1.innerText = neurons_info[i].idx;
   
                         var col_2 = document.createElement("td");
@@ -7075,9 +7075,9 @@ function getSNNModelPage() {
                     var synaps_table = document.getElementById("layer_conns_table");
                     for(var i=0;i<synaps_info.length;++i){
                         var line = document.createElement("tr");
-                        line.style = "margin-top: 15px;";
+                        line.style = "margin-top: 15px; border: solid 3px";
                         var col_1 = document.createElement("td");
-                        col_1.style = "font-size: medium";
+                        col_1.style = "font-size: medium; padding-left:20px;";
                         col_1.innerText = synaps_info[i].idx;
   
                         var col_2 = document.createElement("td");

@@ -154,7 +154,7 @@ br2_state_mon = brian2.StateMonitor(br2_neurons[-1], 'v', record=0)
 # only record state of input and output state
 all_layer_state_mon = []
 all_layer_state_mon.append(brian2.StateMonitor(br2_neurons[0], 'v',record=True))
-all_layer_state_mon.append(brian2.StateMonitor(br2_neurons[1], 'v', record=True))
+all_layer_state_mon.append(brian2.StateMonitor(br2_neurons[-1], 'v', record=True))
 all_layer_spike_mon = [brian2.SpikeMonitor(br2_neurons[e]) for e in range(len(br2_neurons))]
 br2_net = brian2.Network(br2_neurons, br2_synapses, br2_monitor, br2_input_monitor,br2_state_mon)
 for i in range(len(all_layer_state_mon)):

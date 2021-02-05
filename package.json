@@ -17,6 +17,8 @@
 		"onCommand:treeView.viewFunc",
 		"onCommand:convertor.opt",
 		"onCommand:convertor.viewFunc",
+		"onCommand:snn_model_ac.opt",
+		"onCommand:snn_model_ac.viewFunc",
 		"onCommand:simulator.opt",
 		"onCommand:simulator.viewFunc",
 		"onView:multiLevelTree",
@@ -28,6 +30,7 @@
 		"onCommand:treeView-item.datavis",
 		"onCommand:treeView-item.import",
 		"onCommand:convertor.new_proj",
+		"onCommand:snn_model_ac.show_snn_model",
 		"onCommand:item_convertor.start_convert",
 		"*"
 	],
@@ -75,6 +78,10 @@
 				"title": "项目移除"
 			},
 			{
+				"command": "snn_model_ac.show_snn_model",
+				"title": "可视化SNN模型"
+			},
+			{
 				"command": "item_convertor.start_convert",
 				"title": "启动转换"
 			},
@@ -102,6 +109,11 @@
 				{
 					"command": "item_convertor.start_convert",
 					"when": "view == item_convertor",
+					"group": "inline"
+				},
+				{
+					"command": "snn_model_ac.show_snn_model",
+					"when": "view == item_snn_model_view",
 					"group": "inline"
 				},
 				{
@@ -158,6 +170,11 @@
 					"icon": "src/resources/convert.png"
 				},
 				{
+					"id": "snn_model_ac",
+					"title": "导航栏",
+					"icon": "src/resources/snn_model_icon.png"
+				},
+				{
 					"id": "simulator",
 					"title": "导航栏",
 					"icon": "src/resources/simulate_run.png"
@@ -180,6 +197,13 @@
 			"convertor": [
 				{
 					"id": "item_convertor",
+					"name": "",
+					"when": ""
+				}
+			],
+			"snn_model_ac":[
+				{
+					"id": "item_snn_model_view",
 					"name": "",
 					"when": ""
 				}

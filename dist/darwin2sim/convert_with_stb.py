@@ -195,6 +195,7 @@ with open(os.path.join(baseDirPath, "br2_models", "br2.pkl"), "wb+") as f:
 
 snn_test_img_uris = []
 snn_test_output_spikes = []
+snn_test_input_spikes = []
 acc = 0
 for i in range(50):
     br2_net.restore()
@@ -215,16 +216,27 @@ for i in range(50):
                                 .format(i, np.argmax(valY[i]))))
     snn_test_img_uris.append("http://localhost:6003/snn_imgs/img_idx_{}_label_{}.png".format(i,np.argmax(valY[i])))
     last_layer_spikes = [list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]
+    first_layer_spikes = [list(e/brian2.ms) for e in br2_input_monitor.spike_trains().values()]
     for idx_, spk_lst_ in enumerate(last_layer_spikes):
         spike_statics[idx_] += len(spk_lst_)
     spike_tuples = []
     for cls in range(len(last_layer_spikes)):
         for j in range(len(last_layer_spikes[cls])):
             spike_tuples.append([cls, int(last_layer_spikes[cls][j])])
+
+    input_spike_tuples =  []
+    for cls in range(len(first_layer_spikes)):
+        for j in range(len(first_layer_spikes[cls])):
+            input_spike_tuples.append([cls, int(first_layer_spikes[cls][j])])
     
     snn_test_output_spikes.append({
         "cls_names":[str(x) for x in range(len(last_layer_spikes))],
         "spike_tuples": spike_tuples
+    })
+
+    snn_test_input_spikes.append({
+        "cls_names": [str(x) for x in range(len(first_layer_spikes))],
+        "spike_tuples": input_spike_tuples
     })
 
     print("Processing sample #{}".format(i))
@@ -351,7 +363,8 @@ brian2_snn_info = {
     # "spikes":output_spike_info,
     "spikes":{
         "snn_test_imgs": snn_test_img_uris,
-        "snn_test_spikes": snn_test_output_spikes
+        "snn_test_spikes": snn_test_output_spikes,
+        "snn_input_spikes": snn_test_input_spikes
     },
     "layer_conns": layer_conn_info,
     "extra_simu_info":{

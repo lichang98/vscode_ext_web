@@ -14,9 +14,10 @@ import {NewProj} from "./NewProjWebView";
 import {ImportDataShow} from "./ImportDataView";
 import {MultiLevelTreeProvider} from "./multiLevelTree";
 import {getMainPageV2} from "./get_mainpage_v2";
-import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage} from "./get_convertor_page_v2";
+import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage,getSNNModelPage} from "./get_convertor_page_v2";
 import {ChildProcess, exec, spawn} from "child_process";
 import { time } from 'console';
+import { eventNames } from 'process';
 
 
 let local_server:ChildProcess|undefined = undefined;
@@ -28,12 +29,14 @@ export function activate(context: vscode.ExtensionContext) {
 	let treeviewConvertor = TreeViewProvider.initTreeViewItem("item_convertor");
 	let treeViewSimulator = TreeViewProvider.initTreeViewItem("item_simulator");
 	let treeViewConvertDarLang = TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
+	let treeViewSNNModelView = TreeViewProvider.initTreeViewItem("item_snn_model_view");
 	// let treeViewBinConvertDarLang = TreeViewProvider.initTreeViewItem("item_bin_darwinlang_convertor");
 
 	let treeviewHome = vscode.window.createTreeView("treeView-item", {treeDataProvider: treeview});
 	let treeViewCvtor = vscode.window.createTreeView("item_convertor", {treeDataProvider: treeviewConvertor});
 	let treeViewSim = vscode.window.createTreeView("item_simulator", {treeDataProvider:treeViewSimulator});
 	let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", {treeDataProvider:treeViewConvertDarLang});
+	let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
 
 	treeViewCvtor.onDidChangeVisibility((evt)=>{
 		if(evt.visible){
@@ -49,6 +52,13 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		// 点击仿真器快捷方式，启动仿真
 		vscode.commands.executeCommand("item_simulator.start_simulate");
+	});
+
+	treeViewSNNMD.onDidChangeVisibility((evt)=>{
+		if(evt.visible){
+			console.log("SNN模型页面可用！");
+		}
+		vscode.commands.executeCommand("snn_model_ac.show_snn_model");
 	});
 
 	treeViewCvtDarLang.onDidChangeVisibility((evt)=>{
@@ -72,6 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let panelDataVis:vscode.WebviewPanel|undefined = undefined;
 	let panelAnnModelVis:vscode.WebviewPanel|undefined = undefined;
 	let panelSNNModelVis:vscode.WebviewPanel|undefined = undefined;
+	let panelSNNVisWeb:vscode.WebviewPanel|undefined = undefined;
 
 	let proj_desc_info = {
 		"project_name":"",
@@ -235,10 +246,12 @@ export function activate(context: vscode.ExtensionContext) {
 					treeviewConvertor.data = inMemTreeViewStruct;
 					treeViewSimulator.data = inMemTreeViewStruct;
 					treeViewConvertDarLang.data = inMemTreeViewStruct;
+					treeViewSNNModelView.data = inMemTreeViewStruct;
 					treeview.refresh();
 					treeviewConvertor.refresh();
 					treeViewSimulator.refresh();
 					treeViewConvertDarLang.refresh();
+					treeViewSNNModelView.refresh();
 					// treeViewBinConvertDarLang.refresh();
 				}else if(data.project_refac_info){
 					// 接收到webview 项目属性修改的信息
@@ -253,10 +266,12 @@ export function activate(context: vscode.ExtensionContext) {
 					treeviewConvertor.data = inMemTreeViewStruct;
 					treeViewSimulator.data = inMemTreeViewStruct;
 					treeViewConvertDarLang.data = inMemTreeViewStruct;
+					treeViewSNNModelView.data = inMemTreeViewStruct;
 					treeview.refresh();
 					treeviewConvertor.refresh();
 					treeViewSimulator.refresh();
 					treeViewConvertDarLang.refresh();
+					treeViewSNNModelView.refresh();
 					// treeViewBinConvertDarLang.refresh();
 				}else if(data.model_convert_params){
 					// 接收到模型转换与仿真的参数配置，启动脚本
@@ -465,10 +480,12 @@ export function activate(context: vscode.ExtensionContext) {
 				treeviewConvertor.data = inMemTreeViewStruct;
 				treeViewSimulator.data = inMemTreeViewStruct;
 				treeViewConvertDarLang.data = inMemTreeViewStruct;
+				treeViewSNNModelView.data = inMemTreeViewStruct;
 				treeview.refresh();
 				treeviewConvertor.refresh();
 				treeViewSimulator.refresh();
 				treeViewConvertDarLang.refresh();
+				treeViewSNNModelView.refresh();
 				// treeViewBinConvertDarLang.refresh();
 			}
 		});
@@ -487,10 +504,12 @@ export function activate(context: vscode.ExtensionContext) {
 		treeviewConvertor.data = inMemTreeViewStruct;
 		treeViewSimulator.data = inMemTreeViewStruct;
 		treeViewConvertDarLang.data = inMemTreeViewStruct;
+		treeViewSNNModelView.data = inMemTreeViewStruct;
 		treeview.refresh();
 		treeviewConvertor.refresh();
 		treeViewSimulator.refresh();
 		treeViewConvertDarLang.refresh();
+		treeViewSNNModelView.refresh();
 		// treeViewBinConvertDarLang.refresh();
 	}));
 
@@ -746,6 +765,29 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	// 启动显示SNN模型的命令
+	vscode.commands.registerCommand("snn_model_ac.show_snn_model", ()=>{
+		if(panelSNNVisWeb){
+			panelSNNVisWeb.dispose();
+			panelSNNVisWeb = undefined;
+		}
+
+		panelSNNVisWeb = vscode.window.createWebviewPanel("SNN Model Vis View", "SNN模型可视化", vscode.ViewColumn.One, {localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+		panelSNNVisWeb.onDidDispose(()=>{
+			panelSNNVisWeb =undefined;
+		}, null, context.subscriptions);
+
+		panelSNNVisWeb.reveal();
+		panelSNNVisWeb.webview.html = getSNNModelPage();
+		panelSNNVisWeb.title = "SNN模型可视化";
+		// 传递信息
+		fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
+			if(panelSNNVisWeb){
+				panelSNNVisWeb.webview.postMessage(JSON.stringify({"snn_info":data}));
+			}
+		});
+	});
+
 	// 启动仿真
 	vscode.commands.registerCommand("item_simulator.start_simulate", ()=>{
 		if(panelSNNModelVis){
@@ -792,6 +834,7 @@ export function activate(context: vscode.ExtensionContext) {
 			treeviewConvertor.refresh();
 			treeViewSimulator.refresh();
 			treeViewConvertDarLang.refresh();
+			treeViewSNNModelView.refresh();
 		}
 		// treeViewBinConvertDarLang.refresh();
 	});

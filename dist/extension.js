@@ -6949,31 +6949,45 @@ function getSNNModelPage() {
   
       <div class="row" style="margin-top: 40px;">
           <!-- SNN神经元信息 -->
-          <div class="col-md-6">
+          <div class="col-md-4">
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络神经元组信息</div>
-              <table id="snn_neurons_table" style="width: 400px;margin-left:10px;margin-left: 100px;">
+              <table id="snn_neurons_table" style="margin-left:10px;margin-left: 10px;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                   <thead>
                     <tr style="margin-top: 15px;border: solid 3px;">
-                      <td style="font-size: medium;font-weight: bold;width: 120px;padding-left: 10px;">layer编号</td>
-                      <td style="font-size: medium;font-weight: bold;width: 120px;">神经元个数</td>
-                      <td style="font-size: medium;font-weight: bold;width: 120px;">求解方法</td>
-                      <td style="font-size: medium;font-weight: bold;width: 120px;">电压阈值</td>
+                      <td style="font-size: medium;font-weight: bold;width: 100px;padding-left: 10px;">layer编号</td>
+                      <td style="font-size: medium;font-weight: bold;width: 100px;">神经元个数</td>
+                      <td style="font-size: medium;font-weight: bold;width: 100px;">求解方法</td>
+                      <td style="font-size: medium;font-weight: bold;width: 100px;">电压阈值</td>
                     </tr>
                     <!-- 动态加载 -->
                   </thead>
               </table>
           </div>
+          
+          <div class="col-md-4">
+            <div style="font-size: large;font-weight: bold;text-align: center;">层连接权重统计</div>
+            <table id="snn_layer_wt_table">
+              <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
+              <thead>
+                <tr style="margin-top: 15px;border: solid 3px;">
+                  <td style="font-size: medium;font-weight: bold;width: 80px;padding-left: 10px;">layer编号</td>
+                  <td style="font-size: medium;font-weight: bold;width: 80px;">权重均值</td>
+                  <td style="font-size: medium;font-weight: bold;width: 80px;">权重方差</td>
+                </tr>
+              </thead>
+            </table>
+          </div>
   
-          <div class="col-md-6">
+          <div class="col-md-4">
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络突触连接信息</div>
-              <table id="layer_conns_table" style="width: 420px;margin-left:100px;">
+              <table id="layer_conns_table" style="margin-left:40px;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                   <thead>
                     <tr style="margin-top: 15px;border: solid 3px;">
-                      <td style="font-size: medium;font-weight: bold;width: 120px;padding-left: 10px;">layer编号</td>
-                      <td style="font-size: medium;font-weight: bold;width: 120px;">连接稠密度</td>
-                      <td style="font-size: medium;font-weight: bold;width: 120px;">平均连接个数</td>
+                      <td style="font-size: medium;font-weight: bold;width: 100px;padding-left: 10px;">layer编号</td>
+                      <td style="font-size: medium;font-weight: bold;width: 100px;">连接稠密度</td>
+                      <td style="font-size: medium;font-weight: bold;width: 100px;">平均连接个数</td>
                     </tr>
                     <!-- 动态加载 -->
                   </thead>
@@ -7109,6 +7123,51 @@ function getSNNModelPage() {
                     $("#simulate_delay").text(infos.extra_simu_info.simulate_delay);
                     $("#simulate_dura").text(infos.extra_simu_info.simulate_dura);
                     $("#simulate_acc").text(infos.extra_simu_info.simulate_acc);
+  
+  
+                    // 添加SNN各层权重信息
+                    for(let i=0;i<infos.record_layers_wt_info.record_wts_avg.length;++i){
+                      let table_line = document.createElement("tr");
+                      table_line.style.marginTop = "15px";
+                      table_line.style.border = "solid 3px";
+  
+                      let td_id = document.createElement("td");
+                      td_id.style.fontSize = "medium";
+                      td_id.style.width = "120px";
+                      td_id.style.paddingLeft = "10px";
+                      td_id.innerText = "layer_"+i;
+                      table_line.appendChild(td_id);
+  
+                      let td_avg = document.createElement("td");
+                      td_avg.style.fontSize = "medium";
+                      td_avg.style.width = "120px";
+                      td_avg.innerText = infos.record_layers_wt_info.record_wts_avg[i];
+                      table_line.appendChild(td_avg);
+  
+                      let td_std = document.createElement("td");
+                      td_std.style.fontSize = "medium";
+                      td_std.style.width = "120px";
+                      td_std.innerText = infos.record_layers_wt_info.record_wts_std[i];
+                      table_line.appendChild(td_std);
+  
+                      document.getElementById("snn_layer_wt_table").appendChild(table_line);
+  
+                    }
+  
+              //       <table id="snn_layer_wt_table" style="width: 320px;">
+              // <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
+              // <thead>
+              //   <tr style="margin-top: 15px;border: solid 3px;">
+              //     <td style="font-size: medium;font-weight: bold;width: 120px;padding-left: 10px;">layer编号</td>
+              //     <td style="font-size: medium;font-weight: bold;width: 120px;">权重均值</td>
+              //     <td style="font-size: medium;font-weight: bold;width: 120px;">权重方差</td>
+              //   </tr>
+              // </thead>
+  
+      //         "record_layers_wt_info":{
+      //     "record_wts_avg":record_layers_wt_avg,
+      //     "record_wts_std":record_layers_wt_std
+      // }
   
                     // SNN模型简图
                     let sanky_data=new Array();

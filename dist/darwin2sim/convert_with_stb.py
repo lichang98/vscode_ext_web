@@ -287,6 +287,14 @@ for i in range(len(all_layer_spike_mon)):
     record_layers_spike_avg.append("{:.3f}".format(np.mean(counts)))
     record_layers_spike_std.append("{:.3f}".format(np.std(counts)))
 
+
+# calc avg and std of weights for each layer
+record_layers_wt_avg = []
+record_layers_wt_std = []
+for i in range(len(br2_synapses)):
+    record_layers_wt_avg.append("{:.3f}".format(np.mean(br2_synapses[i].w)))
+    record_layers_wt_std.append("{:.3f}".format(np.std(br2_synapses[i].w)))
+
 # save snn model as the DarwinLang format
 snn_model_darlang = {
     "projectName":"snn_digit",
@@ -394,7 +402,7 @@ for i in range(len(br2_synapses)):
     connect_ratio = np.prod(np.shape(br2_synapses[i].w)) / (prev_layer_neuron_count*current_layer_neuron_count)
     curr_layer_avg_conn = len(list(br2_synapses[i].j))/len(set(list(br2_synapses[i].j)))
     print(" layer {} ratio ={}, avg neuron connect count={}".format(i, connect_ratio, curr_layer_avg_conn))
-    layer_conn_info.append({"idx":i, "ratio": connect_ratio, "avg_conn":curr_layer_avg_conn})
+    layer_conn_info.append({"idx":i, "ratio": ["{:.3f}".format(connect_ratio)], "avg_conn":["{:.3f}".format(curr_layer_avg_conn)]})
 
 brian2_snn_info = {
     "neurons_info":neurons_info,
@@ -421,6 +429,10 @@ brian2_snn_info = {
     "record_spike_out_info":{
         "spike_count_avgs":record_layers_spike_avg,
         "spike_count_stds":record_layers_spike_std
+    },
+    "record_layers_wt_info":{
+        "record_wts_avg":record_layers_wt_avg,
+        "record_wts_std":record_layers_wt_std
     }
 }
 

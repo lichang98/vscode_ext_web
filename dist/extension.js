@@ -6669,7 +6669,7 @@ function getSNNSimuPage() {
                   </div>
                 </form>
               </div>
-              <div id="neurons_v_chart" style="width: 420px;height: 240px;margin-left: 125px;margin-top: 40px;"></div>
+              <div id="neurons_v_chart" style="width: 460px;height: 240px;margin-left: 110px;margin-top: 40px;"></div>
             </div>
           </div>
       </div>
@@ -6906,6 +6906,7 @@ function getSNNSimuPage() {
                       "data":v_vals[1],
                       "type":"line",
                       "smooth":true,
+                      "yAxisIndex":1,
                       "name":"脉冲激发次数最多的神经元膜电压"
                     });
   
@@ -6920,6 +6921,7 @@ function getSNNSimuPage() {
                       "data": v_vals[3],
                       "type":"line",
                       "smooth":true,
+                      "yAxisIndex":1,
                       "name":"脉冲激发次数最多的神经元膜电压"
                     });
   
@@ -6929,8 +6931,12 @@ function getSNNSimuPage() {
                       let select_layer_val = $("#select_which_layer").val();
                       if(select_layer_val === "输入层"){
                         display_neuron_v_linechart(tms[0], data_series_input);
+                        console.log("显示输入层：tms[0]="+tms[0]);
+                        console.log("显示输入层：data_series="+data_series_input);
                       }else{
                         display_neuron_v_linechart(tms[0], data_series_output);
+                        console.log("显示输出层：tms[0]="+tms[0]);
+                        console.log("显示输出层：data_series="+JSON.stringify(data_series_output));
                       }
                     });
   
@@ -7122,11 +7128,15 @@ function getSNNSimuPage() {
                     color:"white"
                   }
                 },
+                grid:{
+                  right:100
+                },
                 xAxis: {
                     type: 'category',
                     data: labels,
                     scale:true,
                     name:"时间",
+                    nameGap:40,
                     nameTextStyle:{
                       color:"white"
                     },
@@ -7136,19 +7146,34 @@ function getSNNSimuPage() {
                       }
                     }
                 },
-                yAxis: {
+                yAxis: [
+                  {
+                      type: 'value',
+                      scale:true,
+                      name:"膜电压(左)",
+                      nameTextStyle:{
+                        color:"white"
+                      },
+                      axisLabel:{
+                        textStyle:{
+                          color:"white"
+                        }
+                      }
+                  },
+                  {
                     type: 'value',
-                    scale:true,
-                    name:"膜电压",
-                    nameTextStyle:{
-                      color:"white"
-                    },
-                    axisLabel:{
-                      textStyle:{
+                      scale:true,
+                      name:"膜电压(右)",
+                      nameTextStyle:{
                         color:"white"
-                      }
-                    }
-                },
+                      },
+                      axisLabel:{
+                        textStyle:{
+                          color:"white"
+                        }
+                      } 
+                  }
+                ],
                 series: series_vals
             };
   

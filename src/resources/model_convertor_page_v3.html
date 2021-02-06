@@ -453,6 +453,28 @@ let log_output_lists = new Array();
               }
           });
 
+
+          // 参数更改监听
+          $("#select_vthresh").change(()=>{
+            console.log("参数变动...");
+            reset_and_postmsg();
+          });
+          $("#select_dt").change(()=>{
+              console.log("参数变动...");
+              reset_and_postmsg();
+          });
+          $("#select_synapse_dt").change(()=>{
+              console.log("参数变动...");
+              reset_and_postmsg();
+          });
+          $("#select_delay").change(()=>{
+              console.log("参数变动...");
+              reset_and_postmsg();
+          });
+          $("#select_dura").change(()=>{
+              console.log("参数变动...");
+              reset_and_postmsg();
+          });
         //   $("#start_convert_btn").on("click", ()=>{
         //       let v_thresh = $("#select_vthresh").val().replace("ms","");
         //       let neuron_dt = $("#select_dt").val().replace("ms","");
@@ -477,6 +499,28 @@ let log_output_lists = new Array();
         //   });
 
       });
+
+      function reset_and_postmsg(){
+            let v_thresh = $("#select_vthresh").val().replace("ms","");
+            let neuron_dt = $("#select_dt").val().replace("ms","");
+            let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
+            let delay = $("#select_delay").val().replace("ms", "");
+            let dura = $("#select_dura").val().replace("ms","");
+            console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay+", dura="+dura);
+            // // 传递到插件
+            // vscode.postMessage(JSON.stringify({"convertor_params_change":{
+            //     "v_thresh":v_thresh,
+            //     "neuron_dt":neuron_dt,
+            //     "synapse_dt":synapse_dt,
+            //     "delay":delay,
+            //     "dura":dura
+            // }}));
+              document.getElementById("model_convert_progress_div").style.width = "0%";
+              document.getElementById("preprocess_progress_div").style.width = "0%";
+              document.getElementById("search_progress_div").style.width = "0%";
+              document.getElementById("darlang_progress_div").style.width = "0%";
+              document.getElementById("total_progress_div").style.width = "0%";
+      }
 
 
     //   function display_spike_scatter_chart(labels, datas){

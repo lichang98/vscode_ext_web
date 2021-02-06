@@ -382,8 +382,26 @@ export function activate(context: vscode.ExtensionContext) {
 					// treeViewBinConvertDarLang.refresh();
 				}else if(data.model_convert_params){
 					// 接收到模型转换与仿真的参数配置，启动脚本
+
+					// vscode.postMessage(JSON.stringify({"model_convert_params":{
+					// 	"vthresh": v_thresh,
+					// 	"neuron_dt": neuron_dt,
+					// 	"synapse_dt":synapse_dt,
+					// 	"delay":delay,
+					// 	"dura":dura
+					// }}));
+					// 提取参数
+					let web_param_vthresh = data.model_convert_params.vthresh;
+					let web_param_neurondt = data.model_convert_params.neuron_dt;
+					let web_param_synapse_dt = data.model_convert_params.synapse_dt;
+					let web_param_delay = data.model_convert_params.delay;
+					let web_param_dura = data.model_convert_params.dura;
+
+					console.log("转换脚本启动的参数："+JSON.parse(data.model_convert_params));
+
 					console.log("Extension 接收到 webview的消息，启动脚本......");
-					let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py");
+					let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ web_param_vthresh+" "+ 
+									web_param_neurondt+" "+ web_param_synapse_dt+" "+web_param_delay+" "+web_param_dura);
 					let command_str = "python "+scriptPath;
 					let scriptProcess = exec(command_str,{});
 					
@@ -626,6 +644,36 @@ export function activate(context: vscode.ExtensionContext) {
 		treeViewNewProj.refresh();
 		treeViewLoadProj.refresh();
 		// treeViewBinConvertDarLang.refresh();
+
+		// 关闭所有窗口，重置为初始化界面
+		// let panelDataVis:vscode.WebviewPanel|undefined = undefined;
+		// let panelAnnModelVis:vscode.WebviewPanel|undefined = undefined;
+		// let panelSNNModelVis:vscode.WebviewPanel|undefined = undefined;
+		// let panelSNNVisWeb:vscode.WebviewPanel|undefined = undefined;
+		if(currentPanel){
+			currentPanel.dispose();
+			currentPanel = undefined;
+		}
+		if(panelDataVis){
+			panelDataVis.dispose();
+			panelDataVis = undefined;
+		}
+		if(panelAnnModelVis){
+			panelAnnModelVis.dispose();
+			panelAnnModelVis = undefined;
+		}
+		if(panelSNNModelVis){
+			panelSNNModelVis.dispose();
+			panelSNNModelVis = undefined;
+		}
+		if(panelSNNVisWeb){
+			panelSNNVisWeb.dispose();
+			panelSNNVisWeb = undefined;
+		}
+
+		currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+		currentPanel.webview.html =getConvertorPageV2();
+		currentPanel.reveal();
 	}));
 
 	let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode: TreeItemNode) => {

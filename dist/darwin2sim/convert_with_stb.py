@@ -39,6 +39,24 @@ testY = np.load(os.path.join(os.path.dirname(model_path), "y_test.npz"))["arr_0"
 valX = np.load(os.path.join(os.path.dirname(model_path), "x_test.npz"))["arr_0"]
 valY = np.load(os.path.join(os.path.dirname(model_path), "y_test.npz"))["arr_0"]
 
+sys_param_vthresh = None
+sys_param_neurondt = None
+sys_param_synapsedt = None
+sys_param_delay = None
+sys_param_total_dura = None
+
+if len(sys.argv) > 5:
+    sys_param_vthresh = int(sys.argv[1])
+    sys_param_neurondt = float(sys.argv[2])
+    sys_param_synapsedt = float(sys.argv[3])
+    sys_param_delay = float(sys.argv[4])
+    sys_param_total_dura = int(sys.argv[5])
+else:
+    sys_param_vthresh = 16
+    sys_param_neurondt = 1
+    sys_param_synapsedt = 0.1
+    sys_param_delay = 1
+    sys_param_total_dura = 100
 
 start_time = time.time()
 wt_statics=[]
@@ -124,13 +142,13 @@ for i in range(len(spiking_model.layers)):
     num_neuron = spiking_model.layers[i].N
     model_eqs = spiking_model.layers[i].equations
     print("build layer={}, num neurons={}, model eqs={}".format(i, num_neuron, model_eqs))
-    br2_neurons.append(brian2.NeuronGroup(num_neuron, model_eqs, method="euler",threshold="v >= v_thresh", reset="v = v - v_thresh",dt=1*brian2.ms))
+    br2_neurons.append(brian2.NeuronGroup(num_neuron, model_eqs, method="euler",threshold="v >= v_thresh", reset="v = v - v_thresh",dt=sys_param_neurondt*brian2.ms))
 
 br2_synapses=[]
 all_wts=[]
 for i in range(len(spiking_model.connections)):
     br2_synapses.append(brian2.Synapses(br2_neurons[i],br2_neurons[i+1],model="w:1",\
-        on_pre="v+=w",dt=0.1*brian2.ms))
+        on_pre="v+=w",dt=sys_param_synapsedt*brian2.ms))
     br2_synapses[-1].connect(i=np.array(spiking_model.connections[i].i,dtype="int32"),\
         j=np.array(spiking_model.connections[i].j, dtype="int32"))
 
@@ -190,7 +208,8 @@ all_accus=[]
 # best_vthresh = all_accus[np.argmax([e[1] for e in all_accus])][0]
 # print("choose best vthreshold={}".format(best_vthresh))
 
-best_vthresh = 16
+# best_vthresh = 16
+best_vthresh = sys_param_vthresh
 
 br2_model = {
     "neurons":[e.N for e in br2_neurons],
@@ -198,7 +217,7 @@ br2_model = {
     "synapses_j":[list(e.j) for e in br2_synapses],
     "synapses_w":[list(e.w) for e in br2_synapses],
     "v_thresh": best_vthresh,
-    "run_dura": 100
+    "run_dura": sys_param_total_dura
 }
 with open(os.path.join(baseDirPath, "br2_models", "br2.pkl"), "wb+") as f:
     pickle.dump(br2_model, f)
@@ -213,7 +232,7 @@ for i in range(50):
     br2_net.restore()
     sample = valX[i].flatten()/brian2.ms
     br2_neurons[0].bias = sample
-    br2_net.run(100*brian2.ms,namespace={'v_thresh': best_vthresh},report=None)
+    br2_net.run(sys_param_total_dura*brian2.ms,namespace={'v_thresh': best_vthresh},report=None)
     input_spike = br2_input_monitor.spike_trains()
     output_spike = br2_monitor.spike_trains()
     input_spike_arrs=[]
@@ -416,10 +435,10 @@ brian2_snn_info = {
     "layer_conns": layer_conn_info,
     "extra_simu_info":{
         "simulate_vthresh": best_vthresh,
-        "simulate_neuron_dt": "1ms",
-        "simulate_synapse_dt": "0.1ms",
-        "simulate_delay": "1ms",
-        "simulate_dura": "100ms",
+        "simulate_neuron_dt": sys_param_neurondt,
+        "simulate_synapse_dt": sys_param_synapsedt,
+        "simulate_delay": sys_param_delay,
+        "simulate_dura": sys_param_total_dura,
         "simulate_acc": "{:.2%}".format(acc/50)
     },
     "record_layer_v":{

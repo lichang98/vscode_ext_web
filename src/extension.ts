@@ -31,6 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let treeViewConvertDarLang = TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
 	let treeViewSNNModelView = TreeViewProvider.initTreeViewItem("item_snn_model_view");
 	let treeViewNewProj = TreeViewProvider.initTreeViewItem("new_project_act_view-item");
+	let treeViewLoadProj = TreeViewProvider.initTreeViewItem("load_proj_act_view-item");
 	// let treeViewBinConvertDarLang = TreeViewProvider.initTreeViewItem("item_bin_darwinlang_convertor");
 
 	let treeviewHome = vscode.window.createTreeView("treeView-item", {treeDataProvider: treeview});
@@ -39,44 +40,132 @@ export function activate(context: vscode.ExtensionContext) {
 	let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", {treeDataProvider:treeViewConvertDarLang});
 	let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
 	let treeViewNPView = vscode.window.createTreeView("new_project_act_view-item", {treeDataProvider: treeViewNewProj});
+	let treeViewProjLoadView = vscode.window.createTreeView("load_proj_act_view-item",{treeDataProvider: treeViewLoadProj});
+
+	function is_all_invisible(){
+		return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible
+					&& !treeViewSNNMD.visible && !treeViewNPView.visible && !treeViewProjLoadView.visible;
+	}
+
 
 	treeViewCvtor.onDidChangeVisibility((evt)=>{
 		if(evt.visible){
 			console.log("转换器页面可用!");
-			// 点击转换器快捷方式，启动模型转换
-			vscode.commands.executeCommand("item_convertor.start_convert");
+			if(currentPanel && currentPanel.title !== "模型转换"){
+				currentPanel.webview.html = getANNSNNConvertPage();
+				currentPanel.reveal();
+				currentPanel.title = "模型转换";
+				console.log("显示currentpane  模型转换   1");
+			}else if(currentPanel){
+				currentPanel.reveal();
+			}
+			// // 点击转换器快捷方式，启动模型转换
+			// vscode.commands.executeCommand("item_convertor.start_convert");
+		}else{
+			setTimeout(()=>{
+				if(is_all_invisible()){
+					if(currentPanel && currentPanel.title !== "模型转换"){
+						currentPanel.webview.html = getANNSNNConvertPage();
+						currentPanel.reveal();
+						currentPanel.title = "模型转换";
+						console.log("显示currentpane  模型转换 2");
+					}else if(currentPanel){
+						currentPanel.reveal();
+					}
+					treeViewCvtor.reveal(treeviewConvertor.data[0]);
+				}
+			}, 100);
 		}
 	});
 
 	treeViewNPView.onDidChangeVisibility((evt)=>{
 		if(evt.visible){
 			console.log("新项目创建...");
+			vscode.commands.executeCommand("treeView-item.newproj");
 		}else{
-			treeViewNPView.reveal(treeViewNewProj.data[0]);
+			setTimeout(()=>{
+				if(is_all_invisible()){
+					treeViewNPView.reveal(treeViewNewProj.data[0]);
+					vscode.commands.executeCommand("treeView-item.newproj");
+				}else{
+					return;
+				}
+			},100);
+			console.log("创建新项目隐藏...");
+		}
+	});
+
+	treeViewProjLoadView.onDidChangeVisibility((evt)=>{
+		if(evt.visible){
+			console.log("加载已有项目....");
+			console.log("加载已有项目 命令执行..");
+			vscode.commands.executeCommand("treeView.proj_load");
+		}else{
+			setTimeout(()=>{
+				if(is_all_invisible()){
+					console.log("加载已有项目  reveal..");
+					treeViewProjLoadView.reveal(treeViewLoadProj.data[0]);
+					console.log("加载已有项目 命令执行..");
+					vscode.commands.executeCommand("treeView.proj_load");
+				}else{
+					console.log("加载已有项目 隐藏...");
+					return;
+				}
+			},100);
 		}
 	});
 
 	treeViewSim.onDidChangeVisibility((evt)=>{
 		if(evt.visible){
 			console.log("模拟页面可用！");
+			// 点击仿真器快捷方式，启动仿真
+			vscode.commands.executeCommand("item_simulator.start_simulate");
+		}else{
+			setTimeout(()=>{
+				if(is_all_invisible()){
+					treeViewSim.reveal(treeViewSimulator.data[0]);
+					// 点击仿真器快捷方式，启动仿真
+					vscode.commands.executeCommand("item_simulator.start_simulate");
+					console.log("模拟页面隐藏...");
+				}else{
+					return;
+				}
+			},100);
 		}
-		// 点击仿真器快捷方式，启动仿真
-		vscode.commands.executeCommand("item_simulator.start_simulate");
 	});
 
 	treeViewSNNMD.onDidChangeVisibility((evt)=>{
 		if(evt.visible){
 			console.log("SNN模型页面可用！");
+			vscode.commands.executeCommand("snn_model_ac.show_snn_model");
+		}else{
+			setTimeout(()=>{
+				if(is_all_invisible()){
+					treeViewSNNMD.reveal(treeViewSNNModelView.data[0]);
+					vscode.commands.executeCommand("snn_model_ac.show_snn_model");
+				}else{
+					return;
+				}
+			},100);
 		}
-		vscode.commands.executeCommand("snn_model_ac.show_snn_model");
 	});
 
 	treeViewCvtDarLang.onDidChangeVisibility((evt)=>{
 		if(evt.visible){
 			console.log("转换darwinlang页面可用!");
+			//启动转换生成darwinlang
+			vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
+		}else{
+			setTimeout(()=>{
+				if(is_all_invisible()){
+					treeViewCvtDarLang.reveal(treeViewConvertDarLang.data[0]);
+					//启动转换生成darwinlang
+					vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
+				}else{
+					return;
+				}
+			},100);
 		}
-		//启动转换生成darwinlang
-		vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
 	});
 
 	let inMemTreeViewStruct:Array<TreeItemNode>=new Array();
@@ -257,11 +346,15 @@ export function activate(context: vscode.ExtensionContext) {
 					treeViewSimulator.data = inMemTreeViewStruct;
 					treeViewConvertDarLang.data = inMemTreeViewStruct;
 					treeViewSNNModelView.data = inMemTreeViewStruct;
+					treeViewNewProj.data = inMemTreeViewStruct;
+					treeViewLoadProj.data = inMemTreeViewStruct;
 					treeview.refresh();
 					treeviewConvertor.refresh();
 					treeViewSimulator.refresh();
 					treeViewConvertDarLang.refresh();
 					treeViewSNNModelView.refresh();
+					treeViewNewProj.refresh();
+					treeViewLoadProj.refresh();
 					// treeViewBinConvertDarLang.refresh();
 				}else if(data.project_refac_info){
 					// 接收到webview 项目属性修改的信息
@@ -277,11 +370,15 @@ export function activate(context: vscode.ExtensionContext) {
 					treeViewSimulator.data = inMemTreeViewStruct;
 					treeViewConvertDarLang.data = inMemTreeViewStruct;
 					treeViewSNNModelView.data = inMemTreeViewStruct;
+					treeViewNewProj.data = inMemTreeViewStruct;
+					treeViewLoadProj.data = inMemTreeViewStruct;
 					treeview.refresh();
 					treeviewConvertor.refresh();
 					treeViewSimulator.refresh();
 					treeViewConvertDarLang.refresh();
 					treeViewSNNModelView.refresh();
+					treeViewNewProj.refresh();
+					treeViewLoadProj.refresh();
 					// treeViewBinConvertDarLang.refresh();
 				}else if(data.model_convert_params){
 					// 接收到模型转换与仿真的参数配置，启动脚本
@@ -491,11 +588,15 @@ export function activate(context: vscode.ExtensionContext) {
 				treeViewSimulator.data = inMemTreeViewStruct;
 				treeViewConvertDarLang.data = inMemTreeViewStruct;
 				treeViewSNNModelView.data = inMemTreeViewStruct;
+				treeViewNewProj.data = inMemTreeViewStruct;
+				treeViewLoadProj.data = inMemTreeViewStruct;
 				treeview.refresh();
 				treeviewConvertor.refresh();
 				treeViewSimulator.refresh();
 				treeViewConvertDarLang.refresh();
 				treeViewSNNModelView.refresh();
+				treeViewNewProj.refresh();
+				treeViewLoadProj.refresh();
 				// treeViewBinConvertDarLang.refresh();
 			}
 		});
@@ -515,11 +616,15 @@ export function activate(context: vscode.ExtensionContext) {
 		treeViewSimulator.data = inMemTreeViewStruct;
 		treeViewConvertDarLang.data = inMemTreeViewStruct;
 		treeViewSNNModelView.data = inMemTreeViewStruct;
+		treeViewNewProj.data = inMemTreeViewStruct;
+		treeViewLoadProj.data = inMemTreeViewStruct;
 		treeview.refresh();
 		treeviewConvertor.refresh();
 		treeViewSimulator.refresh();
 		treeViewConvertDarLang.refresh();
 		treeViewSNNModelView.refresh();
+		treeViewNewProj.refresh();
+		treeViewLoadProj.refresh();
 		// treeViewBinConvertDarLang.refresh();
 	}));
 
@@ -747,11 +852,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// 启动模型转换
 	vscode.commands.registerCommand("item_convertor.start_convert", ()=>{
 		if(currentPanel){
-			currentPanel.webview.html = getANNSNNConvertPage();
-			currentPanel.reveal();
-			currentPanel.title = "模型转换";
 			// 发送消息到web view ，开始模型的转换
+			console.log("模型转换页面打开");
 			currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
+
 			// 执行后台脚本，发送log 到webview 展示运行日志，执行结束之后发送消息通知ann_model
 			// let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py");
 			// let command_str = "python "+scriptPath;
@@ -845,6 +949,8 @@ export function activate(context: vscode.ExtensionContext) {
 			treeViewSimulator.refresh();
 			treeViewConvertDarLang.refresh();
 			treeViewSNNModelView.refresh();
+			treeViewNewProj.refresh();
+			treeViewLoadProj.refresh();
 		}
 		// treeViewBinConvertDarLang.refresh();
 	});

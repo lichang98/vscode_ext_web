@@ -1426,6 +1426,8 @@ export function getANNSNNConvertPage(){
                   document.getElementById("search_progress_div").style.width = "0%";
                   document.getElementById("darlang_progress_div").style.width = "0%";
                   document.getElementById("total_progress_div").style.width = "0%";
+  
+                  ("#log_output_div").html("模型转换启动中......");
                 }
             });
   

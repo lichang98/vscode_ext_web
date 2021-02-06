@@ -30,6 +30,7 @@ function activate(context) {
     let treeViewConvertDarLang = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
     let treeViewSNNModelView = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_snn_model_view");
     let treeViewNewProj = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("new_project_act_view-item");
+    let treeViewLoadProj = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("load_proj_act_view-item");
     // let treeViewBinConvertDarLang = TreeViewProvider.initTreeViewItem("item_bin_darwinlang_convertor");
     let treeviewHome = vscode.window.createTreeView("treeView-item", { treeDataProvider: treeview });
     let treeViewCvtor = vscode.window.createTreeView("item_convertor", { treeDataProvider: treeviewConvertor });
@@ -37,40 +38,137 @@ function activate(context) {
     let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", { treeDataProvider: treeViewConvertDarLang });
     let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", { treeDataProvider: treeViewSNNModelView });
     let treeViewNPView = vscode.window.createTreeView("new_project_act_view-item", { treeDataProvider: treeViewNewProj });
+    let treeViewProjLoadView = vscode.window.createTreeView("load_proj_act_view-item", { treeDataProvider: treeViewLoadProj });
+    function is_all_invisible() {
+        return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible
+            && !treeViewSNNMD.visible && !treeViewNPView.visible && !treeViewProjLoadView.visible;
+    }
     treeViewCvtor.onDidChangeVisibility((evt) => {
         if (evt.visible) {
             console.log("转换器页面可用!");
-            // 点击转换器快捷方式，启动模型转换
-            vscode.commands.executeCommand("item_convertor.start_convert");
+            if (currentPanel && currentPanel.title !== "模型转换") {
+                currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
+                currentPanel.reveal();
+                currentPanel.title = "模型转换";
+                console.log("显示currentpane  模型转换   1");
+            }
+            else if (currentPanel) {
+                currentPanel.reveal();
+            }
+            // // 点击转换器快捷方式，启动模型转换
+            // vscode.commands.executeCommand("item_convertor.start_convert");
+        }
+        else {
+            setTimeout(() => {
+                if (is_all_invisible()) {
+                    if (currentPanel && currentPanel.title !== "模型转换") {
+                        currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
+                        currentPanel.reveal();
+                        currentPanel.title = "模型转换";
+                        console.log("显示currentpane  模型转换 2");
+                    }
+                    else if (currentPanel) {
+                        currentPanel.reveal();
+                    }
+                    treeViewCvtor.reveal(treeviewConvertor.data[0]);
+                }
+            }, 100);
         }
     });
     treeViewNPView.onDidChangeVisibility((evt) => {
         if (evt.visible) {
             console.log("新项目创建...");
+            vscode.commands.executeCommand("treeView-item.newproj");
         }
         else {
-            treeViewNPView.reveal(treeViewNewProj.data[0]);
+            setTimeout(() => {
+                if (is_all_invisible()) {
+                    treeViewNPView.reveal(treeViewNewProj.data[0]);
+                    vscode.commands.executeCommand("treeView-item.newproj");
+                }
+                else {
+                    return;
+                }
+            }, 100);
+            console.log("创建新项目隐藏...");
+        }
+    });
+    treeViewProjLoadView.onDidChangeVisibility((evt) => {
+        if (evt.visible) {
+            console.log("加载已有项目....");
+            console.log("加载已有项目 命令执行..");
+            vscode.commands.executeCommand("treeView.proj_load");
+        }
+        else {
+            setTimeout(() => {
+                if (is_all_invisible()) {
+                    console.log("加载已有项目  reveal..");
+                    treeViewProjLoadView.reveal(treeViewLoadProj.data[0]);
+                    console.log("加载已有项目 命令执行..");
+                    vscode.commands.executeCommand("treeView.proj_load");
+                }
+                else {
+                    console.log("加载已有项目 隐藏...");
+                    return;
+                }
+            }, 100);
         }
     });
     treeViewSim.onDidChangeVisibility((evt) => {
         if (evt.visible) {
             console.log("模拟页面可用！");
+            // 点击仿真器快捷方式，启动仿真
+            vscode.commands.executeCommand("item_simulator.start_simulate");
         }
-        // 点击仿真器快捷方式，启动仿真
-        vscode.commands.executeCommand("item_simulator.start_simulate");
+        else {
+            setTimeout(() => {
+                if (is_all_invisible()) {
+                    treeViewSim.reveal(treeViewSimulator.data[0]);
+                    // 点击仿真器快捷方式，启动仿真
+                    vscode.commands.executeCommand("item_simulator.start_simulate");
+                    console.log("模拟页面隐藏...");
+                }
+                else {
+                    return;
+                }
+            }, 100);
+        }
     });
     treeViewSNNMD.onDidChangeVisibility((evt) => {
         if (evt.visible) {
             console.log("SNN模型页面可用！");
+            vscode.commands.executeCommand("snn_model_ac.show_snn_model");
         }
-        vscode.commands.executeCommand("snn_model_ac.show_snn_model");
+        else {
+            setTimeout(() => {
+                if (is_all_invisible()) {
+                    treeViewSNNMD.reveal(treeViewSNNModelView.data[0]);
+                    vscode.commands.executeCommand("snn_model_ac.show_snn_model");
+                }
+                else {
+                    return;
+                }
+            }, 100);
+        }
     });
     treeViewCvtDarLang.onDidChangeVisibility((evt) => {
         if (evt.visible) {
             console.log("转换darwinlang页面可用!");
+            //启动转换生成darwinlang
+            vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
         }
-        //启动转换生成darwinlang
-        vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
+        else {
+            setTimeout(() => {
+                if (is_all_invisible()) {
+                    treeViewCvtDarLang.reveal(treeViewConvertDarLang.data[0]);
+                    //启动转换生成darwinlang
+                    vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
+                }
+                else {
+                    return;
+                }
+            }, 100);
+        }
     });
     let inMemTreeViewStruct = new Array();
     // treeViewBinConvertDarLang.data = inMemTreeViewStruct;
@@ -247,11 +345,15 @@ function activate(context) {
                     treeViewSimulator.data = inMemTreeViewStruct;
                     treeViewConvertDarLang.data = inMemTreeViewStruct;
                     treeViewSNNModelView.data = inMemTreeViewStruct;
+                    treeViewNewProj.data = inMemTreeViewStruct;
+                    treeViewLoadProj.data = inMemTreeViewStruct;
                     treeview.refresh();
                     treeviewConvertor.refresh();
                     treeViewSimulator.refresh();
                     treeViewConvertDarLang.refresh();
                     treeViewSNNModelView.refresh();
+                    treeViewNewProj.refresh();
+                    treeViewLoadProj.refresh();
                     // treeViewBinConvertDarLang.refresh();
                 }
                 else if (data.project_refac_info) {
@@ -268,11 +370,15 @@ function activate(context) {
                     treeViewSimulator.data = inMemTreeViewStruct;
                     treeViewConvertDarLang.data = inMemTreeViewStruct;
                     treeViewSNNModelView.data = inMemTreeViewStruct;
+                    treeViewNewProj.data = inMemTreeViewStruct;
+                    treeViewLoadProj.data = inMemTreeViewStruct;
                     treeview.refresh();
                     treeviewConvertor.refresh();
                     treeViewSimulator.refresh();
                     treeViewConvertDarLang.refresh();
                     treeViewSNNModelView.refresh();
+                    treeViewNewProj.refresh();
+                    treeViewLoadProj.refresh();
                     // treeViewBinConvertDarLang.refresh();
                 }
                 else if (data.model_convert_params) {
@@ -478,11 +584,15 @@ function activate(context) {
                 treeViewSimulator.data = inMemTreeViewStruct;
                 treeViewConvertDarLang.data = inMemTreeViewStruct;
                 treeViewSNNModelView.data = inMemTreeViewStruct;
+                treeViewNewProj.data = inMemTreeViewStruct;
+                treeViewLoadProj.data = inMemTreeViewStruct;
                 treeview.refresh();
                 treeviewConvertor.refresh();
                 treeViewSimulator.refresh();
                 treeViewConvertDarLang.refresh();
                 treeViewSNNModelView.refresh();
+                treeViewNewProj.refresh();
+                treeViewLoadProj.refresh();
                 // treeViewBinConvertDarLang.refresh();
             }
         });
@@ -501,11 +611,15 @@ function activate(context) {
         treeViewSimulator.data = inMemTreeViewStruct;
         treeViewConvertDarLang.data = inMemTreeViewStruct;
         treeViewSNNModelView.data = inMemTreeViewStruct;
+        treeViewNewProj.data = inMemTreeViewStruct;
+        treeViewLoadProj.data = inMemTreeViewStruct;
         treeview.refresh();
         treeviewConvertor.refresh();
         treeViewSimulator.refresh();
         treeViewConvertDarLang.refresh();
         treeViewSNNModelView.refresh();
+        treeViewNewProj.refresh();
+        treeViewLoadProj.refresh();
         // treeViewBinConvertDarLang.refresh();
     }));
     let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode) => {
@@ -713,10 +827,8 @@ function activate(context) {
     // 启动模型转换
     vscode.commands.registerCommand("item_convertor.start_convert", () => {
         if (currentPanel) {
-            currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
-            currentPanel.reveal();
-            currentPanel.title = "模型转换";
             // 发送消息到web view ，开始模型的转换
+            console.log("模型转换页面打开");
             currentPanel.webview.postMessage(JSON.stringify({ "ann_model_start_convert": "yes" }));
             // 执行后台脚本，发送log 到webview 展示运行日志，执行结束之后发送消息通知ann_model
             // let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py");
@@ -808,6 +920,8 @@ function activate(context) {
             treeViewSimulator.refresh();
             treeViewConvertDarLang.refresh();
             treeViewSNNModelView.refresh();
+            treeViewNewProj.refresh();
+            treeViewLoadProj.refresh();
         }
         // treeViewBinConvertDarLang.refresh();
     });
@@ -6244,6 +6358,8 @@ function getANNSNNConvertPage() {
                   document.getElementById("search_progress_div").style.width = "0%";
                   document.getElementById("darlang_progress_div").style.width = "0%";
                   document.getElementById("total_progress_div").style.width = "0%";
+  
+                  ("#log_output_div").html("模型转换启动中......");
                 }
             });
   

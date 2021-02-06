@@ -400,18 +400,18 @@ export function activate(context: vscode.ExtensionContext) {
 					// 	"dura":dura
 					// }}));
 					// 提取参数
+					console.log("Fetch params for conversion from received message");
 					let web_param_vthresh = data.model_convert_params.vthresh;
 					let web_param_neurondt = data.model_convert_params.neuron_dt;
 					let web_param_synapse_dt = data.model_convert_params.synapse_dt;
 					let web_param_delay = data.model_convert_params.delay;
 					let web_param_dura = data.model_convert_params.dura;
 
-					console.log("转换脚本启动的参数："+JSON.parse(data.model_convert_params));
-
 					console.log("Extension 接收到 webview的消息，启动脚本......");
 					let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ web_param_vthresh+" "+ 
 									web_param_neurondt+" "+ web_param_synapse_dt+" "+web_param_delay+" "+web_param_dura);
 					let command_str = "python "+scriptPath;
+					currentPanel?.webview.postMessage(JSON.stringify({"log_output":"模型转换程序启动中......"}));
 					let scriptProcess = exec(command_str,{});
 					
 					scriptProcess.stdout?.on("data", function(data){

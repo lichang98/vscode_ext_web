@@ -288,6 +288,14 @@ function activate(context) {
             imgPreviewPanel.reveal();
         }
     }));
+    function sleep(numberMillis) {
+        var start = new Date().getTime();
+        while (true) {
+            if (new Date().getTime() - start > numberMillis) {
+                break;
+            }
+        }
+    }
     // Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated
     console.log('Congratulations, your extension "darwin2" is now active!');
@@ -297,6 +305,14 @@ function activate(context) {
     // Now provide the implementation of the command with registerCommand
     // The commandId parameter must match the command field in package.json
     let disposable = vscode.commands.registerCommand('darwin2.helloWorld', () => {
+        // 启动后台资源server
+        let scriptPath = path.join(__dirname, "inner_scripts", "img_server.py");
+        let command_str = "python " + scriptPath;
+        console.log("prepare to start img server.");
+        local_server = child_process_1.exec(command_str, function (err, stdout, stderr) {
+            console.log("img server started");
+        });
+        sleep(1000);
         // The code you place here will be executed every time your command is executed
         const columnToShowIn = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
         treeviewHome.reveal(treeview.data[0]);
@@ -307,13 +323,6 @@ function activate(context) {
             currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
             // 主界面由electron 应用启动
             currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
-            // 启动后台资源server
-            let scriptPath = path.join(__dirname, "inner_scripts", "img_server.py");
-            let command_str = "python " + scriptPath;
-            console.log("prepare to start img server.");
-            local_server = child_process_1.exec(command_str, function (err, stdout, stderr) {
-                console.log("img server started");
-            });
             currentPanel.webview.onDidReceiveMessage(function (msg) {
                 var _a, _b;
                 console.log("Receive message: " + msg);
@@ -5015,20 +5024,20 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
               <!-- 数据基本信息表格 -->
               <table id="data_general_table" style="width:440px; margin-left:100px;">
                 <caption class="white-text" style="caption-side: top;font-weight: bold;text-align: center;font-size: large;">导入数据统计</caption>
-                <tr style="font-size:small;">
-                  <td>总数据大小</td>
+                <tr style="border: solid 3px;height: 40px;">
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;">总数据大小</td>
                   <td id="total_data_amount"></td>
                 </tr>
-                <tr style="font-size:small;">
-                  <td>测试数据量</td>
+                <tr style="border: solid 3px;height: 40px;">
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;">测试数据量</td>
                   <td id="test_data_amount"></td>
                 </tr>
-                <tr style="font-size:small;">
-                  <td>验证数据量</td>
+                <tr style="border: solid 3px;height: 40px;">
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;">验证数据量</td>
                   <td id="val_data_amount"></td>
                 </tr>
-                <tr style="font-size: small;">
-                  <td>数据类别个数</td>
+                <tr style="border: solid 3px;height: 40px;">
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;">数据类别个数</td>
                   <td id="class_counts"></td>
                 </tr>
               </table>
@@ -5166,16 +5175,23 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
      height:auto !important;
   }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   
   <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script> -->
+  
+  <link rel="stylesheet" href="http://localhost:6003/css/materialize.min.css">
+  <link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css" >
+  
+  <script src="http://localhost:6003/js/jquery.min.js"></script>
+  <script src="http://localhost:6003/js/materialize.min.js"></script>
+  <script src="http://localhost:6003/js/bootstrap.min.js"></script>
+  <script src="http://localhost:6003/js/echarts.min.js"></script>
+  
   <script>
-  
-  
   var prev_click_img_li_id = undefined;
   var prev_click_img_li_test_id = undefined;
   var data_info=undefined;
@@ -5221,18 +5237,22 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
         // 对数处理histgram
         for(var i=0;i<data_info.test_sample_imgs.length;++i){
           for(var j=0;j<data_info.test_sample_imgs[i].hist_gram_bins.length;++j){
-            data_info.test_sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.test_sample_imgs[i].hist_gram_bins[j]);
+            if(data_info.test_sample_imgs[i].hist_gram_bins[j] > 0){
+              data_info.test_sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.test_sample_imgs[i].hist_gram_bins[j]);
+            }
           }
         }
   
         for(var i=0;i<data_info.sample_imgs.length;++i){
           for(var j=0;j<data_info.sample_imgs[i].hist_gram_bins.length;++j){
-            data_info.sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.sample_imgs[i].hist_gram_bins[j]);
+            if(data_info.sample_imgs[i].hist_gram_bins[j] > 0){
+              data_info.sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.sample_imgs[i].hist_gram_bins[j]);
+            }
           }
         }
   
         console.log("display test data distribution...");
-        display_data_bar_chart(class_labels, class_ratios, "测试数据集各类别分布",  "数据占比", "bar_chart_testdata_container");
+        display_data_bar_chart(class_labels, class_ratios, "测试数据集各类别分布",  "数据占比","类别", "占比", "bar_chart_testdata_container");
         console.log("test data distribution bar chart displayed.");
     });
   });
@@ -5255,71 +5275,63 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
     console.log("current click img id="+sampleId);
     var sampleIdx = parseInt(sampleId.substring(sampleId.length-1));
     if(sampleId.substring(0,4) === "test"){
-      display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布", "test_bar_chart_histgram");
+      display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","区间","数量(log_10)", "test_bar_chart_histgram");
     }else{
-      display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布", "bar_chart_histgram");
+      display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","区间","数量(log_10)", "bar_chart_histgram");
     }
   }
   
   
   
-      function display_data_bar_chart(label_names, label_counts, title,series_name,target_id){
+      function display_data_bar_chart(label_names, label_counts, title,series_name,x_axis_name, y_axis_name,target_id){
         console.log("label names:"+label_names);
         console.log("label counts:"+label_counts);
         var option = {
-              tooltip: {
-                  trigger: 'axis',
-                  axisPointer: {
-                      type: 'cross',
-                      crossStyle: {
-                          color: '#999'
+              tooltip:{
+                  trigger:"axis"
+                },
+              xAxis: {
+                type: 'category',
+                    data: label_names,
+                    scale:true,
+                    name:x_axis_name,
+                    nameTextStyle:{
+                      color:"white"
+                    },
+                    axisLabel:{
+                      textStyle:{
+                        color:"white"
                       }
-                  }
+                    }
               },
-              backgroundColor:"#17202A",
-              xAxis: [
-                  {
-                      type: 'category',
-                      data:label_names,
-                      axisPointer: {
-                          type: 'shadow'
-                      },
-                      axisLabel:{
-                          textStyle:{
-                              "color":"#FDFEFE "
-                          },
-                          rotate:30
-                      }
-                  }
-              ],
               yAxis: [
                   {
-                      type: 'value',
-                      name: '',
-                      min: 0,
-                      max: Math.max(label_counts)*1.2,
-                      interval: Math.max(label_counts)*1.2 / 5,
-                      axisLabel: {
-                          formatter: '{value}'
-                      },
-                      splitLine:{show:false},
-                      axisLine: {show: false}, 
-                      axisTick: {show: false},
-                      axisLabel:{show:false}
+                    type: 'value',
+                    scale:true,
+                    name:y_axis_name,
+                    nameTextStyle:{
+                      color:"white"
+                    },
+                    axisLabel:{
+                      textStyle:{
+                        color:"white"
+                      }
+                    }
                   },
                   {
-                      type: 'value',
-                      name: '',
-                      min: 0,
-                      max: Math.max(label_counts)*1.2,
-                      interval: Math.max(label_counts)*1.2 / 5,
-                      axisLabel: {
-                          formatter: '{value}'
-                      },
-                      splitLine:{show:false},
-                      axisLine: {show: false}, 
-                      axisTick: {show: false},
-                      axisLabel:{show:false}
+                    type: 'value',
+                    scale:true,
+                    name:"",
+                    show:false,
+                    nameTextStyle:{
+                      color:"white"
+                    },
+                    axisLabel:{
+                      show:false,
+                      textStyle:{
+                        color:"white"
+                      }
+                    }
                   }
               ],
               series: [
@@ -5879,9 +5891,13 @@ function getConvertorPageV2() {
        height:auto !important;
     }
     </style>
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+    
+    <link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css">
+    <script src="http://localhost:6003/js/jquery.min.js"></script>
+    <script src="http://localhost:6003/js/bootstrap.min.js"></script>
     
     <script>
     

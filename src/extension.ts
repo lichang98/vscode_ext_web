@@ -289,6 +289,15 @@ export function activate(context: vscode.ExtensionContext) {
 	}));
 
 
+	function sleep(numberMillis:any) {
+		var start = new Date().getTime();
+		while (true) {
+			if (new Date().getTime() - start > numberMillis) {
+				break;
+			}
+		}
+	}
+
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "darwin2" is now active!');
@@ -299,6 +308,14 @@ export function activate(context: vscode.ExtensionContext) {
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
 	let disposable = vscode.commands.registerCommand('darwin2.helloWorld', () => {
+		// 启动后台资源server
+		let scriptPath = path.join(__dirname,"inner_scripts","img_server.py");
+		let command_str = "python "+scriptPath;
+		console.log("prepare to start img server.");
+		local_server = exec(command_str, function(err, stdout, stderr){
+			console.log("img server started");
+		});
+		sleep(1000);
 		// The code you place here will be executed every time your command is executed
 		const columnToShowIn = vscode.window.activeTextEditor? vscode.window.activeTextEditor.viewColumn:undefined;
 		treeviewHome.reveal(treeview.data[0]);
@@ -308,14 +325,6 @@ export function activate(context: vscode.ExtensionContext) {
 			currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 			// 主界面由electron 应用启动
 			currentPanel.webview.html =getConvertorPageV2();
-
-			// 启动后台资源server
-			let scriptPath = path.join(__dirname,"inner_scripts","img_server.py");
-			let command_str = "python "+scriptPath;
-			console.log("prepare to start img server.");
-			local_server = exec(command_str, function(err, stdout, stderr){
-				console.log("img server started");
-			});
 			currentPanel.webview.onDidReceiveMessage(function(msg){
 				console.log("Receive message: "+msg);
 				let data = JSON.parse(msg);

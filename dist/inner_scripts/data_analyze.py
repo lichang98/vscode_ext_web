@@ -35,7 +35,7 @@ class_labels = set([np.argmax(e) for e in y_test])
 # print("sample_img shape={}".format(np.shape(sample_img_arr)))
 # sample_img = Image.fromarray(sample_img_arr)
 # sample_img.save(path.join(path.abspath(path.dirname(__file__)), "sample.png"))
-hist_gram_splits = np.array(np.linspace(0,255,num=10), dtype="int32")
+hist_gram_splits = np.array(np.linspace(0,255,num=len(class_labels)+1), dtype="int32")
 # hist_gram_bins = np.zeros(len(hist_gram_splits),dtype="int32")
 
 # for val in sample_img_arr.flatten():

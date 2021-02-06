@@ -40,6 +40,19 @@ def shutdown():
     shutdown_server()
     return 'Server shutting down...'
 
+@app.route('/js/<js_file>')
+def get_js(js_file):
+    with open(path.join(base_path, "..", "..", "src", "resources","js_css","js",js_file), "r",encoding="utf-8") as f:
+        content = f.read()
+        return Response(content, mimetype="text/javascript")
+
+@app.route("/css/<css_file>")
+def get_css(css_file):
+    with open(path.join(base_path, "..", "..", "src", "resources","js_css","css",css_file), "r",encoding="utf-8") as f:
+        content = f.read()
+        return Response(content, mimetype="text/css")
+
+
 if __name__ == "__main__":
     if not isUse("127.0.0.1",6003):
         app.run(host="0.0.0.0", port=6003)

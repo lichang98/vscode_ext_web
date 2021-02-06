@@ -29,17 +29,17 @@
             <div class="col-md-6">
               <table id="model_general_table" style="width: 440px;margin-left:40px;">
                 <caption class="white-text" style="caption-side: top;text-align: center;font-size: large;font-weight: bold;">ANN模型基本信息</caption>
-                <tr>
-                  <td style="font-size: small;">总层数</td>
-                  <td id="model_total_layers" style="font-size: small;"></td>
+                <tr style="font-size: medium;font-weight: bold;border: solid 3px;">
+                  <td style="font-size: medium;padding-left: 15px;">总层数</td>
+                  <td id="model_total_layers" style="font-size: medium;"></td>
                 </tr>
-                <tr>
-                  <td style="font-size: small;">总参数量</td>
-                  <td id="model_total_param" style="font-size: small;"></td>
+                <tr style="font-size: medium;font-weight: bold;border: solid 3px;">
+                  <td style="font-size: medium;padding-left: 15px;">总参数量</td>
+                  <td id="model_total_param" style="font-size: medium;"></td>
                 </tr>
-                <tr>
-                  <td style="font-size: small;">unit数量</td>
-                  <td id="model_total_units" style="font-size: small;"></td>
+                <tr style="font-size: medium;font-weight: bold;border: solid 3px;">
+                  <td style="font-size: medium;padding-left: 15px;">unit数量</td>
+                  <td id="model_total_units" style="font-size: medium;"></td>
                 </tr>
               </table>
     
@@ -57,10 +57,10 @@
                   <table id="model_detail_table">
                     <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                     <thead>
-                      <tr>
-                        <td style="font-size: medium;">名称</td>
-                        <td style="font-size: medium;">输出形状</td>
-                        <td style="font-size: medium;">参数量</td>
+                      <tr style="font-size: medium;font-weight: bold;border: solid 3px;height: 35px;">
+                        <td style="font-size: medium;padding-left: 15px;">名称</td>
+                        <td style="font-size: medium;padding-left: 15px;">输出形状</td>
+                        <td style="font-size: medium;padding-left: 15px;">参数量</td>
                       </tr>
                     </thead>
                     <!--通过加载模型的信息动态创建-->
@@ -70,10 +70,10 @@
                   <table id="model_detail_table_secondary">
                     <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                     <thead>
-                      <tr>
-                        <td style="font-size: medium;">名称</td>
-                        <td style="font-size: medium;">输出形状</td>
-                        <td style="font-size: medium;">参数量</td>
+                      <tr style="font-size: medium;font-weight: bold;border: solid 3px;height: 35px;">
+                        <td style="font-size: medium;padding-left: 15px;">名称</td>
+                        <td style="font-size: medium;padding-left: 15px;">输出形状</td>
+                        <td style="font-size: medium;padding-left: 15px;">参数量</td>
                       </tr>
                     </thead>
                     <!--通过加载模型的信息动态创建-->
@@ -90,9 +90,9 @@
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">卷积与激活层输出可视化</div>
               <!--动态创建-->
               <div id="layers_vis_div" class="row" style="margin-left: 40px;">
-                <div class="col-md-3" style="font-size: medium;">layer 名称</div>
-                <div class="col-md-3" style="font-size: medium;">layer 编号</div>
-                <div class="col-md-6" style="font-size: medium;">输出可视化</div>
+                <div class="col-md-3" style="font-size: medium;font-weight: bold;padding-left: 15px;">layer 名称</div>
+                <div class="col-md-3" style="font-size: medium;font-weight: bold;padding-left: 15px;">layer 编号</div>
+                <div class="col-md-6" style="font-size: medium;font-weight: bold;padding-left: 15px;">输出可视化</div>
               </div>
               <div id="tmp_peer"></div>
             </div>
@@ -152,13 +152,23 @@ body {
    height:auto !important;
 }
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script> -->
+
+<link rel="stylesheet" href="http://localhost:6003/css/materialize.min.css">
+<link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css">
+
+<script src="http://localhost:6003/js/jquery.min.js"></script>
+<script src="http://localhost:6003/js/materialize.min.js"></script>
+<script src="http://localhost:6003/js/bootstrap.min.js"></script>
+<script src="http://localhost:6003/js/echarts.min.js"></script>
+
+
 <script>
 
     $(document).ready(function(){
@@ -183,14 +193,16 @@ body {
 
             for(var i=0;i<detail_info.length/2;++i){
                 var line = document.createElement("tr");
+                line.style.border = "solid 3px";
+                line.style.height = "45px";
                 var col_name = document.createElement("td");
-                col_name.style = "font-size: small;";
+                col_name.style = "font-size: medium;padding-left: 15px;";
                 col_name.innerText = detail_info[i].name;
                 var col_shape = document.createElement("td");
-                col_shape.style = "font-size: small;";
+                col_shape.style = "font-size: medium;";
                 col_shape.innerText = detail_info[i].shape;
                 var col_params = document.createElement("td");
-                col_params.style = "font-size: small;";
+                col_params.style = "font-size: medium;";
                 col_params.innerText = detail_info[i].params;
                 
                 if( parseInt(detail_info[i].params, 10) > 0){
@@ -210,14 +222,16 @@ body {
 
             for(var i=detail_info.length/2;i<detail_info.length;++i){
                 var line = document.createElement("tr");
+                line.style.border = "solid 3px";
+                line.style.height = "45px";
                 var col_name = document.createElement("td");
-                col_name.style = "font-size: small;";
+                col_name.style = "font-size: medium;padding-left: 15px;";
                 col_name.innerText = detail_info[i].name;
                 var col_shape = document.createElement("td");
-                col_name.style = "font-size: small;";
+                col_shape.style = "font-size: medium;";
                 col_shape.innerText = detail_info[i].shape;
                 var col_params = document.createElement("td");
-                col_params.style = "font-size: small;";
+                col_params.style = "font-size: medium;";
                 col_params.innerText = detail_info[i].params;
                 
                 if( parseInt(detail_info[i].params, 10) > 0){
@@ -251,12 +265,12 @@ body {
 
                 var layer_name_div = document.createElement("div");
                 layer_name_div.setAttribute("class", "col-md-3");
-                layer_name_div.style = "font-size: small;";
+                layer_name_div.style = "font-size: medium;";
                 layer_name_div.innerText = layer_name;
                 img_div.appendChild(layer_name_div);
 
                 var layer_index_div = document.createElement("div");
-                layer_index_div.style = "font-size: small;";
+                layer_index_div.style = "font-size: medium;";
                 layer_index_div.setAttribute("class", "col-md-3");
 
                 layer_index_div.innerText = layer_idx;
@@ -285,60 +299,52 @@ body {
 
     function display_layer_params_bar_chart(layer_names, layer_param_counts){
       var option = {
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    crossStyle: {
-                        color: '#999'
+            tooltip:{
+                trigger:"axis"
+              },
+              xAxis: {
+                  type: 'category',
+                  data: layer_names,
+                  scale:true,
+                  name:"神经层",
+                  nameTextStyle:{
+                    color:"white"
+                  },
+                  axisLabel:{
+                    textStyle:{
+                      color:"white"
+                    },
+                    rotate:30
+                  }
+              },
+            yAxis:[
+              {
+                type: 'value',
+                  scale:true,
+                  name:"参数量(log_10)",
+                  nameTextStyle:{
+                    color:"white"
+                  },
+                  axisLabel:{
+                    textStyle:{
+                      color:"white"
                     }
-                }
-            },
-            backgroundColor:"#17202A",
-            xAxis: [
-                {
-                    type: 'category',
-                    data:layer_names,
-                    axisPointer: {
-                        type: 'shadow'
-                    },
-                    axisLabel:{
-                        textStyle:{
-                            "color":"#FDFEFE "
-                        },
-                        rotate:30
+                  }
+              },
+              {
+                type: 'value',
+                  scale:true,
+                  name:"",
+                  show:false,
+                  nameTextStyle:{
+                    color:"white"
+                  },
+                  axisLabel:{
+                    textStyle:{
+                      color:"white"
                     }
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value',
-                    name: '',
-                    min: 0,
-                    max: Math.max(layer_param_counts)*1.2,
-                    interval: Math.max(layer_param_counts)*1.2 / 5,
-                    axisLabel: {
-                        formatter: '{value}'
-                    },
-                    splitLine:{show:false},
-                    axisLine: {show: false}, 
-                    axisTick: {show: false},
-                    axisLabel:{show:false}
-                },
-                {
-                    type: 'value',
-                    name: '',
-                    min: 0,
-                    max: Math.max(layer_param_counts)*1.2,
-                    interval: Math.max(layer_param_counts)*1.2 / 5,
-                    axisLabel: {
-                        formatter: '{value}'
-                    },
-                    splitLine:{show:false},
-                    axisLine: {show: false}, 
-                    axisTick: {show: false},
-                    axisLabel:{show:false}
-                }
+                  }
+              }
             ],
             series: [
                 {
@@ -347,7 +353,7 @@ body {
                     data: layer_param_counts
                 },
                 {
-                    name: '参数量(log_10)',
+                    name: '',
                     type: 'line',
                     yAxisIndex: 1,
                     data: layer_param_counts

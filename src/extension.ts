@@ -59,6 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}else if(currentPanel){
 				currentPanel.reveal();
 			}
+			treeviewHome.reveal(treeview.data[0]);
 			// // 点击转换器快捷方式，启动模型转换
 			// vscode.commands.executeCommand("item_convertor.start_convert");
 		}else{
@@ -72,7 +73,8 @@ export function activate(context: vscode.ExtensionContext) {
 					}else if(currentPanel){
 						currentPanel.reveal();
 					}
-					treeViewCvtor.reveal(treeviewConvertor.data[0]);
+					treeviewHome.reveal(treeview.data[0]);
+					// treeViewCvtor.reveal(treeviewConvertor.data[0]);
 				}
 			}, 100);
 		}
@@ -107,7 +109,8 @@ export function activate(context: vscode.ExtensionContext) {
 			setTimeout(()=>{
 				if(is_all_invisible()){
 					console.log("加载已有项目  reveal..");
-					treeViewProjLoadView.reveal(treeViewLoadProj.data[0]);
+					treeviewHome.reveal(treeview.data[0]);
+					// treeViewProjLoadView.reveal(treeViewLoadProj.data[0]);
 					console.log("加载已有项目 命令执行..");
 					vscode.commands.executeCommand("treeView.proj_load");
 				}else{
@@ -122,11 +125,13 @@ export function activate(context: vscode.ExtensionContext) {
 		if(evt.visible){
 			console.log("模拟页面可用！");
 			// 点击仿真器快捷方式，启动仿真
+			treeviewHome.reveal(treeview.data[0]);
 			vscode.commands.executeCommand("item_simulator.start_simulate");
 		}else{
 			setTimeout(()=>{
 				if(is_all_invisible()){
-					treeViewSim.reveal(treeViewSimulator.data[0]);
+					// treeViewSim.reveal(treeViewSimulator.data[0]);
+					treeviewHome.reveal(treeview.data[0]);
 					// 点击仿真器快捷方式，启动仿真
 					vscode.commands.executeCommand("item_simulator.start_simulate");
 					console.log("模拟页面隐藏...");
@@ -140,11 +145,13 @@ export function activate(context: vscode.ExtensionContext) {
 	treeViewSNNMD.onDidChangeVisibility((evt)=>{
 		if(evt.visible){
 			console.log("SNN模型页面可用！");
+			treeviewHome.reveal(treeview.data[0]);
 			vscode.commands.executeCommand("snn_model_ac.show_snn_model");
 		}else{
 			setTimeout(()=>{
 				if(is_all_invisible()){
-					treeViewSNNMD.reveal(treeViewSNNModelView.data[0]);
+					// treeViewSNNMD.reveal(treeViewSNNModelView.data[0]);
+					treeviewHome.reveal(treeview.data[0]);
 					vscode.commands.executeCommand("snn_model_ac.show_snn_model");
 				}else{
 					return;
@@ -157,11 +164,13 @@ export function activate(context: vscode.ExtensionContext) {
 		if(evt.visible){
 			console.log("转换darwinlang页面可用!");
 			//启动转换生成darwinlang
+			treeviewHome.reveal(treeview.data[0]);
 			vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
 		}else{
 			setTimeout(()=>{
 				if(is_all_invisible()){
-					treeViewCvtDarLang.reveal(treeViewConvertDarLang.data[0]);
+					// treeViewCvtDarLang.reveal(treeViewConvertDarLang.data[0]);
+					treeviewHome.reveal(treeview.data[0]);
 					//启动转换生成darwinlang
 					vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
 				}else{
@@ -580,15 +589,15 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				}
 
-				// ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
-				// inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin二进制模型",[]));
-				// for(let i=0;i<darwinlang_bin_paths.length;++i){
-				// 	if(inMemTreeViewStruct[0].children){
-				// 		var child_len = inMemTreeViewStruct[0].children.length;
-				// 		ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
-				// 		inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
-				// 	}
-				// }
+				ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
+				inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin二进制模型",[]));
+				for(let i=0;i<darwinlang_bin_paths.length;++i){
+					if(inMemTreeViewStruct[0].children){
+						var child_len = inMemTreeViewStruct[0].children.length;
+						ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
+						inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
+					}
+				}
 				// // 挂载二进制模型的inputs 数据
 				// if(inMemTreeViewStruct[0].children){
 				// 	let par_dir_idx = inMemTreeViewStruct[0].children.length-1;

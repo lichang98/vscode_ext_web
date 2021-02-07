@@ -1252,7 +1252,7 @@ export function getANNSNNConvertPage(){
   
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
+  <script src="https://cdn.staticfile.org/echarts/5.0.1/echarts.min.js"></script>
   
   <script>
   
@@ -1439,8 +1439,6 @@ export function getANNSNNConvertPage(){
                   document.getElementById("search_progress_div").style.width = "0%";
                   document.getElementById("darlang_progress_div").style.width = "0%";
                   document.getElementById("total_progress_div").style.width = "0%";
-  
-                  ("#log_output_div").html("模型转换启动中......");
                 }
             });
   
@@ -1752,7 +1750,7 @@ export function getSNNSimuPage(){
   
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
+  <script src="https://cdn.staticfile.org/echarts/5.0.1/echarts.min.js"></script>
   
   <script>
     let prev_clicked_li = undefined;
@@ -2314,7 +2312,7 @@ export function getSNNModelPage():string{
   
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script>
+  <script src="https://cdn.staticfile.org/echarts/5.0.1/echarts.min.js"></script>
   
   <script>
         $(document).ready(function(){

@@ -82,10 +82,12 @@ export function activate(context: vscode.ExtensionContext) {
 		if(evt.visible){
 			console.log("新项目创建...");
 			vscode.commands.executeCommand("treeView-item.newproj");
+			treeviewHome.reveal(treeview.data[0]);
 		}else{
 			setTimeout(()=>{
 				if(is_all_invisible()){
-					treeViewNPView.reveal(treeViewNewProj.data[0]);
+					// treeViewNPView.reveal(treeViewNewProj.data[0]);
+					treeviewHome.reveal(treeview.data[0]);
 					vscode.commands.executeCommand("treeView-item.newproj");
 				}else{
 					return;
@@ -100,6 +102,7 @@ export function activate(context: vscode.ExtensionContext) {
 			console.log("加载已有项目....");
 			console.log("加载已有项目 命令执行..");
 			vscode.commands.executeCommand("treeView.proj_load");
+			treeviewHome.reveal(treeview.data[0]);
 		}else{
 			setTimeout(()=>{
 				if(is_all_invisible()){

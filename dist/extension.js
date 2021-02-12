@@ -361,7 +361,7 @@ function activate(context) {
                     proj_desc_info.ann_lib_type = data.project_info.ann_lib_type;
                     TreeViewProvider_1.addSlfProj(data.project_info.project_name);
                     inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(data.project_info.project_name, [new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []),
-                            new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("ANN模型", [])]));
+                            new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("ANN模型", [])], true));
                     treeview.data = inMemTreeViewStruct;
                     treeviewConvertor.data = inMemTreeViewStruct;
                     treeViewSimulator.data = inMemTreeViewStruct;
@@ -578,7 +578,7 @@ function activate(context) {
                 // 显示treeview
                 TreeViewProvider_1.addSlfProj(proj_desc_info.project_name);
                 inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(proj_desc_info.project_name, [new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []),
-                        new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("ANN模型", [])]));
+                        new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("ANN模型", [])], true));
                 TreeViewProvider_1.addSlfFile("x_norm");
                 TreeViewProvider_1.addSlfFile("x_test");
                 TreeViewProvider_1.addSlfFile("y_test");
@@ -598,8 +598,8 @@ function activate(context) {
                     (_a = inMemTreeViewStruct[0].children[1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("model_file"));
                 }
                 // add darwinlang and bin files
-                TreeViewProvider_1.ITEM_ICON_MAP.set("Darwin模型", "imgs/file.png");
-                (_b = inMemTreeViewStruct[0].children) === null || _b === void 0 ? void 0 : _b.push(new TreeViewProvider_1.TreeItemNode("Darwin模型", []));
+                TreeViewProvider_1.ITEM_ICON_MAP.set("SNN模型", "imgs/file.png");
+                (_b = inMemTreeViewStruct[0].children) === null || _b === void 0 ? void 0 : _b.push(new TreeViewProvider_1.TreeItemNode("SNN模型", []));
                 for (let i = 0; i < darwinlang_file_paths.length; ++i) {
                     TreeViewProvider_1.ITEM_ICON_MAP.set(path.basename(darwinlang_file_paths[i].toString()), "imgs/file.png");
                     if (inMemTreeViewStruct[0].children) {
@@ -607,8 +607,8 @@ function activate(context) {
                         (_c = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _c === void 0 ? void 0 : _c.push(new TreeViewProvider_1.TreeItemNode(path.basename(darwinlang_file_paths[i].toString())));
                     }
                 }
-                TreeViewProvider_1.ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
-                (_d = inMemTreeViewStruct[0].children) === null || _d === void 0 ? void 0 : _d.push(new TreeViewProvider_1.TreeItemNode("Darwin二进制模型", []));
+                TreeViewProvider_1.ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
+                (_d = inMemTreeViewStruct[0].children) === null || _d === void 0 ? void 0 : _d.push(new TreeViewProvider_1.TreeItemNode("SNN二进制模型", []));
                 for (let i = 0; i < darwinlang_bin_paths.length; ++i) {
                     if (inMemTreeViewStruct[0].children) {
                         var child_len = inMemTreeViewStruct[0].children.length;
@@ -952,13 +952,13 @@ function activate(context) {
             panelSNNVisWeb.dispose();
             panelSNNVisWeb = undefined;
         }
-        panelSNNVisWeb = vscode.window.createWebviewPanel("SNN Model Vis View", "SNN模型可视化", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+        panelSNNVisWeb = vscode.window.createWebviewPanel("SNN Model Vis View", "SNN模型", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
         panelSNNVisWeb.onDidDispose(() => {
             panelSNNVisWeb = undefined;
         }, null, context.subscriptions);
         panelSNNVisWeb.reveal();
         panelSNNVisWeb.webview.html = get_convertor_page_v2_1.getSNNModelPage();
-        panelSNNVisWeb.title = "SNN模型可视化";
+        panelSNNVisWeb.title = "SNN模型";
         // 传递信息
         fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
             if (panelSNNVisWeb) {
@@ -992,9 +992,9 @@ function activate(context) {
     vscode.commands.registerCommand("item_darwinLang_convertor.start_convert", () => {
         var _a;
         // inMemTreeViewDarLang = [];
-        if (!TreeViewProvider_1.ITEM_ICON_MAP.has("Darwin模型")) {
-            TreeViewProvider_1.ITEM_ICON_MAP.set("Darwin模型", "imgs/file.png");
-            (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("Darwin模型", []));
+        if (!TreeViewProvider_1.ITEM_ICON_MAP.has("SNN模型")) {
+            TreeViewProvider_1.ITEM_ICON_MAP.set("SNN模型", "imgs/file.png");
+            (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("SNN模型", []));
             darwinlang_file_paths.splice(0);
             if (inMemTreeViewStruct[0].children) {
                 var child_len = inMemTreeViewStruct[0].children.length;
@@ -1023,8 +1023,8 @@ function activate(context) {
     // // 启动将darwinlang 文件转换为二进制文件的操作
     vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function () {
         var _a;
-        TreeViewProvider_1.ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
-        (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("Darwin二进制模型", []));
+        TreeViewProvider_1.ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
+        (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("SNN二进制模型", []));
         darwinlang_bin_paths.splice(0);
         if (inMemTreeViewStruct[0].children) {
             var child_len = inMemTreeViewStruct[0].children.length;
@@ -4932,6 +4932,9 @@ class TreeItemNode extends vscode_1.TreeItem {
         this.children = children ? children : [];
         // this.contextValue = isRoot ? "TreeViewProviderContext":undefined;
         this.contextValue = label;
+        if (isRoot) {
+            this.contextValue = "root";
+        }
     }
     // __filename：当前文件的路径
     // 重点讲解 Uri.file(join(__filename,'..', '..') 算是一种固定写法

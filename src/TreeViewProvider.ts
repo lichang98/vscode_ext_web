@@ -37,6 +37,9 @@ export class TreeItemNode extends TreeItem {
         this.children = children ? children : [];
         // this.contextValue = isRoot ? "TreeViewProviderContext":undefined;
         this.contextValue = label;
+        if(isRoot){
+            this.contextValue = "root";
+        }
     }
 
     // command: 为每项添加点击事件的命令

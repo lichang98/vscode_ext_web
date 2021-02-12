@@ -362,7 +362,7 @@ export function activate(context: vscode.ExtensionContext) {
 					addSlfProj(data.project_info.project_name);
 					inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("数据", 
 							[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
-							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("ANN模型",[])]));
+							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("ANN模型",[])], true));
 					treeview.data = inMemTreeViewStruct;
 					treeviewConvertor.data = inMemTreeViewStruct;
 					treeViewSimulator.data = inMemTreeViewStruct;
@@ -581,7 +581,7 @@ export function activate(context: vscode.ExtensionContext) {
 				addSlfProj(proj_desc_info.project_name);
 				inMemTreeViewStruct.push(new TreeItemNode(proj_desc_info.project_name, [new TreeItemNode("数据", 
 							[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
-							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("ANN模型",[])]));
+							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("ANN模型",[])], true));
 				addSlfFile("x_norm");
 				addSlfFile("x_test");
 				addSlfFile("y_test");
@@ -601,8 +601,8 @@ export function activate(context: vscode.ExtensionContext) {
 					inMemTreeViewStruct[0].children[1].children?.push(new TreeItemNode("model_file"));
 				}
 				// add darwinlang and bin files
-				ITEM_ICON_MAP.set("Darwin模型","imgs/file.png");
-				inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin模型",[]));
+				ITEM_ICON_MAP.set("SNN模型","imgs/file.png");
+				inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN模型",[]));
 				for(let i=0;i<darwinlang_file_paths.length;++i){
 					ITEM_ICON_MAP.set(path.basename(darwinlang_file_paths[i].toString()),"imgs/file.png");
 					if(inMemTreeViewStruct[0].children){
@@ -611,8 +611,8 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				}
 
-				ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
-				inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin二进制模型",[]));
+				ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
+				inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN二进制模型",[]));
 				for(let i=0;i<darwinlang_bin_paths.length;++i){
 					if(inMemTreeViewStruct[0].children){
 						var child_len = inMemTreeViewStruct[0].children.length;
@@ -983,14 +983,14 @@ export function activate(context: vscode.ExtensionContext) {
 			panelSNNVisWeb = undefined;
 		}
 
-		panelSNNVisWeb = vscode.window.createWebviewPanel("SNN Model Vis View", "SNN模型可视化", vscode.ViewColumn.One, {localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+		panelSNNVisWeb = vscode.window.createWebviewPanel("SNN Model Vis View", "SNN模型", vscode.ViewColumn.One, {localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 		panelSNNVisWeb.onDidDispose(()=>{
 			panelSNNVisWeb =undefined;
 		}, null, context.subscriptions);
 
 		panelSNNVisWeb.reveal();
 		panelSNNVisWeb.webview.html = getSNNModelPage();
-		panelSNNVisWeb.title = "SNN模型可视化";
+		panelSNNVisWeb.title = "SNN模型";
 		// 传递信息
 		fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
 			if(panelSNNVisWeb){
@@ -1025,9 +1025,9 @@ export function activate(context: vscode.ExtensionContext) {
 	// 启动转换为DarwinLang的操作
 	vscode.commands.registerCommand("item_darwinLang_convertor.start_convert", ()=>{
 		// inMemTreeViewDarLang = [];
-		if(!ITEM_ICON_MAP.has("Darwin模型")){
-			ITEM_ICON_MAP.set("Darwin模型","imgs/file.png");
-			inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin模型",[]));
+		if(!ITEM_ICON_MAP.has("SNN模型")){
+			ITEM_ICON_MAP.set("SNN模型","imgs/file.png");
+			inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN模型",[]));
 			darwinlang_file_paths.splice(0);
 			if(inMemTreeViewStruct[0].children){
 				var child_len = inMemTreeViewStruct[0].children.length;
@@ -1055,8 +1055,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// // 启动将darwinlang 文件转换为二进制文件的操作
 	vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function(){
-		ITEM_ICON_MAP.set("Darwin二进制模型", "imgs/file.png");
-		inMemTreeViewStruct[0].children?.push(new TreeItemNode("Darwin二进制模型",[]));
+		ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
+		inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN二进制模型",[]));
 		darwinlang_bin_paths.splice(0);
 		if(inMemTreeViewStruct[0].children){
 			var child_len = inMemTreeViewStruct[0].children.length;

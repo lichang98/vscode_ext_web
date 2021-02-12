@@ -181,7 +181,8 @@ function activate(context) {
             console.log("转换darwinlang页面可用!");
             //启动转换生成darwinlang
             treeviewHome.reveal(treeview.data[0]);
-            vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
+            // vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
+            vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
         }
         else {
             setTimeout(() => {
@@ -189,10 +190,8 @@ function activate(context) {
                     // treeViewCvtDarLang.reveal(treeViewConvertDarLang.data[0]);
                     treeviewHome.reveal(treeview.data[0]);
                     //启动转换生成darwinlang
-                    vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
-                }
-                else {
-                    return;
+                    // vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
+                    vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
                 }
             }, 100);
         }
@@ -491,7 +490,7 @@ function activate(context) {
                                 }
                             });
                             vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
-                            vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
+                            // vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
                             // 							// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
                             // fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
                             // 	if(panelSNNModelVis){

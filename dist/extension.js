@@ -44,36 +44,51 @@ function activate(context) {
             && !treeViewSNNMD.visible && !treeViewNPView.visible && !treeViewProjLoadView.visible;
     }
     treeViewCvtor.onDidChangeVisibility((evt) => {
+        // if(evt.visible){
+        // 	console.log("转换器页面可用!");
+        // 	if(currentPanel && currentPanel.title !== "模型转换"){
+        // 		currentPanel.webview.html = getANNSNNConvertPage();
+        // 		currentPanel.reveal();
+        // 		currentPanel.title = "模型转换";
+        // 		console.log("显示currentpane  模型转换   1");
+        // 	}else if(currentPanel){
+        // 		currentPanel.reveal();
+        // 	}
+        // 	treeviewHome.reveal(treeview.data[0]);
+        // 	// // 点击转换器快捷方式，启动模型转换
+        // 	// vscode.commands.executeCommand("item_convertor.start_convert");
+        // }else{
+        // 	setTimeout(()=>{
+        // 		if(is_all_invisible()){
+        // 			if(currentPanel && currentPanel.title !== "模型转换"){
+        // 				currentPanel.webview.html = getANNSNNConvertPage();
+        // 				currentPanel.reveal();
+        // 				currentPanel.title = "模型转换";
+        // 				console.log("显示currentpane  模型转换 2");
+        // 			}else if(currentPanel){
+        // 				currentPanel.reveal();
+        // 			}
+        // 			treeviewHome.reveal(treeview.data[0]);
+        // 			// treeViewCvtor.reveal(treeviewConvertor.data[0]);
+        // 		}
+        // 	}, 100);
+        // }
         if (evt.visible) {
-            console.log("转换器页面可用!");
-            if (currentPanel && currentPanel.title !== "模型转换") {
-                currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
-                currentPanel.reveal();
-                currentPanel.title = "模型转换";
-                console.log("显示currentpane  模型转换   1");
+            console.log("activity bar 转换图标被点击, treeview convertor 可见...");
+            if (currentPanel && currentPanel.title === "模型转换") {
+                currentPanel.webview.postMessage(JSON.stringify({ "ann_model_start_convert": "yes" }));
+                treeviewHome.reveal(treeview.data[0]);
             }
-            else if (currentPanel) {
-                currentPanel.reveal();
-            }
-            treeviewHome.reveal(treeview.data[0]);
-            // // 点击转换器快捷方式，启动模型转换
-            // vscode.commands.executeCommand("item_convertor.start_convert");
         }
         else {
             setTimeout(() => {
                 if (is_all_invisible()) {
-                    if (currentPanel && currentPanel.title !== "模型转换") {
-                        currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
-                        currentPanel.reveal();
-                        currentPanel.title = "模型转换";
-                        console.log("显示currentpane  模型转换 2");
+                    if (currentPanel && currentPanel.title === "模型转换") {
+                        currentPanel.webview.postMessage(JSON.stringify({ "ann_model_start_convert": "yes" }));
+                        treeviewHome.reveal(treeview.data[0]);
                     }
-                    else if (currentPanel) {
-                        currentPanel.reveal();
-                    }
-                    treeviewHome.reveal(treeview.data[0]);
-                    // treeViewCvtor.reveal(treeviewConvertor.data[0]);
                 }
+                treeviewHome.reveal(treeview.data[0]);
             }, 100);
         }
     });
@@ -430,6 +445,7 @@ function activate(context) {
                     let web_param_delay = data.model_convert_params.delay;
                     let web_param_dura = data.model_convert_params.dura;
                     console.log("Extension 接收到 webview的消息，启动脚本......");
+                    sleep(1000);
                     let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + web_param_vthresh + " " +
                         web_param_neurondt + " " + web_param_synapse_dt + " " + web_param_delay + " " + web_param_dura);
                     let command_str = "python " + scriptPath;
@@ -932,12 +948,21 @@ function activate(context) {
     vscode.commands.registerCommand("convertor.new_proj", () => {
         console.log("create new project");
     });
-    // 启动模型转换
+    // 启动模型转换, 右键点击
     vscode.commands.registerCommand("item_convertor.start_convert", () => {
         if (currentPanel) {
             // 发送消息到web view ，开始模型的转换
             console.log("模型转换页面打开");
-            currentPanel.webview.postMessage(JSON.stringify({ "ann_model_start_convert": "yes" }));
+            // currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
+            if (currentPanel && currentPanel.title !== "模型转换") {
+                currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
+                currentPanel.reveal();
+                currentPanel.title = "模型转换";
+                console.log("显示currentpane  模型转换   1");
+            }
+            else if (currentPanel) {
+                currentPanel.reveal();
+            }
             // 执行后台脚本，发送log 到webview 展示运行日志，执行结束之后发送消息通知ann_model
             // let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py");
             // let command_str = "python "+scriptPath;
@@ -1037,28 +1062,30 @@ function activate(context) {
     // // 启动将darwinlang 文件转换为二进制文件的操作
     vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function () {
         var _a;
-        TreeViewProvider_1.ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
-        (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("SNN二进制模型", []));
-        darwinlang_bin_paths.splice(0);
-        if (inMemTreeViewStruct[0].children) {
-            var child_len = inMemTreeViewStruct[0].children.length;
-            fs.readdir(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out"), (err, files) => {
-                files.forEach(file => {
-                    var _a;
-                    darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", file));
-                    TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
-                    if (inMemTreeViewStruct[0].children) {
-                        (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
-                    }
+        if (!TreeViewProvider_1.ITEM_ICON_MAP.has("SNN二进制模型")) {
+            TreeViewProvider_1.ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
+            (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("SNN二进制模型", []));
+            darwinlang_bin_paths.splice(0);
+            if (inMemTreeViewStruct[0].children) {
+                var child_len = inMemTreeViewStruct[0].children.length;
+                fs.readdir(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out"), (err, files) => {
+                    files.forEach(file => {
+                        var _a;
+                        darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", file));
+                        TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
+                        if (inMemTreeViewStruct[0].children) {
+                            (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
+                        }
+                    });
+                    auto_save_with_check();
                 });
-                auto_save_with_check();
-            });
+            }
+            treeview.refresh();
+            treeviewConvertor.refresh();
+            treeViewSimulator.refresh();
+            treeViewConvertDarLang.refresh();
+            treeViewSNNModelView.refresh();
         }
-        treeview.refresh();
-        treeviewConvertor.refresh();
-        treeViewSimulator.refresh();
-        treeViewConvertDarLang.refresh();
-        treeViewSNNModelView.refresh();
         // treeViewBinConvertDarLang.refresh();
     });
     vscode.commands.executeCommand("darwin2.helloWorld");
@@ -6515,6 +6542,7 @@ function getANNSNNConvertPage() {
                       "delay":delay,
                       "dura":dura
                   }}));
+                  log_output_lists.splice(0);
                   document.getElementById("model_convert_progress_div").style.width = "0%";
                   document.getElementById("preprocess_progress_div").style.width = "0%";
                   document.getElementById("search_progress_div").style.width = "0%";
@@ -6577,6 +6605,7 @@ function getANNSNNConvertPage() {
               let delay = $("#select_delay").val().replace("ms", "");
               let dura = $("#select_dura").val().replace("ms","");
               console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay+", dura="+dura);
+              log_output_lists.splice(0);
               // // 传递到插件
               // vscode.postMessage(JSON.stringify({"convertor_params_change":{
               //     "v_thresh":v_thresh,

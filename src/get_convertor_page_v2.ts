@@ -1451,6 +1451,7 @@ export function getANNSNNConvertPage(){
                       "delay":delay,
                       "dura":dura
                   }}));
+                  log_output_lists.splice(0);
                   document.getElementById("model_convert_progress_div").style.width = "0%";
                   document.getElementById("preprocess_progress_div").style.width = "0%";
                   document.getElementById("search_progress_div").style.width = "0%";
@@ -1513,6 +1514,7 @@ export function getANNSNNConvertPage(){
               let delay = $("#select_delay").val().replace("ms", "");
               let dura = $("#select_dura").val().replace("ms","");
               console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay+", dura="+dura);
+              log_output_lists.splice(0);
               // // 传递到插件
               // vscode.postMessage(JSON.stringify({"convertor_params_change":{
               //     "v_thresh":v_thresh,

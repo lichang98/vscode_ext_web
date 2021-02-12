@@ -324,6 +324,9 @@ export function activate(context: vscode.ExtensionContext) {
 			// ANN模型可视化
 			console.log("单击可视化，ANN模型");
 			vscode.commands.executeCommand<TreeItemNode>("treeView-item.datavis", inMemTreeViewStruct[0].children![1]);
+		}else if(label === "SNN模型"){
+			console.log("SNN模型可视化");
+			vscode.commands.executeCommand("snn_model_ac.show_snn_model");
 		}
 	}));
 

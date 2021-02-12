@@ -52,6 +52,10 @@ def get_css(css_file):
         content = f.read()
         return Response(content, mimetype="text/css")
 
+@app.route("/ping", methods=['GET'])
+def ping():
+    return Response()
+
 
 if __name__ == "__main__":
     if not isUse("127.0.0.1",6003):

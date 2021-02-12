@@ -517,7 +517,8 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand("treeView.proj_save", () => {
         const options = {
             saveLabel: "保存项目",
-            filters: { "Darwin2 Project": ['dar2'] }
+            filters: { "Darwin2 Project": ['dar2'] },
+            defaultUri: vscode.Uri.file(proj_save_path)
         };
         vscode.window.showSaveDialog(options).then(fileUri => {
             if (fileUri && fileUri) {

@@ -300,6 +300,16 @@ function activate(context) {
             }, null, context.subscriptions);
             imgPreviewPanel.reveal();
         }
+        else if (label === "数据") {
+            // 数据可视化
+            console.log("单击可视化,数据");
+            vscode.commands.executeCommand("treeView-item.datavis", inMemTreeViewStruct[0].children[0]);
+        }
+        else if (label === "ANN模型") {
+            // ANN模型可视化
+            console.log("单击可视化，ANN模型");
+            vscode.commands.executeCommand("treeView-item.datavis", inMemTreeViewStruct[0].children[1]);
+        }
     }));
     function sleep(numberMillis) {
         var start = new Date().getTime();
@@ -728,6 +738,10 @@ function activate(context) {
                 panelDataVis.webview.html = get_convertor_page_v2_1.getConvertorDataPageV2(currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample0.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample1.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample2.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample3.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample4.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample5.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample6.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample7.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample8.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample9.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample0.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample1.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample2.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample3.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample4.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample5.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample6.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample7.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample8.png"))), currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample9.png"))));
             }
             else if (itemNode.label === "ANN模型") {
+                if (panelAnnModelVis) {
+                    panelAnnModelVis.dispose();
+                    panelAnnModelVis = undefined;
+                }
                 if (!panelAnnModelVis) {
                     panelAnnModelVis = vscode.window.createWebviewPanel("datavis", "ANN模型", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
                     panelAnnModelVis.onDidDispose(() => {

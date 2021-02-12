@@ -298,6 +298,15 @@ export function activate(context: vscode.ExtensionContext) {
 				imgPreviewPanel = undefined;
 			}, null, context.subscriptions);
 			imgPreviewPanel.reveal();
+		}else if(label === "数据"){
+			// 数据可视化
+			console.log("单击可视化,数据");
+			vscode.commands.executeCommand<TreeItemNode>("treeView-item.datavis", inMemTreeViewStruct[0].children![0]);
+
+		}else if(label === "ANN模型"){
+			// ANN模型可视化
+			console.log("单击可视化，ANN模型");
+			vscode.commands.executeCommand<TreeItemNode>("treeView-item.datavis", inMemTreeViewStruct[0].children![1]);
 		}
 	}));
 
@@ -757,6 +766,10 @@ export function activate(context: vscode.ExtensionContext) {
 					currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample9.png")))
 				);
 			}else if(itemNode.label === "ANN模型"){
+				if(panelAnnModelVis){
+					panelAnnModelVis.dispose();
+					panelAnnModelVis = undefined;
+				}
 				if(!panelAnnModelVis){
 					panelAnnModelVis = vscode.window.createWebviewPanel("datavis", "ANN模型",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 					panelAnnModelVis.onDidDispose(()=>{

@@ -200,6 +200,7 @@ function activate(context) {
         "python_type": "",
         "ann_lib_type": ""
     };
+    let proj_save_path = undefined;
     vscode.window.registerTreeDataProvider("multiLevelTree", new multiLevelTree_1.MultiLevelTreeProvider());
     context.subscriptions.push(vscode.commands.registerCommand('itemClick', (label) => {
         vscode.window.showInformationMessage(label);
@@ -474,6 +475,26 @@ function activate(context) {
                         }
                     });
                 }
+                else if (data.select_save_proj_path_req) {
+                    // 选择项目的保存路径
+                    console.log("select path for saving project, proj name=" + data.select_save_proj_path_req);
+                    const options = {
+                        saveLabel: "确认保存路径",
+                        filters: { "Darwin2 Project": ['dar2'] },
+                        defaultUri: vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req + ".dar2"))
+                    };
+                    vscode.window.showSaveDialog(options).then(fileUri => {
+                        if (fileUri) {
+                            console.log("Selected path for saving project is: " + fileUri.fsPath);
+                            proj_save_path = fileUri.fsPath; // 记录项目保存路径
+                            // 返回给webview 选择的目标路径
+                            if (currentPanel) {
+                                console.log("发送保存路径到webview..., 路径=" + fileUri.fsPath);
+                                currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": fileUri.fsPath }));
+                            }
+                        }
+                    });
+                }
             });
         }
     });
@@ -525,6 +546,7 @@ function activate(context) {
             var _a, _b, _c, _d, _e;
             if (fileUri) {
                 console.log("opened project path = " + fileUri[0].fsPath);
+                proj_save_path = fileUri[0].fsPath;
                 let data = fs.readFileSync(fileUri[0].fsPath);
                 console.log("读取的信息：proj_info=" + data);
                 let proj_data = JSON.parse(data.toString());
@@ -804,6 +826,7 @@ function activate(context) {
                         fs.copyFile(path.join(x_norm_data_path), path.join(__dirname, "darwin2sim", "target", "x_norm.npz"), function (err) {
                         });
                     }
+                    auto_save_with_check();
                 }
             });
         }
@@ -832,6 +855,7 @@ function activate(context) {
                     }
                 }
             });
+            auto_save_with_check();
         }
         else if (itemNode.label === "测试数据标签") {
             const options = {
@@ -859,6 +883,7 @@ function activate(context) {
                     }
                 }
             });
+            auto_save_with_check();
         }
         else if (itemNode.label === "ANN模型") {
             const options = {
@@ -885,6 +910,7 @@ function activate(context) {
                     }
                 }
             });
+            auto_save_with_check();
         }
     });
     context.subscriptions.push(disposable_import_command);
@@ -980,6 +1006,7 @@ function activate(context) {
                             (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
                         }
                     });
+                    auto_save_with_check();
                 });
             }
             treeview.refresh();
@@ -1009,6 +1036,7 @@ function activate(context) {
                         (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
                     }
                 });
+                auto_save_with_check();
             });
         }
         treeview.refresh();
@@ -1019,6 +1047,22 @@ function activate(context) {
         // treeViewBinConvertDarLang.refresh();
     });
     vscode.commands.executeCommand("darwin2.helloWorld");
+    function auto_save_with_check() {
+        // check if all necessary info get, auto save to proj_save_path
+        if (x_norm_data_path && x_test_data_path && y_test_data_path && model_file_path && darwinlang_file_paths && darwinlang_bin_paths) {
+            console.log("all nessary info get, auto save");
+            let proj_info_data = {
+                "proj_info": proj_desc_info,
+                "x_norm_path": x_norm_data_path,
+                "x_test_path": x_test_data_path,
+                "y_test_path": y_test_data_path,
+                "model_path": model_file_path,
+                "darwinlang_file_paths": darwinlang_file_paths,
+                "darwinlang_bin_paths": darwinlang_bin_paths
+            };
+            fs.writeFileSync(proj_save_path, JSON.stringify(proj_info_data));
+        }
+    }
 }
 exports.activate = activate;
 // this method is called when your extension is deactivated
@@ -5804,6 +5848,10 @@ function getConvertorPageV2() {
                             <option>Keras(Tensorflow backended)</option>
                           </select>
                         </div>
+                        <div class="input-group">
+                          <span id="span_save_path" class="input-group-addon" style="cursor:pointer">点击选择保存路径</span>
+                          <input id="proj_save_path_input" type="text" class="form-control">
+                        </div>
                     </form>
           </div>
           <div class="modal-footer">
@@ -5915,18 +5963,23 @@ function getConvertorPageV2() {
        height:auto !important;
     }
     </style>
-    <!-- <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     
-    <link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css">
     <script src="http://localhost:6003/js/jquery.min.js"></script>
-    <script src="http://localhost:6003/js/bootstrap.min.js"></script>
+    <script src="http://localhost:6003/js/bootstrap.min.js"></script> -->
     
     <script>
     
         const vscode = acquireVsCodeApi();
         $(document).ready(function(){
+           // 选择项目文件保存路径
+           $("#span_save_path").on("click", function(){
+             // 发送消息到extension，打开选择路径的dialog
+             vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val()}));
+           });
             $("#create").on("click",function(){
                 console.log("创建xxx");
                 var project_name = $("#project_name").val();
@@ -5965,18 +6018,26 @@ function getConvertorPageV2() {
             // 接收从extension 的消息
             window.addEventListener('message', (event)=>{
                 const message = event.data; // JSON data from extension
-                console.log("从extension 接收到消息：xxxxxx:"+message.command);
-                if(message.command === "CreateNewProject"){
-                  $("#modal_dialog").click();
-                  console.log("web view, 创建新的项目");
-                }else if(message.command === "ProjectRefactor"){
-                  console.log("web view, 项目属性修改");
-                  $("#modal_dialog_projrefac").click();
-                  var project_info = message.project_desc;
-                  $("#project_name_projrefac").val(project_info.project_name);
-                  $("#select_type_refac").val(project_info.project_type);
-                  $("#python_type_projrefac").val(project_info.python_type);
-                  $("#ann_lib_type_projrefac").val(project_info.ann_lib_type);
+                if(message.command){
+                      console.log("从extension 接收到消息：xxxxxx:"+message.command);
+                    if(message.command === "CreateNewProject"){
+                      $("#modal_dialog").click();
+                      console.log("web view, 创建新的项目");
+                    }else if(message.command === "ProjectRefactor"){
+                      console.log("web view, 项目属性修改");
+                      $("#modal_dialog_projrefac").click();
+                      var project_info = message.project_desc;
+                      $("#project_name_projrefac").val(project_info.project_name);
+                      $("#select_type_refac").val(project_info.project_type);
+                      $("#python_type_projrefac").val(project_info.python_type);
+                      $("#ann_lib_type_projrefac").val(project_info.ann_lib_type);
+                    }
+                }else{
+                  let message = JSON.parse(event.data);
+                  if(message.proj_select_path){
+                    console.log("接收到新项目保存路径："+message.proj_select_path);
+                    $("#proj_save_path_input").val(message.proj_select_path);
+                  }
                 }
             });
         });

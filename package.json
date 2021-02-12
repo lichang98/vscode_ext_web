@@ -167,12 +167,12 @@
 			"activitybar": [
 				{
 					"id": "new_project_act_view",
-					"title": "导航栏",
+					"title": "新建项目",
 					"icon": "src/resources/new_proj_act_icon.png"
 				},
 				{
 					"id": "load_proj_act_view",
-					"title": "导航栏",
+					"title": "加载项目",
 					"icon": "src/resources/load_proj_act_icon.png"
 				},
 				{
@@ -182,22 +182,22 @@
 				},
 				{
 					"id": "convertor",
-					"title": "导航栏",
+					"title": "ANN转SNN",
 					"icon": "src/resources/convert.png"
 				},
 				{
 					"id": "snn_model_ac",
-					"title": "导航栏",
+					"title": "查看SNN模型",
 					"icon": "src/resources/snn_model_icon.png"
 				},
 				{
 					"id": "simulator",
-					"title": "导航栏",
+					"title": "查看仿真结果",
 					"icon": "src/resources/simulate_run.png"
 				},
 				{
 					"id": "lang_convertor",
-					"title": "导航栏",
+					"title": "生成DarwinLang",
 					"icon": "src/resources/imgs/lang_convert.png"
 				}
 			]

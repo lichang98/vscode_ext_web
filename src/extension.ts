@@ -201,6 +201,7 @@ export function activate(context: vscode.ExtensionContext) {
 		"python_type":"",
 		"ann_lib_type":""
 	};
+	let proj_save_path:string|undefined = undefined;
 	vscode.window.registerTreeDataProvider("multiLevelTree", new MultiLevelTreeProvider());
     
     context.subscriptions.push(vscode.commands.registerCommand('itemClick', (label) => {
@@ -473,6 +474,25 @@ export function activate(context: vscode.ExtensionContext) {
 									// });
 						}
 					});
+				}else if(data.select_save_proj_path_req){
+					// 选择项目的保存路径
+					console.log("select path for saving project, proj name="+data.select_save_proj_path_req);
+					const options:vscode.SaveDialogOptions = {
+						saveLabel: "确认保存路径",
+						filters:{"Darwin2 Project":['dar2']},
+						defaultUri:vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req+".dar2"))
+					};
+					vscode.window.showSaveDialog(options).then(fileUri => {
+						if(fileUri){
+							console.log("Selected path for saving project is: "+fileUri.fsPath);
+							proj_save_path = fileUri.fsPath; // 记录项目保存路径
+							// 返回给webview 选择的目标路径
+							if(currentPanel){
+								console.log("发送保存路径到webview..., 路径="+fileUri.fsPath);
+								currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": fileUri.fsPath}));
+							}
+						}
+					});
 				}
 			});
 		}
@@ -528,6 +548,7 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showOpenDialog(options).then(fileUri =>{
 			if(fileUri){
 				console.log("opened project path = "+fileUri[0].fsPath);
+				proj_save_path = fileUri[0].fsPath;
 				let data = fs.readFileSync(fileUri[0].fsPath);
 				console.log("读取的信息：proj_info="+data);
 				let proj_data = JSON.parse(data.toString());
@@ -834,6 +855,7 @@ export function activate(context: vscode.ExtensionContext) {
 						fs.copyFile(path.join(x_norm_data_path), path.join(__dirname, "darwin2sim", "target", "x_norm.npz"),function(err){
 						});
 					}
+					auto_save_with_check();
 				}
 			});
 		}else if(itemNode.label === "测试数据"){
@@ -862,6 +884,7 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				}
 			});
+			auto_save_with_check();
 		}else if(itemNode.label === "测试数据标签"){
 			const options:vscode.OpenDialogOptions = {
 				canSelectMany:false,
@@ -888,6 +911,7 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				}
 			});	
+			auto_save_with_check();
 		}else if(itemNode.label === "ANN模型"){
 			const options:vscode.OpenDialogOptions = {
 				canSelectMany:false,
@@ -913,6 +937,7 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				}
 			});	
+			auto_save_with_check();
 		}
 	});
 	context.subscriptions.push(disposable_import_command);
@@ -1013,6 +1038,7 @@ export function activate(context: vscode.ExtensionContext) {
 							inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
 						}
 					});
+					auto_save_with_check();
 				});
 			}
 			treeview.refresh();
@@ -1041,6 +1067,7 @@ export function activate(context: vscode.ExtensionContext) {
 						inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
 					}
 				});
+				auto_save_with_check();
 			});
 		}
 		treeview.refresh();
@@ -1051,6 +1078,24 @@ export function activate(context: vscode.ExtensionContext) {
 		// treeViewBinConvertDarLang.refresh();
 	});
 	vscode.commands.executeCommand("darwin2.helloWorld");
+
+	function auto_save_with_check(){
+		// check if all necessary info get, auto save to proj_save_path
+		if(x_norm_data_path && x_test_data_path && y_test_data_path && model_file_path && darwinlang_file_paths && darwinlang_bin_paths){
+			console.log("all nessary info get, auto save");
+			let proj_info_data = {
+				"proj_info":proj_desc_info,
+				"x_norm_path":x_norm_data_path,
+				"x_test_path":x_test_data_path,
+				"y_test_path":y_test_data_path,
+				"model_path":model_file_path,
+				"darwinlang_file_paths":darwinlang_file_paths,
+				"darwinlang_bin_paths":darwinlang_bin_paths
+			};
+			fs.writeFileSync(proj_save_path!, JSON.stringify(proj_info_data));
+		}
+	}
+
 }
 
 // this method is called when your extension is deactivated

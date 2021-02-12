@@ -56,6 +56,10 @@
                         <option>Keras(Tensorflow backended)</option>
                       </select>
                     </div>
+                    <div class="input-group">
+                      <span id="span_save_path" class="input-group-addon" style="cursor:pointer">点击选择保存路径</span>
+                      <input id="proj_save_path_input" type="text" class="form-control">
+                    </div>
                 </form>
 			</div>
 			<div class="modal-footer">
@@ -167,18 +171,23 @@ body {
    height:auto !important;
 }
 </style>
-<!-- <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css">
 <script src="http://localhost:6003/js/jquery.min.js"></script>
-<script src="http://localhost:6003/js/bootstrap.min.js"></script>
+<script src="http://localhost:6003/js/bootstrap.min.js"></script> -->
 
 <script>
 
     const vscode = acquireVsCodeApi();
     $(document).ready(function(){
+       // 选择项目文件保存路径
+       $("#span_save_path").on("click", function(){
+         // 发送消息到extension，打开选择路径的dialog
+         vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val()}));
+       });
         $("#create").on("click",function(){
             console.log("创建xxx");
             var project_name = $("#project_name").val();
@@ -217,18 +226,26 @@ body {
         // 接收从extension 的消息
         window.addEventListener('message', (event)=>{
             const message = event.data; // JSON data from extension
-            console.log("从extension 接收到消息：xxxxxx:"+message.command);
-            if(message.command === "CreateNewProject"){
-              $("#modal_dialog").click();
-              console.log("web view, 创建新的项目");
-            }else if(message.command === "ProjectRefactor"){
-              console.log("web view, 项目属性修改");
-              $("#modal_dialog_projrefac").click();
-              var project_info = message.project_desc;
-              $("#project_name_projrefac").val(project_info.project_name);
-              $("#select_type_refac").val(project_info.project_type);
-              $("#python_type_projrefac").val(project_info.python_type);
-              $("#ann_lib_type_projrefac").val(project_info.ann_lib_type);
+            if(message.command){
+                  console.log("从extension 接收到消息：xxxxxx:"+message.command);
+                if(message.command === "CreateNewProject"){
+                  $("#modal_dialog").click();
+                  console.log("web view, 创建新的项目");
+                }else if(message.command === "ProjectRefactor"){
+                  console.log("web view, 项目属性修改");
+                  $("#modal_dialog_projrefac").click();
+                  var project_info = message.project_desc;
+                  $("#project_name_projrefac").val(project_info.project_name);
+                  $("#select_type_refac").val(project_info.project_type);
+                  $("#python_type_projrefac").val(project_info.python_type);
+                  $("#ann_lib_type_projrefac").val(project_info.ann_lib_type);
+                }
+            }else{
+              let message = JSON.parse(event.data);
+              if(message.proj_select_path){
+                console.log("接收到新项目保存路径："+message.proj_select_path);
+                $("#proj_save_path_input").val(message.proj_select_path);
+              }
             }
         });
     });

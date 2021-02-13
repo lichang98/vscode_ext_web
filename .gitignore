@@ -9,3 +9,4 @@ src/resources/debug.log
 **/*.pickle
 **/*.h5
 .vscode
+**/*.db

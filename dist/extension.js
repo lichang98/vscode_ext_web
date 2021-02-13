@@ -1074,10 +1074,12 @@ function activate(context) {
                 fs.readdir(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out"), (err, files) => {
                     files.forEach(file => {
                         var _a;
-                        darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", file));
-                        TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
-                        if (inMemTreeViewStruct[0].children) {
-                            (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
+                        if (file !== "inputs") {
+                            darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", file));
+                            TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
+                            if (inMemTreeViewStruct[0].children) {
+                                (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
+                            }
                         }
                     });
                     auto_save_with_check();

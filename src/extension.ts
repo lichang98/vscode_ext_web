@@ -1105,10 +1105,12 @@ export function activate(context: vscode.ExtensionContext) {
 				var child_len = inMemTreeViewStruct[0].children.length;
 				fs.readdir(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out"), (err, files)=>{
 					files.forEach(file =>{
-						darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", file));
-						ITEM_ICON_MAP.set(file, "imgs/file.png");
-						if(inMemTreeViewStruct[0].children){
-							inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
+						if(file !== "inputs"){
+							darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", file));
+							ITEM_ICON_MAP.set(file, "imgs/file.png");
+							if(inMemTreeViewStruct[0].children){
+								inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
+							}
 						}
 					});
 					auto_save_with_check();

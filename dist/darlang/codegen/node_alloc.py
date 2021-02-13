@@ -92,7 +92,7 @@ def buildNetwork(ID, connfiles, netDepth, layerWidth, node_list, zerolist, delay
     for i in range(netDepth - 1):  # 每层
         # neuron_num = layerWidth[i+1] // len(node_list[i+1])  # 根据下层node数量，确定连接到哪个神经元
         neuron_num = int(math.ceil(layerWidth[i + 1] / float(len(node_list[i + 1]))))
-        print(i, neuron_num)
+        # print(i, neuron_num)
         for j in range(layerWidth[i]):  # 该层每个神经元
             for l in range(len(neuronNet[i][j].dst)):  # 每个连接
                 dst = neuronNet[i][j].dst[l]

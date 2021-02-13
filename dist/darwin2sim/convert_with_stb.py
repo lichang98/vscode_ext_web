@@ -1,12 +1,15 @@
 import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"]='3'
 import sys
 import numpy as np
 from importlib import import_module
 
 from numpy.core.records import record
+from tensorflow.python.platform.tf_logging import flush
 import darwin_ii
 import tqdm
 import brian2
+brian2.BrianLogger.log_level_error()
 from sklearn.utils import shuffle
 import json
 import pickle
@@ -19,7 +22,7 @@ baseDirPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(baseDirPath, "snntoolbox"))
 # model_path = os.path.join(
 #     'E:\\courses\\ZJLab\\IDE-related-docs\\darwin2sim\\target\\mnist_cnn.h5')
-model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "target", "mnist_cnn.h5")
+model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "target", "mnist_cnn")
 
 config_path = os.path.join(baseDirPath, "snntoolbox","config")
 dir_name = baseDirPath
@@ -28,6 +31,7 @@ outputPath = os.path.join(baseDirPath, "model_out", "darlang_out")
 from snntoolbox.parsing.model_libs.keras_input_lib import load
 from snntoolbox.bin.utils import import_target_sim, update_setup
 from snntoolbox.conversion.utils import normalize_parameters
+from snntoolbox.utils.utils import import_configparser
 
 # testX = np.load("testX.npz")["arr_0"]
 # testY = np.load("testY.npz")["arr_0"]
@@ -96,6 +100,20 @@ input_model = model_lib.load(os.path.dirname(model_path), os.path.basename(model
 
 acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=testX[:50],y_test=testY[:50])
 
+# set path
+with open(os.path.join(os.path.dirname(__file__), "snntoolbox", "config"), "r") as f:
+    config_file_content = f.read()
+
+config_file_content = [e for e in config_file_content.split('\n')]
+for i in range(len(config_file_content)):
+    if 'path_wd' in config_file_content[i]:
+        config_file_content[i] = "path_wd = {}".format(os.path.join(os.path.dirname(__file__), "target"))
+    if 'dataset_path' in config_file_content[i]:
+        config_file_content[i] = "dataset_path = {}".format(os.path.join(os.path.dirname(__file__), "target"))
+
+with open(os.path.join(os.path.dirname(__file__), "snntoolbox", "config"), "w+") as f:
+    f.write('\n'.join(config_file_content))
+
 config = update_setup(config_path)
 config.set("paths", "path_wd", os.path.dirname(model_path))
 config.set("paths", "dataset_path", os.path.dirname(model_path))
@@ -103,15 +121,15 @@ config.set("paths", "filename_ann", os.path.basename(model_path))
 model_parser = model_lib.ModelParser(input_model['model'],config)
 model_parser.parse()
 parsed_model = model_parser.build_parsed_model()
-
+print(flush=True)
 # Normalize
 norm_data = {'x_norm':testX}
 normalize_parameters(parsed_model, config,**norm_data)
 
 score_norm = model_parser.evaluate(batch_size=1,num_to_test=50,x_test=testX[:50],y_test=testY[:50])
 
-print("score norm = {}".format(score_norm))
 parsed_model.save(os.path.join(dir_name, "parsed_model.h5"))
+print(flush=True)
 # convert
 
 target_sim = import_module('snntoolbox.simulation.target_simulators.brian2_target_sim')
@@ -127,14 +145,15 @@ accu = spiking_model.run(**test_set)
 
 spiking_model.end_sim()
 print("accu={}".format(accu))
+print(flush=True)
 
-print("layers count={}, layers={}".format(len(spiking_model.layers), spiking_model.layers))
-print("connections len={}, conns={}".format(len(spiking_model.connections), spiking_model.connections))
-print("spike monitor len={}, monitors={}".format(len(spiking_model.spikemonitors), spiking_model.spikemonitors))
+# print("layers count={}, layers={}".format(len(spiking_model.layers), spiking_model.layers))
+# print("connections len={}, conns={}".format(len(spiking_model.connections), spiking_model.connections))
+# print("spike monitor len={}, monitors={}".format(len(spiking_model.spikemonitors), spiking_model.spikemonitors))
 
-for i in range(len(spiking_model.connections)):
-    print("connections weights={},{}".format(spiking_model.connections[i].i,\
-        spiking_model.connections[i].j))
+# for i in range(len(spiking_model.connections)):
+#     print("connections weights={},{}".format(spiking_model.connections[i].i,\
+#         spiking_model.connections[i].j))
 
 
 br2_neurons = []
@@ -163,7 +182,7 @@ for i in range(len(spiking_model.connections)):
 all_wts = fixpt(all_wts)
 for i in range(len(br2_synapses)):
     br2_synapses[i].w = all_wts[i]
-    print("wweights={}".format(all_wts[i]))
+    print("fix point weights of synapse {} = {}".format(i,all_wts[i]))
     
 br2_monitor = brian2.SpikeMonitor(br2_neurons[-1])
 br2_input_monitor = brian2.SpikeMonitor(br2_neurons[0]) # monitor for input
@@ -183,6 +202,7 @@ br2_net.store()
 
 
 print("PREPROCESS_FINISH...")
+print(flush=True)
 stage2_time_use = time.time()
 all_accus=[]
 # v_th_range=list(range(10,20,1))
@@ -270,15 +290,15 @@ for i in range(50):
         "spike_tuples": input_spike_tuples
     })
 
-    print("Processing sample #{}".format(i))
     counts=[len(list(x)) for x in output_spike.values()]
-    print("counts={}, one hot labels={}".format(counts,valY[i]))
+    print("Processing sample #{}, output spike counts={}, real one hot labels={}".format(i,counts,valY[i]))
     if np.argmax(counts) == np.argmax(valY[i]):
         acc +=1
 
 print("Accuracy={}".format(acc/50))
 print("SEARCH_FINISH...")
-stage3_time_use = time.time()
+print(flush=True)
+# stage3_time_use = time.time()
 
 # get state monitor of layers
 record_layer_v_vals=[]
@@ -384,7 +404,7 @@ neurons_info=[]
 for i in range(len(br2_neurons)):
     print("neuron count={}, method={}, events={}, vthresh={} ".format(br2_neurons[i].N,br2_neurons[i].method_choice, br2_neurons[i].events,best_vthresh))
     neurons_info.append({"idx":i,"neuron_count":br2_neurons[i].N, "method":br2_neurons[i].method_choice, "vthresh":best_vthresh})
-
+print(flush=True)
 # for display weights distributes 
 wt_labels = set()
 for i in range(len(br2_synapses)):
@@ -420,8 +440,9 @@ for i in range(len(br2_synapses)):
     current_layer_neuron_count = br2_neurons[i+1].N
     connect_ratio = np.prod(np.shape(br2_synapses[i].w)) / (prev_layer_neuron_count*current_layer_neuron_count)
     curr_layer_avg_conn = len(list(br2_synapses[i].j))/len(set(list(br2_synapses[i].j)))
-    print(" layer {} ratio ={}, avg neuron connect count={}".format(i, connect_ratio, curr_layer_avg_conn))
+    print("layer {} connect ratio ={}, avg neuron connect count={}".format(i, connect_ratio, curr_layer_avg_conn))
     layer_conn_info.append({"idx":i, "ratio": ["{:.3f}".format(connect_ratio)], "avg_conn":["{:.3f}".format(curr_layer_avg_conn)]})
+print(flush=True)
 
 brian2_snn_info = {
     "neurons_info":neurons_info,
@@ -466,7 +487,8 @@ print("running darwinlang")
 sys.path.append(os.path.join(baseDirPath, "..", "darlang"))
 import darlang
 darlang.run_darlang(os.path.join(outputPath, "snn_digit_darlang.json"),os.path.join(outputPath,"..", "bin_darwin_out"))
-
+print("darwinlang conversion finished.")
+print(flush=True)
 
 stage4_time_use = "{:.3f}".format(stage4_time_use - stage3_time_use)
 stage3_time_use = "{:.3f}".format(stage3_time_use - stage2_time_use)

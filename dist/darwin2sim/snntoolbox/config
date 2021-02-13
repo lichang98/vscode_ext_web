@@ -1,6 +1,6 @@
 [paths]
-path_wd = E:\courses\ZJLab\IDE-related-docs\darwin2sim\target
-dataset_path = E:\courses\ZJLab\IDE-related-docs\darwin2sim\target
+path_wd = e:/courses/ZJLab/IDE-related-docs/darwin2/dist/darwin2sim\target
+dataset_path = e:/courses/ZJLab/IDE-related-docs/darwin2/dist/darwin2sim\target
 filename_ann = mnist_cnn
 
 [tools]

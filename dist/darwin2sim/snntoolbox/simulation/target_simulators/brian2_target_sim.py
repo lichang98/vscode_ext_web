@@ -224,8 +224,9 @@ class SNN(AbstractSNN):
         else:
             self._input_layer.bias = inputs
 
-        self.snn.run(self._duration * self.sim.ms, namespace=self._cell_params,
-                     report='stdout', report_period=10 * self.sim.ms)
+        # self.snn.run(self._duration * self.sim.ms, namespace=self._cell_params,
+        #              report='stdout', report_period=10 * self.sim.ms)
+        self.snn.run(self._duration * self.sim.ms, namespace=self._cell_params)
 
         output_b_l_t = self.get_recorded_vars(self.layers)
 

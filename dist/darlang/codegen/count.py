@@ -77,7 +77,7 @@ def count_neucon2(filelist):
     for file in filelist[1:]:
         f = open(os.path.join(info.get_output_path(), file), 'rb')
         cons = pk.load(f, encoding='iso-8859-1')
-        print(len(cons))
+        # print(len(cons))
         dst = set()
         maxsou = -1
         for con in cons:
@@ -189,5 +189,5 @@ if __name__ == "__main__":
     print('neus:', neus)
 
     node_link = neuron_link(connfiles, 10, layers, nodes)
-    print(node_link)
+    # print(node_link)
     # print(link_to)

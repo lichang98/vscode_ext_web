@@ -89,7 +89,7 @@ def create_config(path: str, snn: SNN, output_path):
     print('neus:', neus)
 
     node_link = count.neuron_link(connfiles, netDepth, layers, nodes)
-    print(node_link)
+    # print(node_link)
     layer_num = len(layers)
     layer_id = 0
     print("layer_num:", layer_num)
@@ -102,21 +102,22 @@ def create_config(path: str, snn: SNN, output_path):
         while childboard_id <= childboard_num:
             id1 = layer_id + 1
             ID = '%d' % board_id + '_' + '%d' % childboard_id
-            print(ID)
-            print(childboard_id)
+            # print(ID)
+            # print(childboard_id)
+
             # print(chip_num[childboard_id-1])
             # nodelist, zero_ref, layer_id = mapping.mapping_board(nodes, neus, layer_num, layer_id, chip_num[childboard_id-1])
             nodelist, zerolist, layer_id, forward_res = map2.map_chip11(nodes, node_link, layer_num, layer_id,
                                                                         forward_node)
             forward_node = forward_res
-            print(forward_node)
+            # print(forward_node)
             if id1 == 1:
                 firstlayer = nodelist[0]
                 # f = open('conn2/input_to_fc1', 'rb')
                 # get_input(f, layerWidth, firstlayer)
 
-            print("mapping done")
-            print(zerolist)
+            # print("mapping done")
+            # print(zerolist)
             cnt_node = 0
             for i in range(len(nodelist)):
                 cnt_node += len(nodelist[i])
@@ -141,23 +142,24 @@ def create_config(path: str, snn: SNN, output_path):
                 nodelist.append(forward_node)
 
             id2 = layer_id + 1
-            print("id2：", id2)
+            # print("id2：", id2)
+
             # print(layerWidth[1:])
             # print(layerWidth[id1:id2 + 1])
             # print(len(connfiles))
             # print(connfiles[1:])
             # print(len(layerWidth))
             # print(connfiles[id1:id2])
-            print("=================")
-            print((ID, connfiles[id1:id2], id2 - id1 + 1, layerWidth[id1:id2 + 1], nodelist,
-                   zerolist, delay, vth[id1 - 1:id2 - 1], leak, reset_mode[id1 - 1:id2 - 1], leaksign))
-            print("=================")
+            # print("=================")
+            # print((ID, connfiles[id1:id2], id2 - id1 + 1, layerWidth[id1:id2 + 1], nodelist,
+                #    zerolist, delay, vth[id1 - 1:id2 - 1], leak, reset_mode[id1 - 1:id2 - 1], leaksign))
+            # print("=================")
             alloc.buildNetwork(ID, connfiles[id1:id2], id2 - id1 + 1, layerWidth[id1:id2 + 1], nodelist,
                                zerolist, delay, vth[id1 - 1:id2 - 1], leak, reset_mode[id1 - 1:id2 - 1], leaksign,target_path = output_path)
             print("config done")
 
             str1 = 'connfiles' + ID
-            print(str1)
+            # print(str1)
             fw = open(os.path.join(output_path, str1), 'wb')
             pickle.dump(connfiles, fw)
             fw.close()
@@ -208,8 +210,8 @@ def create_config(path: str, snn: SNN, output_path):
                     f.write(c_head + ss + '\n')
             f.close()
 
-            for node in nodelist:
-                print(node)
+            # for node in nodelist:
+            #     print(node)
             # print(nodelist)
 
             if (flag == 1):

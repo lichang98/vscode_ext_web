@@ -10,3 +10,4 @@ src/resources/debug.log
 **/*.h5
 .vscode
 **/*.db
+dist/darwin2sim/target

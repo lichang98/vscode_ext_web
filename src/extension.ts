@@ -222,12 +222,12 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.window.registerTreeDataProvider("multiLevelTree", new MultiLevelTreeProvider());
     
     context.subscriptions.push(vscode.commands.registerCommand('itemClick', (label) => {
-		vscode.window.showInformationMessage(label);
+		// vscode.window.showInformationMessage(label);
 		console.log("label is :["+label+"]");
 		if(label.search("json") !== -1){
 			// 显示darlang文件
 			console.log("显示转换后的darwinLang");
-			let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "darlang_out",label));
+			let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""),"darlang_out",label));
 			vscode.workspace.openTextDocument(file_target).then((doc:vscode.TextDocument)=>{
 				vscode.window.showTextDocument(doc, 1,false).then(ed=>{
 					ed.edit(edit=>{
@@ -239,7 +239,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}else if(label.search("txt") !== -1){
 			// 显示二进制的darlang文件
 			console.log("显示二进制的darwinLang");
-			let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out",label));
+			let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""),"bin_darwin_out",label));
 			vscode.workspace.openTextDocument(file_target).then((doc:vscode.TextDocument)=>{
 				vscode.window.showTextDocument(doc, 1,false).then(ed=>{
 					ed.edit(edit=>{
@@ -252,7 +252,7 @@ export function activate(context: vscode.ExtensionContext) {
 			// 显示pickle 文件的原始内容
 			console.log("解析并显示pickle 文件内容");
 			// let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", "inputs",label));
-			let target_file_path = path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", "inputs",label);
+			let target_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""),"bin_darwin_out", "inputs",label);
 			var modelVisScriptPath = path.join(__dirname, "inner_scripts", "parse_pickle.py");
 			var command_str = "python "+modelVisScriptPath + " "+ target_file_path;
 			exec(command_str, function(err, stdout, stderr){
@@ -273,7 +273,7 @@ export function activate(context: vscode.ExtensionContext) {
 		} else if(label.search("layer") !== -1){
 			// 显示layer之间连接pickle文件的原始内容
 			console.log("显示layer 连接pickle文件");
-			let target_file_path = path.join(__dirname, "darwin2sim", "model_out", "darlang_out", label);
+			let target_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""),"darlang_out", label);
 			let modelVisScriptPath = path.join(__dirname, "inner_scripts", "parse_pickle.py");
 			let command_str = "python "+modelVisScriptPath+" "+target_file_path;
 			exec(command_str, function(err, stdout, stderr){
@@ -297,7 +297,7 @@ export function activate(context: vscode.ExtensionContext) {
 			<body>
 				<img id="sample_img" style="margin:auto;position: absolute;top: 0;left: 0;right: 0;bottom: 0;" 
 				src="${imgPreviewPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,
-					"dist", "darwin2sim", "model_out", "bin_darwin_out", "inputs", label)))}" onmousewheel="return bigimg(this)">
+					"dist", "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""),"bin_darwin_out", "inputs", label)))}" onmousewheel="return bigimg(this)">
 			</body>
 			<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 			<script>
@@ -452,7 +452,7 @@ export function activate(context: vscode.ExtensionContext) {
 					console.log("Extension 接收到 webview的消息，启动脚本......");
 					sleep(1000);
 					let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ web_param_vthresh+" "+ 
-									web_param_neurondt+" "+ web_param_synapse_dt+" "+web_param_delay+" "+web_param_dura);
+									web_param_neurondt+" "+ web_param_synapse_dt+" "+web_param_delay+" "+web_param_dura+" "+path.basename(proj_save_path!).replace("\.dar2",""));
 					let command_str = "python "+scriptPath;
 					currentPanel?.webview.postMessage(JSON.stringify({"log_output":"模型转换程序启动中......"}));
 					let scriptProcess = exec(command_str,{});
@@ -591,20 +591,24 @@ export function activate(context: vscode.ExtensionContext) {
 				darwinlang_file_paths = proj_data.darwinlang_file_paths;
 				darwinlang_bin_paths = proj_data.darwinlang_bin_paths;
 				console.log("导入工程的x_norm 文件路径为："+x_norm_data_path);
+				if(!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2","")))){
+					fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2","")));
+				}
+				let target_proj_name = path.basename(proj_save_path).replace("\.dar2","");
 				if(x_norm_data_path){
-					fs.copyFile(path.join(x_norm_data_path), path.join(__dirname, "darwin2sim", "target", "x_norm.npz"),function(err){
+					fs.copyFile(path.join(x_norm_data_path), path.join(__dirname, "darwin2sim", "target", target_proj_name,"x_norm.npz"),function(err){
 					});
 				}
 				if(x_test_data_path){
-					fs.copyFile(path.join(x_test_data_path), path.join(__dirname, "darwin2sim", "target", "x_test.npz"),function(err){
+					fs.copyFile(path.join(x_test_data_path), path.join(__dirname, "darwin2sim", "target", target_proj_name,"x_test.npz"),function(err){
 					});
 				}
 				if(y_test_data_path){
-					fs.copyFile(path.join(y_test_data_path), path.join(__dirname, "darwin2sim", "target", "y_test.npz"), function(err){
+					fs.copyFile(path.join(y_test_data_path), path.join(__dirname, "darwin2sim", "target", target_proj_name,"y_test.npz"), function(err){
 					});
 				}
 				if(model_file_path){
-					fs.copyFile(path.join(model_file_path), path.join(__dirname, "darwin2sim", "target", "mnist_cnn.h5"),function(err){
+					fs.copyFile(path.join(model_file_path), path.join(__dirname, "darwin2sim", "target", target_proj_name,"mnist_cnn.h5"),function(err){
 					});
 				}
 				// 显示treeview
@@ -886,8 +890,11 @@ export function activate(context: vscode.ExtensionContext) {
 						treeview.refresh();
 					}
 					// 拷贝文件到项目并重命名
+					if(!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2","")))){
+						fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2","")));
+					}
 					if(x_norm_data_path){
-						fs.copyFile(path.join(x_norm_data_path), path.join(__dirname, "darwin2sim", "target", "x_norm.npz"),function(err){
+						fs.copyFile(path.join(x_norm_data_path), path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2",""), "x_norm.npz"),function(err){
 						});
 					}
 					auto_save_with_check();
@@ -913,8 +920,11 @@ export function activate(context: vscode.ExtensionContext) {
 						treeview.refresh();
 					}
 					// 拷贝文件到项目并重命名
+					if(!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2","")))){
+						fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2","")));
+					}
 					if(x_test_data_path){
-						fs.copyFile(path.join(x_test_data_path), path.join(__dirname, "darwin2sim", "target", "x_test.npz"),function(err){
+						fs.copyFile(path.join(x_test_data_path), path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2",""), "x_test.npz"),function(err){
 						});
 					}
 				}
@@ -940,8 +950,11 @@ export function activate(context: vscode.ExtensionContext) {
 						treeview.refresh();
 					}
 					// 拷贝文件到项目并重命名
+					if(!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2","")))){
+						fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2","")));
+					}
 					if(y_test_data_path){
-						fs.copyFile(path.join(y_test_data_path), path.join(__dirname, "darwin2sim", "target", "y_test.npz"),function(err){
+						fs.copyFile(path.join(y_test_data_path), path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2",""), "y_test.npz"),function(err){
 						});
 					}
 				}
@@ -952,7 +965,7 @@ export function activate(context: vscode.ExtensionContext) {
 				canSelectMany:false,
 				canSelectFolders:false,
 				openLabel:"选择模型文件",
-				filters:{"模型文件":['*']}
+				filters:{"模型文件":['h5']}
 			};
 			vscode.window.showOpenDialog(options).then(fileUri => {
 				if(fileUri && fileUri[0]){
@@ -966,8 +979,11 @@ export function activate(context: vscode.ExtensionContext) {
 						treeview.refresh();
 					}
 					// 拷贝文件到项目并重命名
+					if(!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2","")))){
+						fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2","")));
+					}
 					if(model_file_path){
-						fs.copyFile(path.join(model_file_path), path.join(__dirname, "darwin2sim", "target", "mnist_cnn.h5"),function(err){
+						fs.copyFile(path.join(model_file_path), path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path!).replace("\.dar2",""), "mnist_cnn.h5"),function(err){
 						});
 					}
 				}
@@ -1073,9 +1089,9 @@ export function activate(context: vscode.ExtensionContext) {
 			darwinlang_file_paths.splice(0);
 			if(inMemTreeViewStruct[0].children){
 				var child_len = inMemTreeViewStruct[0].children.length;
-				fs.readdir(path.join(__dirname, "darwin2sim","model_out", "darlang_out"), (err, files) => {
+				fs.readdir(path.join(__dirname, "darwin2sim","model_out", path.basename(proj_save_path!).replace("\.dar2",""), "darlang_out"), (err, files) => {
 					files.forEach(file => {
-						darwinlang_file_paths.push(path.join(__dirname, "darwin2sim","model_out", "darlang_out", file));
+						darwinlang_file_paths.push(path.join(__dirname, "darwin2sim","model_out", path.basename(proj_save_path!).replace("\.dar2",""), "darlang_out", file));
 						ITEM_ICON_MAP.set(file, "imgs/file.png");
 						if(inMemTreeViewStruct[0].children){
 							inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
@@ -1103,10 +1119,10 @@ export function activate(context: vscode.ExtensionContext) {
 			darwinlang_bin_paths.splice(0);
 			if(inMemTreeViewStruct[0].children){
 				var child_len = inMemTreeViewStruct[0].children.length;
-				fs.readdir(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out"), (err, files)=>{
+				fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""), "bin_darwin_out"), (err, files)=>{
 					files.forEach(file =>{
 						if(file !== "inputs"){
-							darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", file));
+							darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""), "bin_darwin_out", file));
 							ITEM_ICON_MAP.set(file, "imgs/file.png");
 							if(inMemTreeViewStruct[0].children){
 								inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));

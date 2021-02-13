@@ -22,11 +22,20 @@ baseDirPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(baseDirPath, "snntoolbox"))
 # model_path = os.path.join(
 #     'E:\\courses\\ZJLab\\IDE-related-docs\\darwin2sim\\target\\mnist_cnn.h5')
-model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "target", "mnist_cnn")
+target_proj_name = "new"
+if len(sys.argv) > 6:
+    target_proj_name = sys.argv[6]
+
+model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "target", target_proj_name, "mnist_cnn")
 
 config_path = os.path.join(baseDirPath, "snntoolbox","config")
 dir_name = baseDirPath
-outputPath = os.path.join(baseDirPath, "model_out", "darlang_out")
+outputPath = os.path.join(baseDirPath, "model_out", target_proj_name, "darlang_out")
+
+if not os.path.exists(os.path.join(baseDirPath, "model_out", target_proj_name)):
+    os.mkdir(os.path.join(baseDirPath, "model_out", target_proj_name))
+if not os.path.exists(os.path.join(baseDirPath, "model_out", target_proj_name, "darlang_out")):
+    os.mkdir(os.path.join(baseDirPath, "model_out", target_proj_name, "darlang_out"))
 
 from snntoolbox.parsing.model_libs.keras_input_lib import load
 from snntoolbox.bin.utils import import_target_sim, update_setup
@@ -56,7 +65,7 @@ if len(sys.argv) > 5:
     sys_param_delay = float(sys.argv[4])
     sys_param_total_dura = int(sys.argv[5])
 else:
-    sys_param_vthresh = 16
+    sys_param_vthresh = 5
     sys_param_neurondt = 1
     sys_param_synapsedt = 0.1
     sys_param_delay = 1
@@ -107,9 +116,9 @@ with open(os.path.join(os.path.dirname(__file__), "snntoolbox", "config"), "r") 
 config_file_content = [e for e in config_file_content.split('\n')]
 for i in range(len(config_file_content)):
     if 'path_wd' in config_file_content[i]:
-        config_file_content[i] = "path_wd = {}".format(os.path.join(os.path.dirname(__file__), "target"))
+        config_file_content[i] = "path_wd = {}".format(os.path.join(os.path.dirname(__file__), "target", target_proj_name))
     if 'dataset_path' in config_file_content[i]:
-        config_file_content[i] = "dataset_path = {}".format(os.path.join(os.path.dirname(__file__), "target"))
+        config_file_content[i] = "dataset_path = {}".format(os.path.join(os.path.dirname(__file__), "target", target_proj_name))
 
 with open(os.path.join(os.path.dirname(__file__), "snntoolbox", "config"), "w+") as f:
     f.write('\n'.join(config_file_content))
@@ -202,8 +211,8 @@ br2_net.store()
 
 print("PREPROCESS_FINISH...",flush=True)
 stage2_time_use = time.time()
-all_accus=[]
-# v_th_range=list(range(10,20,1))
+# all_accus=[]
+# v_th_range=list(range(1,24,1))
 # for v_th in v_th_range:
 #     acc = 0
 #     for i in range(50):
@@ -237,7 +246,12 @@ br2_model = {
     "v_thresh": best_vthresh,
     "run_dura": sys_param_total_dura
 }
-with open(os.path.join(baseDirPath, "br2_models", "br2.pkl"), "wb+") as f:
+if not os.path.exists(os.path.join(baseDirPath, "model_out","br2_models")):
+    os.mkdir(os.path.join(baseDirPath, "model_out","br2_models"))
+if not os.path.exists(os.path.join(baseDirPath, "model_out","br2_models", target_proj_name)):
+    os.mkdir(os.path.join(baseDirPath, "model_out","br2_models", target_proj_name))
+
+with open(os.path.join(baseDirPath, "model_out","br2_models", target_proj_name, "br2.pkl"), "wb+") as f:
     pickle.dump(br2_model, f)
 
 snn_test_img_uris = []
@@ -246,6 +260,13 @@ snn_test_input_spikes = []
 last_layer_spikes= []
 first_layer_spikes=[]
 acc = 0
+if not os.path.exists(os.path.join(baseDirPath, "model_out",target_proj_name)):
+    os.mkdir(os.path.join(baseDirPath, "model_out",target_proj_name))
+if not os.path.exists(os.path.join(baseDirPath, "model_out",target_proj_name, "bin_darwin_out")):
+    os.mkdir(os.path.join(baseDirPath, "model_out",target_proj_name, "bin_darwin_out"))
+if not os.path.exists(os.path.join(baseDirPath, "model_out",target_proj_name, "bin_darwin_out", "inputs")):
+    os.mkdir(os.path.join(baseDirPath, "model_out",target_proj_name, "bin_darwin_out", "inputs"))
+
 for i in range(50):
     br2_net.restore()
     sample = valX[i].flatten()/brian2.ms
@@ -257,11 +278,11 @@ for i in range(50):
     for k,v in input_spike.items():
         input_spike_arrs.append([k,np.array(v/brian2.ms, dtype="int32").tolist()])
     # save input and corresponding img
-    with open(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "input_{}.pickle".format(i)), "wb+") as f:
+    with open(os.path.join(baseDirPath, "model_out",target_proj_name, "bin_darwin_out", "inputs", "input_{}.pickle".format(i)), "wb+") as f:
         pickle.dump(input_spike_arrs, f)
         # f.write(json.dumps(input_spike_arrs))
     img = np.array(np.squeeze(valX[i])*255, dtype="uint8")
-    Image.fromarray(img).save(os.path.join(baseDirPath, "model_out", "bin_darwin_out", "inputs", "img_idx_{}_label_{}.png"
+    Image.fromarray(img).save(os.path.join(baseDirPath, "model_out", target_proj_name, "bin_darwin_out", "inputs", "img_idx_{}_label_{}.png"
                                 .format(i, np.argmax(valY[i]))))
     snn_test_img_uris.append("http://localhost:6003/snn_imgs/img_idx_{}_label_{}.png".format(i,np.argmax(valY[i])))
     last_layer_spikes = [list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]

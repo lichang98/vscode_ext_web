@@ -46,7 +46,7 @@ export class TreeItemNode extends TreeItem {
     command = {
         title: this.label,          // 标题
         command: 'itemClick',       // 命令 ID
-        // tooltip: this.label,        // 鼠标覆盖时的小小提示框
+        tooltip: this.label,        // 鼠标覆盖时的小小提示框
         arguments: [                // 向 registerCommand 传递的参数。
             this.label,             // 目前这里我们只传递一个 label
         ]

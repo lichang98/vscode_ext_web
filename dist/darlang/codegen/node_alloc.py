@@ -68,7 +68,7 @@ def buildNetwork(ID, connfiles, netDepth, layerWidth, node_list, zerolist, delay
     for i in range(netDepth):  # 每层
         # print(i,netDepth)
         neuron_num = int(math.ceil(layerWidth[i] / float(len(node_list[i]))))  # 根据该层node数量，确定每个node分配的神经元数量,向上取整
-        print('neuron_num:', neuron_num)
+        print('neuron_num:', neuron_num, flush=True)
         for j in range(layerWidth[i]):  # 该层每个神经元
             node_x = node_list[i][j // neuron_num][0]
             node_y = node_list[i][j // neuron_num][1]
@@ -77,7 +77,7 @@ def buildNetwork(ID, connfiles, netDepth, layerWidth, node_list, zerolist, delay
 
         # 解析每层的连接
         if i != netDepth - 1:
-            print(connfiles[i])
+            print(connfiles[i], flush=True)
             f = open(os.path.join(target_path, connfiles[i]), 'rb')
             # conn = np.array(pickle.load(f))
             conn = np.array(pickle.load(f, encoding='iso-8859-1'))

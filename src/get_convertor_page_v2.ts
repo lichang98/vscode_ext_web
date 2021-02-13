@@ -1274,6 +1274,10 @@ export function getANNSNNConvertPage(){
   <script>
   
   const vscode = acquireVsCodeApi();
+  let stage1_convert_finish=false;
+  let stage2_preprocess_finish=false;
+  let stage3_search_finish=false;
+  let stage4_all_finish=false;
   
   let log_output_lists = new Array();
   
@@ -1289,55 +1293,57 @@ export function getANNSNNConvertPage(){
                   console.log("data split list len="+log_output_lists.length);
                   $("#log_output_div").html(log_output_lists.join("<br/>"));
                   document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
-                  if($("#model_convert_progress_div").css("width") !== "100%"){
-                      if(log_output_lists.length <= 150){
-                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/150*95)+"%";
+                  if(log_output_lists.length <= 180){
+                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/180*100)+"%");
+                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/180*100)+"%";
+                  }
+                  if(stage1_convert_finish){
+                      if(log_output_lists.length < 360 && stage2_preprocess_finish !== true){
+                          console.log("increase sub progress bar 2");
+                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-176)/(360-176)*100)+"%";
                       }
                   }
-                  if(log_output_lists.length > 200){
-                      if($("#preprocess_progress_div").css("width") !== "100%"){
-                          if(log_output_lists.length < 3000){
-                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-200)/2800*95)+"%";
-                          }
+                  if(stage2_preprocess_finish){
+                      if(log_output_lists.length < 460 && stage3_search_finish !== true){
+                          console.log("increase sub progress bar 3");
+                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-347)/(450-347)*100)+"%";
                       }
                   }
-                  if(log_output_lists.length > 3000){
-                      if($("#search_progress_div").css("width") !== "100%"){
-                          if(log_output_lists.length < 3200){
-                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-3000)/134*95)+"%";
-                          }
+                  if(stage3_search_finish){
+                      if(log_output_lists.length < 520 && stage4_all_finish !== true){
+                          console.log("increase sub progress bar 4");
+                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-450)/(520-450)*100)+"%";
                       }
                   }
-                  if(log_output_lists.length > 3200){
-                      if($("#darlang_progress_div") !== "100%"){
-                          if(log_output_lists.length < 3230){
-                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-3200)/80*95)+"%";
-                          }
-                      }
-                  }
-                  if($("#total_progress_div").css("width") !== "100%"){
-                      document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/3300*95)+"%";
+                  if(stage4_all_finish !== true){
+                      console.log("increase sub progress bar total");
+                      document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/520*100)+"%";
                   }
                 }else if(data.exec_finish){
                     // 结束
                   //   document.getElementById("start_convert_btn").style.backgroundColor = "";
+                    console.log("total finished, log_output_list length="+log_output_lists.length);
                     document.getElementById("model_convert_progress_div").style.width = "100%";
                     document.getElementById("preprocess_progress_div").style.width = "100%";
                     document.getElementById("search_progress_div").style.width = "100%";
                     document.getElementById("darlang_progress_div").style.width = "100%";
                     document.getElementById("total_progress_div").style.width = "100%";
                     console.log("LINE COUNT all_finish="+log_output_lists.length);
+                    stage4_all_finish = true;
                 }else if(data.progress){
                     // 处理进度信息
                     if(data.progress === "convert_finish"){
                         document.getElementById("model_convert_progress_div").style.width = "100%";
                         console.log("LINE COUNT convert_finish="+log_output_lists.length);
+                        stage1_convert_finish = true;
                     }else if(data.progress === "preprocess_finish"){
                         document.getElementById("preprocess_progress_div").style.width = "100%";
                         console.log("LINE COUNT preprocess_progress_div="+log_output_lists.length);
+                        stage2_preprocess_finish = true;
                     }else if(data.progress === "search_finish"){
                         document.getElementById("search_progress_div").style.width = "100%";
                         console.log("LINE COUNT search_progress_div="+log_output_lists.length);
+                        stage3_search_finish = true;
                     }
                 }else if(data.snn_info){
                     // snn 相关数据
@@ -1452,6 +1458,10 @@ export function getANNSNNConvertPage(){
                       "dura":dura
                   }}));
                   log_output_lists.splice(0);
+                  stage1_convert_finish = false;
+                  stage2_preprocess_finish = false;
+                  stage3_search_finish = false;
+                  stage4_all_finish = false;
                   document.getElementById("model_convert_progress_div").style.width = "0%";
                   document.getElementById("preprocess_progress_div").style.width = "0%";
                   document.getElementById("search_progress_div").style.width = "0%";
@@ -1515,6 +1525,10 @@ export function getANNSNNConvertPage(){
               let dura = $("#select_dura").val().replace("ms","");
               console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay+", dura="+dura);
               log_output_lists.splice(0);
+              stage1_convert_finish = false;
+              stage2_preprocess_finish = false;
+              stage3_search_finish = false;
+              stage4_all_finish = false;
               // // 传递到插件
               // vscode.postMessage(JSON.stringify({"convertor_params_change":{
               //     "v_thresh":v_thresh,

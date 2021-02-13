@@ -75,24 +75,24 @@ def create_config(path: str, snn: SNN, output_path):
 
     tmp = []
 
-    print("start")
+    print("start",flush=True)
     flag = 0
     firstlayer = []
 
     # mapping
     layers, avg_conn = count.count_neucon2(connfiles)  #####
-    print("layers:", layers)
-    print("avg_conn:", avg_conn)
+    print("layers:", layers,flush=True)
+    print("avg_conn:", avg_conn,flush=True)
 
     nodes, neus = count.count_nodes(layers, avg_conn, neuron_num)  # only nodes will be used
-    print('nodes:', nodes)
-    print('neus:', neus)
+    print('nodes:', nodes, flush=True)
+    print('neus:', neus, flush=True)
 
     node_link = count.neuron_link(connfiles, netDepth, layers, nodes)
     # print(node_link)
     layer_num = len(layers)
     layer_id = 0
-    print("layer_num:", layer_num)
+    print("layer_num:", layer_num, flush=True)
 
     board_id = 1
     forward_node = []
@@ -122,7 +122,7 @@ def create_config(path: str, snn: SNN, output_path):
             for i in range(len(nodelist)):
                 cnt_node += len(nodelist[i])
 
-            print("cnt_node:", cnt_node)
+            print("cnt_node:", cnt_node, flush=True)
 
             ########################已经全部映射完成
             if (layer_id >= layer_num):
@@ -156,7 +156,7 @@ def create_config(path: str, snn: SNN, output_path):
             # print("=================")
             alloc.buildNetwork(ID, connfiles[id1:id2], id2 - id1 + 1, layerWidth[id1:id2 + 1], nodelist,
                                zerolist, delay, vth[id1 - 1:id2 - 1], leak, reset_mode[id1 - 1:id2 - 1], leaksign,target_path = output_path)
-            print("config done")
+            print("config done", flush=True)
 
             str1 = 'connfiles' + ID
             # print(str1)

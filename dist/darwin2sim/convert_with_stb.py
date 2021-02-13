@@ -80,7 +80,7 @@ def fixpt(weights,bit_width=8):
     min_pos_wt = np.min([np.min(wt[wt >=0]) for wt in weights if len(wt[wt >=0]) > 0])
     near0_neg_wt = np.max([np.max(wt[wt <0]) for wt in weights if len(wt[wt < 0]) > 0])
     far0_neg_wt = np.min([np.min(wt[wt <0]) for wt in weights if len(wt[wt < 0]) > 0])
-    print("max_pos_wt={}, min_pos_wt={}, near0 neg wt={}, far0_neg_wt={}".format(max_pos_wt, min_pos_wt, near0_neg_wt, far0_neg_wt))
+    print("max_pos_wt={}, min_pos_wt={}, near0 neg wt={}, far0_neg_wt={}".format(max_pos_wt, min_pos_wt, near0_neg_wt, far0_neg_wt),flush=True)
     scale_fac_pos = range_pos / (max_pos_wt-min_pos_wt)
     scale_fac_neg = range_neg/(far0_neg_wt - near0_neg_wt)
     for i in range(len(weights)):
@@ -137,15 +137,14 @@ spiking_model = target_sim.SNN(config)
 spiking_model.build(parsed_model)
 spiking_model.save(dir_name, "spike_snn")
 
-print("CONVERT_FINISH...")
+print("CONVERT_FINISH...",flush=True)
 stage1_time_use = time.time()
 # simulate
 test_set = {"x_test":testX[:50],"y_test":testY[:50]}
 accu = spiking_model.run(**test_set)
 
 spiking_model.end_sim()
-print("accu={}".format(accu))
-print(flush=True)
+print("accu={}".format(accu),flush=True)
 
 # print("layers count={}, layers={}".format(len(spiking_model.layers), spiking_model.layers))
 # print("connections len={}, conns={}".format(len(spiking_model.connections), spiking_model.connections))
@@ -160,7 +159,7 @@ br2_neurons = []
 for i in range(len(spiking_model.layers)):
     num_neuron = spiking_model.layers[i].N
     model_eqs = spiking_model.layers[i].equations
-    print("build layer={}, num neurons={}, model eqs={}".format(i, num_neuron, model_eqs))
+    print("build layer={}, num neurons={}, model eqs={}".format(i, num_neuron, model_eqs),flush=True)
     br2_neurons.append(brian2.NeuronGroup(num_neuron, model_eqs, method="euler",threshold="v >= v_thresh", reset="v = v - v_thresh",dt=sys_param_neurondt*brian2.ms))
 
 br2_synapses=[]
@@ -175,14 +174,14 @@ for i in range(len(spiking_model.connections)):
     br2_synapses[-1].w = np.array(spiking_model.connections[i].w, dtype="float32")
     print("build synapse={},i={},j={},w{}".format(i,np.array(spiking_model.connections[i].i,dtype="int32"),\
         np.array(spiking_model.connections[i].j, dtype="int32"),\
-            np.array(spiking_model.connections[i].w, dtype="float32")))
+            np.array(spiking_model.connections[i].w, dtype="float32")), flush=True)
     print("----max weight={}, min weight={}".format(np.max(np.array(spiking_model.connections[i].w)),\
-        np.min(np.array(spiking_model.connections[i].w))))
+        np.min(np.array(spiking_model.connections[i].w))), flush=True)
 
 all_wts = fixpt(all_wts)
 for i in range(len(br2_synapses)):
     br2_synapses[i].w = all_wts[i]
-    print("fix point weights of synapse {} = {}".format(i,all_wts[i]))
+    print("fix point weights of synapse {} = {}".format(i,all_wts[i]), flush=True)
     
 br2_monitor = brian2.SpikeMonitor(br2_neurons[-1])
 br2_input_monitor = brian2.SpikeMonitor(br2_neurons[0]) # monitor for input
@@ -201,8 +200,7 @@ for i in range(len(all_layer_spike_mon)):
 br2_net.store()
 
 
-print("PREPROCESS_FINISH...")
-print(flush=True)
+print("PREPROCESS_FINISH...",flush=True)
 stage2_time_use = time.time()
 all_accus=[]
 # v_th_range=list(range(10,20,1))
@@ -291,14 +289,13 @@ for i in range(50):
     })
 
     counts=[len(list(x)) for x in output_spike.values()]
-    print("Processing sample #{}, output spike counts={}, real one hot labels={}".format(i,counts,valY[i]))
+    print("Processing sample #{}, output spike counts={}, real one hot labels={}".format(i,counts,valY[i]), flush=True)
     if np.argmax(counts) == np.argmax(valY[i]):
         acc +=1
 
 print("Accuracy={}".format(acc/50))
-print("SEARCH_FINISH...")
-print(flush=True)
-# stage3_time_use = time.time()
+print("SEARCH_FINISH...",flush=True)
+stage3_time_use = time.time()
 
 # get state monitor of layers
 record_layer_v_vals=[]
@@ -387,7 +384,7 @@ with open(os.path.join(outputPath, "snn_digit_darlang.json"),"w+") as f:
     f.write(json.dumps(snn_model_darlang))
 
 # save weights files, each synapses a file, [(src index, dest index, weight, delay),...]
-print("save weights file, total {} synapses".format(len(br2_synapses)))
+print("save weights file, total {} synapses".format(len(br2_synapses)),flush=True)
 for i in range(len(br2_synapses)):
     info = list(zip(br2_synapses[i].i, br2_synapses[i].j, br2_synapses[i].w, [1]*len(br2_synapses[i].w)))
     info = np.array(info)
@@ -402,9 +399,9 @@ for i in range(len(br2_synapses)):
 # save neuronsgroup info list, each item  (neuron count, neuron v_thresh, min_weight, max_weight)
 neurons_info=[]
 for i in range(len(br2_neurons)):
-    print("neuron count={}, method={}, events={}, vthresh={} ".format(br2_neurons[i].N,br2_neurons[i].method_choice, br2_neurons[i].events,best_vthresh))
+    print("neuron count={}, method={}, events={}, vthresh={} ".format(br2_neurons[i].N,br2_neurons[i].method_choice, br2_neurons[i].events,best_vthresh),flush=True)
     neurons_info.append({"idx":i,"neuron_count":br2_neurons[i].N, "method":br2_neurons[i].method_choice, "vthresh":best_vthresh})
-print(flush=True)
+
 # for display weights distributes 
 wt_labels = set()
 for i in range(len(br2_synapses)):
@@ -440,9 +437,9 @@ for i in range(len(br2_synapses)):
     current_layer_neuron_count = br2_neurons[i+1].N
     connect_ratio = np.prod(np.shape(br2_synapses[i].w)) / (prev_layer_neuron_count*current_layer_neuron_count)
     curr_layer_avg_conn = len(list(br2_synapses[i].j))/len(set(list(br2_synapses[i].j)))
-    print("layer {} connect ratio ={}, avg neuron connect count={}".format(i, connect_ratio, curr_layer_avg_conn))
+    print("layer {} connect ratio ={}, avg neuron connect count={}".format(i, connect_ratio, curr_layer_avg_conn), flush=True)
     layer_conn_info.append({"idx":i, "ratio": ["{:.3f}".format(connect_ratio)], "avg_conn":["{:.3f}".format(curr_layer_avg_conn)]})
-print(flush=True)
+
 
 brian2_snn_info = {
     "neurons_info":neurons_info,
@@ -483,12 +480,11 @@ stage4_time_use = time.time()
 # move to ../inner_scripts directory
 shutil.move(os.path.join(baseDirPath, "brian2_snn_info.json"), os.path.join(baseDirPath, "..", "inner_scripts","brian2_snn_info.json"))
 
-print("running darwinlang")
+print("running darwinlang", flush=True)
 sys.path.append(os.path.join(baseDirPath, "..", "darlang"))
 import darlang
 darlang.run_darlang(os.path.join(outputPath, "snn_digit_darlang.json"),os.path.join(outputPath,"..", "bin_darwin_out"))
-print("darwinlang conversion finished.")
-print(flush=True)
+print("darwinlang conversion finished.", flush=True)
 
 stage4_time_use = "{:.3f}".format(stage4_time_use - stage3_time_use)
 stage3_time_use = "{:.3f}".format(stage3_time_use - stage2_time_use)

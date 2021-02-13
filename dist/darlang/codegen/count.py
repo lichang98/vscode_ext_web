@@ -47,7 +47,7 @@ def count_neucon(filelist):
     for file in filelist[1:]:
         f = open(os.path.join(info.get_output_path(), file), 'rb')
         cons = pk.load(f)
-        print(len(cons))
+        print(len(cons), flush=True)
         dst = set()
         for con in cons:
             dst.add(con[1])
@@ -181,12 +181,12 @@ if __name__ == "__main__":
         'connections2/16_to_18'
     ]
     layers, avg_conn = count_neucon2(connfiles)  #####
-    print("layers:", layers)
-    print("avg_conn:", avg_conn)
+    print("layers:", layers, flush=True)
+    print("avg_conn:", avg_conn, flush=True)
 
     nodes, neus = count_nodes(layers, avg_conn, 256)  # only nodes will be used
-    print('nodes:', nodes)
-    print('neus:', neus)
+    print('nodes:', nodes, flush=True)
+    print('neus:', neus, flush=True)
 
     node_link = neuron_link(connfiles, 10, layers, nodes)
     # print(node_link)

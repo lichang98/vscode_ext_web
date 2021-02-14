@@ -1023,11 +1023,12 @@ export function getANNSNNConvertPage(){
                   <div class="col-md-2" style="text-align: center;">
                       <label for="select_vthresh">膜电压阈值</label>
                       <select class="form-control" id="select_vthresh">
-                          <option>5</option>
-                          <option>2</option>
+                          <option>21</option>
                           <option>1</option>
+                          <option>2</option>
                           <option>3</option>
                           <option>4</option>
+                          <option>5</option>
                           <option>6</option>
                           <option>7</option>
                           <option>8</option>
@@ -1043,7 +1044,6 @@ export function getANNSNNConvertPage(){
                           <option>18</option>
                           <option>19</option>
                           <option>20</option>
-                          <option>21</option>
                           <option>22</option>
                           <option>23</option>
                           <option>24</option>
@@ -1170,7 +1170,7 @@ export function getANNSNNConvertPage(){
           </div>
           <div class="col-md-5">
               <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -40px;">转换性能分析</div>
-              <div id="use_time_bar_chart" style="width: 380px;height: 400px;margin-top: 15px;margin-left: 40px;"></div>
+              <div id="use_time_bar_chart" style="width: 380px;height: 400px;margin-top: 15px;margin-left: 80px;"></div>
           </div>
           <div class="col-md-4" style="height:calc(100vh - 200px);margin-left: -50px;">
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">转换过程信息</div>
@@ -1815,7 +1815,7 @@ export function getSNNSimuPage(){
                     console.log("spike tuples[0]="+test_img_spikes[0].spike_tuples);
   
                     calc_need_red(test_img_spikes);
-  
+                    console.log("call calc_need_red function finish, start for img uris...");
                     for(let i=0;i<test_img_uris.length;++i){
                       var img_li = document.createElement("li");
                       img_li.style.listStyle = "none";
@@ -1837,6 +1837,7 @@ export function getSNNSimuPage(){
                         display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
   
                         // display counts in table
+                        console.log("start display counts in table....");
                         let cls_idx = test_img_spikes[i].spike_tuples[0][0];
                         let curr_count=1;
                         let spike_counts = new Array();
@@ -1852,6 +1853,7 @@ export function getSNNSimuPage(){
                                 cls_idx = test_img_spikes[i].spike_tuples[j][0];
                             }
                         }
+                        console.log("--- calc finished.");
                         spike_counts[spike_counts.length-1] = curr_count;
                         document.getElementById("out_labels").innerHTML = "";
                         let td_child = document.createElement("td");
@@ -2042,6 +2044,8 @@ export function getSNNSimuPage(){
             tmp_lst.push(parseInt(lst[i]));
           }
           tmp_lst.sort((a,b)=>{return a-b;}).reverse()
+          console.log("check with multiple_argmax, lst="+tmp_lst);
+          console.log("---after sort [0]="+tmp_lst[0]+" [1]="+tmp_lst[1]);
           if(tmp_lst[0] === tmp_lst[1]){
             return true;
           }else{
@@ -2051,7 +2055,11 @@ export function getSNNSimuPage(){
   
         function calc_need_red(test_img_spikes){
           for(let i=0;i<test_img_spikes.length;++i){
-            let cls_idx = test_img_spikes[i].spike_tuples[0][0];
+            console.log("test_img_spikes i="+i+"  spike tuples="+test_img_spikes[i].spike_tuples);
+            let cls_idx = 0;
+            if(test_img_spikes[i].spike_tuples.length > 0){
+              cls_idx = test_img_spikes[i].spike_tuples[0][0];
+            }
             let curr_count=1;
             let spike_counts = new Array();
             for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
@@ -2066,11 +2074,16 @@ export function getSNNSimuPage(){
                     cls_idx = test_img_spikes[i].spike_tuples[j][0];
                 }
             }
-            spike_counts[spike_counts.length-1] = curr_count;
+            if(spike_counts.length > 0){
+              spike_counts[spike_counts.length-1] = curr_count;
+            }
             console.log("current check img:"+i+", spike_counts="+spike_counts);
             if(multiple_argmax(spike_counts)){
+              console.log("--after check multiple armax, true");
               need_red_img_li.push("img_li_"+i);
               console.log("img: "+i+" need mark.");
+            }else{
+              console.log("--after check multiple argmax, false");
             }
           }
         }

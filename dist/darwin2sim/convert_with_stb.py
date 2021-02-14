@@ -65,7 +65,7 @@ if len(sys.argv) > 5:
     sys_param_delay = float(sys.argv[4])
     sys_param_total_dura = int(sys.argv[5])
 else:
-    sys_param_vthresh = 5
+    sys_param_vthresh = 21
     sys_param_neurondt = 1
     sys_param_synapsedt = 0.1
     sys_param_delay = 1
@@ -211,6 +211,8 @@ br2_net.store()
 
 print("PREPROCESS_FINISH...",flush=True)
 stage2_time_use = time.time()
+
+######################
 # all_accus=[]
 # v_th_range=list(range(1,24,1))
 # for v_th in v_th_range:
@@ -234,8 +236,8 @@ stage2_time_use = time.time()
 
 # best_vthresh = all_accus[np.argmax([e[1] for e in all_accus])][0]
 # print("choose best vthreshold={}".format(best_vthresh))
+#########################
 
-# best_vthresh = 16
 best_vthresh = sys_param_vthresh
 
 br2_model = {
@@ -284,7 +286,7 @@ for i in range(50):
     img = np.array(np.squeeze(valX[i])*255, dtype="uint8")
     Image.fromarray(img).save(os.path.join(baseDirPath, "model_out", target_proj_name, "bin_darwin_out", "inputs", "img_idx_{}_label_{}.png"
                                 .format(i, np.argmax(valY[i]))))
-    snn_test_img_uris.append("http://localhost:6003/snn_imgs/img_idx_{}_label_{}.png".format(i,np.argmax(valY[i])))
+    snn_test_img_uris.append("http://localhost:6003/snn_imgs/{}/img_idx_{}_label_{}.png".format(target_proj_name,i,np.argmax(valY[i])))
     last_layer_spikes = [list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]
     first_layer_spikes = [list(e/brian2.ms) for e in br2_input_monitor.spike_trains().values()]
     for idx_, spk_lst_ in enumerate(last_layer_spikes):

@@ -1814,7 +1814,7 @@ export function getSNNSimuPage(){
                     console.log("spiking spike infos[0]="+test_img_spikes[0].cls_names);
                     console.log("spike tuples[0]="+test_img_spikes[0].spike_tuples);
   
-                    calc_need_red(test_img_spikes);
+                    calc_need_red(test_img_spikes, test_img_uris);
                     console.log("call calc_need_red function finish, start for img uris...");
                     for(let i=0;i<test_img_uris.length;++i){
                       var img_li = document.createElement("li");
@@ -1839,11 +1839,13 @@ export function getSNNSimuPage(){
                         // display counts in table
                         console.log("start display counts in table....");
                         let cls_idx = test_img_spikes[i].spike_tuples[0][0];
+                        console.log("cls_idx="+cls_idx);
                         let curr_count=1;
                         let spike_counts = new Array();
                         for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
                             spike_counts.push(0);
                         }
+                        console.log("test_img_spikes[i].spike_tuples.length="+test_img_spikes[i].spike_tuples.length);
                         for(let j=1;j<test_img_spikes[i].spike_tuples.length;++j){
                             if(cls_idx === test_img_spikes[i].spike_tuples[j][0]){
                                 curr_count = curr_count+1;
@@ -1854,7 +1856,8 @@ export function getSNNSimuPage(){
                             }
                         }
                         console.log("--- calc finished.");
-                        spike_counts[spike_counts.length-1] = curr_count;
+                        console.log("spike counts="+spike_counts);
+                        spike_counts[cls_idx] = curr_count;
                         document.getElementById("out_labels").innerHTML = "";
                         let td_child = document.createElement("td");
                         td_child.innerText = "标签名称:";
@@ -1897,7 +1900,10 @@ export function getSNNSimuPage(){
                       test_img_uls.appendChild(img_li);
   
                       var label_span = document.createElement("span");
-                      label_span.innerText = "标签: "+test_img_uris[i].split("_")[5].split(".")[0];
+                      console.log("图片 i="+i+", uri="+test_img_uris[i]);
+                      // a.split("/")[5].split("_")[4].split(".")[0]
+                      // label_span.innerText = "标签: "+test_img_uris[i].split("_")[5].split(".")[0];
+                      label_span.innerText = "标签: "+test_img_uris[i].split("/")[5].split("_")[4].split(".")[0];
                       img_li.appendChild(label_span);
                     }
   
@@ -2053,7 +2059,20 @@ export function getSNNSimuPage(){
           }
         }
   
-        function calc_need_red(test_img_spikes){
+  
+        function my_argmax(lst){
+          let max_val=0, max_idx=0;
+          for(let i=0;i<lst.length;++i){
+            if(lst[i] > max_val){
+              max_val = lst[i];
+              max_idx = i;
+            }
+          }
+          return max_idx;
+        }
+  
+        function calc_need_red(test_img_spikes, test_img_uris){
+          // label_span.innerText = "标签: "+test_img_uris[i].split("/")[5].split("_")[4].split(".")[0];
           for(let i=0;i<test_img_spikes.length;++i){
             console.log("test_img_spikes i="+i+"  spike tuples="+test_img_spikes[i].spike_tuples);
             let cls_idx = 0;
@@ -2075,15 +2094,17 @@ export function getSNNSimuPage(){
                 }
             }
             if(spike_counts.length > 0){
-              spike_counts[spike_counts.length-1] = curr_count;
+              spike_counts[cls_idx] = curr_count;
             }
             console.log("current check img:"+i+", spike_counts="+spike_counts);
-            if(multiple_argmax(spike_counts)){
+            if(parseInt(test_img_uris[i].split("/")[5].split("_")[4].split(".")[0]) !== my_argmax(spike_counts)){
+              need_red_img_li.push("img_li_"+i);
+            }else if(multiple_argmax(spike_counts)){
               console.log("--after check multiple armax, true");
               need_red_img_li.push("img_li_"+i);
               console.log("img: "+i+" need mark.");
             }else{
-              console.log("--after check multiple argmax, false");
+              console.log("img " +  i+ " ok");
             }
           }
         }

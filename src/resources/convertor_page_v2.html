@@ -186,6 +186,7 @@ body {
        // 选择项目文件保存路径
        $("#span_save_path").on("click", function(){
          // 发送消息到extension，打开选择路径的dialog
+         console.log("发送消息到extension，打开选择路径的dialog");
          vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val()}));
        });
         $("#create").on("click",function(){

@@ -84,6 +84,10 @@
 				"title": "项目移除"
 			},
 			{
+				"command": "treeView.edit_file",
+				"title": "编辑"
+			},
+			{
 				"command": "snn_model_ac.show_snn_model",
 				"title": "可视化SNN模型"
 			},
@@ -160,6 +164,10 @@
 				{
 					"command": "treeView.proj_remove",
 					"when": "view == treeView-item && viewItem == root"
+				},
+				{
+					"command": "treeView.edit_file",
+					"when": "view == treeView-item && viewItem == darwinlang_json_file"
 				}
 			]
 		},

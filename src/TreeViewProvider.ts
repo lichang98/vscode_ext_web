@@ -39,6 +39,8 @@ export class TreeItemNode extends TreeItem {
         this.contextValue = label;
         if(isRoot){
             this.contextValue = "root";
+        }else if(label.search("darlang.json") !== -1){
+            this.contextValue = "darwinlang_json_file";
         }
     }
 

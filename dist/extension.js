@@ -20,6 +20,131 @@ const multiLevelTree_1 = __webpack_require__(52);
 const get_convertor_page_v2_1 = __webpack_require__(53);
 const child_process_1 = __webpack_require__(54);
 let local_server = undefined;
+function darlangWebContent() {
+    return `<!DOCTYPE html>
+	<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+
+    <body>
+        <div id="draw_region" style="width: 100vw;height: 100vh;"></div>
+        <script src="https://cdn.bootcdn.net/ajax/libs/echarts/4.8.0/echarts-en.min.js"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            function net_structure_show(elementId, map_file_url) {
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById(elementId)); //初始化
+                myChart.showLoading();
+                $.get(map_file_url, function (map_file) {
+                    var node_data = map_file.data;
+                    var node_link = map_file.links;
+                    var node_class = map_file.layers;
+                    var ratios = map_file.ratio;
+                    var num = map_file.nums;
+
+                    var categories = [];
+                    for (var i = 0; i < node_class.length; i++) {
+                        categories[i] = {
+                            name: node_class[i],
+                        };
+                    }
+                    // 指定图表的配置项和数据
+                    let option = {
+                        title: {
+                            show: true,
+                            // text: 'Network Structure Diagram',
+                            text: 'ratio     1 : ' + ratios,
+                            textStyle:{
+                                fontSize:10
+                            },
+                            bottom: '3%',
+                            left: 'center'
+                        },
+                        backgroundColor: '#FFFFFF',//背景色
+                        tooltip: {}, //提示信息
+                        legend: {   //图例组件
+                            top: "0%",   //距离顶部5%
+                            // bottom: "88%",
+                            // left: "5%",
+                            data: node_class,
+                            formatter: function (name) {
+                                var neuron_num;
+                                for (var i = 0; i < node_class.length; i++) {
+                                    if (node_class[i] === name) {
+                                        neuron_num = num[i];
+                                        break;
+                                    }
+                                }
+                                // var arr = [
+                                //     name,
+                                //     '(' + neuron_num + ')'
+                                // ];
+                                var arr = [
+                                    '{a|' + name + '}',
+                                    '{b|(' + neuron_num + ')}'
+                                ];
+                                return arr.join('\\n');
+                            },
+                            textStyle: {
+                                rich: {
+                                    a: {
+                                        fontSize: 14,
+                                        verticalAlign: 'top',
+                                        align: 'center',
+                                        padding: [0, 0, 20, 0]
+                                    },
+                                    b: {
+                                        fontSize: 8,
+                                        align: 'center',
+                                        padding: [0, 10, 0, 0],
+                                        lineHeight: 25
+                                    }
+                                }
+                            }
+                        },
+                        animationDuration: 1500,
+                        animationEasingUpdate: "quinticInOut",
+                        series: [ //系列列表
+                            {
+
+                                name: "Les Miserables",  //系列名称
+                                type: "graph",   //系列图表类型  ——  关系图
+                                // layout: "circular",
+                                // top: "15%",
+                                // bottom: "8%",
+                                symbolSize: 5,  //图元的大小
+                                data: node_data,
+                                links: node_link,
+                                roam: true,
+                                // focusNodeAdjacency: true,
+                                categories: categories,
+                            },
+                        ],
+                    };
+
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.hideLoading();
+                    myChart.setOption(option); //使用json
+                });
+            }
+
+        </script>
+
+        <script>
+            window.addEventListener('message', event => {
+                const message = event.data; 
+                net_structure_show("draw_region", message.resultUri);
+            });
+            
+        </script>
+    </body>
+            
+    </html>`;
+}
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
@@ -216,21 +341,61 @@ function activate(context) {
     };
     let proj_save_path = undefined;
     vscode.window.registerTreeDataProvider("multiLevelTree", new multiLevelTree_1.MultiLevelTreeProvider());
+    context.subscriptions.push(vscode.commands.registerCommand("treeView.edit_file", (treeItem) => {
+        // 编辑darwinlang
+        let file_target = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", treeItem.label));
+        vscode.workspace.openTextDocument(file_target).then((doc) => {
+            vscode.window.showTextDocument(doc, 1, false).then(ed => {
+                ed.edit(edit => {
+                });
+            });
+        }, (err) => {
+            console.log(err);
+        });
+    }));
     context.subscriptions.push(vscode.commands.registerCommand('itemClick', (label) => {
         // vscode.window.showInformationMessage(label);
         console.log("label is :[" + label + "]");
         if (label.search("json") !== -1) {
-            // 显示darlang文件
-            console.log("显示转换后的darwinLang");
-            let file_target = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", label));
-            vscode.workspace.openTextDocument(file_target).then((doc) => {
-                vscode.window.showTextDocument(doc, 1, false).then(ed => {
-                    ed.edit(edit => {
-                    });
-                });
-            }, (err) => {
-                console.log(err);
+            // 显示可视化的darwin snn 模型结构
+            // 执行 darwinlang map 生成脚本
+            let tmp_darlang_webview = vscode.window.createWebviewPanel("darwin lang", label, vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+            tmp_darlang_webview.webview.html = darlangWebContent();
+            tmp_darlang_webview.title = "darwin lang";
+            let target_darlang_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", "snn_digit_darlang.json");
+            let command_str = "python " + path.join(__dirname, "load_graph.py") + " " + target_darlang_file_path + " " + path.join(__dirname);
+            child_process_1.exec(command_str, (err, stdout, stderr) => {
+                tmp_darlang_webview.reveal();
+                if (err) {
+                    console.log("执行 load_grph.py 错误：" + err);
+                }
+                else {
+                    let map_file_disk = vscode.Uri.file(path.join(__dirname, "map.json"));
+                    let file_src = tmp_darlang_webview.webview.asWebviewUri(map_file_disk).toString();
+                    tmp_darlang_webview.webview.postMessage({ resultUri: file_src });
+                }
             });
+            // exec(command_str, function (err, stdout, stderr) {
+            // 	if(err){
+            // 		console.log("执行 load_graph.py 错误：" + err);
+            // 	}else{
+            // 		// 读取map 文件
+            // 		let map_file_disk = vscode.Uri.file(path.join(__dirname, "map.json"));
+            // 		let file_src = panelSNNVisWeb!.webview.asWebviewUri(map_file_disk).toString();
+            // 		panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_map": file_src}));
+            // 	}
+            // });
+            // // 显示darlang文件
+            // console.log("显示转换后的darwinLang");
+            // let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""),"darlang_out",label));
+            // vscode.workspace.openTextDocument(file_target).then((doc:vscode.TextDocument)=>{
+            // 	vscode.window.showTextDocument(doc, 1,false).then(ed=>{
+            // 		ed.edit(edit=>{
+            // 		});
+            // 	});
+            // }, (err)=>{
+            // 	console.log(err);
+            // });
         }
         else if (label.search("txt") !== -1) {
             // 显示二进制的darlang文件
@@ -5007,6 +5172,9 @@ class TreeItemNode extends vscode_1.TreeItem {
         this.contextValue = label;
         if (isRoot) {
             this.contextValue = "root";
+        }
+        else if (label.search("darlang.json") !== -1) {
+            this.contextValue = "darwinlang_json_file";
         }
     }
     // __filename：当前文件的路径

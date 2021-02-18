@@ -1017,10 +1017,21 @@ function activate(context) {
         panelSNNVisWeb.reveal();
         panelSNNVisWeb.webview.html = get_convertor_page_v2_1.getSNNModelPage();
         panelSNNVisWeb.title = "SNN模型";
-        // 传递信息
         fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
-            if (panelSNNVisWeb) {
-                panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_info": data }));
+            panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_info": data }));
+        });
+        // 执行 darwinlang map 生成脚本
+        let target_darlang_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", "snn_digit_darlang.json");
+        let command_str = "python " + path.join(__dirname, "load_graph.py") + " " + target_darlang_file_path + " " + path.join(__dirname);
+        child_process_1.exec(command_str, function (err, stdout, stderr) {
+            if (err) {
+                console.log("执行 load_graph.py 错误：" + err);
+            }
+            else {
+                // 读取map 文件
+                let map_file_disk = vscode.Uri.file(path.join(__dirname, "map.json"));
+                let file_src = panelSNNVisWeb.webview.asWebviewUri(map_file_disk).toString();
+                panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_map": file_src }));
             }
         });
     });
@@ -7416,7 +7427,7 @@ function getSNNModelPage() {
                   </thead>
               </table>
           </div>
-          
+  
           <div class="col-md-4">
             <div style="font-size: large;font-weight: bold;text-align: center;">层连接权重统计</div>
             <table id="snn_layer_wt_table">
@@ -7454,7 +7465,7 @@ function getSNNModelPage() {
           </div>
           <div class="col-md-6">
               <div style="font-size: large;font-weight: bold;text-align: center;">模型连接图</div>
-              <div id="sangky_chart" style="width: 480px;height: 340px;display: inline-block;margin-left: 120px;"></div>
+              <div id="sangky_chart" style="width: 580px;height: 400px;display: inline-block;margin-left: 40px;"></div>
           </div>
       </div>
   </body>
@@ -7498,7 +7509,7 @@ function getSNNModelPage() {
   
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdn.staticfile.org/echarts/5.0.1/echarts.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/echarts/4.8.0/echarts-en.min.js"></script>
   
   <script>
         $(document).ready(function(){
@@ -7631,8 +7642,11 @@ function getSNNModelPage() {
                         sanky_links.push({"source":"layer_"+i, "target":"layer_"+(i+1), "value": infos.layer_conns[i].ratio, "lineStyle":{"color": "#c23531"}});
                     }
                   //   console.log("Display sanky graph, sanky_data="+sanky_data[0]['name']);
-                    console.log("Display sanky links, ="+sanky_links['0']['value']);
-                    display_snn_model_sanky(sanky_data, sanky_links);
+                    // console.log("Display sanky links, ="+sanky_links['0']['value']);
+                    // display_snn_model_sanky(sanky_data, sanky_links);
+                }else if(data.snn_map){
+                  console.log("显示SNN 结构图.....");
+                  net_structure_show("sangky_chart", data.snn_map);
                 }
             });
         });
@@ -7700,9 +7714,112 @@ function getSNNModelPage() {
             var sanky_chart_ = echarts.init(document.getElementById("sangky_chart"));
             sanky_chart_.setOption(option);
         }
+  
+        function net_structure_show(elementId, map_file_url) {
+                  // 基于准备好的dom，初始化echarts实例
+                  var myChart = echarts.init(document.getElementById(elementId)); //初始化
+                  console.log("SNN 结构 div 显示 loading...");
+                  myChart.showLoading();
+                  $.get(map_file_url, function (map_file) {
+                      var node_data = map_file.data;
+                      var node_link = map_file.links;
+                      var node_class = map_file.layers;
+                      var ratios = map_file.ratio;
+                      var num = map_file.nums;
+                      console.log("加载完毕map json 数据....");
+                      console.log("ratios = "+ratios);
+                      var categories = [];
+                      for (var i = 0; i < node_class.length; i++) {
+                          categories[i] = {
+                              name: node_class[i],
+                          };
+                      }
+                      console.log("categories finished...");
+                      // 指定图表的配置项和数据
+                      let option = {
+                          title: {
+                              show: true,
+                              // text: 'Network Structure Diagram',
+                              text: 'ratio     1 : ' + ratios,
+                              textStyle:{
+                                  fontSize:10,
+                                  color:"white"
+                              },
+                              bottom: '3%',
+                              left: 'center'
+                          },
+                          tooltip: {}, //提示信息
+                          legend: {   //图例组件
+                              top: "0%",   //距离顶部5%
+                              // bottom: "88%",
+                              // left: "5%",
+                              data: node_class,
+                              formatter: function (name) {
+                                  var neuron_num;
+                                  for (var i = 0; i < node_class.length; i++) {
+                                      if (node_class[i] === name) {
+                                          neuron_num = num[i];
+                                          break;
+                                      }
+                                  }
+                                  // var arr = [
+                                  //     name,
+                                  //     '(' + neuron_num + ')'
+                                  // ];
+                                  var arr = [
+                                      '{a|' + name + '}',
+                                      '{b|(' + neuron_num + ')}'
+                                  ];
+                                  return arr.join('\\n');
+                              },
+                              textStyle: {
+                                  rich: {
+                                      a: {
+                                          fontSize: 14,
+                                          verticalAlign: 'top',
+                                          align: 'center',
+                                          padding: [0, 0, 20, 0]
+                                      },
+                                      b: {
+                                          fontSize: 8,
+                                          align: 'center',
+                                          padding: [0, 10, 0, 0],
+                                          lineHeight: 25
+                                      }
+                                  },
+                                  color:"white"
+                              }
+                          },
+                          animationDuration: 1500,
+                          animationEasingUpdate: "quinticInOut",
+                          series: [ //系列列表
+                              {
+  
+                                  name: "Les Miserables",  //系列名称
+                                  type: "graph",   //系列图表类型  ——  关系图
+                                  // layout: "circular",
+                                  // top: "15%",
+                                  // bottom: "8%",
+                                  symbolSize: 5,  //图元的大小
+                                  data: node_data,
+                                  links: node_link,
+                                  roam: true,
+                                  // focusNodeAdjacency: true,
+                                  categories: categories,
+                              },
+                          ],
+                      };
+  
+                      console.log("option init finished....");
+                      // 使用刚指定的配置项和数据显示图表。
+                      myChart.hideLoading();
+                      myChart.setOption(option); //使用json
+                  });
+              }
   </script>
   
   </html>
+  
   `;
 }
 exports.getSNNModelPage = getSNNModelPage;

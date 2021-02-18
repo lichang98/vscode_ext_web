@@ -11,3 +11,4 @@ src/resources/debug.log
 .vscode
 **/*.db
 dist/darwin2sim/target
+dist/map.json

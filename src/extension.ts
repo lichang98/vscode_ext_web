@@ -1049,10 +1049,21 @@ export function activate(context: vscode.ExtensionContext) {
 		panelSNNVisWeb.reveal();
 		panelSNNVisWeb.webview.html = getSNNModelPage();
 		panelSNNVisWeb.title = "SNN模型";
-		// 传递信息
-		fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
-			if(panelSNNVisWeb){
-				panelSNNVisWeb.webview.postMessage(JSON.stringify({"snn_info":data}));
+		fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
+			panelSNNVisWeb!.webview.postMessage(JSON.stringify({ "snn_info": data }));
+		});
+		// 执行 darwinlang map 生成脚本
+		let target_darlang_file_path = path.join(__dirname, "darwin2sim", "model_out" , path.basename(proj_save_path!).replace("\.dar2",""), "darlang_out","snn_digit_darlang.json");
+		let command_str: string = "python " + path.join(__dirname, "load_graph.py") + " " + target_darlang_file_path + " " + path.join(__dirname);
+		exec(command_str, function (err, stdout, stderr) {
+			if(err){
+				console.log("执行 load_graph.py 错误：" + err);
+			}else{
+				// 读取map 文件
+				let map_file_disk = vscode.Uri.file(path.join(__dirname, "map.json"));
+				let file_src = panelSNNVisWeb!.webview.asWebviewUri(map_file_disk).toString();
+
+				panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_map": file_src}));
 			}
 		});
 	});

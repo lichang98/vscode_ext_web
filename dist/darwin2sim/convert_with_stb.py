@@ -22,7 +22,7 @@ baseDirPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(baseDirPath, "snntoolbox"))
 # model_path = os.path.join(
 #     'E:\\courses\\ZJLab\\IDE-related-docs\\darwin2sim\\target\\mnist_cnn.h5')
-target_proj_name = "new"
+target_proj_name = "cnn_dig"
 if len(sys.argv) > 6:
     target_proj_name = sys.argv[6]
 

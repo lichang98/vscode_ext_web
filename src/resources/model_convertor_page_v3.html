@@ -6,7 +6,7 @@
   <title>模型转换器</title>
 </head>
 
-<body class="dark-mode" style="height: 100%;width: 100%;">
+<body class="dark-mode" style="height: 100%;width: 100%;overflow: auto;">
 
     <div class="row" style="margin-top: 30px;">
         <div class="col-md-12">
@@ -154,77 +154,89 @@
         </div>
     </div>
 
-    <div class="row" style="height: 100%; margin-top: 50px;">
-        <div class="col-md-3">
-            <div style="font-size: large;font-weight: bold;text-align: center;margin-left: 20px;">日志输出</div>
-            <div id="log_output_div" style="margin-left: 50px;height: 340px; width: 300px; overflow: auto;margin-top: 60px;">
+    <div class="row" style="height: 100%;width: 100%; margin-top: 50px;white-space: nowrap;">
+        <div class="col-md-12" style="overflow-x: auto;">
+            <div style="width: 350px;display: inline-block;vertical-align: top;white-space:normal;">
+                <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -20px;">日志输出</div>
+                <div id="log_output_div" style="margin-left: 20px;height: 340px; width: 240px; overflow: auto;margin-top: 60px;">
+                </div>
             </div>
-        </div>
-        <div class="col-md-5">
-            <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -40px;">转换性能分析</div>
-            <div id="use_time_bar_chart" style="width: 380px;height: 400px;margin-top: 15px;margin-left: 80px;"></div>
-        </div>
-        <div class="col-md-4" style="height:calc(100vh - 200px);margin-left: -50px;">
-            <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">转换过程信息</div>
-            <table id="info_simu_table" style="margin-left: auto;margin-right: auto;margin-top: 60px;">
-                <tr style="margin-top: 15px;height: 35px;">
-                    <td style="width: 200px;font-size: medium;font-weight: bold;">转换总耗时</td>
-                    <td id="total_use_time">xxx</td>
-                </tr>
-                <tr style="margin-top: 15px;height: 35px;">
-                    <td style="font-size: medium;font-weight: bold;">平均激发脉冲次数</td>
-                    <td id="avg_spike">xxx</td>
-                </tr>
-                <tr style="margin-top: 15px;height: 35px;">
-                    <td style="font-size: medium;font-weight: bold;">激发脉冲次数方差</td>
-                    <td id="std_spike">xxx</td>
-                </tr>
-                <tr style="margin-top: 15px;height: 35px;">
-                    <td style="font-size: medium;font-weight: bold;">连接权重均值</td>
-                    <td id="avg_conn_wt">xxx</td>
-                </tr>
-                <tr style="margin-top: 15px;height: 35px;">
-                    <td style="font-size: medium;font-weight: bold;">连接权重方差</td>
-                    <td id="std_conn_wt">xxx</td>
-                </tr>
-                <tr style="margin-top: 15px;height: 35px;">
-                    <td style="font-size: medium;font-weight: bold;">ANN转SNN耗时</td>
-                    <td id="stage1_time_use">xxx</td>
-                </tr>
-                <tr style="margin-top: 15px;height: 35px;">
-                    <td style="font-size: medium;font-weight: bold;">预处理耗时</td>
-                    <td id="stage2_time_use">xxx</td>
-                </tr>
-                <tr style="margin-top: 15px;height: 35px;">
-                    <td style="font-size: medium;font-weight: bold;">参数调优耗时</td>
-                    <td id="stage3_time_use">xxx</td>
-                </tr>
-                <tr style="margin-top: 15px;height: 35px;">
-                    <td style="font-size: medium;font-weight: bold;">DarwinLang文件生成耗时</td>
-                    <td id="stage4_time_use">xxx</td>
-                </tr>
-            </table>
-
-            <!-- <div style="margin-top: 30px;">
-                <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
-                <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;">统计计数</div>
-                <table id="spike_out_count_table" style="margin-left: 125px;">
-                    <tr id="out_labels">
+            <div style="width: 460px;display: inline-block;vertical-align: top;">
+                <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -120px;">转换性能分析</div>
+                <div id="use_time_bar_chart" style="width: 340px;height: 400px;margin-top: 15px;margin-left: -10px;"></div>
+            </div>
+            <div style="height:460px;margin-left: -50px;width: 520px;display: inline-block;vertical-align: top;">
+                <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;margin-left: -120px;">转换过程信息</div>
+                <table id="info_simu_table" style="margin-left: -40px;margin-right: auto;margin-top: 60px;display: inline-block;border-spacing: 0px 5px; border-collapse: separate;">
+                    <tr style="margin-top: 15px;height: 35px;">
+                        <td style="width: 80px;font-size: small;font-weight: bold;">转换总耗时</td>
+                        <td id="total_use_time">xxx</td>
                     </tr>
-                    <tr id="out_counts_tr">
+                    <tr style="margin-top: 15px;height: 35px;">
+                        <td style="font-size: small;font-weight: bold;">平均激发脉冲次数</td>
+                        <td id="avg_spike">xxx</td>
+                    </tr>
+                    <tr style="margin-top: 15px;height: 35px;">
+                        <td style="font-size: small;font-weight: bold;">激发脉冲次数方差</td>
+                        <td id="std_spike">xxx</td>
+                    </tr>
+                    <tr style="margin-top: 15px;height: 35px;">
+                        <td style="font-size: small;font-weight: bold;">连接权重均值</td>
+                        <td id="avg_conn_wt">xxx</td>
+                    </tr>
+                    <tr style="margin-top: 15px;height: 35px;">
+                        <td style="font-size: small;font-weight: bold;">连接权重方差</td>
+                        <td id="std_conn_wt">xxx</td>
+                    </tr>
+                    <tr style="margin-top: 15px;height: 35px;">
+                        <td style="font-size: small;font-weight: bold;">ANN转SNN耗时</td>
+                        <td id="stage1_time_use">xxx</td>
+                    </tr>
+                    <tr style="margin-top: 15px;height: 35px;">
+                        <td style="font-size: small;font-weight: bold;">预处理耗时</td>
+                        <td id="stage2_time_use">xxx</td>
+                    </tr>
+                    <tr style="margin-top: 15px;height: 35px;">
+                        <td style="font-size: small;font-weight: bold;">参数调优耗时</td>
+                        <td id="stage3_time_use">xxx</td>
+                    </tr>
+                    <tr style="margin-top: 15px;height: 35px;">
+                        <td style="font-size: small;font-weight: bold;">DarwinLang文件生成耗时</td>
+                        <td id="stage4_time_use">xxx</td>
                     </tr>
                 </table>
-                <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
-                     <li style="list-style: none;margin-bottom: 10px;">
-                        <img style="height: 50px;width: 50px;">
-                        <span style="text-align: center;">测试标签</span>
-                    </li>
-                    <li style="list-style: none;margin-bottom: 10px;background-color: chocolate;">
-                        <img style="height: 50px;width: 50px;">
-                        <span style="text-align: center;">测试标签</span>
-                    </li> -->
-                </ul>
-                <div id="spike_charts" style="width: 420px;height: 340px;margin-left: 25px;display: inline-block;"></div>
+                <table id="scale_factors_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;border-spacing: 0px 5px;border-collapse: separate;">
+                    <!-- <tr style="height: 35px;margin-top: 0px;">
+                        <td style="width: 100px;font-size: small;font-weight: bold;">层<br/>00Conv2D_26x26x8 参数缩放系数</td>
+                        <td>系数1</td>
+                    </tr>
+                    <tr style="height: 35px;">
+                        <td style="width: 100px;font-size: small;font-weight: bold;">缩放系数</td>
+                        <td>系数2</td>
+                    </tr> -->
+                </table>
+    
+                <!-- <div style="margin-top: 30px;">
+                    <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
+                    <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;">统计计数</div>
+                    <table id="spike_out_count_table" style="margin-left: 125px;">
+                        <tr id="out_labels">
+                        </tr>
+                        <tr id="out_counts_tr">
+                        </tr>
+                    </table>
+                    <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
+                         <li style="list-style: none;margin-bottom: 10px;">
+                            <img style="height: 50px;width: 50px;">
+                            <span style="text-align: center;">测试标签</span>
+                        </li>
+                        <li style="list-style: none;margin-bottom: 10px;background-color: chocolate;">
+                            <img style="height: 50px;width: 50px;">
+                            <span style="text-align: center;">测试标签</span>
+                        </li> -->
+                    </ul>
+                    <!-- <div id="spike_charts" style="width: 420px;height: 340px;margin-left: 25px;display: inline-block;"></div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -468,6 +480,27 @@ let log_output_lists = new Array();
                 document.getElementById("search_progress_div").style.width = "0%";
                 document.getElementById("darlang_progress_div").style.width = "0%";
                 document.getElementById("total_progress_div").style.width = "0%";
+              }else if(data.scale_factors){
+                // scale_factors_table
+                // <tr style="margin-top: 15px;height: 35px;">
+                //     <td style="width: 200px;font-size: medium;font-weight: bold;">缩放系数</td>
+                //     <td>系数2</td>
+                // </tr> -->
+                scale_fac = JSON.parse(data.scale_factors);
+                for(obj in scale_fac){
+                    let table_line = document.createElement("tr");
+                    table_line.style.height = "35px";
+                    let line_td1 = document.createElement("td");
+                    line_td1.style.width = "80px";
+                    line_td1.style.fontSize = "small";
+                    line_td1.style.fontWeight = "bold";
+                    line_td1.innerHTML = ""+obj+"层<br/>参数缩放系数";
+                    table_line.appendChild(line_td1);
+                    let line_td2 = document.createElement("td");
+                    line_td2.innerText = parseFloat(scale_fac[obj]).toFixed(3);
+                    table_line.appendChild(line_td2);
+                    document.getElementById("scale_factors_table").appendChild(table_line);
+                }
               }
           });
 

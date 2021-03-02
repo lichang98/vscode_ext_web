@@ -666,6 +666,11 @@ export function activate(context: vscode.ExtensionContext) {
 									currentPanel.webview.postMessage(JSON.stringify({"convert_info":data}));
 								}
 							});
+							fs.readFile(path.join(__dirname, "darwin2sim","target",path.basename(proj_save_path!).replace("\.dar2",""),"log","gui","test","normalization","99.9.json"),"utf-8", (evt, data)=>{
+								if(currentPanel){
+									currentPanel.webview.postMessage(JSON.stringify({"scale_factors":data}));
+								}
+							});
 							vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
 							// vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
 									// 							// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息

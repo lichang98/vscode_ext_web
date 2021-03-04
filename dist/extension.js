@@ -678,21 +678,37 @@ function activate(context) {
                     // 选择项目的保存路径
                     console.log("select path for saving project, proj name=" + data.select_save_proj_path_req);
                     const options = {
-                        saveLabel: "确认保存路径",
-                        filters: { "Darwin2 Project": ['dar2'] },
-                        defaultUri: vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req + ".dar2"))
+                        canSelectFiles: false,
+                        canSelectFolders: true,
+                        openLabel: "选择目录",
+                        title: "选择项目保存位置"
                     };
-                    vscode.window.showSaveDialog(options).then(fileUri => {
+                    vscode.window.showOpenDialog(options).then(fileUri => {
                         if (fileUri) {
-                            console.log("Selected path for saving project is: " + fileUri.fsPath);
-                            proj_save_path = fileUri.fsPath; // 记录项目保存路径
-                            // 返回给webview 选择的目标路径
+                            console.log("选择的项目保存路径为：" + fileUri[0].fsPath);
+                            proj_save_path = path.join(fileUri[0].fsPath, data.select_save_proj_path_req + ".dar2");
                             if (currentPanel) {
-                                console.log("发送保存路径到webview..., 路径=" + fileUri.fsPath);
-                                currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": fileUri.fsPath }));
+                                console.log("发送保存路径到webview..., 路径=" + proj_save_path);
+                                currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": proj_save_path }));
                             }
                         }
                     });
+                    // const options:vscode.SaveDialogOptions = {
+                    // 	saveLabel: "确认保存路径",
+                    // 	filters:{"Darwin2 Project":['dar2']},
+                    // 	defaultUri:vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req+".dar2"))
+                    // };
+                    // vscode.window.showSaveDialog(options).then(fileUri => {
+                    // 	if(fileUri){
+                    // 		console.log("Selected path for saving project is: "+fileUri.fsPath);
+                    // 		proj_save_path = fileUri.fsPath; // 记录项目保存路径
+                    // 		// 返回给webview 选择的目标路径
+                    // 		if(currentPanel){
+                    // 			console.log("发送保存路径到webview..., 路径="+fileUri.fsPath);
+                    // 			currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": fileUri.fsPath}));
+                    // 		}
+                    // 	}
+                    // });
                 }
             });
         }
@@ -845,21 +861,37 @@ function activate(context) {
                 // 选择项目的保存路径
                 console.log("select path for saving project, proj name=" + data.select_save_proj_path_req);
                 const options = {
-                    saveLabel: "确认保存路径",
-                    filters: { "Darwin2 Project": ['dar2'] },
-                    defaultUri: vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req + ".dar2"))
+                    canSelectFiles: false,
+                    canSelectFolders: true,
+                    openLabel: "选择目录",
+                    title: "选择项目保存位置"
                 };
-                vscode.window.showSaveDialog(options).then(fileUri => {
+                vscode.window.showOpenDialog(options).then(fileUri => {
                     if (fileUri) {
-                        console.log("Selected path for saving project is: " + fileUri.fsPath);
-                        proj_save_path = fileUri.fsPath; // 记录项目保存路径
-                        // 返回给webview 选择的目标路径
+                        console.log("选择的项目保存路径为：" + fileUri[0].fsPath);
+                        proj_save_path = path.join(fileUri[0].fsPath, data.select_save_proj_path_req + ".dar2");
                         if (currentPanel) {
-                            console.log("发送保存路径到webview..., 路径=" + fileUri.fsPath);
-                            currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": fileUri.fsPath }));
+                            console.log("发送保存路径到webview..., 路径=" + proj_save_path);
+                            currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": proj_save_path }));
                         }
                     }
                 });
+                // const options:vscode.SaveDialogOptions = {
+                // 	saveLabel: "确认保存路径",
+                // 	filters:{"Darwin2 Project":['dar2']},
+                // 	defaultUri:vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req+".dar2"))
+                // };
+                // vscode.window.showSaveDialog(options).then(fileUri => {
+                // 	if(fileUri){
+                // 		console.log("Selected path for saving project is: "+fileUri.fsPath);
+                // 		proj_save_path = fileUri.fsPath; // 记录项目保存路径
+                // 		// 返回给webview 选择的目标路径
+                // 		if(currentPanel){
+                // 			console.log("发送保存路径到webview..., 路径="+fileUri.fsPath);
+                // 			currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": fileUri.fsPath}));
+                // 		}
+                // 	}
+                // });
             }
         });
     }
@@ -951,7 +983,7 @@ function activate(context) {
                 TreeViewProvider_1.addSlfFile("x_norm");
                 TreeViewProvider_1.addSlfFile("x_test");
                 TreeViewProvider_1.addSlfFile("y_test");
-                TreeViewProvider_1.addSlfFile("model_file");
+                TreeViewProvider_1.addSlfFile(path.basename(proj_data.model_path));
                 if (proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children) {
                     if (inMemTreeViewStruct[0].children[0].children[0].children) {
                         inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("x_norm"));
@@ -964,7 +996,7 @@ function activate(context) {
                     }
                 }
                 if (proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]) {
-                    (_a = inMemTreeViewStruct[0].children[1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("model_file"));
+                    (_a = inMemTreeViewStruct[0].children[1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(proj_data.model_path)));
                 }
                 // add darwinlang and bin files
                 TreeViewProvider_1.ITEM_ICON_MAP.set("SNN模型", "imgs/file.png");
@@ -1279,10 +1311,10 @@ function activate(context) {
                     console.log("selected path: " + fileUri[0].fsPath);
                     model_file_path = fileUri[0].fsPath;
                     // 添加到treeview下
-                    TreeViewProvider_1.ITEM_ICON_MAP.set("model_file", "imgs/file.png");
+                    // ITEM_ICON_MAP.set("model_file","imgs/file.png");
+                    TreeViewProvider_1.ITEM_ICON_MAP.set(path.basename(model_file_path), "imgs/file.png");
                     if (treeview.data[0].children && treeview.data[0].children[1].children) {
-                        console.log("添加新的文件");
-                        treeview.data[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("model_file"));
+                        treeview.data[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(model_file_path)));
                         treeview.refresh();
                     }
                     // 拷贝文件到项目并重命名
@@ -5346,12 +5378,21 @@ class TreeItemNode extends vscode_1.TreeItem {
         else if (label.search("darlang.json") !== -1) {
             this.contextValue = "darwinlang_json_file";
         }
+        if (label.indexOf("model_file_") >= 0) {
+            this.label = label.replace("model_file_", "");
+            this.contextValue = "model_file";
+        }
+        else {
+            this.label = label;
+        }
+        this.iconPath = TreeItemNode.getIconUriForLabel(this.label);
     }
     // __filename：当前文件的路径
     // 重点讲解 Uri.file(join(__filename,'..', '..') 算是一种固定写法
     // Uri.file(join(__filename,'..','assert', ITEM_ICON_MAP.get(label)+''));   写成这样图标出不来
     // 所以小伙伴们就以下面这种写法编写
     static getIconUriForLabel(label) {
+        console.log("测试 getIconUriForLanel, label=" + label);
         console.log("path:" + vscode_1.Uri.file(path_1.join(__filename, '..', "resources", exports.ITEM_ICON_MAP.get(label) + '')).toString());
         return vscode_1.Uri.file(path_1.join(__filename, '..', "..", "src", "resources", exports.ITEM_ICON_MAP.get(label) + ''));
     }

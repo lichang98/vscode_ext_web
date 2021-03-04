@@ -684,22 +684,38 @@ export function activate(context: vscode.ExtensionContext) {
 				}else if(data.select_save_proj_path_req){
 					// 选择项目的保存路径
 					console.log("select path for saving project, proj name="+data.select_save_proj_path_req);
-					const options:vscode.SaveDialogOptions = {
-						saveLabel: "确认保存路径",
-						filters:{"Darwin2 Project":['dar2']},
-						defaultUri:vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req+".dar2"))
+					const options:vscode.OpenDialogOptions = {
+						canSelectFiles:false,
+						canSelectFolders:true,
+						openLabel:"选择目录",
+						title:"选择项目保存位置"
 					};
-					vscode.window.showSaveDialog(options).then(fileUri => {
+					vscode.window.showOpenDialog(options).then(fileUri => {
 						if(fileUri){
-							console.log("Selected path for saving project is: "+fileUri.fsPath);
-							proj_save_path = fileUri.fsPath; // 记录项目保存路径
-							// 返回给webview 选择的目标路径
+							console.log("选择的项目保存路径为："+fileUri[0].fsPath);
+							proj_save_path = path.join(fileUri[0].fsPath, data.select_save_proj_path_req+".dar2");
 							if(currentPanel){
-								console.log("发送保存路径到webview..., 路径="+fileUri.fsPath);
-								currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": fileUri.fsPath}));
+								console.log("发送保存路径到webview..., 路径="+proj_save_path);
+								currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": proj_save_path}));
 							}
 						}
 					});
+					// const options:vscode.SaveDialogOptions = {
+					// 	saveLabel: "确认保存路径",
+					// 	filters:{"Darwin2 Project":['dar2']},
+					// 	defaultUri:vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req+".dar2"))
+					// };
+					// vscode.window.showSaveDialog(options).then(fileUri => {
+					// 	if(fileUri){
+					// 		console.log("Selected path for saving project is: "+fileUri.fsPath);
+					// 		proj_save_path = fileUri.fsPath; // 记录项目保存路径
+					// 		// 返回给webview 选择的目标路径
+					// 		if(currentPanel){
+					// 			console.log("发送保存路径到webview..., 路径="+fileUri.fsPath);
+					// 			currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": fileUri.fsPath}));
+					// 		}
+					// 	}
+					// });
 				}
 			});
 		}
@@ -849,22 +865,38 @@ export function activate(context: vscode.ExtensionContext) {
 			}else if(data.select_save_proj_path_req){
 				// 选择项目的保存路径
 				console.log("select path for saving project, proj name="+data.select_save_proj_path_req);
-				const options:vscode.SaveDialogOptions = {
-					saveLabel: "确认保存路径",
-					filters:{"Darwin2 Project":['dar2']},
-					defaultUri:vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req+".dar2"))
+				const options:vscode.OpenDialogOptions = {
+					canSelectFiles:false,
+					canSelectFolders:true,
+					openLabel:"选择目录",
+					title:"选择项目保存位置"
 				};
-				vscode.window.showSaveDialog(options).then(fileUri => {
+				vscode.window.showOpenDialog(options).then(fileUri => {
 					if(fileUri){
-						console.log("Selected path for saving project is: "+fileUri.fsPath);
-						proj_save_path = fileUri.fsPath; // 记录项目保存路径
-						// 返回给webview 选择的目标路径
+						console.log("选择的项目保存路径为："+fileUri[0].fsPath);
+						proj_save_path = path.join(fileUri[0].fsPath, data.select_save_proj_path_req+".dar2");
 						if(currentPanel){
-							console.log("发送保存路径到webview..., 路径="+fileUri.fsPath);
-							currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": fileUri.fsPath}));
+							console.log("发送保存路径到webview..., 路径="+proj_save_path);
+							currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": proj_save_path}));
 						}
 					}
 				});
+				// const options:vscode.SaveDialogOptions = {
+				// 	saveLabel: "确认保存路径",
+				// 	filters:{"Darwin2 Project":['dar2']},
+				// 	defaultUri:vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req+".dar2"))
+				// };
+				// vscode.window.showSaveDialog(options).then(fileUri => {
+				// 	if(fileUri){
+				// 		console.log("Selected path for saving project is: "+fileUri.fsPath);
+				// 		proj_save_path = fileUri.fsPath; // 记录项目保存路径
+				// 		// 返回给webview 选择的目标路径
+				// 		if(currentPanel){
+				// 			console.log("发送保存路径到webview..., 路径="+fileUri.fsPath);
+				// 			currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": fileUri.fsPath}));
+				// 		}
+				// 	}
+				// });
 			}
 		});
 	}
@@ -960,7 +992,7 @@ export function activate(context: vscode.ExtensionContext) {
 				addSlfFile("x_norm");
 				addSlfFile("x_test");
 				addSlfFile("y_test");
-				addSlfFile("model_file");
+				addSlfFile(path.basename(proj_data.model_path));
 				if(proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children){
 					if(inMemTreeViewStruct[0].children[0].children[0].children){
 						inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeItemNode("x_norm"));
@@ -973,7 +1005,7 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				}
 				if(proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]){
-					inMemTreeViewStruct[0].children[1].children?.push(new TreeItemNode("model_file"));
+					inMemTreeViewStruct[0].children[1].children?.push(new TreeItemNode("model_file_"+path.basename(proj_data.model_path)));
 				}
 				// add darwinlang and bin files
 				ITEM_ICON_MAP.set("SNN模型","imgs/file.png");
@@ -1312,10 +1344,10 @@ export function activate(context: vscode.ExtensionContext) {
 					console.log("selected path: "+fileUri[0].fsPath);
 					model_file_path = fileUri[0].fsPath;
 					// 添加到treeview下
-					ITEM_ICON_MAP.set("model_file","imgs/file.png");
+					// ITEM_ICON_MAP.set("model_file","imgs/file.png");
+					ITEM_ICON_MAP.set(path.basename(model_file_path), "imgs/file.png");
 					if(treeview.data[0].children && treeview.data[0].children[1].children){
-						console.log("添加新的文件");
-						treeview.data[0].children[1].children.push(new TreeItemNode("model_file"));
+						treeview.data[0].children[1].children.push(new TreeItemNode("model_file_"+path.basename(model_file_path)));
 						treeview.refresh();
 					}
 					// 拷贝文件到项目并重命名

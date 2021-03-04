@@ -1,6 +1,7 @@
 import { TreeItem, TreeItemCollapsibleState, TreeDataProvider, Uri, window } from 'vscode';
 import { join } from 'path';
 import * as vscode from "vscode";
+import { Console } from 'console';
 
 // 创建每一项 label 对应的图片名称
 // 其实就是一个Map集合，用 ts 的写法
@@ -42,6 +43,14 @@ export class TreeItemNode extends TreeItem {
         }else if(label.search("darlang.json") !== -1){
             this.contextValue = "darwinlang_json_file";
         }
+
+        if(label.indexOf("model_file_") >=0){
+            this.label = label.replace("model_file_","");
+            this.contextValue = "model_file";
+        }else{
+            this.label = label;
+        }
+        this.iconPath = TreeItemNode.getIconUriForLabel(this.label);
     }
 
     // command: 为每项添加点击事件的命令
@@ -62,6 +71,7 @@ export class TreeItemNode extends TreeItem {
     // Uri.file(join(__filename,'..','assert', ITEM_ICON_MAP.get(label)+''));   写成这样图标出不来
     // 所以小伙伴们就以下面这种写法编写
     static getIconUriForLabel(label: string):Uri {
+        console.log("测试 getIconUriForLanel, label="+label);
         console.log("path:"+Uri.file(join(__filename,'..', "resources", ITEM_ICON_MAP.get(label)+'')).toString());
         return Uri.file(join(__filename,'..',"..","src", "resources", ITEM_ICON_MAP.get(label)+''));
     }

@@ -38,6 +38,8 @@
 		"onCommand:convertor.new_proj",
 		"onCommand:snn_model_ac.show_snn_model",
 		"onCommand:item_convertor.start_convert",
+		"onCommand:item_darwinLang_convertor.convert_to_darwin2",
+		"onCommand:item_darwinLang_convertor.convert_to_darwin3",
 		"*"
 	],
 	"main": "./dist/extension.js",
@@ -102,6 +104,14 @@
 			{
 				"command": "item_darwinLang_convertor.start_convert",
 				"title": "转换生成darwinLang"
+			},
+			{
+				"command": "item_darwinLang_convertor.convert_to_darwin2",
+				"title": "转换生成达尔文二代可部署文件"
+			},
+			{
+				"command": "item_darwinLang_convertor.convert_to_darwin3",
+				"title": "转换生成达尔文三代可部署文件"
 			}
 		],
 		"menus": {
@@ -168,6 +178,14 @@
 				{
 					"command": "treeView.edit_file",
 					"when": "view == treeView-item && viewItem == darwinlang_json_file"
+				},
+				{
+					"command": "item_darwinLang_convertor.convert_to_darwin2",
+					"when": "view == treeView-item && viewItem == SNN模型"
+				},
+				{
+					"command": "item_darwinLang_convertor.convert_to_darwin3",
+					"when": "view == treeView-item && viewItem == SNN模型"
 				}
 			]
 		},

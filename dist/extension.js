@@ -1011,6 +1011,10 @@ function activate(context) {
                 TreeViewProvider_1.ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
                 (_d = inMemTreeViewStruct[0].children) === null || _d === void 0 ? void 0 : _d.push(new TreeViewProvider_1.TreeItemNode("SNN二进制模型", []));
                 for (let i = 0; i < darwinlang_bin_paths.length; ++i) {
+                    if (path.basename(darwinlang_bin_paths[i].toString()).indexOf("clear") >= 0 ||
+                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("enable") >= 0) {
+                        continue;
+                    }
                     if (inMemTreeViewStruct[0].children) {
                         var child_len = inMemTreeViewStruct[0].children.length;
                         TreeViewProvider_1.ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
@@ -1468,7 +1472,7 @@ function activate(context) {
                 fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out"), (err, files) => {
                     files.forEach(file => {
                         var _a;
-                        if (file !== "inputs") {
+                        if (file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1) {
                             darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out", file));
                             TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
                             if (inMemTreeViewStruct[0].children) {
@@ -1486,6 +1490,13 @@ function activate(context) {
             treeViewSNNModelView.refresh();
         }
         // treeViewBinConvertDarLang.refresh();
+    });
+    vscode.commands.registerCommand("item_darwinLang_convertor.convert_to_darwin2", function () {
+        console.log("目标转换为darwin2二进制文件");
+        vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
+    });
+    vscode.commands.registerCommand("item_darwinLang_convertor.convert_to_darwin3", function () {
+        console.log("目标转换为darwin3二进制文件");
     });
     vscode.commands.executeCommand("darwin2.helloWorld");
     function auto_save_with_check() {

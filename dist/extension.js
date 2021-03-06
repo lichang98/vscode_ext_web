@@ -999,25 +999,33 @@ function activate(context) {
                     (_a = inMemTreeViewStruct[0].children[1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(proj_data.model_path)));
                 }
                 // add darwinlang and bin files
-                TreeViewProvider_1.ITEM_ICON_MAP.set("SNN模型", "imgs/file.png");
+                // ITEM_ICON_MAP.set("SNN模型","imgs/darwin_icon_model_new.png");
+                TreeViewProvider_1.addDarwinFold("SNN模型");
                 (_b = inMemTreeViewStruct[0].children) === null || _b === void 0 ? void 0 : _b.push(new TreeViewProvider_1.TreeItemNode("SNN模型", []));
                 for (let i = 0; i < darwinlang_file_paths.length; ++i) {
-                    TreeViewProvider_1.ITEM_ICON_MAP.set(path.basename(darwinlang_file_paths[i].toString()), "imgs/file.png");
+                    // ITEM_ICON_MAP.set(path.basename(darwinlang_file_paths[i].toString()),"imgs/data_file_icon_new.png");
+                    TreeViewProvider_1.addDarwinFiles(path.basename(darwinlang_file_paths[i].toString()));
                     if (inMemTreeViewStruct[0].children) {
                         var child_len = inMemTreeViewStruct[0].children.length;
                         (_c = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _c === void 0 ? void 0 : _c.push(new TreeViewProvider_1.TreeItemNode(path.basename(darwinlang_file_paths[i].toString())));
                     }
                 }
-                TreeViewProvider_1.ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
+                // ITEM_ICON_MAP.set("SNN二进制模型", "imgs/darwin_icon_model_new.png");
+                TreeViewProvider_1.addDarwinFold("SNN二进制模型");
                 (_d = inMemTreeViewStruct[0].children) === null || _d === void 0 ? void 0 : _d.push(new TreeViewProvider_1.TreeItemNode("SNN二进制模型", []));
                 for (let i = 0; i < darwinlang_bin_paths.length; ++i) {
                     if (path.basename(darwinlang_bin_paths[i].toString()).indexOf("clear") >= 0 ||
-                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("enable") >= 0) {
+                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("enable") >= 0 ||
+                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("re_config") >= 0 ||
+                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("nodelist") >= 0 ||
+                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("linkout") >= 0 ||
+                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("layerWidth") >= 0) {
                         continue;
                     }
                     if (inMemTreeViewStruct[0].children) {
                         var child_len = inMemTreeViewStruct[0].children.length;
-                        TreeViewProvider_1.ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
+                        // ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
+                        TreeViewProvider_1.addDarwinFiles(path.basename(darwinlang_bin_paths[i].toString()));
                         (_e = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _e === void 0 ? void 0 : _e.push(new TreeViewProvider_1.TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
                     }
                 }
@@ -1433,7 +1441,8 @@ function activate(context) {
         var _a;
         // inMemTreeViewDarLang = [];
         if (!TreeViewProvider_1.ITEM_ICON_MAP.has("SNN模型")) {
-            TreeViewProvider_1.ITEM_ICON_MAP.set("SNN模型", "imgs/file.png");
+            // ITEM_ICON_MAP.set("SNN模型","imgs/file.png");
+            TreeViewProvider_1.addDarwinFold("SNN模型");
             (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("SNN模型", []));
             darwinlang_file_paths.splice(0);
             if (inMemTreeViewStruct[0].children) {
@@ -1442,7 +1451,8 @@ function activate(context) {
                     files.forEach(file => {
                         var _a;
                         darwinlang_file_paths.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", file));
-                        TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
+                        // ITEM_ICON_MAP.set(file, "imgs/file.png");
+                        TreeViewProvider_1.addDarwinFiles(file);
                         if (inMemTreeViewStruct[0].children) {
                             (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
                         }
@@ -1476,7 +1486,10 @@ function activate(context) {
                             darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out", file));
                             TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
                             if (inMemTreeViewStruct[0].children) {
-                                (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
+                                if (file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
+                                    file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1) {
+                                    (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
+                                }
                             }
                         }
                     });
@@ -5335,30 +5348,38 @@ module.exports = function isAxiosError(payload) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TreeViewProvider = exports.TreeItemNode = exports.addSlfFile = exports.addSlfProj = exports.ITEM_ICON_MAP = void 0;
+exports.TreeViewProvider = exports.TreeItemNode = exports.addDarwinFiles = exports.addDarwinFold = exports.addSlfFile = exports.addSlfProj = exports.ITEM_ICON_MAP = void 0;
 const vscode_1 = __webpack_require__(1);
 const path_1 = __webpack_require__(2);
 const vscode = __webpack_require__(1);
 // 创建每一项 label 对应的图片名称
 // 其实就是一个Map集合，用 ts 的写法
 exports.ITEM_ICON_MAP = new Map([
-    ['项目', 'imgs/project.png'],
-    ['数据', 'imgs/import_data.png'],
-    ['ANN模型', 'imgs/import_model.png'],
-    ['训练数据', "imgs/file.png"],
-    ['测试数据', "imgs/file.png"],
-    ['测试数据标签', "imgs/file.png"]
+    ['项目', 'imgs/proj_icon_new.png'],
+    ['数据', 'imgs/data_icon_new.png'],
+    ['ANN模型', 'imgs/ann_model.png'],
+    ['训练数据', "imgs/train_data_new.png"],
+    ['测试数据', "imgs/train_data_new.png"],
+    ['测试数据标签', "imgs/data_label_icon_new.png"]
     // ['转换与仿真',"imgs/simulate_run.png"],
     // ['测试添加',"imgs/simulate_run.png"]
 ]);
 function addSlfProj(label) {
-    exports.ITEM_ICON_MAP.set(label, 'imgs/project.png');
+    exports.ITEM_ICON_MAP.set(label, 'imgs/proj_icon_new.png');
 }
 exports.addSlfProj = addSlfProj;
 function addSlfFile(label) {
-    exports.ITEM_ICON_MAP.set(label, "imgs/file.png");
+    exports.ITEM_ICON_MAP.set(label, "imgs/data_file_icon_new.png");
 }
 exports.addSlfFile = addSlfFile;
+function addDarwinFold(label) {
+    exports.ITEM_ICON_MAP.set(label, "imgs/darwin_model_icon_new.png");
+}
+exports.addDarwinFold = addDarwinFold;
+function addDarwinFiles(label) {
+    exports.ITEM_ICON_MAP.set(label, "imgs/data_file_icon_new.png");
+}
+exports.addDarwinFiles = addDarwinFiles;
 // 第一步：创建单项的节点(item)的类
 class TreeItemNode extends vscode_1.TreeItem {
     constructor(

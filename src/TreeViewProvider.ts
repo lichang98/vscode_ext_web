@@ -6,22 +6,30 @@ import { Console } from 'console';
 // 创建每一项 label 对应的图片名称
 // 其实就是一个Map集合，用 ts 的写法
 export let ITEM_ICON_MAP = new Map<string, string>([
-    ['项目', 'imgs/project.png'],
-    ['数据', 'imgs/import_data.png'],
-    ['ANN模型', 'imgs/import_model.png'],
-    ['训练数据', "imgs/file.png"],
-    ['测试数据', "imgs/file.png"],
-    ['测试数据标签', "imgs/file.png"]
+    ['项目', 'imgs/proj_icon_new.png'],
+    ['数据', 'imgs/data_icon_new.png'],
+    ['ANN模型', 'imgs/ann_model.png'],
+    ['训练数据', "imgs/train_data_new.png"],
+    ['测试数据', "imgs/train_data_new.png"],
+    ['测试数据标签', "imgs/data_label_icon_new.png"]
     // ['转换与仿真',"imgs/simulate_run.png"],
     // ['测试添加',"imgs/simulate_run.png"]
 ]);
 
 export function addSlfProj(label:string){
-    ITEM_ICON_MAP.set(label, 'imgs/project.png');
+    ITEM_ICON_MAP.set(label, 'imgs/proj_icon_new.png');
 }
 
 export function addSlfFile(label:string){
-    ITEM_ICON_MAP.set(label, "imgs/file.png");
+    ITEM_ICON_MAP.set(label, "imgs/data_file_icon_new.png");
+}
+
+export function addDarwinFold(label:string){
+    ITEM_ICON_MAP.set(label, "imgs/darwin_model_icon_new.png");
+}
+
+export function addDarwinFiles(label:string){
+    ITEM_ICON_MAP.set(label, "imgs/data_file_icon_new.png");
 }
 
 // 第一步：创建单项的节点(item)的类

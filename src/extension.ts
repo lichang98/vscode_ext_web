@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as child_process from 'child_process';
 import * as axios from 'axios';
 // 引入 TreeViewProvider 的类
-import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile } from './TreeViewProvider';
+import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile ,addDarwinFold, addDarwinFiles} from './TreeViewProvider';
 import {ITEM_ICON_MAP_DARLANG, TreeItemNodeDarLang, TreeViewProviderDarLang} from "./TreeViewProviderDarLang";
 import { TreeViewProviderData } from "./TreeViewData";
 import { TreeViewProviderModel } from "./TreeViewModel";
@@ -1008,26 +1008,34 @@ export function activate(context: vscode.ExtensionContext) {
 					inMemTreeViewStruct[0].children[1].children?.push(new TreeItemNode("model_file_"+path.basename(proj_data.model_path)));
 				}
 				// add darwinlang and bin files
-				ITEM_ICON_MAP.set("SNN模型","imgs/file.png");
+				// ITEM_ICON_MAP.set("SNN模型","imgs/darwin_icon_model_new.png");
+				addDarwinFold("SNN模型");
 				inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN模型",[]));
 				for(let i=0;i<darwinlang_file_paths.length;++i){
-					ITEM_ICON_MAP.set(path.basename(darwinlang_file_paths[i].toString()),"imgs/file.png");
+					// ITEM_ICON_MAP.set(path.basename(darwinlang_file_paths[i].toString()),"imgs/data_file_icon_new.png");
+					addDarwinFiles(path.basename(darwinlang_file_paths[i].toString()));
 					if(inMemTreeViewStruct[0].children){
 						var child_len = inMemTreeViewStruct[0].children.length;
 						inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(path.basename(darwinlang_file_paths[i].toString())));
 					}
 				}
 
-				ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
+				// ITEM_ICON_MAP.set("SNN二进制模型", "imgs/darwin_icon_model_new.png");
+				addDarwinFold("SNN二进制模型");
 				inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN二进制模型",[]));
 				for(let i=0;i<darwinlang_bin_paths.length;++i){
 					if(path.basename(darwinlang_bin_paths[i].toString()).indexOf("clear") >=0 || 
-							path.basename(darwinlang_bin_paths[i].toString()).indexOf("enable") >=0){
+							path.basename(darwinlang_bin_paths[i].toString()).indexOf("enable") >=0||
+							path.basename(darwinlang_bin_paths[i].toString()).indexOf("re_config") >=0||
+							path.basename(darwinlang_bin_paths[i].toString()).indexOf("nodelist")>=0||
+							path.basename(darwinlang_bin_paths[i].toString()).indexOf("linkout") >=0||
+							path.basename(darwinlang_bin_paths[i].toString()).indexOf("layerWidth") >=0){
 								continue;
 					}
 					if(inMemTreeViewStruct[0].children){
 						var child_len = inMemTreeViewStruct[0].children.length;
-						ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
+						// ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
+						addDarwinFiles(path.basename(darwinlang_bin_paths[i].toString()));
 						inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
 					}
 				}
@@ -1471,7 +1479,8 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand("item_darwinLang_convertor.start_convert", ()=>{
 		// inMemTreeViewDarLang = [];
 		if(!ITEM_ICON_MAP.has("SNN模型")){
-			ITEM_ICON_MAP.set("SNN模型","imgs/file.png");
+			// ITEM_ICON_MAP.set("SNN模型","imgs/file.png");
+			addDarwinFold("SNN模型");
 			inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN模型",[]));
 			darwinlang_file_paths.splice(0);
 			if(inMemTreeViewStruct[0].children){
@@ -1479,7 +1488,8 @@ export function activate(context: vscode.ExtensionContext) {
 				fs.readdir(path.join(__dirname, "darwin2sim","model_out", path.basename(proj_save_path!).replace("\.dar2",""), "darlang_out"), (err, files) => {
 					files.forEach(file => {
 						darwinlang_file_paths.push(path.join(__dirname, "darwin2sim","model_out", path.basename(proj_save_path!).replace("\.dar2",""), "darlang_out", file));
-						ITEM_ICON_MAP.set(file, "imgs/file.png");
+						// ITEM_ICON_MAP.set(file, "imgs/file.png");
+						addDarwinFiles(file);
 						if(inMemTreeViewStruct[0].children){
 							inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
 						}
@@ -1512,7 +1522,11 @@ export function activate(context: vscode.ExtensionContext) {
 							darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""), "bin_darwin_out", file));
 							ITEM_ICON_MAP.set(file, "imgs/file.png");
 							if(inMemTreeViewStruct[0].children){
-								inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
+								if(file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
+									file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1){
+										inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
+								}
+								
 							}
 						}
 					});

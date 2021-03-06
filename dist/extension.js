@@ -1232,7 +1232,8 @@ function activate(context) {
                     console.log("selected path: " + fileUri[0].fsPath);
                     x_norm_data_path = fileUri[0].fsPath;
                     // 添加到treeview下
-                    TreeViewProvider_1.ITEM_ICON_MAP.set("x_norm", "imgs/file.png");
+                    // ITEM_ICON_MAP.set("x_norm","imgs/file.png");
+                    TreeViewProvider_1.addSlfFile("x_norm");
                     if (treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children) {
                         console.log("添加新的文件");
                         treeview.data[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("x_norm"));
@@ -1262,7 +1263,8 @@ function activate(context) {
                     console.log("selected path: " + fileUri[0].fsPath);
                     x_test_data_path = fileUri[0].fsPath;
                     // 添加到treeview下
-                    TreeViewProvider_1.ITEM_ICON_MAP.set("x_test", "imgs/file.png");
+                    // ITEM_ICON_MAP.set("x_test","imgs/file.png");
+                    TreeViewProvider_1.addSlfFile("x_test");
                     if (treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[1].children) {
                         console.log("添加新的文件");
                         treeview.data[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("x_test"));
@@ -1293,7 +1295,8 @@ function activate(context) {
                     y_test_data_path = fileUri[0].fsPath;
                     // 添加到treeview下
                     // FIXME
-                    TreeViewProvider_1.ITEM_ICON_MAP.set("y_test", "imgs/file.png");
+                    // ITEM_ICON_MAP.set("y_test","imgs/file.png");
+                    TreeViewProvider_1.addSlfFile("y_test");
                     if (treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[2].children) {
                         console.log("添加新的文件");
                         treeview.data[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode("y_test"));
@@ -1324,7 +1327,8 @@ function activate(context) {
                     model_file_path = fileUri[0].fsPath;
                     // 添加到treeview下
                     // ITEM_ICON_MAP.set("model_file","imgs/file.png");
-                    TreeViewProvider_1.ITEM_ICON_MAP.set(path.basename(model_file_path), "imgs/file.png");
+                    // ITEM_ICON_MAP.set(path.basename(model_file_path), "imgs/file.png");
+                    TreeViewProvider_1.addSlfFile(path.basename(model_file_path));
                     if (treeview.data[0].children && treeview.data[0].children[1].children) {
                         treeview.data[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(model_file_path)));
                         treeview.refresh();
@@ -6300,11 +6304,11 @@ function getConvertorPageV2() {
     
     </button>
     <!-- 模态框（Modal） -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: #333;">
-      <div class="modal-dialog" style="background-color: #333;">
-        <div class="modal-content" style="background-color: #333;">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: white;color: #333;">
+      <div class="modal-dialog" style="background-color: white;">
+        <div class="modal-content" style="background-color: white;">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: antiquewhite;">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);">
               &times;
             </button>
             <h4 class="modal-title" id="myModalLabel">
@@ -6356,11 +6360,11 @@ function getConvertorPageV2() {
     </div>
     
     <!--项目属性修改-->
-    <div class="modal fade" id="myModalProjRefact" tabindex="-1" role="dialog" aria-labelledby="myModalLabelProjRefact" aria-hidden="true" style="background-color: #333;">
-      <div class="modal-dialog" style="background-color: #333;">
-        <div class="modal-content" style="background-color: #333;">
+    <div class="modal fade" id="myModalProjRefact" tabindex="-1" role="dialog" aria-labelledby="myModalLabelProjRefact" aria-hidden="true" style="background-color: white;color: #333;">
+      <div class="modal-dialog" style="background-color: white;">
+        <div class="modal-content" style="background-color: white;">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: antiquewhite;">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);">
               &times;
             </button>
             <h4 class="modal-title" id="myModalLabelProjRefact">
@@ -6416,13 +6420,13 @@ function getConvertorPageV2() {
     
     body {
       padding: 25px;
-      background-color: black;
+      background-color: rgb(250, 253, 253);
       color: white;
       font-size: 25px;
     }
     
     .dark-mode {
-      background-color: rgb(61, 57, 57);
+      background-color: rgb(250, 253, 253);
       color: white;
     }
       @font-face {

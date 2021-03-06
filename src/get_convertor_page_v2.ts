@@ -765,11 +765,11 @@ export function getConvertorPageV2(){
     
     </button>
     <!-- 模态框（Modal） -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: #333;">
-      <div class="modal-dialog" style="background-color: #333;">
-        <div class="modal-content" style="background-color: #333;">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: white;color: #333;">
+      <div class="modal-dialog" style="background-color: white;">
+        <div class="modal-content" style="background-color: white;">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: antiquewhite;">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);">
               &times;
             </button>
             <h4 class="modal-title" id="myModalLabel">
@@ -821,11 +821,11 @@ export function getConvertorPageV2(){
     </div>
     
     <!--项目属性修改-->
-    <div class="modal fade" id="myModalProjRefact" tabindex="-1" role="dialog" aria-labelledby="myModalLabelProjRefact" aria-hidden="true" style="background-color: #333;">
-      <div class="modal-dialog" style="background-color: #333;">
-        <div class="modal-content" style="background-color: #333;">
+    <div class="modal fade" id="myModalProjRefact" tabindex="-1" role="dialog" aria-labelledby="myModalLabelProjRefact" aria-hidden="true" style="background-color: white;color: #333;">
+      <div class="modal-dialog" style="background-color: white;">
+        <div class="modal-content" style="background-color: white;">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: antiquewhite;">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);">
               &times;
             </button>
             <h4 class="modal-title" id="myModalLabelProjRefact">
@@ -881,13 +881,13 @@ export function getConvertorPageV2(){
     
     body {
       padding: 25px;
-      background-color: black;
+      background-color: rgb(250, 253, 253);
       color: white;
       font-size: 25px;
     }
     
     .dark-mode {
-      background-color: rgb(61, 57, 57);
+      background-color: rgb(250, 253, 253);
       color: white;
     }
       @font-face {

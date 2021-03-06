@@ -1267,7 +1267,8 @@ export function activate(context: vscode.ExtensionContext) {
 					console.log("selected path: "+fileUri[0].fsPath);
 					x_norm_data_path = fileUri[0].fsPath;
 					// 添加到treeview下
-					ITEM_ICON_MAP.set("x_norm","imgs/file.png");
+					// ITEM_ICON_MAP.set("x_norm","imgs/file.png");
+					addSlfFile("x_norm");
 					if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children){
 						console.log("添加新的文件");
 						treeview.data[0].children[0].children[0].children.push(new TreeItemNode("x_norm"));
@@ -1297,7 +1298,8 @@ export function activate(context: vscode.ExtensionContext) {
 					x_test_data_path = fileUri[0].fsPath;
 					
 					// 添加到treeview下
-					ITEM_ICON_MAP.set("x_test","imgs/file.png");
+					// ITEM_ICON_MAP.set("x_test","imgs/file.png");
+					addSlfFile("x_test");
 					if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[1].children){
 						console.log("添加新的文件");
 						treeview.data[0].children[0].children[1].children.push(new TreeItemNode("x_test"));
@@ -1327,7 +1329,8 @@ export function activate(context: vscode.ExtensionContext) {
 					y_test_data_path = fileUri[0].fsPath;
 					// 添加到treeview下
 					// FIXME
-					ITEM_ICON_MAP.set("y_test","imgs/file.png");
+					// ITEM_ICON_MAP.set("y_test","imgs/file.png");
+					addSlfFile("y_test");
 					if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[2].children){
 						console.log("添加新的文件");
 						treeview.data[0].children[0].children[2].children.push(new TreeItemNode("y_test"));
@@ -1357,7 +1360,8 @@ export function activate(context: vscode.ExtensionContext) {
 					model_file_path = fileUri[0].fsPath;
 					// 添加到treeview下
 					// ITEM_ICON_MAP.set("model_file","imgs/file.png");
-					ITEM_ICON_MAP.set(path.basename(model_file_path), "imgs/file.png");
+					// ITEM_ICON_MAP.set(path.basename(model_file_path), "imgs/file.png");
+					addSlfFile(path.basename(model_file_path));
 					if(treeview.data[0].children && treeview.data[0].children[1].children){
 						treeview.data[0].children[1].children.push(new TreeItemNode("model_file_"+path.basename(model_file_path)));
 						treeview.refresh();

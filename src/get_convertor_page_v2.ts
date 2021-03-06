@@ -34,41 +34,41 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
   
         <!--展示的主面板-->
         <div class="row" style="height: 45%;width: 100%;">
-            <div class="col-md-6">
+            <div class="col-md-6" style="background: rgba(238,238,238,0.4);height: 345px;">
               <!-- 数据基本信息表格 -->
-              <table id="data_general_table" style="width:440px; margin-left:100px;">
-                <caption class="white-text" style="caption-side: top;font-weight: bold;text-align: center;font-size: large;">导入数据统计</caption>
+              <table id="data_general_table" style="width:440px; margin-left:100px;color: #333;">
+                <caption class="white-text" style="caption-side: top;font-weight: bold;text-align: center;font-size: large;"><font style="color: #333;">导入数据统计</font></caption>
                 <tr style="border: solid 3px;height: 40px;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;">总数据大小</td>
-                  <td id="total_data_amount"></td>
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;">总数据大小</td>
+                  <td id="total_data_amount" style="font-weight:bolder;padding-left: 10px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;">测试数据量</td>
-                  <td id="test_data_amount"></td>
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;">测试数据量</td>
+                  <td id="test_data_amount" style="font-weight: bolder;padding-left: 10px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;">验证数据量</td>
-                  <td id="val_data_amount"></td>
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;">验证数据量</td>
+                  <td id="val_data_amount" style="font-weight: bolder;padding-left: 10px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;">数据类别个数</td>
-                  <td id="class_counts"></td>
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;">数据类别个数</td>
+                  <td id="class_counts" style="font-weight: bolder;padding-left: 10px;"></td>
                 </tr>
               </table>
             </div>
-            <div class="col-md-6">
-              <div style="text-align: center;font-weight: bold;font-size: large;margin-bottom:20px;">
+            <div class="col-md-6" style="background: rgba(238,238,238,0.4);height: 345px;">
+              <div style="text-align: center;font-weight: bold;font-size: large;margin-bottom:20px;color: #333;">
                 数据类别分布
               </div>
               <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:100px;"></div>
             </div>
         </div>
         <div class="row" style="height: 45%;width: 100%;margin-top:35px;">
-          <div id="sample_data_div" class="col-md-6">
-            <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;">
+          <div id="sample_data_div" class="col-md-6" style="height:351px;background: rgba(238,238,238,0.4);">
+            <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;color: black;">
               训练集样例数据
             </div>
-            <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow: auto;display: inline-block;">
+            <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow: auto;display: inline-block;background: rgb(238,238,238);">
               <li id="sample_img0_li" style="list-style: none;margin-bottom: 10px;">
                 <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
@@ -102,8 +102,8 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
             </ul>
             <div id="bar_chart_histgram" style="width: 440px;height: 320px;margin-top: 0px;display: inline-block;"></div>
           </div>
-          <div id="sample_testdataset_data_div" class="col-md-6">
-            <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;">
+          <div id="sample_testdataset_data_div" class="col-md-6" style="height: 351px;background: rgba(238,238,238,0.4);">
+            <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;color: black;">
               测试集样例数据
             </div>
             <ul id="test_sample_imgs_ul" style="height: 300px;width: 100px;overflow: auto;display: inline-block;">
@@ -151,13 +151,13 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
   
   body {
     padding: 25px;
-    background-color: black;
+    background-color: rgb(251, 255, 255);
     color: white;
     font-size: 25px;
   }
   
   .dark-mode {
-    background-color: rgb(61, 57, 57);
+    background-color: rgb(249, 251, 252);
     color: white;
   }
     @font-face {
@@ -182,7 +182,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
     .resizable {
       resize: both;
       overflow: scroll;
-      border: 1px solid black;
+      border: 1px solid rgb(0, 0, 0);
     }
     .dropdown-content{
      width: max-content !important;
@@ -276,15 +276,19 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
     if(sampleId.substring(0,4) === "test"){
       if(prev_click_img_li_test_id !== undefined){
         document.getElementById(prev_click_img_li_test_id).style.backgroundColor="";
+        document.getElementById(prev_click_img_li_test_id).style.opacity = "";
       }
       prev_click_img_li_test_id = sampleId+"_li";
-      document.getElementById(prev_click_img_li_test_id).style.backgroundColor = "chocolate";
+      document.getElementById(prev_click_img_li_test_id).style.backgroundColor = "#00868B";
+      document.getElementById(prev_click_img_li_test_id).style.opacity = "0.5";
     }else{
       if(prev_click_img_li_id !== undefined){
         document.getElementById(prev_click_img_li_id).style.backgroundColor = "";
+        document.getElementById(prev_click_img_li_id).style.opacity = "";
       }
       prev_click_img_li_id = sampleId+"_li";
-      document.getElementById(prev_click_img_li_id).style.backgroundColor = "chocolate";
+      document.getElementById(prev_click_img_li_id).style.backgroundColor = "#00868B";
+      document.getElementById(prev_click_img_li_id).style.opacity = "0.5";
     }
     console.log("current click img id="+sampleId);
     var sampleIdx = parseInt(sampleId.substring(sampleId.length-1));
@@ -310,11 +314,11 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                     scale:true,
                     name:x_axis_name,
                     nameTextStyle:{
-                      color:"white"
+                      color:"black"
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"white"
+                        color:"black"
                       }
                     }
               },
@@ -324,11 +328,11 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                     scale:true,
                     name:y_axis_name,
                     nameTextStyle:{
-                      color:"white"
+                      color:"black"
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"white"
+                        color:"black"
                       }
                     }
                   },
@@ -352,13 +356,40 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                   {
                       name: series_name,
                       type: 'bar',
-                      data: label_counts
+                      data: label_counts,
+                  itemStyle: {
+                    normal: {
+                      color: new echarts.graphic.LinearGradient(
+                            0, 0, 0, 1,
+                          [
+                              {offset: 0, color: '#BBFFFF'},   
+                              {offset: 1, color: '#2FDECA'}
+                          ]
+                          )
+                      },
+                      emphasis: {
+                        color: new echarts.graphic.LinearGradient(
+                              0, 0, 0, 1,
+                             [
+                              {offset: 0, color: '#2FDECA'},
+                              {offset: 1, color: '#2FDE80'}
+                             ]
+                        )
+                      }
+                  }
                   },
                   {
                       name: series_name,
                       type: 'line',
                       yAxisIndex: 1,
-                      data: label_counts
+                      data: label_counts,
+                      itemStyle:{
+                          normal:{
+                              lineStyle:{
+                                  color:"#FF994B"
+                              }
+                          }
+                      }
                   }
               ]
           };

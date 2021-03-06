@@ -427,6 +427,10 @@ export function getConvertorModelPageV2(){
             </div>
           </div>
         </div>
+        <div class="loading-div">
+          <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;"></i>
+          <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">模型信息加载中...</font></span>
+        </div>
   
           <div id="main_panel" style="width: 100%;height: 100%;overflow: auto;">
             <div class="row">
@@ -556,6 +560,20 @@ export function getConvertorModelPageV2(){
      width: max-content !important;
      height:auto !important;
   }
+  
+  .loading-div {
+        width: 1800px;
+        height: 720px;
+        display: table-cell;
+        vertical-align: middle;
+        color: #555;
+        overflow: hidden;
+        text-align: center;
+      }
+  .loading-div::before {
+    display: inline-block;
+    vertical-align: middle;
+  } 
   </style>
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -567,6 +585,7 @@ export function getConvertorModelPageV2(){
   
   <link rel="stylesheet" href="http://localhost:6003/css/materialize.min.css">
   <link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
   
   <script src="http://localhost:6003/js/jquery.min.js"></script>
   <script src="http://localhost:6003/js/materialize.min.js"></script>
@@ -699,6 +718,8 @@ export function getConvertorModelPageV2(){
                   // document.getElementById("model_layers_vis").appendChild(img_div);
                   document.getElementById("model_layers_vis").insertBefore(img_div, document.getElementById("tmp_peer"));
                 }
+  
+                $(".loading-div").hide(); // 隐藏加载提示
             }
             console.log("ann model img displayed");
             $("#ann_model_vis_img").attr("src", "http://127.0.0.1:6003/img/ann_model_vis.png");

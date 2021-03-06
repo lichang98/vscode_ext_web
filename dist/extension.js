@@ -5970,54 +5970,54 @@ function getConvertorModelPageV2() {
           <div id="main_panel" style="width: 100%;height: 100%;overflow: auto;">
             <div class="row">
               <!-- 模型总体信息表格 -->
-              <div class="col-md-6">
-                <table id="model_general_table" style="width: 440px;margin-left:40px;">
-                  <caption class="white-text" style="caption-side: top;text-align: center;font-size: large;font-weight: bold;">ANN模型基本信息</caption>
+              <div class="col-md-6" style="background: rgba(238,238,238,0.4);height: 378px;">
+                <table id="model_general_table" style="width: 540px;margin-left:40px;color: #333;">
+                  <caption class="white-text" style="caption-side: top;text-align: center;font-size: large;font-weight: bold;"><font style="color: #333;">ANN模型基本信息</font></caption>
                   <tr style="font-size: medium;font-weight: bold;border: solid 3px;">
-                    <td style="font-size: medium;padding-left: 15px;">总层数</td>
-                    <td id="model_total_layers" style="font-size: medium;"></td>
+                    <td style="font-size: medium;padding-left: 15px;border: solid 2px;background: rgb(238,238,238)">总层数</td>
+                    <td id="model_total_layers" style="font-size: medium;padding-left: 10px;"></td>
                   </tr>
                   <tr style="font-size: medium;font-weight: bold;border: solid 3px;">
-                    <td style="font-size: medium;padding-left: 15px;">总参数量</td>
-                    <td id="model_total_param" style="font-size: medium;"></td>
+                    <td style="font-size: medium;padding-left: 15px; border: solid 2px;background: rgb(238,238,238)">总参数量</td>
+                    <td id="model_total_param" style="font-size: medium;padding-left: 10px;"></td>
                   </tr>
                   <tr style="font-size: medium;font-weight: bold;border: solid 3px;">
-                    <td style="font-size: medium;padding-left: 15px;">unit数量</td>
-                    <td id="model_total_units" style="font-size: medium;"></td>
+                    <td style="font-size: medium;padding-left: 15px; border: solid 2px;background: rgb(238,238,238)">unit数量</td>
+                    <td id="model_total_units" style="font-size: medium;padding-left: 10px;"></td>
                   </tr>
                 </table>
       
                 <!-- python 绘制的模型结构简图 -->
                 <div id="ann_model_vis_img_parent_div" style="margin-left: 40px;">
-                  <img id="ann_model_vis_img" style="width: 440px;height: 260px;">
+                  <img id="ann_model_vis_img" style="width: 540px;height: 260px;">
                 </div>
               </div>
     
               <!--模型详细信息表格-->
-              <div class="col-sm-6">
-                <div style="text-align: center;font-size: large;font-weight: bold;">各层详细信息</div>
+              <div class="col-sm-6" style="background: rgba(238,238,238,0.4);height: 378px;">
+                <div style="text-align: center;font-size: large;font-weight: bold;color: #333;">各层详细信息</div>
                 <div class="row">
                   <div class="col-sm-6">
-                    <table id="model_detail_table">
+                    <table id="model_detail_table" style="color: #333;">
                       <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                       <thead>
                         <tr style="font-size: medium;font-weight: bold;border: solid 3px;height: 35px;">
-                          <td style="font-size: medium;padding-left: 15px;">名称</td>
-                          <td style="font-size: medium;padding-left: 15px;">输出形状</td>
-                          <td style="font-size: medium;padding-left: 15px;">参数量</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);">名称</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);">输出形状</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);">参数量</td>
                         </tr>
                       </thead>
                       <!--通过加载模型的信息动态创建-->
                     </table>
                   </div>
                   <div class="col-sm-6">
-                    <table id="model_detail_table_secondary">
+                    <table id="model_detail_table_secondary" style="color: #333;">
                       <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                       <thead>
                         <tr style="font-size: medium;font-weight: bold;border: solid 3px;height: 35px;">
-                          <td style="font-size: medium;padding-left: 15px;">名称</td>
-                          <td style="font-size: medium;padding-left: 15px;">输出形状</td>
-                          <td style="font-size: medium;padding-left: 15px;">参数量</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238)">名称</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238)">输出形状</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238)">参数量</td>
                         </tr>
                       </thead>
                       <!--通过加载模型的信息动态创建-->
@@ -6030,20 +6030,20 @@ function getConvertorModelPageV2() {
   
             <!--模型各层的可视化-->
             <div class="row">
-              <div id="model_layers_vis" class="col-md-6">
-                <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">卷积与激活层输出可视化</div>
+              <div id="model_layers_vis" class="col-md-6" style="background: rgba(238,238,238,0.4);">
+                <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;color: #333;">卷积与激活层输出可视化</div>
                 <!--动态创建-->
-                <div id="layers_vis_div" class="row" style="margin-left: 40px;">
-                  <div class="col-md-3" style="font-size: medium;font-weight: bold;padding-left: 15px;">layer 名称</div>
-                  <div class="col-md-3" style="font-size: medium;font-weight: bold;padding-left: 15px;">layer 编号</div>
-                  <div class="col-md-6" style="font-size: medium;font-weight: bold;padding-left: 15px;">输出可视化</div>
+                <div id="layers_vis_div" class="row" style="margin-left: 40px;margin-top: 40px;margin-bottom: 0px; padding: 0px;background: rgb(238,238,238);color: #333;border: 2px solid #333;height: 40px;">
+                  <div class="col-md-3" style="font-size: medium;font-weight: bold;padding-left: 15px;border-right: 2px solid #333;height: 38px;">layer 名称</div>
+                  <div class="col-md-3" style="font-size: medium;font-weight: bold;padding-left: 15px;border-right: 2px solid #333;height: 38px;">layer 编号</div>
+                  <div class="col-md-6" style="font-size: medium;font-weight: bold;padding-left: 15px;height: 38px;">输出可视化</div>
                 </div>
                 <div id="tmp_peer"></div>
               </div>
               <!-- 显示各层的参数量占比 -->
-              <div class="col-md-6">
-                <div style="font-size: large;font-weight: bold;text-align: center;">各层参数量分布</div>
-                <div id="layer_param_percent_div" style="width: 600px;height: 260px;"></div>
+              <div class="col-md-6" style="background: rgba(238,238,238,0.4);">
+                <div style="font-size: large;font-weight: bold;text-align: center;color: #333;">各层参数量分布</div>
+                <div id="layer_param_percent_div" style="width: 600px;height: 300px;"></div>
               </div>
             </div>
   
@@ -6058,13 +6058,13 @@ function getConvertorModelPageV2() {
   
   body {
     padding: 25px;
-    background-color: black;
+    background-color: rgb(251, 255, 255);
     color: white;
     font-size: 25px;
   }
   
   .dark-mode {
-    background-color: rgb(61, 57, 57);
+    background-color: rgb(249, 251, 252);
     color: white;
   }
     @font-face {
@@ -6089,7 +6089,7 @@ function getConvertorModelPageV2() {
     .resizable {
       resize: both;
       overflow: scroll;
-      border: 1px solid black;
+      border: 1px solid rgb(0, 0, 0);
     }
     .dropdown-content{
      width: max-content !important;
@@ -6205,16 +6205,16 @@ function getConvertorModelPageV2() {
                   
                   var img_div = document.createElement("div");
                   img_div.setAttribute("class","row");
-                  img_div.style = "margin-left: 40px;";
+                  img_div.style = "margin-left: 40px;color: #333;border: 3px solid #333;margin-top: 0px; height:40px;margin-bottom: 0px; padding: 0px";
   
                   var layer_name_div = document.createElement("div");
                   layer_name_div.setAttribute("class", "col-md-3");
-                  layer_name_div.style = "font-size: medium;";
+                  layer_name_div.style = "font-size: medium;border-right: 2px solid #333;height: 38px;";
                   layer_name_div.innerText = layer_name;
                   img_div.appendChild(layer_name_div);
   
                   var layer_index_div = document.createElement("div");
-                  layer_index_div.style = "font-size: medium;";
+                  layer_index_div.style = "font-size: medium;border-right: 2px solid #333;height: 38px;";
                   layer_index_div.setAttribute("class", "col-md-3");
   
                   layer_index_div.innerText = layer_idx;
@@ -6229,6 +6229,9 @@ function getConvertorModelPageV2() {
                     console.log("target layer vis path: "+layer_vis_img_paths[j]);
                     layer_img_tag.style.width = "32px";
                     layer_img_tag.style.height = "32px";
+                    if(j === 0){
+                      layer_img_tag.style.marginLeft = "15px";
+                    }
                     layer_vis_div.appendChild(layer_img_tag);
                     img_div.append(layer_img_tag);
                   }
@@ -6252,11 +6255,11 @@ function getConvertorModelPageV2() {
                     scale:true,
                     name:"神经层",
                     nameTextStyle:{
-                      color:"white"
+                      color:"black"
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"white"
+                        color:"black"
                       },
                       rotate:30
                     }
@@ -6267,11 +6270,11 @@ function getConvertorModelPageV2() {
                     scale:true,
                     name:"参数量(log_10)",
                     nameTextStyle:{
-                      color:"white"
+                      color:"black"
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"white"
+                        color:"black"
                       }
                     }
                 },
@@ -6281,11 +6284,11 @@ function getConvertorModelPageV2() {
                     name:"",
                     show:false,
                     nameTextStyle:{
-                      color:"white"
+                      color:"black"
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"white"
+                        color:"black"
                       }
                     }
                 }
@@ -6294,13 +6297,40 @@ function getConvertorModelPageV2() {
                   {
                       name: '参数量(log_10)',
                       type: 'bar',
-                      data: layer_param_counts
+                      data: layer_param_counts,
+                      itemStyle: {
+                        normal: {
+                          color: new echarts.graphic.LinearGradient(
+                                0, 0, 0, 1,
+                              [
+                                  {offset: 0, color: '#BBFFFF'},   
+                                  {offset: 1, color: '#2FDECA'}
+                              ]
+                              )
+                          },
+                          emphasis: {
+                            color: new echarts.graphic.LinearGradient(
+                                  0, 0, 0, 1,
+                                [
+                                  {offset: 0, color: '#2FDECA'},
+                                  {offset: 1, color: '#2FDE80'}
+                                ]
+                            )
+                          }
+                      }
                   },
                   {
                       name: '',
                       type: 'line',
                       yAxisIndex: 1,
-                      data: layer_param_counts
+                      data: layer_param_counts,
+                      itemStyle:{
+                          normal:{
+                              lineStyle:{
+                                  color:"#FF994B"
+                              }
+                          }
+                      }
                   }
               ]
           };

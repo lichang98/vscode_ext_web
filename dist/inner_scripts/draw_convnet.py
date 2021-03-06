@@ -41,20 +41,20 @@ from matplotlib.patches import Circle
 NumDots = 4
 NumConvMax = 8
 NumFcMax = 20
-# White = 1.
-# Light = 0.7
-# Medium = 0.5
-# Dark = 0.3
-# Darker = 0.15
-# Black = 0.
-
-Black = 1.
-Darker = 0.8
-Dark = 0.6
+White = 1.
+Light = 0.7
 Medium = 0.5
-Light = 0.3
-White = 0.
-plt.style.use('dark_background')
+Dark = 0.3
+Darker = 0.15
+Black = 0.
+
+# Black = 1.
+# Darker = 0.8
+# Dark = 0.6
+# Medium = 0.5
+# Light = 0.3
+# White = 0.
+plt.style.use('seaborn-white')
 
 def add_layer(patches, colors, size=(24, 24), num=5,
               top_left=[0, 0],

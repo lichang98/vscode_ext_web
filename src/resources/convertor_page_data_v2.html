@@ -346,26 +346,26 @@ function sample_img_click(e){
                     name: series_name,
                     type: 'bar',
                     data: label_counts,
-                itemStyle: {
-                  normal: {
-                    color: new echarts.graphic.LinearGradient(
-                          0, 0, 0, 1,
-                        [
-                            {offset: 0, color: '#BBFFFF'},   
-                            {offset: 1, color: '#2FDECA'}
-                        ]
-                        )
-                    },
-                    emphasis: {
-                      color: new echarts.graphic.LinearGradient(
-                            0, 0, 0, 1,
-                           [
-                            {offset: 0, color: '#2FDECA'},
-                            {offset: 1, color: '#2FDE80'}
-                           ]
-                      )
+                    itemStyle: {
+                      normal: {
+                        color: new echarts.graphic.LinearGradient(
+                              0, 0, 0, 1,
+                            [
+                                {offset: 0, color: '#BBFFFF'},   
+                                {offset: 1, color: '#2FDECA'}
+                            ]
+                            )
+                        },
+                        emphasis: {
+                          color: new echarts.graphic.LinearGradient(
+                                0, 0, 0, 1,
+                              [
+                                {offset: 0, color: '#2FDECA'},
+                                {offset: 1, color: '#2FDE80'}
+                              ]
+                          )
+                        }
                     }
-                }
                 },
                 {
                     name: series_name,

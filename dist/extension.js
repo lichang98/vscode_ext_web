@@ -5571,114 +5571,120 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
             </div>
           </div>
         </div>
+        <div class="loading-div">
+          <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;"></i>
+          <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
+        </div>
   
         <!--展示的主面板-->
         <div class="row" style="height: 45%;width: 100%;">
-            <div class="col-md-6" style="background: rgba(238,238,238,0.4);height: 345px;">
+            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 345px;margin-left: 50px;">
               <!-- 数据基本信息表格 -->
-              <table id="data_general_table" style="width:440px; margin-left:100px;color: #333;">
-                <caption class="white-text" style="caption-side: top;font-weight: bold;text-align: center;font-size: large;"><font style="color: #333;">导入数据统计</font></caption>
-                <tr style="border: solid 3px;height: 40px;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;">总数据大小</td>
+              <div style="text-align: center;font-size: large;font-weight: bold;color: #333;"><font style="color: #333;">导入数据统计</font></div>
+              <table id="data_general_table" style="width:440px; margin-left:30px;color: #333;margin-top: 60px;">
+                <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;">总数据大小</td>
                   <td id="total_data_amount" style="font-weight:bolder;padding-left: 10px;"></td>
                 </tr>
-                <tr style="border: solid 3px;height: 40px;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;">测试数据量</td>
+                <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;">测试数据量</td>
                   <td id="test_data_amount" style="font-weight: bolder;padding-left: 10px;"></td>
                 </tr>
-                <tr style="border: solid 3px;height: 40px;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;">验证数据量</td>
+                <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;">验证数据量</td>
                   <td id="val_data_amount" style="font-weight: bolder;padding-left: 10px;"></td>
                 </tr>
-                <tr style="border: solid 3px;height: 40px;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;">数据类别个数</td>
+                <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;">数据类别个数</td>
                   <td id="class_counts" style="font-weight: bolder;padding-left: 10px;"></td>
                 </tr>
               </table>
             </div>
-            <div class="col-md-6" style="background: rgba(238,238,238,0.4);height: 345px;">
+            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 345px;margin-left: 10px;">
               <div style="text-align: center;font-weight: bold;font-size: large;margin-bottom:20px;color: #333;">
                 数据类别分布
               </div>
-              <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:100px;"></div>
+              <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:20px;"></div>
             </div>
         </div>
-        <div class="row" style="height: 45%;width: 100%;margin-top:35px;">
-          <div id="sample_data_div" class="col-md-6" style="height:351px;background: rgba(238,238,238,0.4);">
+        <div class="row" style="height: 45%;width: 100%;margin-top:60px;">
+          <div id="sample_data_div" class="col-md-5" style="height:351px;background: rgba(238,238,238,0.4);margin-left: 50px;">
             <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;color: black;">
               训练集样例数据
             </div>
-            <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow: auto;display: inline-block;background: rgb(238,238,238);">
-              <li id="sample_img0_li" style="list-style: none;margin-bottom: 10px;">
+            <div id="bar_chart_histgram" style="width: 440px;height: 320px;margin-top: 0px;display: block;"></div>
+            <ul id="sample_imgs_ul" style="height: 80px;width: 440px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
+              <li id="sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="sample_img1_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img1_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img1" onclick="sample_img_click(this);" src="${sample1}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="sample_img2_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img2_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img2" onclick="sample_img_click(this);" src="${sample2}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="sample_img3_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img3_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img3" onclick="sample_img_click(this);" src="${sample3}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="sample_img4_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img4_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img4" onclick="sample_img_click(this);" src="${sample4}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="sample_img5_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img5_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img5" onclick="sample_img_click(this);" src="${sample5}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="sample_img6_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img6_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img6" onclick="sample_img_click(this);" src="${sample6}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="sample_img7_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img7_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img7" onclick="sample_img_click(this);" src="${sample7}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="sample_img8_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img8_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img8" onclick="sample_img_click(this);" src="${sample8}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="sample_img9_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="sample_img9_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img9" onclick="sample_img_click(this);" src="${sample9}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
-            <div id="bar_chart_histgram" style="width: 440px;height: 320px;margin-top: 0px;display: inline-block;"></div>
+            
           </div>
-          <div id="sample_testdataset_data_div" class="col-md-6" style="height: 351px;background: rgba(238,238,238,0.4);">
+          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 351px;background: rgba(238,238,238,0.4);margin-left: 10px;">
             <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;color: black;">
               测试集样例数据
             </div>
-            <ul id="test_sample_imgs_ul" style="height: 300px;width: 100px;overflow: auto;display: inline-block;">
-              <li id="test_sample_img0_li" style="list-style: none;margin-bottom: 10px;">
+  
+            <div id="test_bar_chart_histgram" style="width: 440px;height: 320px;margin-top: 0px;display: block;"></div>
+            <ul id="test_sample_imgs_ul" style="height: 80px;width: 440px;overflow: auto;display: block;white-space: nowrap;">
+              <li id="test_sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img0" onclick="sample_img_click(this);" src="${test_sample0}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="test_sample_img1_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img1_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img1" onclick="sample_img_click(this);" src="${test_sample1}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="test_sample_img2_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img2_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img2" onclick="sample_img_click(this);" src="${test_sample2}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="test_sample_img3_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img3_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img3" onclick="sample_img_click(this);" src="${test_sample3}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="test_sample_img4_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img4_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img4" onclick="sample_img_click(this);" src="${test_sample4}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="test_sample_img5_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img5_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img5" onclick="sample_img_click(this);" src="${test_sample5}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="test_sample_img6_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img6_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img6" onclick="sample_img_click(this);" src="${test_sample6}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="test_sample_img7_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img7_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img7" onclick="sample_img_click(this);" src="${test_sample7}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="test_sample_img8_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img8_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img8" onclick="sample_img_click(this);" src="${test_sample8}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
-              <li id="test_sample_img9_li" style="list-style: none;margin-bottom: 10px;">
+              <li id="test_sample_img9_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img9" onclick="sample_img_click(this);" src="${test_sample9}" style="width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
-            <div id="test_bar_chart_histgram" style="width: 440px;height: 320px;margin-top: 0px;display: inline-block;"></div>
           </div>
         </div>
       </div>
@@ -5728,6 +5734,20 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
      width: max-content !important;
      height:auto !important;
   }
+  
+  .loading-div {
+        width: 1800px;
+        height: 720px;
+        display: table-cell;
+        vertical-align: middle;
+        color: #555;
+        overflow: hidden;
+        text-align: center;
+      }
+  .loading-div::before {
+    display: inline-block;
+    vertical-align: middle;
+  } 
   </style>
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -5739,6 +5759,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
   
   <link rel="stylesheet" href="http://localhost:6003/css/materialize.min.css">
   <link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css" >
+  <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
   
   <script src="http://localhost:6003/js/jquery.min.js"></script>
   <script src="http://localhost:6003/js/materialize.min.js"></script>
@@ -5805,6 +5826,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
           }
         }
   
+        $(".loading-div").hide(); // 隐藏加载提示
         console.log("display test data distribution...");
         display_data_bar_chart(class_labels, class_ratios, "测试数据集各类别分布",  "数据占比","类别", "占比", "bar_chart_testdata_container");
         console.log("test data distribution bar chart displayed.");
@@ -5897,26 +5919,26 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
                       name: series_name,
                       type: 'bar',
                       data: label_counts,
-                  itemStyle: {
-                    normal: {
-                      color: new echarts.graphic.LinearGradient(
-                            0, 0, 0, 1,
-                          [
-                              {offset: 0, color: '#BBFFFF'},   
-                              {offset: 1, color: '#2FDECA'}
-                          ]
-                          )
-                      },
-                      emphasis: {
-                        color: new echarts.graphic.LinearGradient(
-                              0, 0, 0, 1,
-                             [
-                              {offset: 0, color: '#2FDECA'},
-                              {offset: 1, color: '#2FDE80'}
-                             ]
-                        )
+                      itemStyle: {
+                        normal: {
+                          color: new echarts.graphic.LinearGradient(
+                                0, 0, 0, 1,
+                              [
+                                  {offset: 0, color: '#BBFFFF'},   
+                                  {offset: 1, color: '#2FDECA'}
+                              ]
+                              )
+                          },
+                          emphasis: {
+                            color: new echarts.graphic.LinearGradient(
+                                  0, 0, 0, 1,
+                                [
+                                  {offset: 0, color: '#2FDECA'},
+                                  {offset: 1, color: '#2FDE80'}
+                                ]
+                            )
+                          }
                       }
-                  }
                   },
                   {
                       name: series_name,

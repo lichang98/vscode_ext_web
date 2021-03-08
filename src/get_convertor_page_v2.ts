@@ -38,10 +38,10 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
   
         <!--展示的主面板-->
         <div class="row" style="height: 45%;width: 100%;">
-            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 345px;margin-left: 50px;">
+            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 310px;margin-left: 50px;">
               <!-- 数据基本信息表格 -->
               <div style="text-align: center;font-size: large;font-weight: bold;color: #333;"><font style="color: #333;">导入数据统计</font></div>
-              <table id="data_general_table" style="width:440px; margin-left:30px;color: #333;margin-top: 60px;">
+              <table id="data_general_table" style="width:440px; margin-left:30px;color: #333;margin-top: 30px;">
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
                   <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;">总数据大小</td>
                   <td id="total_data_amount" style="font-weight:bolder;padding-left: 10px;"></td>
@@ -60,89 +60,89 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                 </tr>
               </table>
             </div>
-            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 345px;margin-left: 10px;">
+            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 310px;margin-left: 40px;">
               <div style="text-align: center;font-weight: bold;font-size: large;margin-bottom:20px;color: #333;">
                 数据类别分布
               </div>
-              <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:20px;"></div>
+              <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:20px;margin-top: -30px;"></div>
             </div>
         </div>
-        <div class="row" style="height: 45%;width: 100%;margin-top:60px;">
+        <div class="row" style="height: 45%;width: 100%;margin-top:10px;">
           <div id="sample_data_div" class="col-md-5" style="height:351px;background: rgba(238,238,238,0.4);margin-left: 50px;">
             <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;color: black;">
               训练集样例数据
             </div>
-            <div id="bar_chart_histgram" style="width: 440px;height: 320px;margin-top: 0px;display: block;"></div>
-            <ul id="sample_imgs_ul" style="height: 80px;width: 440px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
+            <div id="bar_chart_histgram" style="width: 440px;height: 320px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
+            <ul id="sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 440px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
               <li id="sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img1_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img1" onclick="sample_img_click(this);" src="${sample1}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img1" onclick="sample_img_click(this);" src="${sample1}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img2_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img2" onclick="sample_img_click(this);" src="${sample2}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img2" onclick="sample_img_click(this);" src="${sample2}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img3_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img3" onclick="sample_img_click(this);" src="${sample3}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img3" onclick="sample_img_click(this);" src="${sample3}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img4_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img4" onclick="sample_img_click(this);" src="${sample4}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img4" onclick="sample_img_click(this);" src="${sample4}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img5_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img5" onclick="sample_img_click(this);" src="${sample5}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img5" onclick="sample_img_click(this);" src="${sample5}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img6_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img6" onclick="sample_img_click(this);" src="${sample6}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img6" onclick="sample_img_click(this);" src="${sample6}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img7_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img7" onclick="sample_img_click(this);" src="${sample7}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img7" onclick="sample_img_click(this);" src="${sample7}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img8_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img8" onclick="sample_img_click(this);" src="${sample8}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img8" onclick="sample_img_click(this);" src="${sample8}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img9_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img9" onclick="sample_img_click(this);" src="${sample9}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img9" onclick="sample_img_click(this);" src="${sample9}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
             
           </div>
-          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 351px;background: rgba(238,238,238,0.4);margin-left: 10px;">
+          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 351px;background: rgba(238,238,238,0.4);margin-left: 40px;">
             <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;color: black;">
               测试集样例数据
             </div>
   
-            <div id="test_bar_chart_histgram" style="width: 440px;height: 320px;margin-top: 0px;display: block;"></div>
-            <ul id="test_sample_imgs_ul" style="height: 80px;width: 440px;overflow: auto;display: block;white-space: nowrap;">
+            <div id="test_bar_chart_histgram" style="width: 440px;height: 320px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
+            <ul id="test_sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 440px;overflow: auto;display: block;white-space: nowrap;">
               <li id="test_sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img0" onclick="sample_img_click(this);" src="${test_sample0}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img0" onclick="sample_img_click(this);" src="${test_sample0}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img1_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img1" onclick="sample_img_click(this);" src="${test_sample1}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img1" onclick="sample_img_click(this);" src="${test_sample1}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img2_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img2" onclick="sample_img_click(this);" src="${test_sample2}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img2" onclick="sample_img_click(this);" src="${test_sample2}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img3_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img3" onclick="sample_img_click(this);" src="${test_sample3}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img3" onclick="sample_img_click(this);" src="${test_sample3}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img4_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img4" onclick="sample_img_click(this);" src="${test_sample4}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img4" onclick="sample_img_click(this);" src="${test_sample4}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img5_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img5" onclick="sample_img_click(this);" src="${test_sample5}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img5" onclick="sample_img_click(this);" src="${test_sample5}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img6_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img6" onclick="sample_img_click(this);" src="${test_sample6}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img6" onclick="sample_img_click(this);" src="${test_sample6}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img7_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img7" onclick="sample_img_click(this);" src="${test_sample7}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img7" onclick="sample_img_click(this);" src="${test_sample7}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img8_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img8" onclick="sample_img_click(this);" src="${test_sample8}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img8" onclick="sample_img_click(this);" src="${test_sample8}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img9_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img9" onclick="sample_img_click(this);" src="${test_sample9}" style="width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img9" onclick="sample_img_click(this);" src="${test_sample9}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
           </div>

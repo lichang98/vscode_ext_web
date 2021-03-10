@@ -157,7 +157,7 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
     patches = []
     colors = []
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(facecolor='#eeeeee')
 
 
     ############################

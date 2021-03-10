@@ -5581,7 +5581,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
             <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 310px;margin-left: 50px;">
               <!-- 数据基本信息表格 -->
               <div style="text-align: center;font-size: large;font-weight: bold;color: #333;"><font style="color: #333;">导入数据统计</font></div>
-              <table id="data_general_table" style="width:440px; margin-left:30px;color: #333;margin-top: 30px;">
+              <table id="data_general_table" style="width:440px; margin-left:15px;color: #333;margin-top: 30px;">
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
                   <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;">总数据大小</td>
                   <td id="total_data_amount" style="font-weight:bolder;padding-left: 10px;"></td>
@@ -5600,14 +5600,14 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
                 </tr>
               </table>
             </div>
-            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 310px;margin-left: 40px;">
+            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 310px;margin-left: 15px;">
               <div style="text-align: center;font-weight: bold;font-size: large;margin-bottom:20px;color: #333;">
                 数据类别分布
               </div>
               <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:20px;margin-top: -30px;"></div>
             </div>
         </div>
-        <div class="row" style="height: 45%;width: 100%;margin-top:10px;">
+        <div class="row" style="height: 45%;width: 100%;margin-top:7px;">
           <div id="sample_data_div" class="col-md-5" style="height:351px;background: rgba(238,238,238,0.4);margin-left: 50px;">
             <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;color: black;">
               训练集样例数据
@@ -5647,7 +5647,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
             </ul>
             
           </div>
-          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 351px;background: rgba(238,238,238,0.4);margin-left: 40px;">
+          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 351px;background: rgba(238,238,238,0.4);margin-left: 15px;">
             <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;color: black;">
               测试集样例数据
             </div>
@@ -5993,10 +5993,10 @@ function getConvertorModelPageV2() {
           <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">模型信息加载中...</font></span>
         </div>
   
-          <div id="main_panel" style="width: 100%;height: 100%;overflow: auto;">
-            <div class="row">
+          <div id="main_panel" style="width: 100%;height: 100%;overflow: auto;white-space: nowrap;">
+            <div style="width: 100%;">
               <!-- 模型总体信息表格 -->
-              <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 378px;">
+              <div style="background: rgba(238,238,238,0.4);height: 378px;display: inline-block;">
                 <table id="model_general_table" style="margin-left:40px;color: #333;width: 440px;">
                   <caption class="white-text" style="caption-side: top;text-align: center;font-size: large;font-weight: bold;"><font style="color: #333;">ANN模型基本信息</font></caption>
                   <tr style="font-size: medium;font-weight: bold;border: solid 3px;border-color: #D6D6D6;">
@@ -6014,23 +6014,23 @@ function getConvertorModelPageV2() {
                 </table>
       
                 <!-- python 绘制的模型结构简图 -->
-                <div id="ann_model_vis_img_parent_div" style="margin-left: 40px;">
-                  <img id="ann_model_vis_img" style="width: 540px;height: 260px;">
+                <div id="ann_model_vis_img_parent_div" style="margin-left: 40px;width: 440px;margin-right: 40px;">
+                  <img id="ann_model_vis_img" style="width: 440px;height: 260px;">
                 </div>
               </div>
     
               <!--模型详细信息表格-->
-              <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 378px;margin-left: 20px;width: 600px;">
+              <div style="background: rgba(238,238,238,0.4);height: 378px;margin-left: 10px;width: 800px;display: inline-block;vertical-align: top;padding-left: 40px;margin-right: 40px;">
                 <div style="text-align: center;font-size: large;font-weight: bold;color: #333;">各层详细信息</div>
-                <div class="row">
+                <div class="row" style="width: 100%;">
                   <div class="col-md-6">
                     <table id="model_detail_table" style="color: #333;">
                       <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                       <thead>
                         <tr style="font-size: medium;font-weight: bold;border: solid 3px;height: 35px;border-color: #D6D6D6;">
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border-color: #D6D6D6;">名称</td>
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border-color: #D6D6D6;">输出形状</td>
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border-color: #D6D6D6;">参数量</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;">名称</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;">输出形状</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;">参数量</td>
                         </tr>
                       </thead>
                       <!--通过加载模型的信息动态创建-->
@@ -6041,9 +6041,9 @@ function getConvertorModelPageV2() {
                       <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                       <thead>
                         <tr style="font-size: medium;font-weight: bold;border: solid 3px;height: 35px;border-color: #D6D6D6;">
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border-color: #D6D6D6;">名称</td>
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border-color: #D6D6D6;">输出形状</td>
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border-color: #D6D6D6;">参数量</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;">名称</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;">输出形状</td>
+                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;">参数量</td>
                         </tr>
                       </thead>
                       <!--通过加载模型的信息动态创建-->
@@ -6055,11 +6055,11 @@ function getConvertorModelPageV2() {
             </div>
   
             <!--模型各层的可视化-->
-            <div class="row">
-              <div id="model_layers_vis" class="col-md-5" style="background: rgba(238,238,238,0.4);">
+            <div style="width: 100%;margin-top: 12px;">
+              <div id="model_layers_vis" style="background: rgba(238,238,238,0.4);display: inline-block;">
                 <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;color: #333;">卷积与激活层输出可视化</div>
                 <!--动态创建-->
-                <div id="layers_vis_div" class="row" style="margin-left: 40px;margin-top: 40px;margin-bottom: 0px; padding: 0px;background: rgb(238,238,238);color: #333;border: 2px solid #333;height: 40px;border-color: #D6D6D6;">
+                <div id="layers_vis_div" class="row" style="width: 440px;margin-left: 40px;margin-top: 40px;margin-bottom: 0px; margin-right: 40px;padding: 0px;background: rgb(238,238,238);color: #333;border: 2px solid #333;height: 40px;border-color: #D6D6D6;">
                   <div class="col-md-3" style="font-size: medium;font-weight: bold;padding-left: 15px;border-right: 2px solid #333;height: 38px;border-color: #D6D6D6;">layer 名称</div>
                   <div class="col-md-3" style="font-size: medium;font-weight: bold;padding-left: 15px;border-right: 2px solid #333;height: 38px;border-color: #D6D6D6;">layer 编号</div>
                   <div class="col-md-6" style="font-size: medium;font-weight: bold;padding-left: 15px;height: 38px;">输出可视化</div>
@@ -6067,9 +6067,9 @@ function getConvertorModelPageV2() {
                 <div id="tmp_peer"></div>
               </div>
               <!-- 显示各层的参数量占比 -->
-              <div class="col-md-5" style="background: rgba(238,238,238,0.4);margin-left: 20px;width: 600px;">
-                <div style="font-size: large;font-weight: bold;text-align: center;color: #333;">各层参数量分布</div>
-                <div id="layer_param_percent_div" style="width: 600px;height: 300px;"></div>
+              <div style="background: rgba(238,238,238,0.4);margin-left: 10px;width: 800px;vertical-align: top;display: inline-block;">
+                <div style="font-size: large;font-weight: bold;text-align: center;color: #333;margin-left: 100px;">各层参数量分布</div>
+                <div id="layer_param_percent_div" style="width: 480px;height: 300px;margin-left: 140px;"></div>
               </div>
             </div>
   
@@ -6182,13 +6182,13 @@ function getConvertorModelPageV2() {
                   line.style.height = "45px";
                   line.style.borderColor ="#D6D6D6";
                   var col_name = document.createElement("td");
-                  col_name.style = "font-size: medium;padding-left: 15px;border-color: #D6D6D6;";
+                  col_name.style = "font-size: medium;padding-left: 15px;border: solid 2px;border-color: #D6D6D6;";
                   col_name.innerText = detail_info[i].name;
                   var col_shape = document.createElement("td");
-                  col_shape.style = "font-size: medium;border-color: #D6D6D6;";
+                  col_shape.style = "font-size: medium;border: solid 2px;border-color: #D6D6D6;";
                   col_shape.innerText = detail_info[i].shape;
                   var col_params = document.createElement("td");
-                  col_params.style = "font-size: medium;border-color: #D6D6D6;";
+                  col_params.style = "font-size: medium;border: solid 2px;border-color: #D6D6D6;";
                   col_params.innerText = detail_info[i].params;
                   
                   if( parseInt(detail_info[i].params, 10) > 0){
@@ -6215,10 +6215,10 @@ function getConvertorModelPageV2() {
                   col_name.style = "font-size: medium;padding-left: 15px;";
                   col_name.innerText = detail_info[i].name;
                   var col_shape = document.createElement("td");
-                  col_shape.style = "font-size: medium;border-color: #D6D6D6;";
+                  col_shape.style = "font-size: medium;border: solid 2px;border-color: #D6D6D6;";
                   col_shape.innerText = detail_info[i].shape;
                   var col_params = document.createElement("td");
-                  col_params.style = "font-size: medium;border-color: #D6D6D6;";
+                  col_params.style = "font-size: medium;border: solid 2px;border-color: #D6D6D6;";
                   col_params.innerText = detail_info[i].params;
                   
                   if( parseInt(detail_info[i].params, 10) > 0){
@@ -6248,7 +6248,7 @@ function getConvertorModelPageV2() {
                   
                   var img_div = document.createElement("div");
                   img_div.setAttribute("class","row");
-                  img_div.style = "margin-left: 40px;color: #333;border: 3px solid #333;margin-top: 0px; height:40px;margin-bottom: 0px; padding: 0px;border-color: #D6D6D6;";
+                  img_div.style = "margin-left: 40px;margin-right: 40px;color: #333;border: 3px solid #333;margin-top: 0px; height:40px;margin-bottom: 0px; padding: 0px;border-color: #D6D6D6;";
   
                   var layer_name_div = document.createElement("div");
                   layer_name_div.setAttribute("class", "col-md-3");

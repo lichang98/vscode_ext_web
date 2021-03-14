@@ -5607,7 +5607,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
               <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:20px;margin-top: -30px;"></div>
             </div>
         </div>
-        <div class="row" style="height: 45%;width: 100%;margin-top:7px;">
+        <div class="row" style="height: 45%;width: 100%;margin-top:35px;">
           <div id="sample_data_div" class="col-md-5" style="height:351px;background: rgba(238,238,238,0.4);margin-left: 50px;">
             <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;color: black;">
               训练集样例数据

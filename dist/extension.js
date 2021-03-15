@@ -7337,62 +7337,62 @@ function getSNNSimuPage() {
     <title>模型转换器</title>
   </head>
   
-  <body class="dark-mode" style="height: 100%;width: 100%;">
+  <body class="dark-mode" style="height: 100%;width: 100%;white-space: nowrap;overflow: auto;">
   
-      <div class="row" style="margin-top: 20px;">
+      <div style="margin-top: 20px;display: block;">
   
-          <div class="col-md-3">
+          <div style="background: rgba(238,238,238);width: 350px;height: 350px;display: inline-block;">
             <div>
-              <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">仿真配置结果评估</div>
-              <table id="layer_conf_val" style="width: 260px;margin-left:19px;margin-top: 70px;border: solid 3px;">
+              <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">仿真配置结果评估</font></div>
+              <table id="layer_conf_val" style="width: 260px;margin-left:40px;margin-top: 70px;border: solid 3px #D6D6D6;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                  <tr style="height: 25px; border: solid 2px;">
-                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;">膜电压阈值</td>
+                  <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
+                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;">膜电压阈值</td>
                     <td id="simulate_vthresh"></td>
                   </tr>
-                  <tr style="height: 25px;border: solid 2px;">
-                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;">神经元时间步长</td>
+                  <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
+                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;">神经元时间步长</td>
                     <td id="simulate_neuron_dt"></td>
                   </tr>
-                  <tr style="height: 25px;border: solid 2px;">
-                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;">突触时间步长</td>
+                  <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
+                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;">突触时间步长</td>
                     <td id="simulate_synapse_dt"></td>
                   </tr>
-                  <tr style="height: 25px;border: solid 2px;">
-                    <td  style="font-size: medium;font-weight: bold;padding-left: 15px;">延迟</td>
+                  <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
+                    <td  style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;">延迟</td>
                     <td id="simulate_delay"></td>
                   </tr>
-                  <tr style="height: 25px;border: solid 2px;">
-                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;">仿真时长</td>
+                  <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
+                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;">仿真时长</td>
                     <td id="simulate_dura"></td>
                   </tr>
-                  <tr style="height: 25px;border: solid 2px;">
-                    <td style="font-size: medium;font-weight: bold;color: rgb(11, 247, 247);padding-left: 15px;">准确率</td>
-                    <td id="simulate_acc" style="color: rgb(11, 247, 247);"></td>
+                  <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
+                    <td style="font-size: medium;font-weight: bold;color: rgb(161, 11, 247);padding-left: 15px;border: solid 2px #D6D6D6;">准确率</td>
+                    <td id="simulate_acc" style="color: rgb(161, 11, 247);"></td>
                   </tr>    
               </table>
             </div>
           </div>
   
-          <div class="col-md-3">
-            <div style="font-size: large;font-weight: bold;text-align: center;margin-left: 40px;">放电次数均值方差统计</div>
-            <table id="snn_layers_spike_table" style="width: 360px;margin-left:10px;margin-top: 70px;border: solid 3px;">
+          <div style="background: rgba(238,238,238);width: 350px;height: 350px;display: inline-block;">
+            <div style="font-size: large;font-weight: bold;text-align: center;margin-left: 40px;"><font style="color: #333;font-weight: bold;">放电次数均值方差统计</font></div>
+            <table id="snn_layers_spike_table" style="width: 280px;margin-left:40px;margin-top: 70px;border: solid 3px #D6D6D6;">
               <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-              <tr style="height: 25px; border: solid 2px;">
-                <td style="font-size: medium;font-weight: bold;padding-left: 15px;">层编号</td>
-                <td style="font-size: medium;font-weight: bold;padding-left: 15px;">放电次数均值</td>
-                <td style="font-size: medium;font-weight: bold;padding-left: 15px;">放电次数方差</td>
+              <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
+                <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;">层编号</td>
+                <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;">放电次数均值</td>
+                <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;">放电次数方差</td>
               </tr>
             </table>
           </div>
   
-          <div class="col-md-6">
+          <div style="background: rgba(238,238,238);width: 500px;height: 350px;display: inline-block;">
             <div>
-              <div id="neurons_v_out_div" style="font-size: large;font-weight: bold;text-align: center;">神经元放电</div>
+              <div id="neurons_v_out_div" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">神经元放电</font></div>
               <div style="width: 360px;margin-left: 40px;">
                 <form class="form-horizontal" role="form">
                   <div class="form-group">
-                    <label class="control-label col-md-8" for="select_which_layer">选择神经元层</label>
+                    <label class="control-label col-md-8" for="select_which_layer"><font style="color: #333;font-weight: bold;">选择神经元层</font></label>
                     <div class="col-md-4">
                       <select class="form-control" id="select_which_layer">
                         <option>输入层</option>
@@ -7402,30 +7402,30 @@ function getSNNSimuPage() {
                   </div>
                 </form>
               </div>
-              <div id="neurons_v_chart" style="width: 460px;height: 240px;margin-left: 110px;margin-top: 40px;"></div>
+              <div id="neurons_v_chart" style="width: 460px;height: 240px;margin-left: 40px;margin-top: 40px;"></div>
             </div>
           </div>
       </div>
-      <div class="row" style="margin-top: -10px;">
-          <div class="col-md-6">
-            <div id="model_input_spike_cap" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输入层脉冲</div>
-            <ul id="input_spike_sample_imgs_ul" style="height: 280px;width: 100px;overflow-x: hidden;display: inline-block;margin-left: 15px;margin-top: 80px;">
+      <div style="margin-top: 5px;display: block;">
+          <div style="display: inline-block;width: 610px;height: 550px;background: rgba(238,238,238)">
+            <div id="model_input_spike_cap" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">脉冲神经网络输入层脉冲</font></div>
+            <div id="input_spike_charts" style="width: 460px;height: 320px;margin-left: 70px;display: inline-block;margin-top: 40px;"></div>
+            <ul id="input_spike_sample_imgs_ul" style="height: 60px;width: 460px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: 20px;">
             </ul>
-            <div id="input_spike_charts" style="width: 440px;height: 320px;margin-left: 15px;display: inline-block;margin-top: -40px;"></div>
           </div>
-          <div class="col-md-6">
-              <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
-              <span style="font-size: smaller;margin-left: 160px;color: aquamarine;">红色标记图像为输出层出现激发次数相同</span>
-              <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;">统计计数</div>
-              <table id="spike_out_count_table" style="margin-left: 100px;border: solid 3px;">
-                  <tr id="out_labels">
+          <div style="width: 590px;height: 550px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238)">
+              <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">脉冲神经网络输出层脉冲</font></div>
+              <span style="font-size: smaller;margin-left: 160px;color: rgb(133, 4, 255);">红色标记图像为输出层预测错误</span>
+              <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">统计计数</font></div>
+              <table id="spike_out_count_table" style="margin-left: 100px;border: solid 3px #D6D6D6;color: #333;">
+                  <tr id="out_labels" style="border: solid 2px #D6D6D6;">
                   </tr>
-                  <tr id="out_counts_tr">
+                  <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
                   </tr>
               </table>
-              <ul id="sample_imgs_ul" style="height: 280px;width: 100px;overflow-x: hidden;display: inline-block;">
+              <div id="spike_charts" style="width: 460px;height: 320px;margin-left: 70px;display: inline-block;"></div>
+              <ul id="sample_imgs_ul" style="height: 100px;width: 460px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;">
               </ul>
-              <div id="spike_charts" style="width: 440px;height: 320px;margin-left: 5px;display: inline-block;"></div>
           </div>
       </div>
   </body>
@@ -7440,8 +7440,15 @@ function getSNNSimuPage() {
     -webkit-app-region: no-drag;
   }
   
+  body {
+    padding: 25px;
+    background-color: rgb(251, 255, 255);
+    color: white;
+    font-size: 25px;
+  }
+  
   .dark-mode {
-    background-color: rgb(61, 57, 57);
+    background-color: rgb(249, 251, 252);
     color: white;
   }
   
@@ -7496,12 +7503,15 @@ function getSNNSimuPage() {
                     for(let i=0;i<test_img_uris.length;++i){
                       var img_li = document.createElement("li");
                       img_li.style.listStyle = "none";
+                      img_li.style.display = "inline-block";
                       img_li.id = "img_li_"+i;
                       img_li.style.width = "53px";
-                      img_li.style.height = "53px";
-                      img_li.style.marginBottom = "16px";
+                      img_li.style.height = "80px";
+                      img_li.style.marginRight = "20px";
                       var img_tag = document.createElement("img");
                       img_tag.id = "sample_img_"+i;
+                      img_tag.style.opacity = "0.5";
+                      img_tag.style.display = "block";
                       img_tag.onclick = function(){
                         console.log("draw NO."+i+" img and spikes");
                         console.log("current click cls_names="+test_img_spikes[i].cls_names);
@@ -7577,6 +7587,7 @@ function getSNNSimuPage() {
                       test_img_uls.appendChild(img_li);
   
                       var label_span = document.createElement("span");
+                      label_span.style.color = "#333";
                       console.log("图片 i="+i+", uri="+test_img_uris[i]);
                       // a.split("/")[5].split("_")[4].split(".")[0]
                       // label_span.innerText = "标签: "+test_img_uris[i].split("_")[5].split(".")[0];
@@ -7590,13 +7601,15 @@ function getSNNSimuPage() {
                       input_img_li.style.listStyle = "none";
                       input_img_li.id = "input_img_li_"+i;
                       input_img_li.style.width = "53px";
-                      input_img_li.style.height = "53px";
-                      input_img_li.style.marginBottom = "16px";
+                      input_img_li.style.height = "100%";
+                      input_img_li.style.display = "inline-block";
+                      input_img_li.style.marginRight = "10px";
                       var input_img_tag = document.createElement("img");
                       input_img_tag.src = test_img_uris[i];
                       input_img_tag.id = "input_sample_img_"+i;
                       input_img_tag.style.width = "50px";
                       input_img_tag.style.height = "50px";
+                      input_img_tag.style.opacity = "0.5";
                       input_img_tag.onclick = ()=>{
                         console.log("input spike display img idx "+i);
                         if(prev_clicked_input_li !== undefined){
@@ -7695,23 +7708,27 @@ function getSNNSimuPage() {
                     for(let j=0;j<infos.record_spike_out_info.spike_count_avgs.length;++j){
                       let table_line = document.createElement("tr");
                       table_line.style.height = "25px";
-                      table_line.style.border = "solid 2px";
+                      table_line.style.border = "solid 2px #D6D6D6";
+                      table_line.style.color = "#333";
   
                       let td_id = document.createElement("td");
                       td_id.style.fontSize = "medium";
                       td_id.style.paddingLeft= "15px";
+                      td_id.style.border = "solid 2px #D6D6D6";
                       td_id.innerText = "layer_"+j;
                       table_line.appendChild(td_id);
   
                       let td_spike_avg = document.createElement("td");
                       td_spike_avg.style.fontSize = "medium";
                       td_spike_avg.style.paddingLeft = "15px";
+                      td_spike_avg.style.order = "solid 2px #D6D6D6";
                       td_spike_avg.innerText = infos.record_spike_out_info.spike_count_avgs[j];
                       table_line.appendChild(td_spike_avg);
   
                       let td_spike_std = document.createElement("td");
                       td_spike_std.style.fontSize = "medium";
                       td_spike_std.style.paddingLeft = "15px";
+                      td_spike_std.style.border = "solid 2px #D6D6D6";
                       td_spike_std.innerText = infos.record_spike_out_info.spike_count_stds[j];
                       table_line.appendChild(td_spike_std);
   
@@ -7802,11 +7819,11 @@ function getSNNSimuPage() {
                       data: labels,
                       name: "类别",
                       nameTextStyle:{
-                        color:"white"
+                        color:"black"
                       },
                       axisLabel:{
                         textStyle:{
-                            color:"white"
+                            color:"black"
                         }
                      }
                   },
@@ -7815,12 +7832,12 @@ function getSNNSimuPage() {
                       scale:true,
                       name:"时间(brian2 ms)",
                       nameTextStyle:{
-                        color:"white"
+                        color:"black"
                       },
                       axisLabel: {
                           formatter: '{value}',
                           textStyle:{
-                              color:"white"
+                              color:"black"
                           }
                       }
                   },
@@ -7852,11 +7869,11 @@ function getSNNSimuPage() {
                       data: labels,
                       name: "ID",
                       nameTextStyle:{
-                        color:"white"
+                        color:"black"
                       },
                       axisLabel:{
                         textStyle:{
-                            color:"white"
+                            color:"black"
                         }
                      }
                   },
@@ -7865,12 +7882,12 @@ function getSNNSimuPage() {
                       scale:true,
                       name:"时间(brian2 ms)",
                       nameTextStyle:{
-                        color:"white"
+                        color:"black"
                       },
                       axisLabel: {
                           formatter: '{value}',
                           textStyle:{
-                              color:"white"
+                              color:"black"
                           }
                       }
                   },
@@ -7892,7 +7909,7 @@ function getSNNSimuPage() {
                 legend:{
                   data:["脉冲激发次数最少的神经元膜电压", "脉冲激发次数最多的神经元膜电压"],
                   textStyle:{
-                    color:"white"
+                    color:"black"
                   }
                 },
                 grid:{
@@ -7905,11 +7922,11 @@ function getSNNSimuPage() {
                     name:"时间",
                     nameGap:40,
                     nameTextStyle:{
-                      color:"white"
+                      color:"black"
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"white"
+                        color:"black"
                       }
                     }
                 },
@@ -7919,11 +7936,11 @@ function getSNNSimuPage() {
                       scale:true,
                       name:"膜电压(左)",
                       nameTextStyle:{
-                        color:"white"
+                        color:"black"
                       },
                       axisLabel:{
                         textStyle:{
-                          color:"white"
+                          color:"black"
                         }
                       }
                   },
@@ -7932,11 +7949,11 @@ function getSNNSimuPage() {
                       scale:true,
                       name:"膜电压(右)",
                       nameTextStyle:{
-                        color:"white"
+                        color:"black"
                       },
                       axisLabel:{
                         textStyle:{
-                          color:"white"
+                          color:"black"
                         }
                       } 
                   }

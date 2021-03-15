@@ -6417,18 +6417,18 @@ function getConvertorPageV2() {
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);">
               &times;
             </button>
-            <h4 class="modal-title" id="myModalLabel">
+            <h4 class="modal-title" id="myModalLabel" style="font-weight: 700;font-size: 25px;">
               项目创建向导
             </h4>
           </div>
           <div class="modal-body">
                     <form role="form" id="project_info_form">
                         <div class="form-group">
-                            <label for="project_name">项目名称</label>
+                            <label for="project_name" style="font-weight: 500;font-size: 18px;">项目名称</label>
                             <input type="text" class="form-control" id="project_name">
                         </div>
                         <div class="form-group">
-                            <label for="select_type">选择项目类别</label>
+                            <label for="select_type" style="font-weight: 500;font-size: 18px;">选择项目类别</label>
                             <select class="form-control" id="select_type">
                                 <option>图像分类</option>
                                 <option>语音识别</option>
@@ -6436,7 +6436,7 @@ function getConvertorPageV2() {
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="python_type">选择python版本</label>
+                            <label for="python_type" style="font-weight: 500;font-size: 18px;">选择python版本</label>
                             <select class="form-control" id="python_type">
                                 <option>python3.6x</option>
                                 <option>python3.7x</option>
@@ -6444,7 +6444,7 @@ function getConvertorPageV2() {
                             </select>
                         </div>
                         <div class="form-group">
-                          <label for="ann_lib_type">模型使用的神经网络库</label>
+                          <label for="ann_lib_type" style="font-weight: 500;font-size: 18px;">模型使用的神经网络库</label>
                           <select class="form-control" id="ann_lib_type">
                             <option>Keras(Tensorflow backended)</option>
                           </select>
@@ -6473,18 +6473,18 @@ function getConvertorPageV2() {
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);">
               &times;
             </button>
-            <h4 class="modal-title" id="myModalLabelProjRefact">
+            <h4 class="modal-title" id="myModalLabelProjRefact" style="font-weight: 700;font-size: 25px;">
               项目属性修改
             </h4>
           </div>
           <div class="modal-body">
                     <form role="form" id="project_info_form_projrefac">
                         <div class="form-group">
-                            <label for="project_name_projrefac">项目名称</label>
+                            <label for="project_name_projrefac" style="font-weight: 500;font-size: 18px;">项目名称</label>
                             <input type="text" class="form-control" id="project_name_projrefac">
                         </div>
                         <div class="form-group">
-                            <label for="select_type_refac">选择项目类别</label>
+                            <label for="select_type_refac" style="font-weight: 500;font-size: 18px;">选择项目类别</label>
                             <select class="form-control" id="select_type_refac">
                                 <option>图像分类</option>
                                 <option>语音识别</option>
@@ -6492,7 +6492,7 @@ function getConvertorPageV2() {
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="python_type_projrefac">选择python版本</label>
+                            <label for="python_type_projrefac" style="font-weight: 500;font-size: 18px;">选择python版本</label>
                             <select class="form-control" id="python_type_projrefac">
                                 <option>python3.6x</option>
                                 <option>python3.7x</option>
@@ -6500,7 +6500,7 @@ function getConvertorPageV2() {
                             </select>
                         </div>
                         <div class="form-group">
-                          <label for="ann_lib_type_projrefac">模型使用的神经网络库</label>
+                          <label for="ann_lib_type_projrefac" style="font-weight: 500;font-size: 18px;">模型使用的神经网络库</label>
                           <select class="form-control" id="ann_lib_type_projrefac">
                             <option>Keras(Tensorflow backended)</option>
                           </select>

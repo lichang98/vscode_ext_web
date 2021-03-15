@@ -1804,7 +1804,7 @@ export function getSNNSimuPage(){
   
       <div style="margin-top: 20px;display: block;">
   
-          <div style="background: rgba(238,238,238,0.4);width: 350px;height: 350px;display: inline-block;">
+          <div style="background: rgba(238,238,238,0.4);width: 350px;height: 300px;display: inline-block;">
             <div>
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">仿真配置结果评估</font></div>
               <table id="layer_conf_val" style="width: 260px;margin-left:40px;margin-top: 70px;border: solid 3px #D6D6D6;">
@@ -1830,14 +1830,14 @@ export function getSNNSimuPage(){
                     <td id="simulate_dura"></td>
                   </tr>
                   <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
-                    <td style="font-size: medium;font-weight: bold;color: rgb(161, 11, 247);padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">准确率</td>
-                    <td id="simulate_acc" style="color: rgb(161, 11, 247);"></td>
+                    <td style="font-size: medium;font-weight: bold;color: #00BE57;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">准确率</td>
+                    <td id="simulate_acc" style="color: #00BE57;"></td>
                   </tr>    
               </table>
             </div>
           </div>
   
-          <div style="background: rgba(238,238,238,0.4);width: 350px;height: 350px;display: inline-block;">
+          <div style="background: rgba(238,238,238,0.4);width: 350px;height: 300px;display: inline-block;">
             <div style="font-size: large;font-weight: bold;text-align: center;margin-left: 40px;"><font style="color: #333;font-weight: bold;">放电次数均值方差统计</font></div>
             <table id="snn_layers_spike_table" style="width: 280px;margin-left:40px;margin-top: 70px;border: solid 3px #D6D6D6;">
               <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
@@ -1849,7 +1849,7 @@ export function getSNNSimuPage(){
             </table>
           </div>
   
-          <div style="background: rgba(238,238,238,0.4);width: 500px;height: 350px;display: inline-block;">
+          <div style="background: rgba(238,238,238,0.4);width: 500px;height: 300px;display: inline-block;">
             <div>
               <div id="neurons_v_out_div" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">神经元放电</font></div>
               <div style="width: 360px;margin-left: 40px;">
@@ -1873,12 +1873,12 @@ export function getSNNSimuPage(){
           <div style="display: inline-block;width: 610px;height: 550px;background: rgba(238,238,238,0.4);">
             <div id="model_input_spike_cap" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">脉冲神经网络输入层脉冲</font></div>
             <div id="input_spike_charts" style="width: 460px;height: 320px;margin-left: 70px;display: inline-block;margin-top: 40px;"></div>
-            <ul id="input_spike_sample_imgs_ul" style="height: 60px;width: 460px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: 20px;">
+            <ul id="input_spike_sample_imgs_ul" style="height: 60px;width: 460px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;">
             </ul>
           </div>
           <div style="width: 590px;height: 550px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
               <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">脉冲神经网络输出层脉冲</font></div>
-              <span style="font-size: smaller;margin-left: 160px;color: rgb(133, 4, 255);">红色标记图像为输出层预测错误</span>
+              <span style="font-size: smaller;margin-left: 200px;color: #23D951;">红色标记图像为输出层预测错误</span>
               <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">统计计数</font></div>
               <table id="spike_out_count_table" style="margin-left: 100px;border: solid 3px #D6D6D6;color: #333;">
                   <tr id="out_labels" style="border: solid 2px #D6D6D6;">

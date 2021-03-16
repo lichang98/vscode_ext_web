@@ -6811,7 +6811,7 @@ function getANNSNNConvertPage() {
           <div class="col-md-12">
               <div style="width: 350px;height: 560px;display: inline-block;vertical-align: top;white-space:normal;background: rgba(238,238,238,0.4);">
                   <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -20px;"><font style="color: #333;font-weight: bold;">日志输出</font></div>
-                  <div id="log_output_div" style="margin-left: 20px;height: 340px; width: 240px; overflow: auto;margin-top: 60px;color: #333;">
+                  <div id="log_output_div" style="margin-left: 20px;height: 340px; width: 300px; overflow: auto;margin-top: 60px;color: #333;">
                   </div>
               </div>
               <div style="width: 460px;height: 560px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);margin-left: 10px;">

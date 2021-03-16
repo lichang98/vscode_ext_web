@@ -410,6 +410,13 @@ function activate(context) {
                 console.log(err);
             });
         }
+        else if (label.search("1_1config.b") !== -1) {
+            console.log("解析显示1_1config.b 文件内容");
+            let target_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt");
+            vscode.workspace.openTextDocument(target_file_path).then((doc) => {
+                vscode.window.showTextDocument(doc, 1, false);
+            });
+        }
         else if (label.search(".pickle") !== -1 && label.search("layer") === -1) {
             // 显示pickle 文件的原始内容
             console.log("解析并显示pickle 文件内容");
@@ -1019,7 +1026,8 @@ function activate(context) {
                         path.basename(darwinlang_bin_paths[i].toString()).indexOf("re_config") >= 0 ||
                         path.basename(darwinlang_bin_paths[i].toString()).indexOf("nodelist") >= 0 ||
                         path.basename(darwinlang_bin_paths[i].toString()).indexOf("linkout") >= 0 ||
-                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("layerWidth") >= 0) {
+                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("layerWidth") >= 0 ||
+                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("1_1config.txt") >= 0) {
                         continue;
                     }
                     if (inMemTreeViewStruct[0].children) {
@@ -1491,7 +1499,7 @@ function activate(context) {
                             TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
                             if (inMemTreeViewStruct[0].children) {
                                 if (file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
-                                    file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1) {
+                                    file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {
                                     (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
                                 }
                             }

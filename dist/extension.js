@@ -1486,7 +1486,8 @@ function activate(context) {
     vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function () {
         var _a;
         if (!TreeViewProvider_1.ITEM_ICON_MAP.has("SNN二进制模型")) {
-            TreeViewProvider_1.ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
+            // ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
+            TreeViewProvider_1.addSlfFile("SNN二进制模型");
             (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("SNN二进制模型", []));
             darwinlang_bin_paths.splice(0);
             if (inMemTreeViewStruct[0].children) {
@@ -1497,6 +1498,7 @@ function activate(context) {
                         if (file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1) {
                             darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out", file));
                             TreeViewProvider_1.ITEM_ICON_MAP.set(file, "imgs/file.png");
+                            TreeViewProvider_1.addSlfFile(file);
                             if (inMemTreeViewStruct[0].children) {
                                 if (file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
                                     file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {

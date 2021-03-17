@@ -625,9 +625,12 @@ function activate(context) {
                         web_param_neurondt + " " + web_param_synapse_dt + " " + web_param_delay + " " + web_param_dura + " " + path.basename(proj_save_path).replace("\.dar2", ""));
                     let command_str = "python " + scriptPath;
                     currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.webview.postMessage(JSON.stringify({ "log_output": "模型转换程序启动中......" }));
+                    let log_output_channel = vscode.window.createOutputChannel("Darwin Convertor");
+                    log_output_channel.show();
                     let scriptProcess = child_process_1.exec(command_str, {});
                     (_a = scriptProcess.stdout) === null || _a === void 0 ? void 0 : _a.on("data", function (data) {
                         console.log(data);
+                        log_output_channel.append(data);
                         if (data.indexOf("CONVERT_FINISH") !== -1) {
                             if (currentPanel) {
                                 currentPanel.webview.postMessage(JSON.stringify({ "progress": "convert_finish" }));
@@ -814,7 +817,10 @@ function activate(context) {
                 let command_str = "python " + scriptPath;
                 currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.webview.postMessage(JSON.stringify({ "log_output": "模型转换程序启动中......" }));
                 let scriptProcess = child_process_1.exec(command_str, {});
+                let log_output_panel = vscode.window.createOutputChannel("Darwin Convertor");
+                log_output_panel.show();
                 (_a = scriptProcess.stdout) === null || _a === void 0 ? void 0 : _a.on("data", function (data) {
+                    log_output_panel.append(data);
                     console.log(data);
                     if (data.indexOf("CONVERT_FINISH") !== -1) {
                         if (currentPanel) {

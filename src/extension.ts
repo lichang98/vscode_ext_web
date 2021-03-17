@@ -1532,7 +1532,7 @@ export function activate(context: vscode.ExtensionContext) {
 					files.forEach(file =>{
 						if(file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1){
 							darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""), "bin_darwin_out", file));
-							ITEM_ICON_MAP.set(file, "imgs/file.png");
+							// ITEM_ICON_MAP.set(file, "imgs/file.png");
 							addSlfFile(file);
 							if(inMemTreeViewStruct[0].children){
 								if(file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&

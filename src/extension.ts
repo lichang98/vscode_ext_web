@@ -638,7 +638,7 @@ export function activate(context: vscode.ExtensionContext) {
 					let scriptProcess = exec(command_str,{});
 					
 					scriptProcess.stdout?.on("data", function(data){
-						console.log(data);
+						// console.log(data);
 						log_output_channel.append(data);
 						if(data.indexOf("CONVERT_FINISH") !== -1){
 							if(currentPanel){
@@ -828,7 +828,7 @@ export function activate(context: vscode.ExtensionContext) {
 				
 				scriptProcess.stdout?.on("data", function(data){
 					log_output_panel.append(data);
-					console.log(data);
+					// console.log(data);
 					if(data.indexOf("CONVERT_FINISH") !== -1){
 						if(currentPanel){
 							currentPanel.webview.postMessage(JSON.stringify({"progress":"convert_finish"}));

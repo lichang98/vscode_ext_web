@@ -1123,12 +1123,12 @@ export function getANNSNNConvertPage(){
   
   <body class="dark-mode" style="height: 100%;width: 100%;overflow: auto;white-space: nowrap;">
   
-      <div style="margin-top: 30px;height: 140px;background: rgba(238,238,238,0.4);width: 1400px;">
+      <div style="margin-top: 30px;height: 140px;background: rgba(238,238,238,0.4);width: 1300px;">
           <div class="col-md-12">
               <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -160px;"><font style="color: #333;font-weight: bold;">转换参数配置</font></div>
               <form role="form" class="row" style="margin-left: 40px;margin-top: 15px;" id="project_info_form">
                   <div class="col-md-2" style="text-align: center;">
-                      <label for="select_vthresh"><font style="color: #333;font-weight: bold;">膜电压阈值</font></label>
+                      <label for="select_vthresh"><font style="color: #333;font-weight: bold;">脉冲发放阈值</font></label>
                       <select class="form-control" id="select_vthresh">
                           <option>21</option>
                           <option>1</option>
@@ -1199,7 +1199,7 @@ export function getANNSNNConvertPage(){
       </div>
   
   
-      <div style="margin-top: 10px;height: 160px;background: rgba(238,238,238,0.4);width: 1400px;">
+      <div style="margin-top: 10px;height: 160px;background: rgba(238,238,238,0.4);width: 1300px;">
           <div>
               <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -160px;"><font style="color: #333;font-weight: bold;">转换进度</font></div>
               <div class="row" style="margin-left: 30px;color: #333;">
@@ -1269,20 +1269,20 @@ export function getANNSNNConvertPage(){
           </div>
       </div>
   
-      <div style="height: 560px; margin-top: 10px;">
+      <div style="height: 560px; margin-top: 10px;width: 1300px;margin-left: -20px;">
           <div class="col-md-12">
-              <div style="width: 350px;height: 560px;display: inline-block;vertical-align: top;white-space:normal;background: rgba(238,238,238,0.4);">
+              <!-- <div style="width: 350px;height: 560px;display: inline-block;vertical-align: top;white-space:normal;background: rgba(238,238,238,0.4);">
                   <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -20px;"><font style="color: #333;font-weight: bold;">日志输出</font></div>
                   <div id="log_output_div" style="margin-left: 20px;height: 340px; width: 300px; overflow: auto;margin-top: 60px;color: #333;">
                   </div>
-              </div>
+              </div> -->
               <div style="width: 460px;height: 560px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);margin-left: 10px;">
                   <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -80px;"><font style="color: #333;font-weight: bold;">转换性能分析</font></div>
-                  <div id="use_time_bar_chart" style="width: 340px;height: 400px;margin-top: 15px;margin-left: 40px;"></div>
+                  <div id="use_time_bar_chart" style="width: 440px;height: 400px;margin-top: 15px;margin-left: 40px;"></div>
               </div>
-              <div style="height:560px;margin-left: 10px;width: 560px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
-                  <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;margin-left: 10px;"><font style="color: #333;font-weight: bold;">转换过程信息</font></div>
-                  <table id="info_simu_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;border-spacing: 0px 5px;color: #333;margin-left: 20px;">
+              <div style="height:560px;margin-left: 10px;width: 720px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
+                  <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;margin-left: 60px;"><font style="color: #333;font-weight: bold;">转换过程信息</font></div>
+                  <table id="info_simu_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;border-spacing: 0px 5px;color: #333;margin-left: 80px;">
                       <tr style="margin-top: 15px;border: solid 2px #D6D6D6;">
                           <td style="width: 80px;font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">转换总耗时</td>
                           <td id="total_use_time" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
@@ -1425,8 +1425,8 @@ export function getANNSNNConvertPage(){
                   log_output_lists = log_output_lists.concat(data.log_output.split("<br/>"));
                   console.log("data.logoutput=["+data.log_output+"]");
                   console.log("data split list len="+log_output_lists.length);
-                  $("#log_output_div").html(log_output_lists.join("<br/>"));
-                  document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
+                  // $("#log_output_div").html(log_output_lists.join("<br/>"));
+                  // document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
                   if(log_output_lists.length <= 180){
                       console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/180*100)+"%");
                           document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/180*100)+"%";

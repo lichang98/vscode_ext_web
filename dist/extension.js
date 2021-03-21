@@ -6427,54 +6427,113 @@ function getConvertorPageV2() {
     </button>
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: white;color: #333;">
-      <div class="modal-dialog" style="background-color: white;">
+      <div class="modal-dialog" style="background-color: white;width: 800px;">
         <div class="modal-content" style="background-color: white;">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);">
+          <div>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
               &times;
             </button>
-            <h4 class="modal-title" id="myModalLabel" style="font-weight: 700;font-size: 25px;">
+            <h4 id="myModalLabel" style="font-family: SourceHanSansCN-Normal;
+            font-size: 24px;
+            color: #333333;
+            letter-spacing: 1.07px;margin-left: 20px;">
               项目创建向导
             </h4>
           </div>
-          <div class="modal-body">
+          <div>
                     <form role="form" id="project_info_form">
-                        <div class="form-group">
-                            <label for="project_name" style="font-weight: 500;font-size: 18px;">项目名称</label>
-                            <input type="text" class="form-control" id="project_name">
+                        <div style="margin-top: 50px;">
+                            <label for="project_name" style="font-family: SourceHanSansCN-Normal;
+                            font-size: 22px;
+                            color: #333333;
+                            letter-spacing: 1.26px;margin-left: 180px;">项目名称: </label>
+                            <input type="text" id="project_name" style="background: #EEEEEE;
+                            border: 1px solid #D9D9D9;
+                            border-radius: 6px;
+                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 14px;">
                         </div>
-                        <div class="form-group">
-                            <label for="select_type" style="font-weight: 500;font-size: 18px;">选择项目类别</label>
-                            <select class="form-control" id="select_type">
+                        <div style="margin-top: 20px;">
+                            <label for="select_type" style="font-family: SourceHanSansCN-Normal;
+                            font-size: 22px;
+                            color: #333333;
+                            letter-spacing: 1.26px;margin-left: 140px;">选择项目类别: </label>
+                            <select id="select_type" style="background: #EEEEEE;
+                            border: 1px solid #D9D9D9;
+                            border-radius: 6px;
+                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 14px;">
                                 <option>图像分类</option>
                                 <option>语音识别</option>
                                 <option>目标检测</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="python_type" style="font-weight: 500;font-size: 18px;">选择python版本</label>
-                            <select class="form-control" id="python_type">
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label for="python_type" style="font-family: SourceHanSansCN-Normal;
+                            font-size: 22px;
+                            color: #333333;
+                            letter-spacing: 1.26px;margin-left: 100px;">选择python版本: </label>
+                            <select id="python_type" style="background: #EEEEEE;
+                            border: 1px solid #D9D9D9;
+                            border-radius: 6px;
+                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 14px;">
                                 <option>python3.6x</option>
                                 <option>python3.7x</option>
                                 <option>python3.8x</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                          <label for="ann_lib_type" style="font-weight: 500;font-size: 18px;">模型使用的神经网络库</label>
-                          <select class="form-control" id="ann_lib_type">
+                        <div class="form-group" style="margin-top: 20px;">
+                          <label for="ann_lib_type" style="font-family: SourceHanSansCN-Normal;
+                          font-size: 22px;
+                          color: #333333;
+                          letter-spacing: 1.26px;margin-left: 40px;">模型使用的神经网络库: </label>
+                          <select id="ann_lib_type" style="background: #EEEEEE;
+                          border: 1px solid #D9D9D9;
+                          border-radius: 6px;
+                          border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 14px;">
                             <option>Keras(Tensorflow backended)</option>
                           </select>
                         </div>
-                        <div class="input-group">
-                          <span id="span_save_path" class="input-group-addon" style="cursor:pointer">点击选择保存路径</span>
-                          <input id="proj_save_path_input" type="text" class="form-control">
+                        <div class="input-group" style="background: #EEEEEE;
+                        border-radius: 6px;
+                        border-radius: 6px;margin-left: 100px;margin-right: 20px;">
+                          <span id="span_save_path" class="input-group-addon" style="cursor:pointer;background: #DFDFDF;font-family: SourceHanSansCN-Normal;
+                          font-size: 22px;
+                          color: #333333;
+                          letter-spacing: 1.26px;">点击选择保存路径</span>
+                          <input id="proj_save_path_input" type="text" class="form-control" style="background: #EEEEEE;
+                          border-radius: 6px;
+                          border-radius: 6px;font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 14px;">
                         </div>
                     </form>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss">关闭
+          <div style="margin-top: 40px;margin-bottom: 40px;">
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss" style="background: #F3F3F3;
+            border: 1px solid #D7D7D7;
+            border-radius: 2px;
+            border-radius: 2px;width: 140px;margin-left: 200px;">关闭
             </button>
-            <button type="button" class="btn btn-primary" id="create">创建
+            <button type="button" class="btn btn-primary" id="create" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+            border-radius: 2px;
+            border-radius: 2px;width: 140px;margin-left: 60px;">创建
             </button>
           </div>
         </div><!-- /.modal-content -->
@@ -6483,50 +6542,98 @@ function getConvertorPageV2() {
     
     <!--项目属性修改-->
     <div class="modal fade" id="myModalProjRefact" tabindex="-1" role="dialog" aria-labelledby="myModalLabelProjRefact" aria-hidden="true" style="background-color: white;color: #333;">
-      <div class="modal-dialog" style="background-color: white;">
+      <div class="modal-dialog" style="background-color: white;width: 800px;">
         <div class="modal-content" style="background-color: white;">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);">
+          <div>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
               &times;
             </button>
-            <h4 class="modal-title" id="myModalLabelProjRefact" style="font-weight: 700;font-size: 25px;">
+            <h4 id="myModalLabelProjRefact" style="font-family: SourceHanSansCN-Normal;
+            font-size: 24px;
+            color: #333333;
+            letter-spacing: 1.07px;margin-left: 20px;">
               项目属性修改
             </h4>
           </div>
           <div class="modal-body">
                     <form role="form" id="project_info_form_projrefac">
-                        <div class="form-group">
-                            <label for="project_name_projrefac" style="font-weight: 500;font-size: 18px;">项目名称</label>
-                            <input type="text" class="form-control" id="project_name_projrefac">
+                        <div style="margin-top: 50px;">
+                            <label for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
+                            font-size: 22px;
+                            color: #333333;
+                            letter-spacing: 1.26px;margin-left: 180px;">项目名称</label>
+                            <input type="text" id="project_name_projrefac" style="background: #EEEEEE;
+                            border: 1px solid #D9D9D9;
+                            border-radius: 6px;
+                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 14px;">
                         </div>
-                        <div class="form-group">
-                            <label for="select_type_refac" style="font-weight: 500;font-size: 18px;">选择项目类别</label>
-                            <select class="form-control" id="select_type_refac">
+                        <div style="margin-top: 20px;">
+                            <label for="select_type_refac" style="font-family: SourceHanSansCN-Normal;
+                            font-size: 22px;
+                            color: #333333;
+                            letter-spacing: 1.26px;margin-left: 140px;">选择项目类别</label>
+                            <select id="select_type_refac" style="background: #EEEEEE;
+                            border: 1px solid #D9D9D9;
+                            border-radius: 6px;
+                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 14px;">
                                 <option>图像分类</option>
                                 <option>语音识别</option>
                                 <option>目标检测</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="python_type_projrefac" style="font-weight: 500;font-size: 18px;">选择python版本</label>
-                            <select class="form-control" id="python_type_projrefac">
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label for="python_type_projrefac" style="font-family: SourceHanSansCN-Normal;
+                            font-size: 22px;
+                            color: #333333;
+                            letter-spacing: 1.26px;margin-left: 100px;">选择python版本</label>
+                            <select id="python_type_projrefac" style="background: #EEEEEE;
+                            border: 1px solid #D9D9D9;
+                            border-radius: 6px;
+                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 14px;">
                                 <option>python3.6x</option>
                                 <option>python3.7x</option>
                                 <option>python3.8x</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                          <label for="ann_lib_type_projrefac" style="font-weight: 500;font-size: 18px;">模型使用的神经网络库</label>
-                          <select class="form-control" id="ann_lib_type_projrefac">
+                        <div class="form-group" style="margin-top: 20px;">
+                          <label for="ann_lib_type_projrefac" style="font-family: SourceHanSansCN-Normal;
+                          font-size: 22px;
+                          color: #333333;
+                          letter-spacing: 1.26px;margin-left: 40px;">模型使用的神经网络库</label>
+                          <select id="ann_lib_type_projrefac" style="background: #EEEEEE;
+                          border: 1px solid #D9D9D9;
+                          border-radius: 6px;
+                          border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 14px;">
                             <option>Keras(Tensorflow backended)</option>
                           </select>
                         </div>
                     </form>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_projrefac">取消
+          <div style="margin-top: 40px;margin-bottom: 40px;">
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_projrefac" style="background: #F3F3F3;
+            border: 1px solid #D7D7D7;
+            border-radius: 2px;
+            border-radius: 2px;width: 140px;margin-left: 200px;">取消
             </button>
-            <button type="button" class="btn btn-primary" id="create_projrefac">确认
+            <button type="button" class="btn btn-primary" id="create_projrefac" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+            border-radius: 2px;
+            border-radius: 2px;width: 140px;margin-left: 60px;">确认
             </button>
           </div>
         </div><!-- /.modal-content -->

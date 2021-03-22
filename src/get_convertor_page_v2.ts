@@ -2703,6 +2703,7 @@ export function getSNNModelPage():string{
                 const data = JSON.parse(evt.data);
                 if(data.snn_info){
                     var infos =JSON.parse(data.snn_info);
+                    console.log("显示snn 基本信息......");
                     // 构建neurons info 表格
                     var neurons_info = infos.neurons_info;
                     var neurons_table = document.getElementById("snn_neurons_table");
@@ -2823,15 +2824,15 @@ export function getSNNModelPage():string{
       //     "record_wts_std":record_layers_wt_std
       // }
   
-                    // SNN模型简图
-                    let sanky_data=new Array();
-                    let sanky_links=new Array();
-                    for(let i=0;i<infos.layer_conns.length+1;++i){
-                        sanky_data.push({"name": "layer_"+i});
-                    }
-                    for(let i=0;i<infos.layer_conns.length;++i){
-                        sanky_links.push({"source":"layer_"+i, "target":"layer_"+(i+1), "value": infos.layer_conns[i].ratio, "lineStyle":{"color": "#c23531"}});
-                    }
+                    // // SNN模型简图
+                    // let sanky_data=new Array();
+                    // let sanky_links=new Array();
+                    // for(let i=0;i<infos.layer_conns.length+1;++i){
+                    //     sanky_data.push({"name": "layer_"+i});
+                    // }
+                    // for(let i=0;i<infos.layer_conns.length;++i){
+                    //     sanky_links.push({"source":"layer_"+i, "target":"layer_"+(i+1), "value": infos.layer_conns[i].ratio, "lineStyle":{"color": "#c23531"}});
+                    // }
                   //   console.log("Display sanky graph, sanky_data="+sanky_data[0]['name']);
                     // console.log("Display sanky links, ="+sanky_links['0']['value']);
                     // display_snn_model_sanky(sanky_data, sanky_links);

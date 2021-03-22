@@ -410,7 +410,7 @@ function activate(context) {
                 console.log(err);
             });
         }
-        else if (label.search("1_1config.b") !== -1) {
+        else if (label.search("config.b") !== -1) {
             console.log("解析显示1_1config.b 文件内容");
             let target_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt");
             vscode.workspace.openTextDocument(target_file_path).then((doc) => {
@@ -954,7 +954,7 @@ function activate(context) {
             filters: { "Darwin2Project": ['dar2'] }
         };
         vscode.window.showOpenDialog(options).then(fileUri => {
-            var _a, _b, _c, _d, _e;
+            var _a, _b, _c, _d, _e, _f;
             if (fileUri) {
                 console.log("opened project path = " + fileUri[0].fsPath);
                 proj_save_path = fileUri[0].fsPath;
@@ -1039,8 +1039,15 @@ function activate(context) {
                     if (inMemTreeViewStruct[0].children) {
                         var child_len = inMemTreeViewStruct[0].children.length;
                         // ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
-                        TreeViewProvider_1.addDarwinFiles(path.basename(darwinlang_bin_paths[i].toString()));
-                        (_e = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _e === void 0 ? void 0 : _e.push(new TreeViewProvider_1.TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
+                        if (darwinlang_bin_paths[i].toString().search("config.b") !== -1) {
+                            TreeViewProvider_1.addDarwinFiles("config.b");
+                            (_e = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _e === void 0 ? void 0 : _e.push(new TreeViewProvider_1.TreeItemNode("config.b"));
+                        }
+                        else if (darwinlang_bin_paths[i].toString().search("connfiles") !== -1) {
+                            TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
+                            (_f = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _f === void 0 ? void 0 : _f.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                        }
+                        // inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
                     }
                 }
                 // // 挂载二进制模型的inputs 数据
@@ -1414,9 +1421,18 @@ function activate(context) {
         panelSNNVisWeb.reveal();
         panelSNNVisWeb.webview.html = get_convertor_page_v2_1.getSNNModelPage();
         panelSNNVisWeb.title = "SNN模型";
-        fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
-            panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_info": data }));
-        });
+        // fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
+        // 	console.log("panelSNNVisWeb is: "+panelSNNVisWeb+", send snn info......");
+        // 	panelSNNVisWeb!.webview.postMessage(JSON.stringify({ "snn_info": data })).then((onfullfill)=>{
+        // 		console.log("向SNN模型界面发送消息，on fullfill.");
+        // 	}, (onreject)=>{
+        // 		console.log("向SNN模型界面发送消息，on reject.");
+        // 	});
+        // });
+        let snn_model_info_data = fs.readFileSync(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"));
+        console.log("加载完毕snn 模型数据.....");
+        panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_info": snn_model_info_data.toString() }));
+        console.log("执行darwinlang map生成脚本...");
         // 执行 darwinlang map 生成脚本
         let target_darlang_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", "snn_digit_darlang.json");
         let command_str = "python " + path.join(__dirname, "load_graph.py") + " " + target_darlang_file_path + " " + path.join(__dirname);
@@ -1500,15 +1516,28 @@ function activate(context) {
                 var child_len = inMemTreeViewStruct[0].children.length;
                 fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out"), (err, files) => {
                     files.forEach(file => {
-                        var _a;
+                        var _a, _b;
                         if (file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1) {
                             darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out", file));
                             // ITEM_ICON_MAP.set(file, "imgs/file.png");
-                            TreeViewProvider_1.addSlfFile(file);
+                            // addSlfFile(file);
+                            // if(file.search("config.b") !== -1){
+                            // 	addDarwinFiles("config.b");
+                            // }else if(file.search("connfiles") !== -1){
+                            // 	addDarwinFiles("packed_bin_files.dat");
+                            // }
                             if (inMemTreeViewStruct[0].children) {
                                 if (file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
                                     file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {
-                                    (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
+                                    // inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
+                                    if (file.search("config.b") !== -1) {
+                                        TreeViewProvider_1.addDarwinFiles("config.b");
+                                        (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("config.b"));
+                                    }
+                                    else if (file.search("connfiles") !== -1) {
+                                        TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
+                                        (_b = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _b === void 0 ? void 0 : _b.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                                    }
                                 }
                             }
                         }
@@ -8255,6 +8284,7 @@ function getSNNModelPage() {
                 const data = JSON.parse(evt.data);
                 if(data.snn_info){
                     var infos =JSON.parse(data.snn_info);
+                    console.log("显示snn 基本信息......");
                     // 构建neurons info 表格
                     var neurons_info = infos.neurons_info;
                     var neurons_table = document.getElementById("snn_neurons_table");
@@ -8375,15 +8405,15 @@ function getSNNModelPage() {
       //     "record_wts_std":record_layers_wt_std
       // }
   
-                    // SNN模型简图
-                    let sanky_data=new Array();
-                    let sanky_links=new Array();
-                    for(let i=0;i<infos.layer_conns.length+1;++i){
-                        sanky_data.push({"name": "layer_"+i});
-                    }
-                    for(let i=0;i<infos.layer_conns.length;++i){
-                        sanky_links.push({"source":"layer_"+i, "target":"layer_"+(i+1), "value": infos.layer_conns[i].ratio, "lineStyle":{"color": "#c23531"}});
-                    }
+                    // // SNN模型简图
+                    // let sanky_data=new Array();
+                    // let sanky_links=new Array();
+                    // for(let i=0;i<infos.layer_conns.length+1;++i){
+                    //     sanky_data.push({"name": "layer_"+i});
+                    // }
+                    // for(let i=0;i<infos.layer_conns.length;++i){
+                    //     sanky_links.push({"source":"layer_"+i, "target":"layer_"+(i+1), "value": infos.layer_conns[i].ratio, "lineStyle":{"color": "#c23531"}});
+                    // }
                   //   console.log("Display sanky graph, sanky_data="+sanky_data[0]['name']);
                     // console.log("Display sanky links, ="+sanky_links['0']['value']);
                     // display_snn_model_sanky(sanky_data, sanky_links);

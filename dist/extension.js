@@ -5625,28 +5625,46 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
         <div class="row" style="height: 45%;width: 100%;">
             <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 310px;margin-left: 50px;">
               <!-- 数据基本信息表格 -->
-              <div style="text-align: center;font-size: large;font-weight: bold;color: #333;"><font style="color: #333;">导入数据统计</font></div>
+              <div style="text-align: center;color: #333;"><font style="font-family: SourceHanSansCN-Normal;
+                font-size: 20px;
+                color: #333333;
+                letter-spacing: 1.14px;">导入数据统计</font></div>
               <table id="data_general_table" style="width:440px; margin-left:15px;color: #333;margin-top: 30px;">
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;">总数据大小</td>
-                  <td id="total_data_amount" style="font-weight:bolder;padding-left: 10px;"></td>
+                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;"><font style="font-family: SourceHanSansCN-Normal;
+                    font-size: 16px;
+                    color: #333333;
+                    text-align: right;"></font>总数据量</td>
+                  <td id="total_data_amount" style="font-weight:bolder;text-align: right;padding-right: 15px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;">测试数据量</td>
-                  <td id="test_data_amount" style="font-weight: bolder;padding-left: 10px;"></td>
+                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;"><font style="font-family: SourceHanSansCN-Normal;
+                    font-size: 16px;
+                    color: #333333;
+                    text-align: right;"></font>测试数据量</td>
+                  <td id="test_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;">验证数据量</td>
-                  <td id="val_data_amount" style="font-weight: bolder;padding-left: 10px;"></td>
+                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;"><font style="font-family: SourceHanSansCN-Normal;
+                    font-size: 16px;
+                    color: #333333;
+                    text-align: right;">验证数据量</font></td>
+                  <td id="val_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;">数据类别个数</td>
-                  <td id="class_counts" style="font-weight: bolder;padding-left: 10px;"></td>
+                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;"><font style="font-family: SourceHanSansCN-Normal;
+                    font-size: 16px;
+                    color: #333333;
+                    text-align: right;">数据类别</font></td>
+                  <td id="class_counts" style="font-weight: bolder;text-align: right;padding-right: 15px;"></td>
                 </tr>
               </table>
             </div>
             <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 310px;margin-left: 15px;">
-              <div style="text-align: center;font-weight: bold;font-size: large;margin-bottom:20px;color: #333;">
+              <div style="text-align: center;margin-bottom:20px;color: #333;font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;">
                 数据类别分布
               </div>
               <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:20px;margin-top: -30px;"></div>
@@ -5654,7 +5672,10 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
         </div>
         <div class="row" style="height: 45%;width: 100%;margin-top:35px;">
           <div id="sample_data_div" class="col-md-5" style="height:351px;background: rgba(238,238,238,0.4);margin-left: 50px;">
-            <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;color: black;">
+            <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
+            font-size: 20px;
+            color: #333333;
+            letter-spacing: 1.14px;">
               训练集样例数据
             </div>
             <div id="bar_chart_histgram" style="width: 440px;height: 320px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
@@ -5693,7 +5714,10 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
             
           </div>
           <div id="sample_testdataset_data_div" class="col-md-5" style="height: 351px;background: rgba(238,238,238,0.4);margin-left: 15px;">
-            <div style="text-align: center;font-weight: bold;font-size: large;margin-left:15px;color: black;">
+            <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
+            font-size: 20px;
+            color: #333333;
+            letter-spacing: 1.14px;">
               测试集样例数据
             </div>
   
@@ -5812,8 +5836,10 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
   <script src="http://localhost:6003/js/echarts.min.js"></script>
   
   <script>
-  var prev_click_img_li_id = undefined;
-  var prev_click_img_li_test_id = undefined;
+  // var prev_click_img_li_id = undefined;
+  // var prev_click_img_li_test_id = undefined;
+  let prev_click_img_id = undefined;
+  let prev_click_img_test_id = undefined;
   var data_info=undefined;
   $(document).ready(function(){
     // display_data_bar_chart(['0','1','2','3','4','5','6','7','8','9'],
@@ -5881,21 +5907,41 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
   function sample_img_click(e){
     var sampleId = $(e).attr("id");
     if(sampleId.substring(0,4) === "test"){
-      if(prev_click_img_li_test_id !== undefined){
-        document.getElementById(prev_click_img_li_test_id).style.backgroundColor="";
-        document.getElementById(prev_click_img_li_test_id).style.opacity = "";
+      if(prev_click_img_test_id !== undefined){
+        document.getElementById(prev_click_img_test_id).style.border = "";
       }
-      prev_click_img_li_test_id = sampleId+"_li";
-      document.getElementById(prev_click_img_li_test_id).style.backgroundColor = "#00868B";
-      document.getElementById(prev_click_img_li_test_id).style.opacity = "0.5";
+      console.log("点击目标："+sampleId+", 设置边框颜色...");
+      prev_click_img_test_id = sampleId;
+      let img_clicked = document.getElementById(prev_click_img_test_id);
+      document.getElementById(sampleId+"_li").removeChild(img_clicked);
+      img_clicked.style.border = "10px outset red";
+      document.getElementById(sampleId+"_li").appendChild(img_clicked);
+      // document.getElementById(prev_click_img_test_id).style.border = "10px outset red;";
+      // if(prev_click_img_li_test_id !== undefined){
+      //   document.getElementById(prev_click_img_li_test_id).style.backgroundColor="";
+      //   document.getElementById(prev_click_img_li_test_id).style.opacity = "";
+      // }
+      // prev_click_img_li_test_id = sampleId+"_li";
+      // document.getElementById(prev_click_img_li_test_id).style.backgroundColor = "#00868B";
+      // document.getElementById(prev_click_img_li_test_id).style.opacity = "0.5";
     }else{
-      if(prev_click_img_li_id !== undefined){
-        document.getElementById(prev_click_img_li_id).style.backgroundColor = "";
-        document.getElementById(prev_click_img_li_id).style.opacity = "";
+      if(prev_click_img_id !== undefined){
+        document.getElementById(prev_click_img_id).style.border = "";
       }
-      prev_click_img_li_id = sampleId+"_li";
-      document.getElementById(prev_click_img_li_id).style.backgroundColor = "#00868B";
-      document.getElementById(prev_click_img_li_id).style.opacity = "0.5";
+      console.log("点击目标："+sampleId+", 设置边框颜色...");
+      prev_click_img_id = sampleId;
+      let img_clicked = document.getElementById(prev_click_img_id);
+      document.getElementById(sampleId+"_li").removeChild(img_clicked);
+      img_clicked.style.border = "10px outset red";
+      document.getElementById(sampleId+"_li").appendChild(img_clicked);
+      // document.getElementById(prev_click_img_id).style.border = "10px outset red;";
+      // if(prev_click_img_li_id !== undefined){
+      //   document.getElementById(prev_click_img_li_id).style.backgroundColor = "";
+      //   document.getElementById(prev_click_img_li_id).style.opacity = "";
+      // }
+      // prev_click_img_li_id = sampleId+"_li";
+      // document.getElementById(prev_click_img_li_id).style.backgroundColor = "#00868B";
+      // document.getElementById(prev_click_img_li_id).style.opacity = "0.5";
     }
     console.log("current click img id="+sampleId);
     var sampleIdx = parseInt(sampleId.substring(sampleId.length-1));
@@ -5926,7 +5972,9 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
                     axisLabel:{
                       textStyle:{
                         color:"black"
-                      }
+                      },
+                      fontFamily: 'Helvetica',
+                      fontSize: '12px',
                     }
               },
               yAxis: [
@@ -5940,7 +5988,9 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
                     axisLabel:{
                       textStyle:{
                         color:"black"
-                      }
+                      },
+                      fontFamily: 'Helvetica',
+                      fontSize: '12px',
                     }
                   },
                   {
@@ -5951,11 +6001,15 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
                     nameTextStyle:{
                       color:"white"
                     },
+                    fontFamily: 'Helvetica',
+                    fontSize: '12px',
                     axisLabel:{
                       show:false,
                       textStyle:{
                         color:"white"
-                      }
+                      },
+                      fontFamily: 'Helvetica',
+                      fontSize: '12px',
                     }
                   }
               ],
@@ -6043,7 +6097,7 @@ function getConvertorModelPageV2() {
               <!-- 模型总体信息表格 -->
               <div style="background: rgba(238,238,238,0.4);height: 378px;display: inline-block;">
                 <table id="model_general_table" style="margin-left:40px;color: #333;width: 440px;">
-                  <caption class="white-text" style="caption-side: top;text-align: center;font-size: large;font-weight: bold;"><font style="color: #333;">ANN模型基本信息</font></caption>
+                  <caption class="white-text" style="caption-side: top;text-align: center;font-size: large;font-weight: bold;"><font style="color: #333;">人工神经网络模型基本信息</font></caption>
                   <tr style="font-size: medium;font-weight: bold;border: solid 3px;border-color: #D6D6D6;">
                     <td style="font-size: medium;padding-left: 15px;border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;">总层数</td>
                     <td id="model_total_layers" style="font-size: medium;padding-left: 10px;"></td>
@@ -7527,7 +7581,7 @@ function getSNNSimuPage() {
               <table id="layer_conf_val" style="width: 260px;margin-left:40px;margin-top: 70px;border: solid 3px #D6D6D6;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                   <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
-                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">膜电压阈值</td>
+                    <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">膜电位阈值</td>
                     <td id="simulate_vthresh"></td>
                   </tr>
                   <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
@@ -7840,21 +7894,21 @@ function getSNNSimuPage() {
                       "data": v_vals[0],
                       "type":"line",
                       "smooth":true,
-                      "name":"脉冲激发次数最少的神经元膜电压"
+                      "name":"脉冲激发次数最少的神经元膜电位"
                     });
                     data_series_input.push({
                       "data":v_vals[1],
                       "type":"line",
                       "smooth":true,
                       "yAxisIndex":1,
-                      "name":"脉冲激发次数最多的神经元膜电压"
+                      "name":"脉冲激发次数最多的神经元膜电位"
                     });
   
                     data_series_output.push({
                       "data": v_vals[2],
                       "type": "line",
                       "smooth":true,
-                      "name": "脉冲激发次数最少的神经元膜电压"
+                      "name": "脉冲激发次数最少的神经元膜电位"
                     });
   
                     data_series_output.push({
@@ -7862,7 +7916,7 @@ function getSNNSimuPage() {
                       "type":"line",
                       "smooth":true,
                       "yAxisIndex":1,
-                      "name":"脉冲激发次数最多的神经元膜电压"
+                      "name":"脉冲激发次数最多的神经元膜电位"
                     });
   
                     display_neuron_v_linechart(tms[0], data_series_input);
@@ -8093,7 +8147,7 @@ function getSNNSimuPage() {
                   trigger:"axis"
                 },
                 legend:{
-                  data:["脉冲激发次数最少的神经元膜电压", "脉冲激发次数最多的神经元膜电压"],
+                  data:["脉冲激发次数最少的神经元膜电位", "脉冲激发次数最多的神经元膜电位"],
                   textStyle:{
                     color:"black"
                   }
@@ -8120,7 +8174,7 @@ function getSNNSimuPage() {
                   {
                       type: 'value',
                       scale:true,
-                      name:"膜电压(左)",
+                      name:"膜电位(左)",
                       nameTextStyle:{
                         color:"black"
                       },
@@ -8133,7 +8187,7 @@ function getSNNSimuPage() {
                   {
                     type: 'value',
                       scale:true,
-                      name:"膜电压(右)",
+                      name:"膜电位(右)",
                       nameTextStyle:{
                         color:"black"
                       },
@@ -8280,7 +8334,7 @@ function getSNNModelPage() {
   <script>
         $(document).ready(function(){
             window.addEventListener("message", function(evt){
-              console.log("SNN 模型可视化接收到extension 消息");
+              console.log("SNN 模型可视化接收到extension 消息: ");
                 const data = JSON.parse(evt.data);
                 if(data.snn_info){
                     var infos =JSON.parse(data.snn_info);
@@ -8367,7 +8421,7 @@ function getSNNModelPage() {
                       td_id.style.width = "120px";
                       td_id.style.paddingLeft = "10px";
                       td_id.style.border = "solid 3px #D6D6D6";
-                      td_id.innerText = "layer_"+i;
+                      td_id.innerText = ""+i;
                       table_line.appendChild(td_id);
   
                       let td_avg = document.createElement("td");

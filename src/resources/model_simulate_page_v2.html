@@ -16,7 +16,7 @@
             <table id="layer_conf_val" style="width: 260px;margin-left:40px;margin-top: 70px;border: solid 3px #D6D6D6;">
                 <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                 <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">膜电压阈值</td>
+                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">膜电位阈值</td>
                   <td id="simulate_vthresh"></td>
                 </tr>
                 <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
@@ -329,21 +329,21 @@ body {
                     "data": v_vals[0],
                     "type":"line",
                     "smooth":true,
-                    "name":"脉冲激发次数最少的神经元膜电压"
+                    "name":"脉冲激发次数最少的神经元膜电位"
                   });
                   data_series_input.push({
                     "data":v_vals[1],
                     "type":"line",
                     "smooth":true,
                     "yAxisIndex":1,
-                    "name":"脉冲激发次数最多的神经元膜电压"
+                    "name":"脉冲激发次数最多的神经元膜电位"
                   });
 
                   data_series_output.push({
                     "data": v_vals[2],
                     "type": "line",
                     "smooth":true,
-                    "name": "脉冲激发次数最少的神经元膜电压"
+                    "name": "脉冲激发次数最少的神经元膜电位"
                   });
 
                   data_series_output.push({
@@ -351,7 +351,7 @@ body {
                     "type":"line",
                     "smooth":true,
                     "yAxisIndex":1,
-                    "name":"脉冲激发次数最多的神经元膜电压"
+                    "name":"脉冲激发次数最多的神经元膜电位"
                   });
 
                   display_neuron_v_linechart(tms[0], data_series_input);
@@ -582,7 +582,7 @@ body {
                 trigger:"axis"
               },
               legend:{
-                data:["脉冲激发次数最少的神经元膜电压", "脉冲激发次数最多的神经元膜电压"],
+                data:["脉冲激发次数最少的神经元膜电位", "脉冲激发次数最多的神经元膜电位"],
                 textStyle:{
                   color:"black"
                 }
@@ -609,7 +609,7 @@ body {
                 {
                     type: 'value',
                     scale:true,
-                    name:"膜电压(左)",
+                    name:"膜电位(左)",
                     nameTextStyle:{
                       color:"black"
                     },
@@ -622,7 +622,7 @@ body {
                 {
                   type: 'value',
                     scale:true,
-                    name:"膜电压(右)",
+                    name:"膜电位(右)",
                     nameTextStyle:{
                       color:"black"
                     },

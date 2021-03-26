@@ -30,9 +30,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 """
 
 
+from numbers import Number
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.lib.arraysetops import isin
 plt.rcdefaults()
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
@@ -48,6 +50,10 @@ Dark = 0.3
 Darker = 0.15
 Black = 0.
 
+dynamic_color_darker = ['#FFDEAD', '#6495ED', '#00CED1', '#3CB371', '#B22222']
+dynamic_color_lighter = ['#FFFAFA', '#87CEFA', '#00FFFF', '#7CFC00', '#FA8072']
+map_rect_color = '#7D26CD'
+map_line_color = '#D15FEE'
 # Black = 1.
 # Darker = 0.8
 # Dark = 0.6
@@ -77,6 +83,7 @@ def add_layer_with_omission(patches, colors, size=(24, 24),
                             num_dots=4,
                             top_left=[0, 0],
                             loc_diff=[3, -3],
+                            layer_ind=0
                             ):
     # add a rectangle
     top_left = np.array(top_left)
@@ -102,9 +109,11 @@ def add_layer_with_omission(patches, colors, size=(24, 24),
         if omit:
             colors.append(Black)
         elif ind % 2:
-            colors.append(Medium)
+            # colors.append(Medium)
+            colors.append(dynamic_color_lighter[layer_ind % len(dynamic_color_lighter)])
         else:
-            colors.append(Light)
+            # colors.append(Light)
+            colors.append(dynamic_color_darker[layer_ind % len(dynamic_color_darker)])
 
 
 def add_mapping(patches, colors, start_ratio, end_ratio, patch_size, ind_bgn,
@@ -127,19 +136,24 @@ def add_mapping(patches, colors, start_ratio, end_ratio, patch_size, ind_bgn,
 
 
     patches.append(Rectangle(start_loc, patch_size[1], -patch_size[0]))
-    colors.append(Dark)
+    # colors.append(Dark)
+    colors.append(map_rect_color)
     patches.append(Line2D([start_loc[0], end_loc[0]],
                           [start_loc[1], end_loc[1]]))
-    colors.append(Darker)
+    # colors.append(Darker)
+    colors.append(map_line_color)
     patches.append(Line2D([start_loc[0] + patch_size[1], end_loc[0]],
                           [start_loc[1], end_loc[1]]))
-    colors.append(Darker)
+    # colors.append(Darker)
+    colors.append(map_line_color)
     patches.append(Line2D([start_loc[0], end_loc[0]],
                           [start_loc[1] - patch_size[0], end_loc[1]]))
-    colors.append(Darker)
+    # colors.append(Darker)
+    colors.append(map_line_color)
     patches.append(Line2D([start_loc[0] + patch_size[1], end_loc[0]],
                           [start_loc[1] - patch_size[0], end_loc[1]]))
-    colors.append(Darker)
+    # colors.append(Darker)
+    colors.append(map_line_color)
 
 
 
@@ -180,7 +194,8 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
                                     num_max=NumConvMax,
                                     num_dots=NumDots,
                                     top_left=top_left_list[ind],
-                                    loc_diff=loc_diff_list[ind])
+                                    loc_diff=loc_diff_list[ind],
+                                    layer_ind=ind)
         else:
             add_layer(patches, colors, size=size_list[ind],
                       num=num_show_list[ind],
@@ -225,7 +240,7 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
                                     num_max=NumFcMax,
                                     num_dots=NumDots,
                                     top_left=top_left_list[ind],
-                                    loc_diff=loc_diff_list[ind])
+                                    loc_diff=loc_diff_list[ind], layer_ind=ind)
         else:
             add_layer(patches, colors, size=size_list[ind],
                       num=num_show_list[ind],
@@ -241,12 +256,19 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
 
     ############################
     for patch, color in zip(patches, colors):
-        patch.set_color(color * np.ones(3))
-        if isinstance(patch, Line2D):
-            ax.add_line(patch)
+        if not isinstance(color, Number):
+            patch.set_color(color)
+            if isinstance(patch, Line2D):
+                ax.add_line(patch)
+            else:
+                ax.add_patch(patch)
         else:
-            patch.set_edgecolor(Black * np.ones(3))
-            ax.add_patch(patch)
+            patch.set_color(color * np.ones(3))
+            if isinstance(patch, Line2D):
+                ax.add_line(patch)
+            else:
+                patch.set_edgecolor(Black * np.ones(3))
+                ax.add_patch(patch)
 
     plt.tight_layout()
     plt.axis('equal')

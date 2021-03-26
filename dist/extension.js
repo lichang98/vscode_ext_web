@@ -6925,7 +6925,17 @@ function getANNSNNConvertPage() {
     <title>模型转换器</title>
   </head>
   
-  <body class="dark-mode" style="height: 100%;width: 100%;overflow: auto;white-space: nowrap;">
+  <body class="dark-mode" style="height: 100%;width: 100%;overflow: auto;white-space: nowrap;position: relative;">
+  
+      <div class="loading-div" id="loader_barchart" style="position: absolute;top: 460px;left: 50px;background: rgba(238,238,238);width: 360px;height: 460px;z-index: 2;">
+          <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="margin-top: 200px;"></i>
+          <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="color: #333;font-weight: bolder;margin-left: 120px;">等待转换结束...</font></span>
+      </div>
+  
+      <div class="loading-div" id="loader_tb" style="position: absolute;top: 460px;left: 540px;background: rgba(238,238,238);width: 560px;height: 460px;z-index: 2;">
+          <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="margin-top: 200px;"></i>
+          <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="color: #333;font-weight: bolder;margin-left: 220px;">等待转换结束...</font></span>
+      </div>
   
       <div style="margin-top: 30px;height: 140px;background: rgba(238,238,238,0.4);width: 1300px;">
           <div class="col-md-12">
@@ -7088,7 +7098,7 @@ function getANNSNNConvertPage() {
                   <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;margin-left: 60px;"><font style="color: #333;font-weight: bold;">转换过程信息</font></div>
                   <table id="info_simu_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;border-spacing: 0px 5px;color: #333;margin-left: 80px;">
                       <tr style="margin-top: 15px;border: solid 2px #D6D6D6;">
-                          <td style="width: 80px;font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">转换总耗时</td>
+                          <td style="width: 80px;font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">转换总耗时(秒)</td>
                           <td id="total_use_time" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
                       <tr style="margin-top: 15px;">
@@ -7108,19 +7118,19 @@ function getANNSNNConvertPage() {
                           <td id="std_conn_wt" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
                       <tr style="margin-top: 15px;">
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">ANN转SNN耗时</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">ANN转SNN耗时(秒)</td>
                           <td id="stage1_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
                       <tr style="margin-top: 15px;">
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">预处理耗时</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">预处理耗时(秒)</td>
                           <td id="stage2_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
                       <tr style="margin-top: 15px;">
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">参数调优耗时</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">参数调优耗时(秒)</td>
                           <td id="stage3_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
                       <tr style="margin-top: 15px;">
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">DarwinLang文件生成耗时</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">DarwinLang文件生成耗时(秒)</td>
                           <td id="stage4_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
                   </table>
@@ -7201,6 +7211,17 @@ function getANNSNNConvertPage() {
       -webkit-font-feature-settings: 'liga';
       -webkit-font-smoothing: antialiased;
     }
+  
+  .loading-div {
+      display: table-cell;
+      vertical-align: middle;
+      overflow: hidden;
+      text-align: center;
+  }
+  .loading-div::before {
+    display: inline-block;
+    vertical-align: middle;
+  } 
   </style>
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -7208,6 +7229,7 @@ function getANNSNNConvertPage() {
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdn.staticfile.org/echarts/5.0.1/echarts.min.js"></script>
+  <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
   
   <script>
   
@@ -7267,6 +7289,7 @@ function getANNSNNConvertPage() {
                     document.getElementById("darlang_progress_div").style.width = "100%";
                     document.getElementById("total_progress_div").style.width = "100%";
                     console.log("LINE COUNT all_finish="+log_output_lists.length);
+                    $(".loading-div").hide();
                     stage4_all_finish = true;
                 }else if(data.progress){
                     // 处理进度信息
@@ -7366,15 +7389,15 @@ function getANNSNNConvertPage() {
                   //   }
                 }else if(data.convert_info){
                     const convert_infos = JSON.parse(data.convert_info);
-                    $("#total_use_time").text(convert_infos.total_use_time);
-                    $("#avg_spike").text(convert_infos.spk_mean+" 次");
+                    $("#total_use_time").text(convert_infos.total_use_time.replace("秒",""));
+                    $("#avg_spike").text(convert_infos.spk_mean);
                     $("#std_spike").text(convert_infos.spk_std);
                     $("#avg_conn_wt").text(convert_infos.wt_mean);
                     $("#std_conn_wt").text(convert_infos.wt_std);
-                    $("#stage1_time_use").text(convert_infos.stage1_time_use+" 秒");
-                    $("#stage2_time_use").text(convert_infos.stage2_time_use+" 秒");
-                    $("#stage3_time_use").text(convert_infos.stage3_time_use+" 秒");
-                    $("#stage4_time_use").text(convert_infos.stage4_time_use+" 秒");
+                    $("#stage1_time_use").text(convert_infos.stage1_time_use);
+                    $("#stage2_time_use").text(convert_infos.stage2_time_use);
+                    $("#stage3_time_use").text(convert_infos.stage3_time_use);
+                    $("#stage4_time_use").text(convert_infos.stage4_time_use);
   
                     let bar_chart_label_names = ["ANN转SNN", "预处理", "参数调优", "DarwinLang文件生成"];
                     let bar_chart_label_counts = [parseFloat(convert_infos.stage1_time_use), parseFloat(convert_infos.stage2_time_use),

@@ -5901,6 +5901,9 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
         console.log("display test data distribution...");
         display_data_bar_chart(class_labels, class_ratios, "测试数据集各类别分布",  "数据占比","类别", "占比", "bar_chart_testdata_container");
         console.log("test data distribution bar chart displayed.");
+        console.log("Auto click first image....");
+        document.getElementById("sample_img0").click();
+        document.getElementById("test_sample_img0").click();
     });
   });
   
@@ -7746,10 +7749,10 @@ function getSNNSimuPage() {
               font-size: 14px;
               color: #23D951;
               letter-spacing: 0.8px;">红色标记图像为输出层预测错误</span>
-              <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Medium;
+              <div id="model_layers_vis_tab_caption" style="text-align: center;background: rgba(238,238,238,1.00);border: solid 1px #D6D6D6;width: 460px;margin-left: 100px;"><font style="font-family: SourceHanSansCN-Medium;
                 font-size: 14px;
                 color: #666666;">统计计数</font></div>
-              <table id="spike_out_count_table" style="margin-left: 100px;border: solid 3px #D6D6D6;color: #333;">
+              <table id="spike_out_count_table" style="margin-left: 100px;border: solid 3px #D6D6D6;color: #333;width: 460px;">
                   <tr id="out_labels" style="border: solid 2px #D6D6D6;">
                   </tr>
                   <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
@@ -8140,6 +8143,9 @@ function getSNNSimuPage() {
   
                       document.getElementById("snn_layers_spike_table").appendChild(table_line);
                     }
+                    console.log("Auto click first image.......");
+                    document.getElementById("img_0").click();
+                    document.getElementById("inputimg_0").click();
                 }
             });
         });

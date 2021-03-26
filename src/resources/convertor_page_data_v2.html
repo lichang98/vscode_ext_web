@@ -305,6 +305,9 @@ $(document).ready(function(){
       console.log("display test data distribution...");
       display_data_bar_chart(class_labels, class_ratios, "测试数据集各类别分布",  "数据占比","类别", "占比", "bar_chart_testdata_container");
       console.log("test data distribution bar chart displayed.");
+      console.log("Auto click first image....");
+      document.getElementById("sample_img0").click();
+      document.getElementById("test_sample_img0").click();
   });
 });
 

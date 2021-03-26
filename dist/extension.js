@@ -5805,8 +5805,8 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
   }
   
   .loading-div {
-        width: 1800px;
-        height: 720px;
+        width: calc(100vw);
+        height: calc(100vh);
         display: table-cell;
         vertical-align: middle;
         color: #555;
@@ -6097,18 +6097,36 @@ function getConvertorModelPageV2() {
               <!-- 模型总体信息表格 -->
               <div style="background: rgba(238,238,238,0.4);height: 378px;display: inline-block;">
                 <table id="model_general_table" style="margin-left:40px;color: #333;width: 440px;">
-                  <caption class="white-text" style="caption-side: top;text-align: center;font-size: large;font-weight: bold;"><font style="color: #333;">人工神经网络模型基本信息</font></caption>
-                  <tr style="font-size: medium;font-weight: bold;border: solid 3px;border-color: #D6D6D6;">
-                    <td style="font-size: medium;padding-left: 15px;border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;">总层数</td>
-                    <td id="model_total_layers" style="font-size: medium;padding-left: 10px;"></td>
+                  <caption class="white-text" style="caption-side: top;text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+                    font-size: 20px;
+                    color: #333333;
+                    letter-spacing: 1.14px;">人工神经网络模型基本信息</font></caption>
+                  <tr style="border: solid 3px;border-color: #D6D6D6;">
+                    <td style="padding-left: 15px;border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
+                    font-size: 14px;
+                    color: #333333;
+                    text-align: left;">总层数</td>
+                    <td id="model_total_layers" style="padding-left: 10px;font-family: SourceHanSansCN-Heavy;
+                    font-size: 14px;
+                    color: #4D4D4D;text-align: right;padding-right: 15px;"></td>
                   </tr>
-                  <tr style="font-size: medium;font-weight: bold;border: solid 3px;border-color: #D6D6D6;">
-                    <td style="font-size: medium;padding-left: 15px; border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;">总参数量</td>
-                    <td id="model_total_param" style="font-size: medium;padding-left: 10px;"></td>
+                  <tr style="border: solid 3px;border-color: #D6D6D6;">
+                    <td style="padding-left: 15px; border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
+                    font-size: 14px;
+                    color: #333333;
+                    text-align: left;">总参数量</td>
+                    <td id="model_total_param" style="padding-left: 10px;font-family: SourceHanSansCN-Heavy;
+                    font-size: 14px;
+                    color: #4D4D4D;text-align: right;padding-right: 15px;"></td>
                   </tr>
-                  <tr style="font-size: medium;font-weight: bold;border: solid 3px;border-color: #D6D6D6;">
-                    <td style="font-size: medium;padding-left: 15px; border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;">unit数量</td>
-                    <td id="model_total_units" style="font-size: medium;padding-left: 10px;"></td>
+                  <tr style="border: solid 3px;border-color: #D6D6D6;">
+                    <td style="padding-left: 15px; border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
+                    font-size: 14px;
+                    color: #333333;
+                    text-align: left;">unit数量</td>
+                    <td id="model_total_units" style="padding-left: 10px;font-family: SourceHanSansCN-Heavy;
+                    font-size: 14px;
+                    color: #4D4D4D;text-align: right;padding-right: 15px;"></td>
                   </tr>
                 </table>
       
@@ -6120,16 +6138,25 @@ function getConvertorModelPageV2() {
     
               <!--模型详细信息表格-->
               <div style="background: rgba(238,238,238,0.4);height: 378px;margin-left: 10px;width: 800px;display: inline-block;vertical-align: top;padding-left: 40px;margin-right: 40px;">
-                <div style="text-align: center;font-size: large;font-weight: bold;color: #333;">各层详细信息</div>
+                <div style="text-align: center;font-family: SourceHanSansCN-Normal;
+                font-size: 20px;
+                color: #333333;
+                letter-spacing: 1.14px;">各层详细信息</div>
                 <div class="row" style="width: 100%;">
                   <div class="col-md-6">
                     <table id="model_detail_table" style="color: #333;">
                       <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                       <thead>
-                        <tr style="font-size: medium;font-weight: bold;border: solid 3px;height: 35px;border-color: #D6D6D6;">
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;">名称</td>
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;">输出形状</td>
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;">参数量</td>
+                        <tr style="border: solid 3px;height: 35px;border-color: #D6D6D6;">
+                          <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
+                          font-size: 14px;
+                          color: #666666;">名称</td>
+                          <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;font-family: SourceHanSansCN-Regular;
+                          font-size: 14px;
+                          color: #666666;">输出形状</td>
+                          <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;font-family: SourceHanSansCN-Regular;
+                          font-size: 14px;
+                          color: #666666;">参数量</td>
                         </tr>
                       </thead>
                       <!--通过加载模型的信息动态创建-->
@@ -6139,10 +6166,16 @@ function getConvertorModelPageV2() {
                     <table id="model_detail_table_secondary" style="color: #333;">
                       <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                       <thead>
-                        <tr style="font-size: medium;font-weight: bold;border: solid 3px;height: 35px;border-color: #D6D6D6;">
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;">名称</td>
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;">输出形状</td>
-                          <td style="font-size: medium;padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;">参数量</td>
+                        <tr style="border: solid 3px;height: 35px;border-color: #D6D6D6;">
+                          <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
+                          font-size: 14px;
+                          color: #666666;">名称</td>
+                          <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;font-family: SourceHanSansCN-Regular;
+                          font-size: 14px;
+                          color: #666666;">输出形状</td>
+                          <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;font-family: SourceHanSansCN-Regular;
+                          font-size: 14px;
+                          color: #666666;">参数量</td>
                         </tr>
                       </thead>
                       <!--通过加载模型的信息动态创建-->
@@ -6156,18 +6189,30 @@ function getConvertorModelPageV2() {
             <!--模型各层的可视化-->
             <div style="width: 100%;margin-top: 12px;">
               <div id="model_layers_vis" style="background: rgba(238,238,238,0.4);display: inline-block;">
-                <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;color: #333;">卷积与激活层输出可视化</div>
+                <div id="model_layers_vis_tab_caption" style="text-align: center;font-family: SourceHanSansCN-Normal;
+                font-size: 20px;
+                color: #333333;
+                letter-spacing: 1.14px;">卷积与激活层输出可视化</div>
                 <!--动态创建-->
                 <div id="layers_vis_div" class="row" style="width: 440px;margin-left: 40px;margin-top: 40px;margin-bottom: 0px; margin-right: 40px;padding: 0px;background: rgb(238,238,238);color: #333;border: 2px solid #333;height: 40px;border-color: #D6D6D6;">
-                  <div class="col-md-3" style="font-size: medium;font-weight: bold;padding-left: 15px;border-right: 2px solid #333;height: 38px;border-color: #D6D6D6;">layer 名称</div>
-                  <div class="col-md-3" style="font-size: medium;font-weight: bold;padding-left: 15px;border-right: 2px solid #333;height: 38px;border-color: #D6D6D6;">layer 编号</div>
-                  <div class="col-md-6" style="font-size: medium;font-weight: bold;padding-left: 15px;height: 38px;">输出可视化</div>
+                  <div class="col-md-3" style="padding-left: 15px;border-right: 2px solid #333;height: 38px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
+                  font-size: 14px;
+                  color: #666666;">layer 名称</div>
+                  <div class="col-md-3" style="padding-left: 15px;border-right: 2px solid #333;height: 38px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
+                  font-size: 14px;
+                  color: #666666;">layer 编号</div>
+                  <div class="col-md-6" style="padding-left: 15px;height: 38px;font-family: SourceHanSansCN-Regular;
+                  font-size: 14px;
+                  color: #666666;">输出可视化</div>
                 </div>
                 <div id="tmp_peer"></div>
               </div>
               <!-- 显示各层的参数量占比 -->
               <div style="background: rgba(238,238,238,0.4);margin-left: 10px;width: 800px;vertical-align: top;display: inline-block;">
-                <div style="font-size: large;font-weight: bold;text-align: center;color: #333;margin-left: 100px;">各层参数量分布</div>
+                <div style="text-align: center;margin-left: 100px;font-family: SourceHanSansCN-Normal;
+                font-size: 20px;
+                color: #333333;
+                letter-spacing: 1.14px;">各层参数量分布</div>
                 <div id="layer_param_percent_div" style="width: 480px;height: 300px;margin-left: 140px;"></div>
               </div>
             </div>
@@ -6222,8 +6267,8 @@ function getConvertorModelPageV2() {
   }
   
   .loading-div {
-        width: 1800px;
-        height: 720px;
+        width: calc(100vw);
+        height: calc(100vh);
         display: table-cell;
         vertical-align: middle;
         color: #555;
@@ -6281,13 +6326,13 @@ function getConvertorModelPageV2() {
                   line.style.height = "45px";
                   line.style.borderColor ="#D6D6D6";
                   var col_name = document.createElement("td");
-                  col_name.style = "font-size: medium;padding-left: 15px;border: solid 2px;border-color: #D6D6D6;";
+                  col_name.style = "padding-left: 15px;border: solid 2px;border-color: #D6D6D6;font-family: ArialMT;font-size: 12px;color: #333333;";
                   col_name.innerText = detail_info[i].name;
                   var col_shape = document.createElement("td");
-                  col_shape.style = "font-size: medium;border: solid 2px;border-color: #D6D6D6;";
-                  col_shape.innerText = detail_info[i].shape;
+                  col_shape.style = "border: solid 2px;border-color: #D6D6D6;text-align: right; padding-right:15px;font-family: ArialMT;font-size: 12px;color: #333333;";
+                  col_shape.innerText = '('+detail_info[i].shape+')';
                   var col_params = document.createElement("td");
-                  col_params.style = "font-size: medium;border: solid 2px;border-color: #D6D6D6;";
+                  col_params.style = "border: solid 2px;border-color: #D6D6D6;text-align: right; padding-right:15px;font-family: ArialMT;font-size: 12px;color: #333333;";
                   col_params.innerText = detail_info[i].params;
                   
                   if( parseInt(detail_info[i].params, 10) > 0){
@@ -6311,13 +6356,13 @@ function getConvertorModelPageV2() {
                   line.style.height = "45px";
                   line.style.borderColor = "#D6D6D6";
                   var col_name = document.createElement("td");
-                  col_name.style = "font-size: medium;padding-left: 15px;";
+                  col_name.style = "padding-left: 15px;font-family: ArialMT;font-size: 12px;color: #333333;";
                   col_name.innerText = detail_info[i].name;
                   var col_shape = document.createElement("td");
-                  col_shape.style = "font-size: medium;border: solid 2px;border-color: #D6D6D6;";
-                  col_shape.innerText = detail_info[i].shape;
+                  col_shape.style = "border: solid 2px;border-color: #D6D6D6;text-align:right; padding-right: 15px;font-family: ArialMT;font-size: 12px;color: #333333;";
+                  col_shape.innerText = '('+detail_info[i].shape+')';
                   var col_params = document.createElement("td");
-                  col_params.style = "font-size: medium;border: solid 2px;border-color: #D6D6D6;";
+                  col_params.style = "border: solid 2px;border-color: #D6D6D6;text-align: right; padding-right:15px;font-family: ArialMT;font-size: 12px;color: #333333;";
                   col_params.innerText = detail_info[i].params;
                   
                   if( parseInt(detail_info[i].params, 10) > 0){
@@ -6351,12 +6396,12 @@ function getConvertorModelPageV2() {
   
                   var layer_name_div = document.createElement("div");
                   layer_name_div.setAttribute("class", "col-md-3");
-                  layer_name_div.style = "font-size: medium;border-right: 2px solid #333;height: 38px;border-color: #D6D6D6;";
+                  layer_name_div.style = "border-right: 2px solid #333;height: 38px;border-color: #D6D6D6;font-family: ArialMT;font-size: 12px;color: #333333;";
                   layer_name_div.innerText = layer_name;
                   img_div.appendChild(layer_name_div);
   
                   var layer_index_div = document.createElement("div");
-                  layer_index_div.style = "font-size: medium;border-right: 2px solid #333;height: 38px;border-color: #D6D6D6;";
+                  layer_index_div.style = "border-right: 2px solid #333;height: 38px;border-color: #D6D6D6;text-align: right; padding-right: 15px;font-family: ArialMT;font-size: 12px;color: #333333;";
                   layer_index_div.setAttribute("class", "col-md-3");
   
                   layer_index_div.innerText = layer_idx;
@@ -6399,13 +6444,17 @@ function getConvertorModelPageV2() {
                     scale:true,
                     name:"神经层",
                     nameTextStyle:{
-                      color:"black"
+                      color:"#999999",
+                      fontFamily: 'PingFangSC-Regular',
+                      fontSize: '12px',
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"black"
+                        color:"#999999"
                       },
-                      rotate:30
+                      rotate:30,
+                      fontFamily: 'PingFangSC-Regular',
+                      fontSize: '12px',
                     }
                 },
               yAxis:[
@@ -6414,12 +6463,16 @@ function getConvertorModelPageV2() {
                     scale:true,
                     name:"参数量(log_10)",
                     nameTextStyle:{
-                      color:"black"
+                      color:"#999999",
+                      fontFamily: 'PingFangSC-Regular',
+                      fontSize: '12px',
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"black"
-                      }
+                        color:"#999999"
+                      },
+                      fontFamily: 'PingFangSC-Regular',
+                      fontSize: '12px',
                     }
                 },
                 {
@@ -6428,12 +6481,16 @@ function getConvertorModelPageV2() {
                     name:"",
                     show:false,
                     nameTextStyle:{
-                      color:"black"
+                      color:"#999999",
+                      fontFamily: 'PingFangSC-Regular',
+                      fontSize: '12px',
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"black"
-                      }
+                        color:"#999999"
+                      },
+                      fontFamily: 'PingFangSC-Regular',
+                      fontSize: '12px',
                     }
                 }
               ],

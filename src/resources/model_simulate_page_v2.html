@@ -12,56 +12,86 @@
 
         <div style="background: rgba(238,238,238,0.4);width: 350px;height: 300px;display: inline-block;">
           <div>
-            <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">仿真配置结果评估</font></div>
+            <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;">仿真配置结果评估</font></div>
             <table id="layer_conf_val" style="width: 260px;margin-left:40px;margin-top: 70px;border: solid 3px #D6D6D6;">
                 <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                 <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">膜电位阈值</td>
-                  <td id="simulate_vthresh"></td>
+                  <td style="padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                  font-size: 14px;
+                  color: #666666;">膜电位阈值</td>
+                  <td id="simulate_vthresh" style="text-align: right;padding-right: 15px;"></td>
                 </tr>
                 <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">神经元时间步长</td>
-                  <td id="simulate_neuron_dt"></td>
+                  <td style="padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                  font-size: 14px;
+                  color: #666666;">神经元时间步长</td>
+                  <td id="simulate_neuron_dt" style="text-align: right;padding-right: 15px;"></td>
                 </tr>
                 <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">突触时间步长</td>
-                  <td id="simulate_synapse_dt"></td>
+                  <td style="padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                  font-size: 14px;
+                  color: #666666;">突触时间步长</td>
+                  <td id="simulate_synapse_dt" style="text-align: right;padding-right: 15px;"></td>
                 </tr>
                 <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
-                  <td  style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">延迟</td>
-                  <td id="simulate_delay"></td>
+                  <td  style="padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                  font-size: 14px;
+                  color: #666666;">延迟</td>
+                  <td id="simulate_delay" style="text-align: right;padding-right: 15px;"></td>
                 </tr>
                 <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
-                  <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">仿真时长</td>
-                  <td id="simulate_dura"></td>
+                  <td style="padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                  font-size: 14px;
+                  color: #666666;">仿真时长</td>
+                  <td id="simulate_dura" style="text-align: right;padding-right: 15px;"></td>
                 </tr>
                 <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;"">
-                  <td style="font-size: medium;font-weight: bold;color: #00BE57;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">准确率</td>
-                  <td id="simulate_acc" style="color: #00BE57;"></td>
+                  <td style="color: #00BE57;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                  font-size: 14px;
+                  color: #666666;">准确率</td>
+                  <td id="simulate_acc" style="color: #00BE57;text-align: right;padding-right: 15px;"></td>
                 </tr>    
             </table>
           </div>
         </div>
 
         <div style="background: rgba(238,238,238,0.4);width: 350px;height: 300px;display: inline-block;">
-          <div style="font-size: large;font-weight: bold;text-align: center;margin-left: 40px;"><font style="color: #333;font-weight: bold;">放电次数均值方差统计</font></div>
+          <div style="text-align: center;margin-left: 40px;"><font style="font-family: SourceHanSansCN-Normal;
+            font-size: 20px;
+            color: #333333;
+            letter-spacing: 1.14px;">放电次数均值方差统计</font></div>
           <table id="snn_layers_spike_table" style="width: 280px;margin-left:40px;margin-top: 70px;border: solid 3px #D6D6D6;">
             <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
             <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
-              <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">层编号</td>
-              <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">放电次数均值</td>
-              <td style="font-size: medium;font-weight: bold;padding-left: 15px;border: solid 2px #D6D6D6;background: #EEEEEE">放电次数方差</td>
+              <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+              font-size: 14px;
+              color: #666666;">层编号</td>
+              <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+              font-size: 14px;
+              color: #666666;">放电次数均值</td>
+              <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+              font-size: 14px;
+              color: #666666;">放电次数方差</td>
             </tr>
           </table>
         </div>
 
         <div style="background: rgba(238,238,238,0.4);width: 500px;height: 300px;display: inline-block;">
           <div>
-            <div id="neurons_v_out_div" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">神经元放电</font></div>
+            <div id="neurons_v_out_div" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;">神经元放电</font></div>
             <div style="width: 360px;margin-left: 40px;">
               <form class="form-horizontal" role="form">
                 <div class="form-group">
-                  <label class="control-label col-md-8" for="select_which_layer"><font style="color: #333;font-weight: bold;">选择神经元层</font></label>
+                  <label class="control-label col-md-8" for="select_which_layer"><font style="font-family: PingFangSC-Regular;
+                    font-size: 14px;
+                    color: #000000;
+                    text-align: left;">选择神经元层</font></label>
                   <div class="col-md-4">
                     <select class="form-control" id="select_which_layer">
                       <option>输入层</option>
@@ -77,15 +107,26 @@
     </div>
     <div style="margin-top: 5px;display: block;">
         <div style="display: inline-block;width: 610px;height: 550px;background: rgba(238,238,238,0.4);">
-          <div id="model_input_spike_cap" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">脉冲神经网络输入层脉冲</font></div>
+          <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+            font-size: 20px;
+            color: #333333;
+            letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
           <div id="input_spike_charts" style="width: 460px;height: 320px;margin-left: 70px;display: inline-block;margin-top: 40px;"></div>
           <ul id="input_spike_sample_imgs_ul" style="height: 60px;width: 460px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;">
           </ul>
         </div>
         <div style="width: 590px;height: 550px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
-            <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">脉冲神经网络输出层脉冲</font></div>
-            <span style="font-size: smaller;margin-left: 200px;color: #23D951;">红色标记图像为输出层预测错误</span>
-            <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;"><font style="color: #333;font-weight: bold;">统计计数</font></div>
+            <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;">脉冲神经网络输出层脉冲</font></div>
+            <span style="margin-left: 200px;font-family: SourceHanSansCN-Normal;
+            font-size: 14px;
+            color: #23D951;
+            letter-spacing: 0.8px;">红色标记图像为输出层预测错误</span>
+            <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Medium;
+              font-size: 14px;
+              color: #666666;">统计计数</font></div>
             <table id="spike_out_count_table" style="margin-left: 100px;border: solid 3px #D6D6D6;color: #333;">
                 <tr id="out_labels" style="border: solid 2px #D6D6D6;">
                 </tr>
@@ -150,6 +191,8 @@ body {
 <script>
   let prev_clicked_li = undefined;
   let prev_clicked_input_li = undefined;
+  let prev_clicked_img = undefined;
+  let prev_clicked_input_img = undefined;
   let need_red_img_li = new Array();
 
       $(document).ready(function(){
@@ -178,56 +221,76 @@ body {
                     img_li.style.height = "80px";
                     img_li.style.marginRight = "20px";
                     var img_tag = document.createElement("img");
-                    img_tag.id = "sample_img_"+i;
+                    // img_tag.id = "sample_img_"+i;
                     img_tag.style.opacity = "0.5";
                     img_tag.style.display = "block";
                     img_tag.onclick = function(){
                       console.log("draw NO."+i+" img and spikes");
                       console.log("current click cls_names="+test_img_spikes[i].cls_names);
                       console.log("current click spike tuples="+test_img_spikes[i].spike_tuples);
-                      if(prev_clicked_li !== undefined){
-                        document.getElementById(prev_clicked_li).style.backgroundColor = "";
-                      }
-                      document.getElementById("img_li_"+i).style.backgroundColor = "chocolate";
+                      // if(prev_clicked_li !== undefined){
+                      //   document.getElementById(prev_clicked_li).style.backgroundColor = "";
+                      // }
+                      // document.getElementById("img_li_"+i).style.backgroundColor = "chocolate";
                       prev_clicked_li = "img_li_"+i;
+                      if(prev_clicked_img !== undefined){
+                        document.getElementById(prev_clicked_img).style.border = '';
+                      }
+                      prev_clicked_img = "img_"+i;
+                      document.getElementById(prev_clicked_img).style.border = "10px outset orange";
                       display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
 
                       // display counts in table
                       console.log("start display counts in table....");
-                      let cls_idx = test_img_spikes[i].spike_tuples[0][0];
-                      console.log("cls_idx="+cls_idx);
+                      let num_classes = test_img_spikes[i].cls_names.length;
                       let curr_count=1;
                       let spike_counts = new Array();
-                      for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
+                      if(test_img_spikes[i].spike_tuples.length === 0){
+                        for(let k=0;k<num_classes;++k){
                           spike_counts.push(0);
+                        }
+                      }else{
+                        let cls_idx = test_img_spikes[i].spike_tuples[0][0];
+                        console.log("cls_idx="+cls_idx);
+                        for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
+                            spike_counts.push(0);
+                        }
+                        console.log("test_img_spikes[i].spike_tuples.length="+test_img_spikes[i].spike_tuples.length);
+                        for(let j=1;j<test_img_spikes[i].spike_tuples.length;++j){
+                            if(cls_idx === test_img_spikes[i].spike_tuples[j][0]){
+                                curr_count = curr_count+1;
+                            }else{
+                                spike_counts[cls_idx] = curr_count;
+                                curr_count=1;
+                                cls_idx = test_img_spikes[i].spike_tuples[j][0];
+                            }
+                        }
+                        console.log("--- calc finished.");
+                        console.log("spike counts="+spike_counts);
+                        spike_counts[cls_idx] = curr_count; 
                       }
-                      console.log("test_img_spikes[i].spike_tuples.length="+test_img_spikes[i].spike_tuples.length);
-                      for(let j=1;j<test_img_spikes[i].spike_tuples.length;++j){
-                          if(cls_idx === test_img_spikes[i].spike_tuples[j][0]){
-                              curr_count = curr_count+1;
-                          }else{
-                              spike_counts[cls_idx] = curr_count;
-                              curr_count=1;
-                              cls_idx = test_img_spikes[i].spike_tuples[j][0];
-                          }
-                      }
-                      console.log("--- calc finished.");
-                      console.log("spike counts="+spike_counts);
-                      spike_counts[cls_idx] = curr_count;
                       document.getElementById("out_labels").innerHTML = "";
                       let td_child = document.createElement("td");
                       td_child.innerText = "标签名称:";
                       td_child.style.width = "80px";
+                      td_child.style.fontFamily = 'PingFangSC-Regular';
+                      td_child.style.fontSize = '14px';
+                      td_child.style.color = '#333333';
                       td_child.style.backgroundColor = "#EEEEEE";
                       td_child.style.border = "solid 2px #D6D6D6";
+                      td_child.style.paddingLeft = '5px';
                       document.getElementById("out_labels").appendChild(td_child);
 
                       document.getElementById("out_counts_tr").innerHTML = '';
                       td_child = document.createElement("td");
                       td_child.style.backgroundColor = "#EEEEEE";
                       td_child.style.border = "solid 2px #D6D6D6";
+                      td_child.style.fontFamily = 'PingFangSC-Regular';
+                      td_child.style.fontSize = '14px';
+                      td_child.style.color = '#333333';
                       td_child.innerText = "计数值:";
                       td_child.style.width = "80px";
+                      td_child.style.paddingLeft = '5px';
                       document.getElementById("out_counts_tr").appendChild(td_child);
 
                       for(let j=0;j<spike_counts.length;++j){
@@ -235,12 +298,22 @@ body {
                         td_child.innerText = spike_counts[j];
                         td_child.style.width = "33px";
                         td_child.style.border = "solid 2px #D6D6D6";
+                        td_child.style.fontFamily = 'PingFangSC-Regular';
+                        td_child.style.fontSize = '14px';
+                        td_child.style.color = '#333333';
+                        td_child.style.textAlign = 'right';
+                        td_child.style.paddingRight = '5px';
                         document.getElementById("out_counts_tr").appendChild(td_child);
 
                         td_child = document.createElement("td");
                         td_child.innerText = test_img_spikes[i].cls_names[j];
                         td_child.style.width = "33px";
                         td_child.style.border = "solid 2px #D6D6D6";
+                        td_child.style.fontFamily = 'PingFangSC-Regular';
+                        td_child.style.fontSize = '14px';
+                        td_child.style.color = '#333333';
+                        td_child.style.textAlign = 'right';
+                        td_child.style.paddingRight = '5px';
                         document.getElementById("out_labels").appendChild(td_child);
                       }
 
@@ -248,18 +321,34 @@ body {
                       // mark reds
                       for(let k=0;k<need_red_img_li.length;++k){
                         if(prev_clicked_li === need_red_img_li[k]){
-                          document.getElementById(need_red_img_li[k]).style.backgroundColor = "yellow";  
+                          // document.getElementById(need_red_img_li[k]).style.backgroundColor = "yellow";  
+                          document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '10px outset orange';
                         }else{
-                          document.getElementById(need_red_img_li[k]).style.backgroundColor = "red";
+                          // document.getElementById(need_red_img_li[k]).style.backgroundColor = "red";
+                          // document.getElementById(need_red_img_li[k]).style.border = '2px dashed red';
+                          document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '5px dashed red';
                         }
                       }
                     }
                     img_tag.src = test_img_uris[i];
+                    img_tag.id = "img_"+i;
                     img_tag.style.width = "50px";
                     img_tag.style.height = "50px";
 
                     img_li.appendChild(img_tag);
                     test_img_uls.appendChild(img_li);
+
+                    // // mark reds
+                    // for(let k=0;k<need_red_img_li.length;++k){
+                    //   if(prev_clicked_li === need_red_img_li[k]){
+                    //     // document.getElementById(need_red_img_li[k]).style.backgroundColor = "yellow";  
+                    //     document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '10px outset orange';
+                    //   }else{
+                    //     // document.getElementById(need_red_img_li[k]).style.backgroundColor = "red";
+                    //     // document.getElementById(need_red_img_li[k]).style.border = '2px dashed red';
+                    //     document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '5px dashed red';
+                    //   }
+                    // }
 
                     var label_span = document.createElement("span");
                     label_span.style.color = "#333";
@@ -270,28 +359,34 @@ body {
                     img_li.appendChild(label_span);
                   }
 
+                  console.log("创建输入层脉冲激发图......");
                   // 创建输入层脉冲激发图
                   for(let i=0;i<infos.spikes.snn_input_spikes.length;++i){
                     var input_img_li = document.createElement("li");
                     input_img_li.style.listStyle = "none";
-                    input_img_li.id = "input_img_li_"+i;
+                    input_img_li.id = "inputimg_li_"+i;
                     input_img_li.style.width = "53px";
                     input_img_li.style.height = "100%";
                     input_img_li.style.display = "inline-block";
                     input_img_li.style.marginRight = "10px";
                     var input_img_tag = document.createElement("img");
                     input_img_tag.src = test_img_uris[i];
-                    input_img_tag.id = "input_sample_img_"+i;
+                    input_img_tag.id = "inputimg_"+i;
                     input_img_tag.style.width = "50px";
                     input_img_tag.style.height = "50px";
                     input_img_tag.style.opacity = "0.5";
                     input_img_tag.onclick = ()=>{
                       console.log("input spike display img idx "+i);
-                      if(prev_clicked_input_li !== undefined){
-                        document.getElementById(prev_clicked_input_li).style.backgroundColor ="";
+                      // if(prev_clicked_input_li !== undefined){
+                      //   document.getElementById(prev_clicked_input_li).style.backgroundColor ="";
+                      // }
+                      // document.getElementById("input_img_li_"+i).style.backgroundColor = "chocolate";
+                      prev_clicked_input_li = "inputimg_li_"+i;
+                      if(prev_clicked_input_img !== undefined){
+                        document.getElementById(prev_clicked_input_img).style.border = '';
                       }
-                      document.getElementById("input_img_li_"+i).style.backgroundColor = "chocolate";
-                      prev_clicked_input_li = "input_img_li_"+i;
+                      prev_clicked_input_img = 'inputimg_'+i;
+                      document.getElementById(prev_clicked_input_img).style.border = '10px outset orange';
                       console.log("Current cls_names="+infos.spikes.snn_input_spikes[i].cls_names);
                       console.log("Current spike data="+infos.spikes.snn_input_spikes[i].spike_tuples);
                       display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
@@ -309,12 +404,16 @@ body {
                     // };
                   }
 
+                  console.log("标记错误样例数据.....");
                   // mark reds
                   for(let i=0;i<need_red_img_li.length;++i){
+                    console.log("当前检测：prev_clicked_li="+prev_clicked_li+", target="+need_red_img_li[i].split("_")[0]+'_'+need_red_img_li[i].split('_')[2]);
                     if(prev_clicked_li === need_red_img_li[i]){
-                      document.getElementById(need_red_img_li[i]).style.backgroundColor = "yellow";  
+                      // document.getElementById(need_red_img_li[i]).style.backgroundColor = "yellow";  
+                      document.getElementById(need_red_img_li[i].split("_")[0]+'_'+need_red_img_li[i].split('_')[2]).style.border = '10px outset orange';
                     }else{
-                      document.getElementById(need_red_img_li[i]).style.backgroundColor = "red";
+                      // document.getElementById(need_red_img_li[i]).style.backgroundColor = "red";
+                      document.getElementById(need_red_img_li[i].split('_')[0]+'_'+need_red_img_li[i].split('_')[2]).style.border = '5px dashed red';
                     }
                   }
 
@@ -370,6 +469,7 @@ body {
                   });
 
                   // fill tables
+                  console.log("填充表格数据.....");
                   $("#simulate_vthresh").text(infos.extra_simu_info.simulate_vthresh);
                   $("#simulate_neuron_dt").text(infos.extra_simu_info.simulate_neuron_dt);
                   $("#simulate_synapse_dt").text(infos.extra_simu_info.simulate_synapse_dt);
@@ -387,22 +487,31 @@ body {
                     table_line.style.color = "#333";
 
                     let td_id = document.createElement("td");
-                    td_id.style.fontSize = "medium";
-                    td_id.style.paddingLeft= "15px";
+                    td_id.style.fontFamily = 'ArialMT';
+                    td_id.style.fontSize = '14px';
+                    td_id.style.color = '#333333';
+                    td_id.style.textAlign = 'right';
+                    td_id.style.paddingRight = '15px';
                     td_id.style.border = "solid 2px #D6D6D6";
-                    td_id.innerText = "layer_"+j;
+                    td_id.innerText = ""+j;
                     table_line.appendChild(td_id);
 
                     let td_spike_avg = document.createElement("td");
-                    td_spike_avg.style.fontSize = "medium";
-                    td_spike_avg.style.paddingLeft = "15px";
+                    td_spike_avg.style.fontFamily = 'ArialMT';
+                    td_spike_avg.style.fontSize = '14px';
+                    td_spike_avg.style.color = '#333333';
+                    td_spike_avg.style.textAlign = 'right';
+                    td_spike_avg.style.paddingRight = '15px';
                     td_spike_avg.style.order = "solid 2px #D6D6D6";
                     td_spike_avg.innerText = infos.record_spike_out_info.spike_count_avgs[j];
                     table_line.appendChild(td_spike_avg);
 
                     let td_spike_std = document.createElement("td");
-                    td_spike_std.style.fontSize = "medium";
-                    td_spike_std.style.paddingLeft = "15px";
+                    td_spike_std.style.fontFamily = 'ArialMT';
+                    td_spike_std.style.fontSize = '14px';
+                    td_spike_std.style.color = '#333333';
+                    td_spike_std.style.textAlign = 'right';
+                    td_spike_std.style.paddingRight = '15px';
                     td_spike_std.style.border = "solid 2px #D6D6D6";
                     td_spike_std.innerText = infos.record_spike_out_info.spike_count_stds[j];
                     table_line.appendChild(td_spike_std);

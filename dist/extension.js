@@ -5623,63 +5623,63 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
   
         <!--展示的主面板-->
         <div class="row" style="height: 45%;width: 100%;">
-            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 310px;margin-left: 50px;">
+            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 400px;margin-left: 50px;width: 700px;">
               <!-- 数据基本信息表格 -->
               <div style="text-align: center;color: #333;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
                 letter-spacing: 1.14px;">导入数据统计</font></div>
-              <table id="data_general_table" style="width:440px; margin-left:15px;color: #333;margin-top: 30px;">
+              <table id="data_general_table" style="width:500px; margin-left:75px;color: #333;margin-top: 30px;">
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;"><font style="font-family: SourceHanSansCN-Normal;
+                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 25px;padding-bottom: 25px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
-                    text-align: right;"></font>总数据量</td>
-                  <td id="total_data_amount" style="font-weight:bolder;text-align: right;padding-right: 15px;"></td>
+                    text-align: right;">总数据量</font></td>
+                  <td id="total_data_amount" style="font-weight:bolder;text-align: right;padding-right: 15px;padding-top: 25px;padding-bottom: 25px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;"><font style="font-family: SourceHanSansCN-Normal;
+                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 25px;padding-bottom: 25px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
-                    text-align: right;"></font>测试数据量</td>
-                  <td id="test_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;"></td>
+                    text-align: right;">测试数据量</font></td>
+                  <td id="test_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 25px;padding-bottom: 25px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;"><font style="font-family: SourceHanSansCN-Normal;
+                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 25px;padding-bottom: 25px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
                     text-align: right;">验证数据量</font></td>
-                  <td id="val_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;"></td>
+                  <td id="val_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 25px;padding-bottom: 25px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;"><font style="font-family: SourceHanSansCN-Normal;
+                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 25px;padding-bottom: 25px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
                     text-align: right;">数据类别</font></td>
-                  <td id="class_counts" style="font-weight: bolder;text-align: right;padding-right: 15px;"></td>
+                  <td id="class_counts" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 25px;padding-bottom: 25px;"></td>
                 </tr>
               </table>
             </div>
-            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 310px;margin-left: 15px;">
+            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 400px;margin-left: 15px;width: 760px;">
               <div style="text-align: center;margin-bottom:20px;color: #333;font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
               letter-spacing: 1.14px;">
                 数据类别分布
               </div>
-              <div id="bar_chart_testdata_container" style="width: 440px;height: 300px;margin-left:20px;margin-top: -30px;"></div>
+              <div id="bar_chart_testdata_container" style="width: 700px;height: 400px;margin-left:20px;margin-top: -30px;"></div>
             </div>
         </div>
-        <div class="row" style="height: 45%;width: 100%;margin-top:35px;">
-          <div id="sample_data_div" class="col-md-5" style="height:351px;background: rgba(238,238,238,0.4);margin-left: 50px;">
+        <div class="row" style="height: 45%;width: 100%;margin-top:-10px;">
+          <div id="sample_data_div" class="col-md-5" style="height:440;width: 700px;background: rgba(238,238,238,0.4);margin-left: 50px;">
             <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
             font-size: 20px;
             color: #333333;
             letter-spacing: 1.14px;">
               训练集样例数据
             </div>
-            <div id="bar_chart_histgram" style="width: 440px;height: 320px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
-            <ul id="sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 440px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
+            <div id="bar_chart_histgram" style="width: 700px;height: 400px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
+            <ul id="sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 640px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
               <li id="sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
@@ -5713,7 +5713,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
             </ul>
             
           </div>
-          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 351px;background: rgba(238,238,238,0.4);margin-left: 15px;">
+          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 440px;width: 760px;background: rgba(238,238,238,0.4);margin-left: 15px;">
             <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
             font-size: 20px;
             color: #333333;
@@ -5721,8 +5721,8 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
               测试集样例数据
             </div>
   
-            <div id="test_bar_chart_histgram" style="width: 440px;height: 320px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
-            <ul id="test_sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 440px;overflow: auto;display: block;white-space: nowrap;">
+            <div id="test_bar_chart_histgram" style="width: 700px;height: 400px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
+            <ul id="test_sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 700px;overflow: auto;display: block;white-space: nowrap;">
               <li id="test_sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img0" onclick="sample_img_click(this);" src="${test_sample0}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
               </li>
@@ -5970,11 +5970,11 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
                     scale:true,
                     name:x_axis_name,
                     nameTextStyle:{
-                      color:"black"
+                      color:"#000000"
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"black"
+                        color:"#000000"
                       },
                       fontFamily: 'Helvetica',
                       fontSize: '12px',
@@ -5986,11 +5986,11 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
                     scale:true,
                     name:y_axis_name,
                     nameTextStyle:{
-                      color:"black"
+                      color:"#000000"
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"black"
+                        color:"#000000"
                       },
                       fontFamily: 'Helvetica',
                       fontSize: '12px',
@@ -6002,14 +6002,14 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
                     name:"",
                     show:false,
                     nameTextStyle:{
-                      color:"white"
+                      color:"#000000"
                     },
                     fontFamily: 'Helvetica',
                     fontSize: '12px',
                     axisLabel:{
                       show:false,
                       textStyle:{
-                        color:"white"
+                        color:"#000000"
                       },
                       fontFamily: 'Helvetica',
                       fontSize: '12px',

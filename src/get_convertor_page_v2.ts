@@ -1345,22 +1345,34 @@ export function getANNSNNConvertPage(){
   
   <body class="dark-mode" style="height: 100%;width: 100%;overflow: auto;white-space: nowrap;position: relative;">
   
-      <div class="loading-div" id="loader_barchart" style="position: absolute;top: 460px;left: 50px;background: rgba(238,238,238);width: 360px;height: 460px;z-index: 2;">
+      <div class="loading-div" id="loader_barchart" style="position: absolute;top: 400px;left: 50px;background: rgba(238,238,238);width: 600px;height: 500px;z-index: 2;">
           <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="margin-top: 200px;"></i>
-          <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="color: #333;font-weight: bolder;margin-left: 120px;">等待转换结束...</font></span>
+          <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="margin-left: 240px;font-family: SourceHanSansCN-Normal;
+              font-size: 16px;
+              color: #333333;
+              letter-spacing: 0.91px;">等待转换结束...</font></span>
       </div>
   
-      <div class="loading-div" id="loader_tb" style="position: absolute;top: 460px;left: 540px;background: rgba(238,238,238);width: 560px;height: 460px;z-index: 2;">
+      <div class="loading-div" id="loader_tb" style="position: absolute;top: 400px;left: 740px;background: rgba(238,238,238);width: 720px;height: 500px;z-index: 2;">
           <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="margin-top: 200px;"></i>
-          <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="color: #333;font-weight: bolder;margin-left: 220px;">等待转换结束...</font></span>
+          <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="margin-left: 300px;font-family: SourceHanSansCN-Normal;
+              font-size: 16px;
+              color: #333333;
+              letter-spacing: 0.91px;">等待转换结束...</font></span>
       </div>
   
-      <div style="margin-top: 30px;height: 140px;background: rgba(238,238,238,0.4);width: 1300px;">
+      <div style="height: 140px;background: rgba(238,238,238,0.4);width: 1500px;">
           <div class="col-md-12">
-              <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -160px;"><font style="color: #333;font-weight: bold;">转换参数配置</font></div>
-              <form role="form" class="row" style="margin-left: 40px;margin-top: 15px;" id="project_info_form">
+              <div style="text-align: center;margin-left: -60px;"><font style="font-family: SourceHanSansCN-Normal;
+                  font-size: 20px;
+                  color: #333333;
+                  letter-spacing: 1.14px;">转换参数配置</font></div>
+              <form role="form" class="row" style="margin-left: 80px;margin-top: 15px;" id="project_info_form">
                   <div class="col-md-2" style="text-align: center;">
-                      <label for="select_vthresh"><font style="color: #333;font-weight: bold;">脉冲发放阈值</font></label>
+                      <label for="select_vthresh"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                          font-size: 16px;
+                          color: #333333;
+                          letter-spacing: 0.91px;">脉冲发放阈值</font></label>
                       <select class="form-control" id="select_vthresh">
                           <option>21</option>
                           <option>1</option>
@@ -1394,32 +1406,44 @@ export function getANNSNNConvertPage(){
                           <option>30</option>
                       </select>
                   </div>
-                  <div class="col-md-2" style="margin-left: 18px;text-align: center;">
-                      <label for="select_dt"><font style="color: #333;font-weight: bold;">神经元dt</font></label>
+                  <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                      <label for="select_dt"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                          font-size: 16px;
+                          color: #333333;
+                          letter-spacing: 0.91px;">神经元dt</font></label>
                       <select class="form-control" id="select_dt">
                           <option>1ms</option>
                           <option>0.1ms</option>
                       </select>
                   </div>
       
-                  <div class="col-md-2" style="margin-left: 18px;text-align: center;">
-                      <label for="select_synapse_dt"><font style="color: #333;font-weight: bold;">突触dt</font></label>
+                  <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                      <label for="select_synapse_dt"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                          font-size: 16px;
+                          color: #333333;
+                          letter-spacing: 0.91px;">突触dt</font></label>
                       <select class="form-control" id="select_synapse_dt">
                           <option>0.1ms</option>
                           <option>1ms</option>
                       </select>
                   </div>
       
-                  <div class="col-md-2" style="margin-left: 18px;text-align: center;">
-                      <label for="select_delay"><font style="color: #333;font-weight: bold;">delay</font></label>
+                  <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                      <label for="select_delay"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                          font-size: 16px;
+                          color: #333333;
+                          letter-spacing: 0.91px;">delay</font></label>
                       <select class="form-control" id="select_delay">
                           <option>1ms</option>
                           <option>0.1ms</option>
                       </select>
                   </div>
       
-                  <div class="col-md-2" style="margin-left: 18px;text-align: center;">
-                      <label for="select_dura"><font style="color: #333;font-weight: bold;">总时间</font></label>
+                  <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                      <label for="select_dura"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                          font-size: 16px;
+                          color: #333333;
+                          letter-spacing: 0.91px;">总时间</font></label>
                       <select class="form-control" id="select_dura">
                           <option>100ms</option>
                           <option>200ms</option>
@@ -1431,12 +1455,18 @@ export function getANNSNNConvertPage(){
       </div>
   
   
-      <div style="margin-top: 10px;height: 160px;background: rgba(238,238,238,0.4);width: 1300px;">
+      <div style="margin-top: 10px;height: 160px;background: rgba(238,238,238,0.4);width: 1500px;">
           <div>
-              <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -160px;"><font style="color: #333;font-weight: bold;">转换进度</font></div>
+              <div style="text-align: center;margin-left: -60px;"><font style="font-family: SourceHanSansCN-Normal;
+                  font-size: 20px;
+                  color: #333333;
+                  letter-spacing: 1.14px;">转换进度</font></div>
               <div class="row" style="margin-left: 30px;color: #333;">
                   <div class="col-md-2" style="text-align: center;">
-                      <div>ANN转SNN</div>
+                      <div style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      letter-spacing: 0.91px;">ANN转SNN</div>
                       <div class="progress progress-striped active">
                           <div id="model_convert_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
@@ -1450,7 +1480,10 @@ export function getANNSNNConvertPage(){
                   </div>
               
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
-                      <div>预处理</div>
+                      <div style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      letter-spacing: 0.91px;">预处理</div>
                       <div class="progress  progress-striped active">
                           <div id="preprocess_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
@@ -1464,7 +1497,10 @@ export function getANNSNNConvertPage(){
                   </div>
   
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
-                      <div>参数调优</div>
+                      <div style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      letter-spacing: 0.91px;">参数调优</div>
                       <div class="progress progress-striped active">
                           <div id="search_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
@@ -1478,7 +1514,10 @@ export function getANNSNNConvertPage(){
                   </div>
               
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
-                      <div>DarwinLang文件生成</div>
+                      <div style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      letter-spacing: 0.91px;">DarwinLang文件生成</div>
                       <div class="progress progress-striped active">
                           <div id="darlang_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
@@ -1501,58 +1540,64 @@ export function getANNSNNConvertPage(){
           </div>
       </div>
   
-      <div style="height: 560px; margin-top: 10px;width: 1300px;margin-left: -20px;">
+      <div style="height: 560px; margin-top: 10px;width: 1500px;margin-left: -20px;">
           <div class="col-md-12">
               <!-- <div style="width: 350px;height: 560px;display: inline-block;vertical-align: top;white-space:normal;background: rgba(238,238,238,0.4);">
                   <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -20px;"><font style="color: #333;font-weight: bold;">日志输出</font></div>
                   <div id="log_output_div" style="margin-left: 20px;height: 340px; width: 300px; overflow: auto;margin-top: 60px;color: #333;">
                   </div>
               </div> -->
-              <div style="width: 460px;height: 560px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);margin-left: 10px;">
-                  <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -80px;"><font style="color: #333;font-weight: bold;">转换性能分析</font></div>
-                  <div id="use_time_bar_chart" style="width: 440px;height: 400px;margin-top: 15px;margin-left: 40px;"></div>
+              <div style="width: 660px;height: 560px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);margin-left: 10px;">
+                  <div style="text-align: center;margin-left: -40px;"><font style="font-family: SourceHanSansCN-Normal;
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;">转换性能分析</font></div>
+                  <div id="use_time_bar_chart" style="width: 560px;height: 440px;margin-top: 15px;margin-left: 40px;"></div>
               </div>
-              <div style="height:560px;margin-left: 10px;width: 720px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
-                  <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;margin-left: 60px;"><font style="color: #333;font-weight: bold;">转换过程信息</font></div>
-                  <table id="info_simu_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;border-spacing: 0px 5px;color: #333;margin-left: 80px;">
-                      <tr style="margin-top: 15px;border: solid 2px #D6D6D6;">
-                          <td style="width: 80px;font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">转换总耗时(秒)</td>
-                          <td id="total_use_time" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
+              <div style="height:560px;margin-left: 10px;width: 820px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
+                  <div id="model_layers_vis_tab_caption" style="text-align: center;margin-left: -20px;"><font style="font-family: SourceHanSansCN-Normal;
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;">转换过程信息</font></div>
+                  <table id="info_simu_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;color: #333;margin-left: 40px;">
+                      <tr style="border: solid 2px #D6D6D6;">
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;padding-right: 80px;">转换总耗时(秒)</td>
+                          <td id="total_use_time" style="border: solid 2px #D6D6D6;padding-left: 15px;padding-top: 15px;padding-bottom: 15px;padding-right: 80px;">xxx</td>
                       </tr>
-                      <tr style="margin-top: 15px;">
+                      <tr>
                           <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">平均激发脉冲次数</td>
                           <td id="avg_spike" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
-                      <tr style="margin-top: 15px;">
+                      <tr>
                           <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">激发脉冲次数方差</td>
                           <td id="std_spike" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
-                      <tr style="margin-top: 15px;">
+                      <tr>
                           <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">连接权重均值</td>
                           <td id="avg_conn_wt" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
-                      <tr style="margin-top: 15px;">
+                      <tr>
                           <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">连接权重方差</td>
                           <td id="std_conn_wt" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
-                      <tr style="margin-top: 15px;">
+                      <tr>
                           <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">ANN转SNN耗时(秒)</td>
                           <td id="stage1_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
-                      <tr style="margin-top: 15px;">
+                      <tr>
                           <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">预处理耗时(秒)</td>
                           <td id="stage2_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
-                      <tr style="margin-top: 15px;">
+                      <tr>
                           <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">参数调优耗时(秒)</td>
                           <td id="stage3_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
-                      <tr style="margin-top: 15px;">
+                      <tr>
                           <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">DarwinLang文件生成耗时(秒)</td>
                           <td id="stage4_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
                       </tr>
                   </table>
-                  <table id="scale_factors_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;border-spacing: 0px 5px;">
+                  <table id="scale_factors_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;border-spacing: 0px 5px;margin-left: 20px;">
                       <!-- <tr style="height: 35px;margin-top: 0px;">
                           <td style="width: 100px;font-size: small;font-weight: bold;">层<br/>00Conv2D_26x26x8 参数缩放系数</td>
                           <td>系数1</td>
@@ -1859,16 +1904,17 @@ export function getANNSNNConvertPage(){
                       table_line.style.border = "solid 2px #D6D6D6";
                       table_line.style.color = "#333";
                       let line_td1 = document.createElement("td");
-                      line_td1.style.width = "80px";
                       line_td1.style.fontSize = "small";
                       line_td1.style.fontWeight = "bold";
                       line_td1.style.border = "solid 2px #D6D6D6";
-                      line_td1.style.padding = "10px";
+                      line_td1.style.padding = "15px";
+                      line_td1.style.paddingRight = '80px';
                       line_td1.innerHTML = ""+obj+"层<br/>参数缩放系数";
                       table_line.appendChild(line_td1);
                       let line_td2 = document.createElement("td");
                       line_td2.style.border = "solid 2px #D6D6D6";
-                      line_td2.style.padding = "10px";
+                      line_td2.style.padding = "15px";
+                      line_td2.style.paddingRight = '80px';
                       line_td2.innerText = parseFloat(scale_fac[obj]).toFixed(3);
                       table_line.appendChild(line_td2);
                       document.getElementById("scale_factors_table").appendChild(table_line);

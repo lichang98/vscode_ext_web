@@ -6216,7 +6216,7 @@ function getConvertorModelPageV2() {
                 font-size: 20px;
                 color: #333333;
                 letter-spacing: 1.14px;">各层参数量分布</div>
-                <div id="layer_param_percent_div" style="width: 560px;height: 400px;margin-left: 140px;"></div>
+                <div id="layer_param_percent_div" style="width: 600px;height: 400px;margin-left: 60px;"></div>
               </div>
             </div>
   
@@ -8420,57 +8420,57 @@ function getSNNModelPage() {
   
       <div style="height: 400px;">
           <!-- SNN神经元信息 -->
-          <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 350px;width: 450px;">
+          <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 500px;">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
                 letter-spacing: 1.14px;">脉冲神经网络神经元组信息</font></div>
-              <table id="snn_neurons_table" style="margin-left:10px;margin-left: 20px;border: solid 3px #D6D6D6;width: 400px;">
+              <table id="snn_neurons_table" style="margin-left:10px;margin-left: 20px;border: solid 3px #D6D6D6;width: 440px;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                   <thead>
                     <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;">layer编号</td>
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">layer编号</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;">神经元个数</td>
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">神经元个数</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;">求解方法</td>
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">求解方法</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;">电压阈值</td>
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">电压阈值</td>
                     </tr>
                     <!-- 动态加载 -->
                   </thead>
               </table>
           </div>
   
-          <div style="display: inline-block;background: rgba(238,238,238,0.4);height: 350px;width: 450px;">
+          <div style="display: inline-block;background: rgba(238,238,238,0.4);height: 400px;width: 500px;">
             <div style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
               letter-spacing: 1.14px;">层连接权重统计</font></div>
-            <table id="snn_layer_wt_table" style="border: solid 3px #D6D6D6;width: 400px;margin-left: 20px;">
+            <table id="snn_layer_wt_table" style="border: solid 3px #D6D6D6;width: 380px;margin-left: 20px;">
               <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
               <thead>
                 <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                   font-size: 14px;
-                  color: #666666;">layer编号</td>
+                  color: #666666;padding-top: 12px; padding-bottom: 12px;">layer编号</td>
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                   font-size: 14px;
-                  color: #666666;">权重均值</td>
+                  color: #666666;padding-top: 12px; padding-bottom: 12px;">权重均值</td>
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                   font-size: 14px;
-                  color: #666666;">权重方差</td>
+                  color: #666666;padding-top: 12px; padding-bottom: 12px;">权重方差</td>
                 </tr>
               </thead>
             </table>
           </div>
   
-          <div style="height: 350px;margin-top: 20px;display: inline-block;background: rgba(238,238,238,0.4);width: 450px;">
+          <div style="height: 400px;margin-top: 20px;display: inline-block;background: rgba(238,238,238,0.4);width: 500px;">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -8481,34 +8481,34 @@ function getSNNModelPage() {
                     <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;">layer编号</td>
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">layer编号</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;">连接稠密度</td>
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">连接稠密度</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;">平均连接个数</td>
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">平均连接个数</td>
                     </tr>
                     <!-- 动态加载 -->
                   </thead>
               </table>
           </div>
       </div>
-      <div style="height: 450px;margin-top: -25px;">
+      <div style="height: 460px;margin-top: 30px;">
           <!--权重分布图-->
-          <div style="height: 440px;width: 670px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
+          <div style="height: 460px;width: 770px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
                 letter-spacing: 1.14px;">脉冲神经网络权重分布</font></div>
-              <div id="weight_dist_chart" style="width: 580px;height: 320px;margin-left: 40px;margin-top: 10px;"></div>
+              <div id="weight_dist_chart" style="width: 700px;height: 400px;margin-left: 40px;margin-top: 10px;"></div>
           </div>
-          <div style="height: 440px;width: 670px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
+          <div style="height: 460px;width: 740px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
               <div style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
                 letter-spacing: 1.14px;">模型连接图</font></div>
-              <div id="sangky_chart" style="width: 560px;height: 400px;display: inline-block;margin-left: 20px;"></div>
+              <div id="sangky_chart" style="width: 700px;height: 400px;display: inline-block;margin-left: 20px;"></div>
           </div>
       </div>
   </body>
@@ -8577,19 +8577,19 @@ function getSNNModelPage() {
                         var line = document.createElement("tr");
                         line.style = "margin-top: 15px;border: solid 3px #D6D6D6;color: #333;"
                         var col_1 = document.createElement("td");
-                        col_1.style = "text-align:right; padding-right:15px; font-family: ArialMT;font-size: 14px;color: #333333;";
+                        col_1.style = "text-align:right; padding-right:15px; font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                         col_1.innerText = neurons_info[i].idx;
   
                         var col_2 = document.createElement("td");
-                        col_2.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;";
+                        col_2.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                         col_2.innerText = neurons_info[i].neuron_count;
   
                         var col_3 = document.createElement("td");
-                        col_3.style = "border: solid 3px #D6D6D6;padding-left:10px;font-family: ArialMT;font-size: 14px;color: #333333;";
+                        col_3.style = "border: solid 3px #D6D6D6;padding-left:10px;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                         col_3.innerText = neurons_info[i].method;
   
                         var col_4 = document.createElement("td");
-                        col_4.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;";
+                        col_4.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                         col_4.innerText = neurons_info[i].vthresh;
   
                         line.appendChild(col_1);
@@ -8606,15 +8606,15 @@ function getSNNModelPage() {
                         var line = document.createElement("tr");
                         line.style = "margin-top: 15px; border: solid 3px #D6D6D6; color:#333;";
                         var col_1 = document.createElement("td");
-                        col_1.style = "text-align:right; padding-right:15px;border: solid 3px #D6D6D6;font-family: ArialMT;font-size: 14px;color: #333333;";
+                        col_1.style = "text-align:right; padding-right:15px;border: solid 3px #D6D6D6;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                         col_1.innerText = synaps_info[i].idx;
   
                         var col_2 = document.createElement("td");
-                        col_2.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;font-family: ArialMT;font-size: 14px;color: #333333;";
+                        col_2.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                         col_2.innerText = synaps_info[i].ratio;
   
                         var col_3 = document.createElement("td");
-                        col_3.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;font-family: ArialMT;font-size: 14px;color: #333333;";
+                        col_3.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                         col_3.innerText = synaps_info[i].avg_conn;
   
                         line.appendChild(col_1);
@@ -8656,6 +8656,8 @@ function getSNNModelPage() {
                       td_id.style.border = "solid 3px #D6D6D6";
                       td_id.style.textAlign = "right";
                       td_id.style.paddingRight = "15px";
+                      td_id.style.paddingTop = "12px";
+                      td_id.style.paddingBottom = "12px";
                       td_id.innerText = ""+i;
                       table_line.appendChild(td_id);
   
@@ -8667,6 +8669,8 @@ function getSNNModelPage() {
                       td_avg.style.border = "solid 3px #D6D6D6";
                       td_avg.style.textAlign = "right";
                       td_avg.style.paddingRight = "15px";
+                      td_avg.style.paddingTop = "12px";
+                      td_avg.style.paddingBottom = "12px";
                       td_avg.innerText = infos.record_layers_wt_info.record_wts_avg[i];
                       table_line.appendChild(td_avg);
   
@@ -8678,6 +8682,8 @@ function getSNNModelPage() {
                       td_std.style.textAlign = "right";
                       td_std.style.paddingRight = "15px";
                       td_std.style.border = "solid 3px #D6D6D6";
+                      td_std.style.paddingTop = "12px";
+                      td_std.style.paddingBottom = "12px";
                       td_std.innerText = infos.record_layers_wt_info.record_wts_std[i];
                       table_line.appendChild(td_std);
   

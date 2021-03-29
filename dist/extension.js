@@ -7188,43 +7188,51 @@ function getANNSNNConvertPage() {
                       letter-spacing: 1.14px;">转换过程信息</font></div>
                   <table id="info_simu_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;color: #333;margin-left: 40px;">
                       <tr style="border: solid 2px #D6D6D6;">
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;padding-right: 80px;">转换总耗时(秒)</td>
-                          <td id="total_use_time" style="border: solid 2px #D6D6D6;padding-left: 15px;padding-top: 15px;padding-bottom: 15px;padding-right: 80px;">xxx</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;">转换指标统计</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;">统计值</td>
+                      </tr>
+                      <tr style="border: solid 2px #D6D6D6;">
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">转换总耗时(秒)</td>
+                          <td id="total_use_time" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">平均激发脉冲次数</td>
-                          <td id="avg_spike" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">平均激发脉冲次数</td>
+                          <td id="avg_spike" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">激发脉冲次数方差</td>
-                          <td id="std_spike" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">激发脉冲次数方差</td>
+                          <td id="std_spike" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">连接权重均值</td>
-                          <td id="avg_conn_wt" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">连接权重均值</td>
+                          <td id="avg_conn_wt" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">连接权重方差</td>
-                          <td id="std_conn_wt" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">连接权重方差</td>
+                          <td id="std_conn_wt" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">ANN转SNN耗时(秒)</td>
-                          <td id="stage1_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">ANN转SNN耗时(秒)</td>
+                          <td id="stage1_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">预处理耗时(秒)</td>
-                          <td id="stage2_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">预处理耗时(秒)</td>
+                          <td id="stage2_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">参数调优耗时(秒)</td>
-                          <td id="stage3_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">参数调优耗时(秒)</td>
+                          <td id="stage3_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;padding: 15px;">DarwinLang文件生成耗时(秒)</td>
-                          <td id="stage4_time_use" style="border: solid 2px #D6D6D6;padding: 15px;">xxx</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">DarwinLang文件生成耗时(秒)</td>
+                          <td id="stage4_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
                       </tr>
                   </table>
-                  <table id="scale_factors_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;border-spacing: 0px 5px;margin-left: 20px;">
+                  <table id="scale_factors_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;border-spacing: 0px 5px;margin-left: 20px;color: #333;">
+                      <tr style="border: solid 2px #D6D6D6;">
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;">神经层</td>
+                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;">参数缩放系数</td>
+                      </tr>
                       <!-- <tr style="height: 35px;margin-top: 0px;">
                           <td style="width: 100px;font-size: small;font-weight: bold;">层<br/>00Conv2D_26x26x8 参数缩放系数</td>
                           <td>系数1</td>
@@ -7534,14 +7542,19 @@ function getANNSNNConvertPage() {
                       line_td1.style.fontSize = "small";
                       line_td1.style.fontWeight = "bold";
                       line_td1.style.border = "solid 2px #D6D6D6";
-                      line_td1.style.padding = "15px";
+                      line_td1.style.paddingTop = '15px';
+                      line_td1.style.paddingBottom = '15px';
+                      line_td1.style.paddingLeft = '10px';
                       line_td1.style.paddingRight = '80px';
-                      line_td1.innerHTML = ""+obj+"层<br/>参数缩放系数";
+                      line_td1.innerHTML = ""+obj;
                       table_line.appendChild(line_td1);
                       let line_td2 = document.createElement("td");
                       line_td2.style.border = "solid 2px #D6D6D6";
-                      line_td2.style.padding = "15px";
-                      line_td2.style.paddingRight = '80px';
+                      line_td2.style.paddingTop = '15px';
+                      line_td2.style.paddingBottom = '15px';
+                      line_td2.style.paddingRight = '10px';
+                      line_td2.style.paddingLeft = '80px';
+                      line_td2.style.textAlign = 'right';
                       line_td2.innerText = parseFloat(scale_fac[obj]).toFixed(3);
                       table_line.appendChild(line_td2);
                       document.getElementById("scale_factors_table").appendChild(table_line);

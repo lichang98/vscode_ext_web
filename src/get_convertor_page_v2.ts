@@ -3379,9 +3379,12 @@ export function getSNNModelPage():string{
                           },
                           tooltip: {}, //提示信息
                           legend: {   //图例组件
-                              top: "0%",   //距离顶部5%
+                              // top: "0%",   //距离顶部5%
                               // bottom: "88%",
                               // left: "5%",
+                              orient:'vertical',
+                              x:'left',
+                              y:'center',
                               data: node_class,
                               formatter: function (name) {
                                   var neuron_num;
@@ -3407,7 +3410,7 @@ export function getSNNModelPage():string{
                                           fontSize: 14,
                                           verticalAlign: 'top',
                                           align: 'center',
-                                          padding: [0, 0, 20, 0],
+                                          padding: [0, 0, 5, 0],
                                           color:"#333333",
                                           fontFamily: 'SourceHanSansCN-Normal',
                                           letterSpacing: '0.8px'

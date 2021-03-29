@@ -47,10 +47,10 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
               <table id="data_general_table" style="width:500px; margin-left:75px;color: #333;margin-top: 30px;">
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
                     <td style="background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
-                      font-size: 16px;
+                      font-size: 18px;
                       color: #333333;">指标</font></td>
                     <td style="background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
-                      font-size: 16px;
+                      font-size: 18px;
                       color: #333333;">指标值</font></td>               
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
@@ -58,28 +58,28 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                     font-size: 16px;
                     color: #333333;
                     text-align: right;">总数据量</font></td>
-                  <td id="total_data_amount" style="font-weight:bolder;text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
+                  <td id="total_data_amount" style="text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
                   <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
                     text-align: right;">测试数据量</font></td>
-                  <td id="test_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
+                  <td id="test_data_amount" style="text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
                   <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
                     text-align: right;">验证数据量</font></td>
-                  <td id="val_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
+                  <td id="val_data_amount" style="text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
                   <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
                     text-align: right;">数据类别</font></td>
-                  <td id="class_counts" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
+                  <td id="class_counts" style="text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
                 </tr>
               </table>
             </div>
@@ -393,11 +393,11 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                     scale:true,
                     name:x_axis_name,
                     nameTextStyle:{
-                      color:"#000000"
+                      color:"#999999"
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"#000000"
+                        color:"#999999"
                       },
                       fontFamily: 'Helvetica',
                       fontSize: '12px',
@@ -409,11 +409,11 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                     scale:true,
                     name:y_axis_name,
                     nameTextStyle:{
-                      color:"#000000"
+                      color:"#999999"
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"#000000"
+                        color:"#999999"
                       },
                       fontFamily: 'Helvetica',
                       fontSize: '12px',
@@ -425,14 +425,14 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                     name:"",
                     show:false,
                     nameTextStyle:{
-                      color:"#000000"
+                      color:"#999999"
                     },
                     fontFamily: 'Helvetica',
                     fontSize: '12px',
                     axisLabel:{
                       show:false,
                       textStyle:{
-                        color:"#000000"
+                        ccolor:"#999999"
                       },
                       fontFamily: 'Helvetica',
                       fontSize: '12px',
@@ -530,11 +530,11 @@ export function getConvertorModelPageV2(){
                     letter-spacing: 1.14px;">人工神经网络模型基本信息</font></caption>
                   <tr style="border: solid 3px;border-color: #D6D6D6;">
                     <td style="border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
-                    font-size: 14px;
+                    font-size: 16px;
                     color: #333333;
                     text-align: left;padding-top: 8px; padding-bottom: 8px;text-align: center;">统计字段</td>
                     <td style="border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
-                    font-size: 14px;
+                    font-size: 16px;
                     color: #333333;
                     text-align: left;padding-top: 8px; padding-bottom: 8px;text-align: center;">统计值</td>
                   </tr>
@@ -586,13 +586,13 @@ export function getConvertorModelPageV2(){
                       <thead>
                         <tr style="border: solid 3px;height: 35px;border-color: #D6D6D6;">
                           <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
-                          font-size: 14px;
+                          font-size: 16px;
                           color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">名称</td>
                           <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;font-family: SourceHanSansCN-Regular;
-                          font-size: 14px;
+                          font-size: 16px;
                           color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">输出形状</td>
                           <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;font-family: SourceHanSansCN-Regular;
-                          font-size: 14px;
+                          font-size: 16px;
                           color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">参数量</td>
                         </tr>
                       </thead>
@@ -605,13 +605,13 @@ export function getConvertorModelPageV2(){
                       <thead>
                         <tr style="border: solid 3px;height: 35px;border-color: #D6D6D6;">
                           <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
-                          font-size: 14px;
+                          font-size: 16px;
                           color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">名称</td>
                           <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;font-family: SourceHanSansCN-Regular;
-                          font-size: 14px;
+                          font-size: 16px;
                           color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">输出形状</td>
                           <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;font-family: SourceHanSansCN-Regular;
-                          font-size: 14px;
+                          font-size: 16px;
                           color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">参数量</td>
                         </tr>
                       </thead>
@@ -633,13 +633,13 @@ export function getConvertorModelPageV2(){
                 <!--动态创建-->
                 <div id="layers_vis_div" class="row" style="width: 620px;margin-left: 40px;margin-top: 40px;margin-bottom: 0px; margin-right: 40px;padding: 0px;background: rgb(238,238,238);color: #333;border: 2px solid #333;height: 60px;border-color: #D6D6D6;">
                   <div class="col-md-3" style="border-right: 2px solid #333;height: 58px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
-                  font-size: 14px;
+                  font-size: 16px;
                   color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">layer 名称</div>
                   <div class="col-md-3" style="border-right: 2px solid #333;height: 58px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
-                  font-size: 14px;
+                  font-size: 16px;
                   color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">layer 编号</div>
                   <div class="col-md-6" style="height: 58px;font-family: SourceHanSansCN-Regular;
-                  font-size: 14px;
+                  font-size: 16px;
                   color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">输出可视化</div>
                 </div>
                 <div id="tmp_peer"></div>
@@ -1579,50 +1579,94 @@ export function getANNSNNConvertPage(){
                       letter-spacing: 1.14px;">转换过程信息</font></div>
                   <table id="info_simu_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;color: #333;margin-left: 40px;">
                       <tr style="border: solid 2px #D6D6D6;">
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;">转换指标统计</td>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;">统计值</td>
+                          <td style="border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 16px;
+                          color: #666666;">转换指标统计</td>
+                          <td style="border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 16px;
+                          color: #666666;">统计值</td>
                       </tr>
                       <tr style="border: solid 2px #D6D6D6;">
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">转换总耗时(秒)</td>
-                          <td id="total_use_time" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">转换总耗时(秒)</td>
+                          <td id="total_use_time" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">平均激发脉冲次数</td>
-                          <td id="avg_spike" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">平均激发脉冲次数</td>
+                          <td id="avg_spike" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">激发脉冲次数方差</td>
-                          <td id="std_spike" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">激发脉冲次数方差</td>
+                          <td id="std_spike" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">连接权重均值</td>
-                          <td id="avg_conn_wt" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">连接权重均值</td>
+                          <td id="avg_conn_wt" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">连接权重方差</td>
-                          <td id="std_conn_wt" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">连接权重方差</td>
+                          <td id="std_conn_wt" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">ANN转SNN耗时(秒)</td>
-                          <td id="stage1_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">ANN转SNN耗时(秒)</td>
+                          <td id="stage1_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">预处理耗时(秒)</td>
-                          <td id="stage2_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">预处理耗时(秒)</td>
+                          <td id="stage2_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">参数调优耗时(秒)</td>
-                          <td id="stage3_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">参数调优耗时(秒)</td>
+                          <td id="stage3_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
                       </tr>
                       <tr>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;">DarwinLang文件生成耗时(秒)</td>
-                          <td id="stage4_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;">xxx</td>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">DarwinLang文件生成耗时(秒)</td>
+                          <td id="stage4_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
                       </tr>
                   </table>
                   <table id="scale_factors_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;border-spacing: 0px 5px;margin-left: 20px;color: #333;">
                       <tr style="border: solid 2px #D6D6D6;">
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;">神经层</td>
-                          <td style="font-size: small;font-weight: bold;border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;">参数缩放系数</td>
+                          <td style="border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 16px;
+                          color: #666666;">神经层</td>
+                          <td style="border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 16px;
+                          color: #666666;">参数缩放系数</td>
                       </tr>
                       <!-- <tr style="height: 35px;margin-top: 0px;">
                           <td style="width: 100px;font-size: small;font-weight: bold;">层<br/>00Conv2D_26x26x8 参数缩放系数</td>
@@ -1930,13 +1974,14 @@ export function getANNSNNConvertPage(){
                       table_line.style.border = "solid 2px #D6D6D6";
                       table_line.style.color = "#333";
                       let line_td1 = document.createElement("td");
-                      line_td1.style.fontSize = "small";
-                      line_td1.style.fontWeight = "bold";
                       line_td1.style.border = "solid 2px #D6D6D6";
                       line_td1.style.paddingTop = '15px';
                       line_td1.style.paddingBottom = '15px';
                       line_td1.style.paddingLeft = '10px';
                       line_td1.style.paddingRight = '80px';
+                      line_td1.style.fontFamily = 'SourceHanSansCN-Medium';
+                      line_td1.style.fontSize = '14px';
+                      line_td1.style.color = '#666666';
                       line_td1.innerHTML = ""+obj;
                       table_line.appendChild(line_td1);
                       let line_td2 = document.createElement("td");
@@ -1946,6 +1991,9 @@ export function getANNSNNConvertPage(){
                       line_td2.style.paddingRight = '10px';
                       line_td2.style.paddingLeft = '80px';
                       line_td2.style.textAlign = 'right';
+                      line_td2.style.fontFamily = 'SourceHanSansCN-Medium';
+                      line_td2.style.fontSize = '14px';
+                      line_td2.style.color = '#666666';
                       line_td2.innerText = parseFloat(scale_fac[obj]).toFixed(3);
                       table_line.appendChild(line_td2);
                       document.getElementById("scale_factors_table").appendChild(table_line);
@@ -2073,7 +2121,7 @@ export function getANNSNNConvertPage(){
                       },
                       axisLabel:{
                           rotate:30,
-                          color:"black"
+                          color:"#999999"
                       }
                   }
               ],
@@ -2082,13 +2130,13 @@ export function getANNSNNConvertPage(){
                       type: 'value',
                       name: '时长(秒)',
                       nameTextStyle:{
-                          color:"black"
+                          color:"#999999"
                       },
                       scale:true,
                       axisLabel: {
                           formatter: '{value}',
                           textStyle:{
-                              color:"black"
+                              color:"#999999"
                           }
                       }
                   }
@@ -2105,7 +2153,7 @@ export function getANNSNNConvertPage(){
                                   show: true, //开启显示
                                   position: 'top', //在上方显示
                                   textStyle: { //数值样式
-                                      color: 'black',
+                                      color:"#999999",
                                       fontSize: 16
                                   }
                               },
@@ -2169,10 +2217,10 @@ export function getSNNSimuPage(){
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                   <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
                     <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                    font-size: 14px;
+                    font-size: 16px;
                     color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">统计指标</td>
                     <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                    font-size: 14px;
+                    font-size: 16px;
                     color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">指标值</td>
                   </tr>
                   <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
@@ -2224,13 +2272,13 @@ export function getSNNSimuPage(){
               <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
               <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
                 <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                font-size: 14px;
+                font-size: 16px;
                 color: #666666;padding-top: 12px;padding-bottom: 12px;">层编号</td>
                 <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                font-size: 14px;
+                font-size: 16px;
                 color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数均值</td>
                 <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                font-size: 14px;
+                font-size: 16px;
                 color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数方差</td>
               </tr>
             </table>
@@ -2245,8 +2293,8 @@ export function getSNNSimuPage(){
               <div style="width: 360px;margin-left: 40px;margin-top: 20px;">
                 <form class="form-horizontal" role="form">
                   <div class="form-group">
-                    <label class="control-label col-md-8" for="select_which_layer"><font style="font-family: PingFangSC-Regular;
-                      font-size: 14px;
+                    <label class="control-label col-md-8" for="select_which_layer"><font style="font-family: PingFangSC-Regular;font-weight: normal;
+                      font-size: 16px;
                       color: #000000;
                       text-align: left;">选择神经元层</font></label>
                     <div class="col-md-4">
@@ -2669,6 +2717,7 @@ export function getSNNSimuPage(){
                       td_id.style.color = '#333333';
                       td_id.style.textAlign = 'right';
                       td_id.style.paddingRight = '15px';
+                      td_id.style.textAlign = 'center';
                       td_id.style.border = "solid 2px #D6D6D6";
                       td_id.style.paddingTop = '12px';
                       td_id.style.paddingBottom = '12px';
@@ -2791,11 +2840,11 @@ export function getSNNSimuPage(){
                       data: labels,
                       name: "类别",
                       nameTextStyle:{
-                        color:"black"
+                        color:"#999999"
                       },
                       axisLabel:{
                         textStyle:{
-                            color:"black"
+                          color:"#999999"
                         }
                      }
                   },
@@ -2804,12 +2853,12 @@ export function getSNNSimuPage(){
                       scale:true,
                       name:"时间(brian2 ms)",
                       nameTextStyle:{
-                        color:"black"
+                        color:"#999999"
                       },
                       axisLabel: {
                           formatter: '{value}',
                           textStyle:{
-                              color:"black"
+                            color:"#999999"
                           }
                       }
                   },
@@ -2841,11 +2890,11 @@ export function getSNNSimuPage(){
                       data: labels,
                       name: "ID",
                       nameTextStyle:{
-                        color:"black"
+                        color:"#999999"
                       },
                       axisLabel:{
                         textStyle:{
-                            color:"black"
+                          color:"#999999"
                         }
                      }
                   },
@@ -2854,12 +2903,12 @@ export function getSNNSimuPage(){
                       scale:true,
                       name:"时间(brian2 ms)",
                       nameTextStyle:{
-                        color:"black"
+                        color:"#999999"
                       },
                       axisLabel: {
                           formatter: '{value}',
                           textStyle:{
-                              color:"black"
+                            color:"#999999"
                           }
                       }
                   },
@@ -2881,7 +2930,7 @@ export function getSNNSimuPage(){
                 legend:{
                   data:["脉冲激发次数最少的神经元膜电位", "脉冲激发次数最多的神经元膜电位"],
                   textStyle:{
-                    color:"black"
+                    color:"#999999"
                   }
                 },
                 grid:{
@@ -2894,11 +2943,11 @@ export function getSNNSimuPage(){
                     name:"时间",
                     nameGap:40,
                     nameTextStyle:{
-                      color:"black"
+                      color:"#999999"
                     },
                     axisLabel:{
                       textStyle:{
-                        color:"black"
+                        color:"#999999"
                       }
                     }
                 },
@@ -2908,11 +2957,11 @@ export function getSNNSimuPage(){
                       scale:true,
                       name:"膜电位(左)",
                       nameTextStyle:{
-                        color:"black"
+                        color:"#999999"
                       },
                       axisLabel:{
                         textStyle:{
-                          color:"black"
+                          color:"#999999"
                         }
                       }
                   },
@@ -2921,11 +2970,11 @@ export function getSNNSimuPage(){
                       scale:true,
                       name:"膜电位(右)",
                       nameTextStyle:{
-                        color:"black"
+                        color:"#999999"
                       },
                       axisLabel:{
                         textStyle:{
-                          color:"black"
+                          color:"#999999"
                         }
                       } 
                   }
@@ -2972,16 +3021,16 @@ export function getSNNModelPage():string{
                   <thead>
                     <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                      font-size: 14px;
+                      font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">layer编号</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                      font-size: 14px;
+                      font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">神经元个数</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                      font-size: 14px;
+                      font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">求解方法</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                      font-size: 14px;
+                      font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">电压阈值</td>
                     </tr>
                     <!-- 动态加载 -->
@@ -2999,13 +3048,13 @@ export function getSNNModelPage():string{
               <thead>
                 <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                  font-size: 14px;
+                  font-size: 16px;
                   color: #666666;padding-top: 12px; padding-bottom: 12px;">layer编号</td>
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                  font-size: 14px;
+                  font-size: 16px;
                   color: #666666;padding-top: 12px; padding-bottom: 12px;">权重均值</td>
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                  font-size: 14px;
+                  font-size: 16px;
                   color: #666666;padding-top: 12px; padding-bottom: 12px;">权重方差</td>
                 </tr>
               </thead>
@@ -3022,13 +3071,13 @@ export function getSNNModelPage():string{
                   <thead>
                     <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                      font-size: 14px;
+                      font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">layer编号</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                      font-size: 14px;
+                      font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">连接稠密度</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                      font-size: 14px;
+                      font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">平均连接个数</td>
                     </tr>
                     <!-- 动态加载 -->
@@ -3300,13 +3349,13 @@ export function getSNNModelPage():string{
                       data: label_names,
                       name:"权重",
                       nameTextStyle:{
-                        color:"#333333",
+                        color:"#999999",
                         fontFamily: 'SourceHanSansCN-Normal',
                         fontSize: '14px',
                       },
                       axisLabel:{
                         textStyle:{
-                            color:"#333333"
+                          color:"#999999"
                         },
                         fontFamily: 'SourceHanSansCN-Normal',
                         fontSize: '14px',
@@ -3316,7 +3365,7 @@ export function getSNNModelPage():string{
                       type: 'value',
                       name:"连接个数(log_10)",
                       nameTextStyle:{
-                        color:"#333333",
+                        color:"#999999",
                         fontFamily: 'SourceHanSansCN-Normal',
                         fontSize: '14px',
                       },
@@ -3324,7 +3373,7 @@ export function getSNNModelPage():string{
                       axisLabel: {
                           formatter: '{value}',
                           textStyle:{
-                              color:"#333333"
+                            color:"#999999"
                           },
                           fontFamily: 'SourceHanSansCN-Normal',
                           fontSize: '14px',

@@ -46,32 +46,40 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                 letter-spacing: 1.14px;">导入数据统计</font></div>
               <table id="data_general_table" style="width:500px; margin-left:75px;color: #333;margin-top: 30px;">
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 25px;padding-bottom: 25px;"><font style="font-family: SourceHanSansCN-Normal;
+                    <td style="background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;">指标</font></td>
+                    <td style="background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;">指标值</font></td>               
+                </tr>
+                <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
+                  <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
                     text-align: right;">总数据量</font></td>
-                  <td id="total_data_amount" style="font-weight:bolder;text-align: right;padding-right: 15px;padding-top: 25px;padding-bottom: 25px;"></td>
+                  <td id="total_data_amount" style="font-weight:bolder;text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 25px;padding-bottom: 25px;"><font style="font-family: SourceHanSansCN-Normal;
+                  <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
                     text-align: right;">测试数据量</font></td>
-                  <td id="test_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 25px;padding-bottom: 25px;"></td>
+                  <td id="test_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 25px;padding-bottom: 25px;"><font style="font-family: SourceHanSansCN-Normal;
+                  <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
                     text-align: right;">验证数据量</font></td>
-                  <td id="val_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 25px;padding-bottom: 25px;"></td>
+                  <td id="val_data_amount" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
-                  <td style="padding-left: 15px;background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 25px;padding-bottom: 25px;"><font style="font-family: SourceHanSansCN-Normal;
+                  <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
                     text-align: right;">数据类别</font></td>
-                  <td id="class_counts" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 25px;padding-bottom: 25px;"></td>
+                  <td id="class_counts" style="font-weight: bolder;text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
                 </tr>
               </table>
             </div>

@@ -106,16 +106,16 @@
         </div>
     </div>
     <div style="margin-top: 5px;display: block;">
-        <div style="display: inline-block;width: 760px;height: 520px;background: rgba(238,238,238,0.4);">
+        <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
           <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
             font-size: 20px;
             color: #333333;
             letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
           <div id="input_spike_charts" style="width:660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
-          <ul id="input_spike_sample_imgs_ul" style="height: 100px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -30px;z-index: 2;">
+          <ul id="input_spike_sample_imgs_ul" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
           </ul>
         </div>
-        <div style="width: 760px;height: 520px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
+        <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
             <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
@@ -134,7 +134,7 @@
                 </tr>
             </table>
             <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
-            <ul id="sample_imgs_ul" style="height: 100px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -30px;z-index: 2;">
+            <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
             </ul>
         </div>
     </div>
@@ -189,6 +189,7 @@ body {
 <script src="https://cdn.staticfile.org/echarts/5.0.1/echarts.min.js"></script>
 
 <script>
+  const vscode = acquireVsCodeApi();
   let prev_clicked_li = undefined;
   let prev_clicked_input_li = undefined;
   let prev_clicked_img = undefined;
@@ -196,6 +197,8 @@ body {
   let need_red_img_li = new Array();
 
       $(document).ready(function(){
+        vscode.postMessage(JSON.stringify({"snn_simulate_ready":true}));
+        console.log("SNN仿真Webview 界面ready.");
           window.addEventListener("message", function(evt){
             console.log("SNN 仿真接收到extension 消息");
             need_red_img_li.splice(0);

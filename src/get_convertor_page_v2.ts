@@ -85,15 +85,15 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
               <div id="bar_chart_testdata_container" style="width: 700px;height: 400px;margin-left:20px;margin-top: -30px;"></div>
             </div>
         </div>
-        <div class="row" style="height: 45%;width: 100%;margin-top:-10px;">
-          <div id="sample_data_div" class="col-md-5" style="height:440;width: 700px;background: rgba(238,238,238,0.4);margin-left: 50px;">
+        <div class="row" style="height: 45%;width: 100%;margin-top:30px;">
+          <div id="sample_data_div" class="col-md-5" style="height:410;width: 700px;background: rgba(238,238,238,0.4);margin-left: 50px;">
             <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
             font-size: 20px;
             color: #333333;
             letter-spacing: 1.14px;">
               训练集样例数据
             </div>
-            <div id="bar_chart_histgram" style="width: 700px;height: 400px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
+            <div id="bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
             <ul id="sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 640px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
               <li id="sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
@@ -128,7 +128,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
             </ul>
             
           </div>
-          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 440px;width: 760px;background: rgba(238,238,238,0.4);margin-left: 15px;">
+          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 410px;width: 760px;background: rgba(238,238,238,0.4);margin-left: 15px;">
             <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
             font-size: 20px;
             color: #333333;
@@ -136,7 +136,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
               测试集样例数据
             </div>
   
-            <div id="test_bar_chart_histgram" style="width: 700px;height: 400px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
+            <div id="test_bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
             <ul id="test_sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 700px;overflow: auto;display: block;white-space: nowrap;">
               <li id="test_sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
                 <img id="test_sample_img0" onclick="sample_img_click(this);" src="${test_sample0}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
@@ -607,7 +607,7 @@ export function getConvertorModelPageV2(){
   
             <!--模型各层的可视化-->
             <div style="width: 100%;margin-top: 12px;">
-              <div id="model_layers_vis" style="background: rgba(238,238,238,0.4);display: inline-block;width: 700px;height: 440px;">
+              <div id="model_layers_vis" style="background: rgba(238,238,238,0.4);display: inline-block;width: 700px;height: 400px;">
                 <div id="model_layers_vis_tab_caption" style="text-align: center;font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -627,12 +627,12 @@ export function getConvertorModelPageV2(){
                 <div id="tmp_peer"></div>
               </div>
               <!-- 显示各层的参数量占比 -->
-              <div style="background: rgba(238,238,238,0.4);margin-left: 10px;width: 740px;height: 440px;vertical-align: top;display: inline-block;">
+              <div style="background: rgba(238,238,238,0.4);margin-left: 10px;width: 740px;height: 400px;vertical-align: top;display: inline-block;">
                 <div style="text-align: center;margin-left: 100px;font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
                 letter-spacing: 1.14px;">各层参数量分布</div>
-                <div id="layer_param_percent_div" style="width: 600px;height: 400px;margin-left: 60px;"></div>
+                <div id="layer_param_percent_div" style="width: 600px;height: 370px;margin-left: 60px;"></div>
               </div>
             </div>
   
@@ -2219,16 +2219,16 @@ export function getSNNSimuPage(){
           </div>
       </div>
       <div style="margin-top: 5px;display: block;">
-          <div style="display: inline-block;width: 760px;height: 520px;background: rgba(238,238,238,0.4);">
+          <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
             <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
               letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
             <div id="input_spike_charts" style="width:660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
-            <ul id="input_spike_sample_imgs_ul" style="height: 100px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -30px;z-index: 2;">
+            <ul id="input_spike_sample_imgs_ul" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
             </ul>
           </div>
-          <div style="width: 760px;height: 520px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
+          <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -2247,7 +2247,7 @@ export function getSNNSimuPage(){
                   </tr>
               </table>
               <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
-              <ul id="sample_imgs_ul" style="height: 100px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -30px;z-index: 2;">
+              <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
               </ul>
           </div>
       </div>
@@ -2302,6 +2302,7 @@ export function getSNNSimuPage(){
   <script src="https://cdn.staticfile.org/echarts/5.0.1/echarts.min.js"></script>
   
   <script>
+    const vscode = acquireVsCodeApi();
     let prev_clicked_li = undefined;
     let prev_clicked_input_li = undefined;
     let prev_clicked_img = undefined;
@@ -2309,6 +2310,8 @@ export function getSNNSimuPage(){
     let need_red_img_li = new Array();
   
         $(document).ready(function(){
+          vscode.postMessage(JSON.stringify({"snn_simulate_ready":true}));
+          console.log("SNN仿真Webview 界面ready.");
             window.addEventListener("message", function(evt){
               console.log("SNN 仿真接收到extension 消息");
               need_red_img_li.splice(0);

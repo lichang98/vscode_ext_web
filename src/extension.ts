@@ -1453,9 +1453,9 @@ export function activate(context: vscode.ExtensionContext) {
 			panelSNNVisWeb =undefined;
 		}, null, context.subscriptions);
 
-		panelSNNVisWeb.reveal();
 		panelSNNVisWeb.webview.html = getSNNModelPage();
 		panelSNNVisWeb.title = "SNN模型";
+		panelSNNVisWeb.reveal();
 		// fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
 		// 	console.log("panelSNNVisWeb is: "+panelSNNVisWeb+", send snn info......");
 		// 	panelSNNVisWeb!.webview.postMessage(JSON.stringify({ "snn_info": data })).then((onfullfill)=>{
@@ -1464,9 +1464,6 @@ export function activate(context: vscode.ExtensionContext) {
 		// 		console.log("向SNN模型界面发送消息，on reject.");
 		// 	});
 		// });
-		let snn_model_info_data = fs.readFileSync(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"));
-		console.log("加载完毕snn 模型数据.....");
-		panelSNNVisWeb.webview.postMessage(JSON.stringify({"snn_info": snn_model_info_data.toString()}));
 		console.log("执行darwinlang map生成脚本...");
 		// 执行 darwinlang map 生成脚本
 		let target_darlang_file_path = path.join(__dirname, "darwin2sim", "model_out" , path.basename(proj_save_path!).replace("\.dar2",""), "darlang_out","snn_digit_darlang.json");
@@ -1476,9 +1473,21 @@ export function activate(context: vscode.ExtensionContext) {
 				console.log("执行 load_graph.py 错误：" + err);
 			}else{
 				// 读取map 文件
+				console.log("向SNN模型界面发送 snn_map 数据....");
 				let map_file_disk = vscode.Uri.file(path.join(__dirname, "map.json"));
 				let file_src = panelSNNVisWeb!.webview.asWebviewUri(map_file_disk).toString();
-				panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_map": file_src}));
+				panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_map": file_src})).then((fullfill)=>{
+					console.log("snn_map 数据postmsg fullfill: "+fullfill);
+					let snn_model_info_data = fs.readFileSync(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"));
+					console.log("加载完毕snn 模型数据.....");
+					panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_info": snn_model_info_data.toString()})).then((fullfill)=>{
+						console.log("snn_info 数据postmsg fullfill: "+fullfill);
+					}, (reject)=>{
+						console.log("snn_info 数据postmsg reject :"+reject);
+					});
+				}, (reject)=>{
+					console.log("snn_map 数据postmsg reject :"+reject);
+				});
 			}
 		});
 	});
@@ -1494,16 +1503,24 @@ export function activate(context: vscode.ExtensionContext) {
 			panelSNNModelVis.onDidDispose(()=>{
 				panelSNNModelVis = undefined;
 			},null, context.subscriptions);
+			panelSNNModelVis.webview.onDidReceiveMessage((evt)=>{
+				console.log("extension 接收到 snn 仿真界面ready 消息.");
+				let data = JSON.parse(evt);
+				if(data.snn_simulate_ready){
+					// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
+					console.log("SNN仿真界面就绪.....");
+					fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
+						if(panelSNNModelVis){
+							console.log("SNN仿真界面发送 snn_info 数据....");
+							panelSNNModelVis.webview.postMessage(JSON.stringify({"snn_info":data}));
+						}
+					});
+				}
+			});
+			panelSNNModelVis.webview.html = getSNNSimuPage();
+			panelSNNModelVis.title = "SNN仿真";
+			panelSNNModelVis.reveal();
 		}
-		panelSNNModelVis.reveal();
-		panelSNNModelVis.webview.html = getSNNSimuPage();
-		panelSNNModelVis.title = "SNN仿真";
-		// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
-		fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
-			if(panelSNNModelVis){
-				panelSNNModelVis.webview.postMessage(JSON.stringify({"snn_info":data}));
-			}
-		});
 	});
 
 	// 启动转换为DarwinLang的操作

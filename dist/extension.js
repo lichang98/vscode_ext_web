@@ -168,6 +168,15 @@ function activate(context) {
         return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible
             && !treeViewSNNMD.visible && !treeViewNPView.visible && !treeViewProjLoadView.visible;
     }
+    if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target"))) {
+        fs.mkdirSync(path.join(__dirname, "darwin2sim", "target"));
+    }
+    if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out"))) {
+        fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out"));
+        if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", "br2_models"))) {
+            fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", "br2_models"));
+        }
+    }
     treeViewCvtor.onDidChangeVisibility((evt) => {
         // if(evt.visible){
         // 	console.log("转换器页面可用!");
@@ -7720,6 +7729,11 @@ function getSNNSimuPage() {
   
   <body class="dark-mode" style="height: 100%;width: 100%;white-space: nowrap;overflow: auto;">
   
+    <div class="loading-div">
+      <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;"></i>
+      <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">仿真数据加载中...</font></span>
+    </div>
+  
       <div style="margin-top: 5px;display: block;">
   
           <div style="background: rgba(238,238,238,0.4);width: 400px;height: 380px;display: inline-block;">
@@ -7892,9 +7906,25 @@ function getSNNSimuPage() {
       -webkit-font-feature-settings: 'liga';
       -webkit-font-smoothing: antialiased;
     }
+  
+  .loading-div {
+      width: calc(100vw);
+      height: calc(100vh);
+      display: table-cell;
+      vertical-align: middle;
+      color: #555;
+      overflow: hidden;
+      text-align: center;
+    }
+  .loading-div::before {
+    display: inline-block;
+    vertical-align: middle;
+  } 
+  
   </style>
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
   
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -8243,6 +8273,8 @@ function getSNNSimuPage() {
                     console.log("Auto click first image.......");
                     document.getElementById("img_0").click();
                     document.getElementById("inputimg_0").click();
+                    
+                    $(".loading-div").hide(); // 隐藏加载提示
                 }
             });
         });
@@ -8491,6 +8523,11 @@ function getSNNModelPage() {
   
   <body class="dark-mode" style="height: 100%;width: 100%;white-space: nowrap;overflow: auto;">
   
+    <div class="loading-div">
+      <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;"></i>
+      <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
+    </div>
+  
       <div style="height: 400px;">
           <!-- SNN神经元信息 -->
           <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 500px;">
@@ -8627,9 +8664,24 @@ function getSNNModelPage() {
       -webkit-font-feature-settings: 'liga';
       -webkit-font-smoothing: antialiased;
     }
+  
+    .loading-div {
+        width: calc(100vw);
+        height: calc(100vh);
+        display: table-cell;
+        vertical-align: middle;
+        color: #555;
+        overflow: hidden;
+        text-align: center;
+    }
+    .loading-div::before {
+        display: inline-block;
+        vertical-align: middle;
+    } 
   </style>
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
   
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -8763,6 +8815,8 @@ function getSNNModelPage() {
                       document.getElementById("snn_layer_wt_table").appendChild(table_line);
   
                     }
+  
+                    $(".loading-div").hide(); // 隐藏加载提示
   
               //       <table id="snn_layer_wt_table" style="width: 320px;">
               // <caption class="white-text" style="caption-side: top;text-align: center;"></caption>

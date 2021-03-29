@@ -175,6 +175,16 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 
+	if(!fs.existsSync(path.join(__dirname, "darwin2sim", "target"))){
+		fs.mkdirSync(path.join(__dirname, "darwin2sim", "target"));
+	}
+	if(!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out"))){
+		fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out"));
+		if(!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", "br2_models"))){
+			fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", "br2_models"));
+		}
+	}
+
 	treeViewCvtor.onDidChangeVisibility((evt)=>{
 		// if(evt.visible){
 		// 	console.log("转换器页面可用!");

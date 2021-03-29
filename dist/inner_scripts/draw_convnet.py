@@ -172,7 +172,7 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
     colors = []
 
     fig, ax = plt.subplots(facecolor='#eeeeee')
-
+    fig.patch.set_alpha(0.0)
 
     ############################
     # conv layers

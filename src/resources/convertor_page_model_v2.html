@@ -37,37 +37,47 @@
                   color: #333333;
                   letter-spacing: 1.14px;">人工神经网络模型基本信息</font></caption>
                 <tr style="border: solid 3px;border-color: #D6D6D6;">
-                  <td style="padding-left: 15px;border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
+                  <td style="border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
                   font-size: 14px;
                   color: #333333;
-                  text-align: left;padding-top: 10px; padding-bottom: 10px;">总层数</td>
+                  text-align: left;padding-top: 8px; padding-bottom: 8px;text-align: center;">统计字段</td>
+                  <td style="border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
+                  font-size: 14px;
+                  color: #333333;
+                  text-align: left;padding-top: 8px; padding-bottom: 8px;text-align: center;">统计值</td>
+                </tr>
+                <tr style="border: solid 3px;border-color: #D6D6D6;">
+                  <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
+                  font-size: 14px;
+                  color: #333333;
+                  text-align: left;padding-top: 8px; padding-bottom: 8px;">总层数</td>
                   <td id="model_total_layers" style="padding-left: 10px;font-family: SourceHanSansCN-Heavy;
                   font-size: 14px;
-                  color: #4D4D4D;text-align: right;padding-right: 15px;padding-top: 10px; padding-bottom: 10px;"></td>
+                  color: #4D4D4D;text-align: right;padding-right: 15px;padding-top: 8px; padding-bottom: 8px;"></td>
                 </tr>
                 <tr style="border: solid 3px;border-color: #D6D6D6;">
-                  <td style="padding-left: 15px; border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
+                  <td style="padding-left: 15px; border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
                   font-size: 14px;
                   color: #333333;
-                  text-align: left;padding-top: 10px; padding-bottom: 10px;">总参数量</td>
+                  text-align: left;padding-top: 8px; padding-bottom: 8px;">总参数量</td>
                   <td id="model_total_param" style="padding-left: 10px;font-family: SourceHanSansCN-Heavy;
                   font-size: 14px;
-                  color: #4D4D4D;text-align: right;padding-right: 15px;padding-top: 10px; padding-bottom: 10px;"></td>
+                  color: #4D4D4D;text-align: right;padding-right: 15px;padding-top: 8px; padding-bottom: 8px;"></td>
                 </tr>
                 <tr style="border: solid 3px;border-color: #D6D6D6;">
-                  <td style="padding-left: 15px; border: solid 2px;background: rgb(238,238,238);border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
+                  <td style="padding-left: 15px; border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
                   font-size: 14px;
                   color: #333333;
-                  text-align: left;padding-top: 10px; padding-bottom: 10px;">unit数量</td>
+                  text-align: left;padding-top: 8px; padding-bottom: 8px;">unit数量</td>
                   <td id="model_total_units" style="padding-left: 10px;font-family: SourceHanSansCN-Heavy;
                   font-size: 14px;
-                  color: #4D4D4D;text-align: right;padding-right: 15px;padding-top: 10px; padding-bottom: 10px;"></td>
+                  color: #4D4D4D;text-align: right;padding-right: 15px;padding-top: 8px; padding-bottom: 8px;"></td>
                 </tr>
               </table>
     
               <!-- python 绘制的模型结构简图 -->
               <div id="ann_model_vis_img_parent_div" style="margin-left: 40px;width: 600px;margin-right: 40px;">
-                <img id="ann_model_vis_img" style="width: 600px;height: 260px;">
+                <img id="ann_model_vis_img" style="width: 600px;height: 220px;">
               </div>
             </div>
   
@@ -83,15 +93,15 @@
                     <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                     <thead>
                       <tr style="border: solid 3px;height: 35px;border-color: #D6D6D6;">
-                        <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
+                        <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
                         font-size: 14px;
-                        color: #666666;padding-top: 15px; padding-bottom: 15px;">名称</td>
-                        <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;font-family: SourceHanSansCN-Regular;
+                        color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">名称</td>
+                        <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;font-family: SourceHanSansCN-Regular;
                         font-size: 14px;
-                        color: #666666;padding-top: 15px; padding-bottom: 15px;">输出形状</td>
-                        <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;font-family: SourceHanSansCN-Regular;
+                        color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">输出形状</td>
+                        <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;font-family: SourceHanSansCN-Regular;
                         font-size: 14px;
-                        color: #666666;padding-top: 15px; padding-bottom: 15px;">参数量</td>
+                        color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">参数量</td>
                       </tr>
                     </thead>
                     <!--通过加载模型的信息动态创建-->
@@ -102,15 +112,15 @@
                     <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                     <thead>
                       <tr style="border: solid 3px;height: 35px;border-color: #D6D6D6;">
-                        <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
+                        <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
                         font-size: 14px;
-                        color: #666666;padding-top: 15px; padding-bottom: 15px;">名称</td>
-                        <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;font-family: SourceHanSansCN-Regular;
+                        color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">名称</td>
+                        <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;font-family: SourceHanSansCN-Regular;
                         font-size: 14px;
-                        color: #666666;padding-top: 15px; padding-bottom: 15px;">输出形状</td>
-                        <td style="padding-left: 15px;background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;font-family: SourceHanSansCN-Regular;
+                        color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">输出形状</td>
+                        <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;font-family: SourceHanSansCN-Regular;
                         font-size: 14px;
-                        color: #666666;padding-top: 15px; padding-bottom: 15px;">参数量</td>
+                        color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">参数量</td>
                       </tr>
                     </thead>
                     <!--通过加载模型的信息动态创建-->
@@ -132,13 +142,13 @@
               <div id="layers_vis_div" class="row" style="width: 620px;margin-left: 40px;margin-top: 40px;margin-bottom: 0px; margin-right: 40px;padding: 0px;background: rgb(238,238,238);color: #333;border: 2px solid #333;height: 60px;border-color: #D6D6D6;">
                 <div class="col-md-3" style="border-right: 2px solid #333;height: 58px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
                 font-size: 14px;
-                color: #666666;text-align: left;vertical-align: middle;padding-top: 20px;">layer 名称</div>
+                color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">layer 名称</div>
                 <div class="col-md-3" style="border-right: 2px solid #333;height: 58px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
                 font-size: 14px;
-                color: #666666;text-align: left;vertical-align: middle;padding-top: 20px;">layer 编号</div>
+                color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">layer 编号</div>
                 <div class="col-md-6" style="height: 58px;font-family: SourceHanSansCN-Regular;
                 font-size: 14px;
-                color: #666666;text-align: left;vertical-align: middle;padding-top: 20px;">输出可视化</div>
+                color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">输出可视化</div>
               </div>
               <div id="tmp_peer"></div>
             </div>

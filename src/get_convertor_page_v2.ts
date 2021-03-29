@@ -2973,7 +2973,7 @@ export function getSNNModelPage():string{
               font-size: 20px;
               color: #333333;
               letter-spacing: 1.14px;">层连接权重统计</font></div>
-            <table id="snn_layer_wt_table" style="border: solid 3px #D6D6D6;width: 380px;margin-left: 20px;">
+            <table id="snn_layer_wt_table" style="border: solid 3px #D6D6D6;width: 380px;margin-left: 60px;">
               <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
               <thead>
                 <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
@@ -2996,7 +2996,7 @@ export function getSNNModelPage():string{
                 font-size: 20px;
                 color: #333333;
                 letter-spacing: 1.14px;">脉冲神经网络突触连接信息</font></div>
-              <table id="layer_conns_table" style="margin-left:20px;border: solid 3px #D6D6D6;width: 400px;">
+              <table id="layer_conns_table" style="margin-left:60px;border: solid 3px #D6D6D6;width: 400px;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                   <thead>
                     <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
@@ -3113,7 +3113,7 @@ export function getSNNModelPage():string{
                         var line = document.createElement("tr");
                         line.style = "margin-top: 15px;border: solid 3px #D6D6D6;color: #333;"
                         var col_1 = document.createElement("td");
-                        col_1.style = "text-align:right; padding-right:15px; font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
+                        col_1.style = "text-align:center; padding-right:15px; font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                         col_1.innerText = neurons_info[i].idx;
   
                         var col_2 = document.createElement("td");
@@ -3142,7 +3142,7 @@ export function getSNNModelPage():string{
                         var line = document.createElement("tr");
                         line.style = "margin-top: 15px; border: solid 3px #D6D6D6; color:#333;";
                         var col_1 = document.createElement("td");
-                        col_1.style = "text-align:right; padding-right:15px;border: solid 3px #D6D6D6;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
+                        col_1.style = "text-align:center; padding-right:15px;border: solid 3px #D6D6D6;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                         col_1.innerText = synaps_info[i].idx;
   
                         var col_2 = document.createElement("td");
@@ -3190,7 +3190,7 @@ export function getSNNModelPage():string{
                       td_id.style.color = "#333333";
                       td_id.style.width = "120px";
                       td_id.style.border = "solid 3px #D6D6D6";
-                      td_id.style.textAlign = "right";
+                      td_id.style.textAlign = "center";
                       td_id.style.paddingRight = "15px";
                       td_id.style.paddingTop = "12px";
                       td_id.style.paddingBottom = "12px";

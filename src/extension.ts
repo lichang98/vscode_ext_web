@@ -715,6 +715,12 @@ export function activate(context: vscode.ExtensionContext) {
 							proj_save_path = path.join(fileUri[0].fsPath, data.select_save_proj_path_req+".dar2");
 							if(currentPanel){
 								console.log("发送保存路径到webview..., 路径="+proj_save_path);
+								fs.open(proj_save_path, 'w', 0o777, (err, fd)=>{
+									if(err){
+										console.log("创建项目文件错误："+err);
+									}
+									console.log("创建新项目文件，路径："+proj_save_path);
+								});
 								currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": proj_save_path}));
 							}
 						}
@@ -899,6 +905,12 @@ export function activate(context: vscode.ExtensionContext) {
 						proj_save_path = path.join(fileUri[0].fsPath, data.select_save_proj_path_req+".dar2");
 						if(currentPanel){
 							console.log("发送保存路径到webview..., 路径="+proj_save_path);
+							fs.open(proj_save_path, 'w', 0o777 , (err, fd)=>{
+								if(err){
+									console.log("创建项目文件错误："+err);
+								}
+								console.log("创建新项目文件，路径："+proj_save_path);
+							});
 							currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": proj_save_path}));
 						}
 					}

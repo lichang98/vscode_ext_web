@@ -1019,16 +1019,24 @@ export function getConvertorPageV2(){
             </h4>
           </div>
           <div>
+            <div id="alert_sheet" class="alert alert-danger" style="display: none;">
+              <a href="#" class="close" data-dismiss="alert">
+                  &times;
+              </a>
+              <div id="error_band_text">
+                <strong>警告！</strong>您的网络连接有问题。
+              </div>
+            </div>
                     <form role="form" id="project_info_form">
-                        <div style="margin-top: 50px;">
-                            <label for="project_name" style="font-family: SourceHanSansCN-Normal;
+                        <div id="proj_name_div" style="margin-top: 50px;">
+                            <label for="project_name" id="lb_project_name" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
-                            letter-spacing: 1.26px;margin-left: 180px;">项目名称: </label>
+                            letter-spacing: 1.26px;margin-left: 186px;">项目名称: </label>
                             <input type="text" id="project_name" style="background: #EEEEEE;
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
-                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+                            border-radius: 6px;width: 476px;font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #999999;
     letter-spacing: 0;
@@ -1074,11 +1082,11 @@ export function getConvertorPageV2(){
                           <label for="ann_lib_type" style="font-family: SourceHanSansCN-Normal;
                           font-size: 22px;
                           color: #333333;
-                          letter-spacing: 1.26px;margin-left: 40px;">模型使用的神经网络库: </label>
+                          letter-spacing: 1.26px;margin-left: 46px;">模型使用的神经网络库: </label>
                           <select id="ann_lib_type" style="background: #EEEEEE;
                           border: 1px solid #D9D9D9;
                           border-radius: 6px;
-                          border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+                          border-radius: 6px;width: 480px;font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #999999;
     letter-spacing: 0;
@@ -1088,7 +1096,7 @@ export function getConvertorPageV2(){
                         </div>
                         <div class="input-group" style="background: #EEEEEE;
                         border-radius: 6px;
-                        border-radius: 6px;margin-left: 100px;margin-right: 20px;">
+                        border-radius: 6px;margin-left: 100px;margin-right: 22px;">
                           <span id="span_save_path" class="input-group-addon" style="cursor:pointer;background: #DFDFDF;font-family: SourceHanSansCN-Normal;
                           font-size: 22px;
                           color: #333333;
@@ -1139,11 +1147,11 @@ export function getConvertorPageV2(){
                             <label for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
-                            letter-spacing: 1.26px;margin-left: 180px;">项目名称</label>
+                            letter-spacing: 1.26px;margin-left: 186px;">项目名称</label>
                             <input type="text" id="project_name_projrefac" style="background: #EEEEEE;
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
-                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+                            border-radius: 6px;width: 476px;font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #999999;
     letter-spacing: 0;
@@ -1189,11 +1197,11 @@ export function getConvertorPageV2(){
                           <label for="ann_lib_type_projrefac" style="font-family: SourceHanSansCN-Normal;
                           font-size: 22px;
                           color: #333333;
-                          letter-spacing: 1.26px;margin-left: 40px;">模型使用的神经网络库</label>
+                          letter-spacing: 1.26px;margin-left: 46px;">模型使用的神经网络库</label>
                           <select id="ann_lib_type_projrefac" style="background: #EEEEEE;
                           border: 1px solid #D9D9D9;
                           border-radius: 6px;
-                          border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+                          border-radius: 6px;width: 480px;font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #999999;
     letter-spacing: 0;
@@ -1280,8 +1288,44 @@ export function getConvertorPageV2(){
              console.log("发送消息到extension，打开选择路径的dialog");
              vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val()}));
            });
+    
+           $("#project_name").on('change',(evt)=>{
+            document.getElementById("alert_sheet").style.display = "none";
+            document.getElementById("project_name").style.borderColor = '#D9D9D9';
+            document.getElementById("lb_project_name").style.color = '#333333';
+           });
+    
             $("#create").on("click",function(){
                 console.log("创建xxx");
+                // 字段检查
+                if($("#project_name").val() === undefined || $("#project_name").val().toString().trim().length === 0){
+                  document.getElementById("alert_sheet").style.display = "block";
+                  document.getElementById("project_name").style.borderColor='#f82d2d';
+                  document.getElementById("lb_project_name").style.color = '#f82d2d';
+                  document.getElementById("error_band_text").innerHTML = '<strong>项目名称不可为空!</strong>';
+                  return;
+                }else if($("#project_name").val().toString().trim().length > 20){
+                  document.getElementById("alert_sheet").style.display = "block";
+                  document.getElementById("project_name").style.borderColor='#f82d2d';
+                  document.getElementById("lb_project_name").style.color = '#f82d2d';
+                  document.getElementById("error_band_text").innerHTML = '<strong>项目名称不可超过20个字符!</strong>';
+                  return;
+                }else if($("#project_name").val().toString().trim().search("[\~\!\！\@\#\$\￥\%\<\>\》\《\.\?\？]") >=0){
+                  document.getElementById("alert_sheet").style.display = "block";
+                  document.getElementById("project_name").style.borderColor='#f82d2d';
+                  document.getElementById("lb_project_name").style.color = '#f82d2d';
+                  document.getElementById("error_band_text").innerHTML = '<strong>项目名称不可包含特殊字符!</strong>';
+                  return;
+                }
+    
+                if($("#proj_save_path_input").val().toString().trim().length === 0){
+                  document.getElementById("alert_sheet").style.display = "block";
+                  document.getElementById("span_save_path").style.color = '#f82d2d';
+                  document.getElementById("proj_save_path_input").style.borderColor = '#f82d2d';
+                  document.getElementById("error_band_text").innerHTML = '<strong>项目路径不可为空!</strong>';
+                  return;
+                }
+    
                 var project_name = $("#project_name").val();
                 var project_type = $("#select_type").val();
                 var python_type = $("#python_type").val();
@@ -1337,6 +1381,10 @@ export function getConvertorPageV2(){
                   if(message.proj_select_path){
                     console.log("接收到新项目保存路径："+message.proj_select_path);
                     $("#proj_save_path_input").val(message.proj_select_path);
+    
+                    document.getElementById("alert_sheet").style.display = "none";
+                    document.getElementById("span_save_path").style.color = '#333333';
+                    document.getElementById("proj_save_path_input").style.borderColor = '';
                   }
                 }
             });

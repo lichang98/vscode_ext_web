@@ -63,6 +63,12 @@ def get_css(css_file):
         content = f.read()
         return Response(content, mimetype="text/css")
 
+@app.route("/woff2/<woff2_file>")
+def get_woff2file(woff2_file):
+    with open(path.join(base_path, "..", "..", "src", "resources","js_css",woff2_file), "rb") as f:
+        content = f.read()
+        return Response(content, mimetype="font/woff2")
+
 @app.route("/ping", methods=['GET'])
 def ping():
     return Response()

@@ -1419,7 +1419,6 @@ export function activate(context: vscode.ExtensionContext) {
 			// 发送消息到web view ，开始模型的转换
 			console.log("模型转换页面打开");
 			// currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
-
 			if(currentPanel && currentPanel.title !== "模型转换"){
 				currentPanel.webview.html = getANNSNNConvertPage();
 				currentPanel.reveal();

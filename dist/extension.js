@@ -16,10 +16,9 @@ const fs = __webpack_require__(3);
 const axios = __webpack_require__(4);
 // 引入 TreeViewProvider 的类
 const TreeViewProvider_1 = __webpack_require__(51);
-const multiLevelTree_1 = __webpack_require__(52);
 const get_convertor_page_v2_1 = __webpack_require__(53);
 const child_process_1 = __webpack_require__(54);
-let local_server = undefined;
+// 点击darwinlang json 文件单独显示SNN结构的界面
 function darlangWebContent() {
     return `<!DOCTYPE html>
 	<html lang="en">
@@ -154,19 +153,14 @@ function activate(context) {
     let treeViewSimulator = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_simulator");
     let treeViewConvertDarLang = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
     let treeViewSNNModelView = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_snn_model_view");
-    let treeViewNewProj = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("new_project_act_view-item");
-    let treeViewLoadProj = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("load_proj_act_view-item");
-    // let treeViewBinConvertDarLang = TreeViewProvider.initTreeViewItem("item_bin_darwinlang_convertor");
     let treeviewHome = vscode.window.createTreeView("treeView-item", { treeDataProvider: treeview });
     let treeViewCvtor = vscode.window.createTreeView("item_convertor", { treeDataProvider: treeviewConvertor });
     let treeViewSim = vscode.window.createTreeView("item_simulator", { treeDataProvider: treeViewSimulator });
     let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", { treeDataProvider: treeViewConvertDarLang });
     let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", { treeDataProvider: treeViewSNNModelView });
-    let treeViewNPView = vscode.window.createTreeView("new_project_act_view-item", { treeDataProvider: treeViewNewProj });
-    let treeViewProjLoadView = vscode.window.createTreeView("load_proj_act_view-item", { treeDataProvider: treeViewLoadProj });
-    function is_all_invisible() {
+    function isAllOtherTreeViewInvisible() {
         return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible
-            && !treeViewSNNMD.visible && !treeViewNPView.visible && !treeViewProjLoadView.visible;
+            && !treeViewSNNMD.visible;
     }
     if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target"))) {
         fs.mkdirSync(path.join(__dirname, "darwin2sim", "target"));
@@ -178,35 +172,6 @@ function activate(context) {
         }
     }
     treeViewCvtor.onDidChangeVisibility((evt) => {
-        // if(evt.visible){
-        // 	console.log("转换器页面可用!");
-        // 	if(currentPanel && currentPanel.title !== "模型转换"){
-        // 		currentPanel.webview.html = getANNSNNConvertPage();
-        // 		currentPanel.reveal();
-        // 		currentPanel.title = "模型转换";
-        // 		console.log("显示currentpane  模型转换   1");
-        // 	}else if(currentPanel){
-        // 		currentPanel.reveal();
-        // 	}
-        // 	treeviewHome.reveal(treeview.data[0]);
-        // 	// // 点击转换器快捷方式，启动模型转换
-        // 	// vscode.commands.executeCommand("item_convertor.start_convert");
-        // }else{
-        // 	setTimeout(()=>{
-        // 		if(is_all_invisible()){
-        // 			if(currentPanel && currentPanel.title !== "模型转换"){
-        // 				currentPanel.webview.html = getANNSNNConvertPage();
-        // 				currentPanel.reveal();
-        // 				currentPanel.title = "模型转换";
-        // 				console.log("显示currentpane  模型转换 2");
-        // 			}else if(currentPanel){
-        // 				currentPanel.reveal();
-        // 			}
-        // 			treeviewHome.reveal(treeview.data[0]);
-        // 			// treeViewCvtor.reveal(treeviewConvertor.data[0]);
-        // 		}
-        // 	}, 100);
-        // }
         if (evt.visible) {
             console.log("activity bar 转换图标被点击, treeview convertor 可见...");
             if (currentPanel && currentPanel.title === "模型转换") {
@@ -216,56 +181,13 @@ function activate(context) {
         }
         else {
             setTimeout(() => {
-                if (is_all_invisible()) {
+                if (isAllOtherTreeViewInvisible()) {
                     if (currentPanel && currentPanel.title === "模型转换") {
                         currentPanel.webview.postMessage(JSON.stringify({ "ann_model_start_convert": "yes" }));
                         treeviewHome.reveal(treeview.data[0]);
                     }
                 }
                 treeviewHome.reveal(treeview.data[0]);
-            }, 100);
-        }
-    });
-    treeViewNPView.onDidChangeVisibility((evt) => {
-        if (evt.visible) {
-            console.log("新项目创建...");
-            vscode.commands.executeCommand("treeView-item.newproj");
-            treeviewHome.reveal(treeview.data[0]);
-        }
-        else {
-            setTimeout(() => {
-                if (is_all_invisible()) {
-                    // treeViewNPView.reveal(treeViewNewProj.data[0]);
-                    treeviewHome.reveal(treeview.data[0]);
-                    vscode.commands.executeCommand("treeView-item.newproj");
-                }
-                else {
-                    return;
-                }
-            }, 100);
-            console.log("创建新项目隐藏...");
-        }
-    });
-    treeViewProjLoadView.onDidChangeVisibility((evt) => {
-        if (evt.visible) {
-            console.log("加载已有项目....");
-            console.log("加载已有项目 命令执行..");
-            vscode.commands.executeCommand("treeView.proj_load");
-            treeviewHome.reveal(treeview.data[0]);
-        }
-        else {
-            setTimeout(() => {
-                if (is_all_invisible()) {
-                    console.log("加载已有项目  reveal..");
-                    treeviewHome.reveal(treeview.data[0]);
-                    // treeViewProjLoadView.reveal(treeViewLoadProj.data[0]);
-                    console.log("加载已有项目 命令执行..");
-                    vscode.commands.executeCommand("treeView.proj_load");
-                }
-                else {
-                    console.log("加载已有项目 隐藏...");
-                    return;
-                }
             }, 100);
         }
     });
@@ -278,8 +200,7 @@ function activate(context) {
         }
         else {
             setTimeout(() => {
-                if (is_all_invisible()) {
-                    // treeViewSim.reveal(treeViewSimulator.data[0]);
+                if (isAllOtherTreeViewInvisible()) {
                     treeviewHome.reveal(treeview.data[0]);
                     // 点击仿真器快捷方式，启动仿真
                     vscode.commands.executeCommand("item_simulator.start_simulate");
@@ -299,7 +220,7 @@ function activate(context) {
         }
         else {
             setTimeout(() => {
-                if (is_all_invisible()) {
+                if (isAllOtherTreeViewInvisible()) {
                     // treeViewSNNMD.reveal(treeViewSNNModelView.data[0]);
                     treeviewHome.reveal(treeview.data[0]);
                     vscode.commands.executeCommand("snn_model_ac.show_snn_model");
@@ -315,16 +236,13 @@ function activate(context) {
             console.log("转换darwinlang页面可用!");
             //启动转换生成darwinlang
             treeviewHome.reveal(treeview.data[0]);
-            // vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
             vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
         }
         else {
             setTimeout(() => {
-                if (is_all_invisible()) {
-                    // treeViewCvtDarLang.reveal(treeViewConvertDarLang.data[0]);
+                if (isAllOtherTreeViewInvisible()) {
                     treeviewHome.reveal(treeview.data[0]);
                     //启动转换生成darwinlang
-                    // vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
                     vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
                 }
             }, 100);
@@ -332,51 +250,48 @@ function activate(context) {
     });
     let inMemTreeViewStruct = new Array();
     // treeViewBinConvertDarLang.data = inMemTreeViewStruct;
-    let x_norm_data_path = undefined;
-    let x_test_data_path = undefined;
-    let y_test_data_path = undefined;
-    let model_file_path = undefined;
-    let darwinlang_file_paths = new Array();
-    let darwinlang_bin_paths = new Array();
+    let X_NORM_DATA_PATH = undefined;
+    let X_TEST_DATA_PATH = undefined;
+    let Y_TEST_DATA_PATH = undefined;
+    let ANN_MODEL_FILE_PATH = undefined;
+    let DARWIN_LANG_FILE_PATHS = new Array();
+    let DARWIN_LANG_BIN_PATHS = new Array();
     let panelDataVis = undefined;
     let panelAnnModelVis = undefined;
     let panelSNNModelVis = undefined;
     let panelSNNVisWeb = undefined;
-    let proj_desc_info = {
+    let PROJ_DESC_INFO = {
         "project_name": "",
         "project_type": "",
         "python_type": "",
         "ann_lib_type": ""
     };
-    let proj_save_path = undefined;
-    vscode.window.registerTreeDataProvider("multiLevelTree", new multiLevelTree_1.MultiLevelTreeProvider());
-    function rm_treeview_file_item(root, target_label_name) {
+    let PROJ_SAVE_PATH = undefined;
+    // 删除treeview item
+    function rmTreeViewFileItemByLabelName(root, targetLabelName) {
         if (root === undefined || root.children === undefined || root.children.length === 0) {
             return;
         }
         for (let i = 0; i < root.children.length; ++i) {
-            if (root.children[i].label === target_label_name) {
+            if (root.children[i].label === targetLabelName) {
                 root.children.splice(i, 1);
                 return;
             }
             else {
-                rm_treeview_file_item(root.children[i], target_label_name);
+                rmTreeViewFileItemByLabelName(root.children[i], targetLabelName);
             }
         }
     }
     context.subscriptions.push(vscode.commands.registerCommand("treeView-item.rm-item", (item) => {
         console.log("当前删除的treeview item 标签名称：" + item.label);
-        rm_treeview_file_item(inMemTreeViewStruct[0], item.label);
+        rmTreeViewFileItemByLabelName(inMemTreeViewStruct[0], item.label);
         treeview.refresh();
     }));
     context.subscriptions.push(vscode.commands.registerCommand("treeView.edit_file", (treeItem) => {
         // 编辑darwinlang
-        let file_target = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", treeItem.label));
-        vscode.workspace.openTextDocument(file_target).then((doc) => {
-            vscode.window.showTextDocument(doc, 1, false).then(ed => {
-                ed.edit(edit => {
-                });
-            });
+        let fileTarget = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out", treeItem.label));
+        vscode.workspace.openTextDocument(fileTarget).then((doc) => {
+            vscode.window.showTextDocument(doc, 1, false);
         }, (err) => {
             console.log(err);
         });
@@ -385,51 +300,29 @@ function activate(context) {
         // vscode.window.showInformationMessage(label);
         console.log("label is :[" + label + "]");
         if (label.search("json") !== -1) {
-            // 显示可视化的darwin snn 模型结构
             // 执行 darwinlang map 生成脚本
-            let tmp_darlang_webview = vscode.window.createWebviewPanel("darwin lang", label, vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
-            tmp_darlang_webview.webview.html = darlangWebContent();
-            tmp_darlang_webview.title = "darwin lang";
-            let target_darlang_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", "snn_digit_darlang.json");
-            let command_str = "python " + path.join(__dirname, "load_graph.py") + " " + target_darlang_file_path + " " + path.join(__dirname);
-            child_process_1.exec(command_str, (err, stdout, stderr) => {
-                tmp_darlang_webview.reveal();
+            let tmpDarlangWebview = vscode.window.createWebviewPanel("darwin lang", label, vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+            tmpDarlangWebview.webview.html = darlangWebContent();
+            tmpDarlangWebview.title = "darwin lang";
+            let targetDarlangFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out", "snn_digit_darlang.json");
+            let commandStr = "python " + path.join(__dirname, "load_graph.py") + " " + targetDarlangFilePath + " " + path.join(__dirname);
+            child_process_1.exec(commandStr, (err, stdout, stderr) => {
+                tmpDarlangWebview.reveal();
                 if (err) {
                     console.log("执行 load_grph.py 错误：" + err);
                 }
                 else {
-                    let map_file_disk = vscode.Uri.file(path.join(__dirname, "map.json"));
-                    let file_src = tmp_darlang_webview.webview.asWebviewUri(map_file_disk).toString();
-                    tmp_darlang_webview.webview.postMessage({ resultUri: file_src });
+                    let mapFileDisk = vscode.Uri.file(path.join(__dirname, "map.json"));
+                    let fileSrc = tmpDarlangWebview.webview.asWebviewUri(mapFileDisk).toString();
+                    tmpDarlangWebview.webview.postMessage({ resultUri: fileSrc });
                 }
             });
-            // exec(command_str, function (err, stdout, stderr) {
-            // 	if(err){
-            // 		console.log("执行 load_graph.py 错误：" + err);
-            // 	}else{
-            // 		// 读取map 文件
-            // 		let map_file_disk = vscode.Uri.file(path.join(__dirname, "map.json"));
-            // 		let file_src = panelSNNVisWeb!.webview.asWebviewUri(map_file_disk).toString();
-            // 		panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_map": file_src}));
-            // 	}
-            // });
-            // // 显示darlang文件
-            // console.log("显示转换后的darwinLang");
-            // let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""),"darlang_out",label));
-            // vscode.workspace.openTextDocument(file_target).then((doc:vscode.TextDocument)=>{
-            // 	vscode.window.showTextDocument(doc, 1,false).then(ed=>{
-            // 		ed.edit(edit=>{
-            // 		});
-            // 	});
-            // }, (err)=>{
-            // 	console.log(err);
-            // });
         }
         else if (label.search("txt") !== -1) {
             // 显示二进制的darlang文件
             console.log("显示二进制的darwinLang");
-            let file_target = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out", label));
-            vscode.workspace.openTextDocument(file_target).then((doc) => {
+            let fileTarget = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", label));
+            vscode.workspace.openTextDocument(fileTarget).then((doc) => {
                 vscode.window.showTextDocument(doc, 1, false).then(ed => {
                     ed.edit(edit => {
                     });
@@ -440,8 +333,8 @@ function activate(context) {
         }
         else if (label.search("config.b") !== -1) {
             console.log("解析显示1_1config.b 文件内容");
-            let target_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt");
-            vscode.workspace.openTextDocument(target_file_path).then((doc) => {
+            let targetFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt");
+            vscode.workspace.openTextDocument(targetFilePath).then((doc) => {
                 vscode.window.showTextDocument(doc, 1, false);
             });
         }
@@ -449,70 +342,36 @@ function activate(context) {
             // 显示pickle 文件的原始内容
             console.log("解析并显示pickle 文件内容");
             // let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", "inputs",label));
-            let target_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out", "inputs", label);
+            let targetFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "inputs", label);
             var modelVisScriptPath = path.join(__dirname, "inner_scripts", "parse_pickle.py");
-            var command_str = "python " + modelVisScriptPath + " " + target_file_path;
-            child_process_1.exec(command_str, function (err, stdout, stderr) {
+            var commandStr = "python " + modelVisScriptPath + " " + targetFilePath;
+            child_process_1.exec(commandStr, function (err, stdout, stderr) {
                 console.log("pickle 文件解析结束");
-                let file_target = vscode.Uri.file(path.join(__dirname, "inner_scripts", label));
-                vscode.workspace.openTextDocument(file_target).then((doc) => {
-                    vscode.window.showTextDocument(doc, 1, false).then(ed => {
-                        ed.edit(edit => { });
-                    });
+                let fileTarget = vscode.Uri.file(path.join(__dirname, "inner_scripts", label));
+                vscode.workspace.openTextDocument(fileTarget).then((doc) => {
+                    vscode.window.showTextDocument(doc, 1, false);
                 });
                 vscode.workspace.onDidCloseTextDocument(evt => {
                     console.log(evt.fileName + " [is closed");
-                    let target_file = evt.fileName;
-                    target_file = target_file.replace("\.git", "");
-                    fs.unlink(target_file, () => { });
+                    let targetFile = evt.fileName;
+                    targetFile = targetFile.replace("\.git", "");
+                    fs.unlink(targetFile, () => { });
                 });
             });
         }
         else if (label.search("layer") !== -1) {
             // 显示layer之间连接pickle文件的原始内容
             console.log("显示layer 连接pickle文件");
-            let target_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", label);
+            let targetFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out", label);
             let modelVisScriptPath = path.join(__dirname, "inner_scripts", "parse_pickle.py");
-            let command_str = "python " + modelVisScriptPath + " " + target_file_path;
-            child_process_1.exec(command_str, function (err, stdout, stderr) {
+            let commandStr = "python " + modelVisScriptPath + " " + targetFilePath;
+            child_process_1.exec(commandStr, function (err, stdout, stderr) {
                 console.log("layer 连接pickle 文件 " + label + " 解析结束");
-                let file_target = vscode.Uri.file(path.join(__dirname, "inner_scripts", label));
-                vscode.workspace.openTextDocument(file_target).then((doc) => {
+                let fileTarget = vscode.Uri.file(path.join(__dirname, "inner_scripts", label));
+                vscode.workspace.openTextDocument(fileTarget).then((doc) => {
                     vscode.window.showTextDocument(doc, 1, false);
                 });
             });
-        }
-        else if (label.search(".png") !== -1) {
-            console.log("显示图片");
-            let imgPreviewPanel = vscode.window.createWebviewPanel("darwin2web", label, vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
-            imgPreviewPanel.webview.html = `
-			<!DOCTYPE html>
-			<html style="height: 100%;width: 100%;">
-
-			<head>
-			<meta charset="UTF-8">
-			</head>
-
-			<body>
-				<img id="sample_img" style="margin:auto;position: absolute;top: 0;left: 0;right: 0;bottom: 0;" 
-				src="${imgPreviewPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "dist", "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out", "inputs", label)))}" onmousewheel="return bigimg(this)">
-			</body>
-			<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-			<script>
-			function bigimg(obj){
-				var zoom = parseInt(obj.style.zoom,10)||100;
-				zoom += event.wheelDelta / 12;
-				if(zoom > 0 )
-					obj.style.zoom=zoom+'%';
-				return false;
-			}
-			</script>
-			</html>
-			`;
-            imgPreviewPanel.onDidDispose(() => {
-                imgPreviewPanel = undefined;
-            }, null, context.subscriptions);
-            imgPreviewPanel.reveal();
         }
         else if (label === "数据") {
             // 数据可视化
@@ -548,9 +407,9 @@ function activate(context) {
     let disposable = vscode.commands.registerCommand('darwin2.helloWorld', () => {
         // 启动后台资源server
         let scriptPath = path.join(__dirname, "inner_scripts", "img_server.py");
-        let command_str = "python " + scriptPath;
+        let commandStr = "python " + scriptPath;
         console.log("prepare to start img server.");
-        local_server = child_process_1.exec(command_str, function (err, stdout, stderr) {
+        child_process_1.exec(commandStr, function (err, stdout, stderr) {
             console.log("img server started");
         });
         sleep(1000);
@@ -564,203 +423,11 @@ function activate(context) {
             currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
             // 主界面由electron 应用启动
             currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
-            currentPanel.webview.onDidReceiveMessage(function (msg) {
-                var _a, _b;
-                console.log("Receive message: " + msg);
-                let data = JSON.parse(msg);
-                if (data.click) {
-                    console.log("Click message, val is: " + data.click);
-                    if (data.click === "convertor_page") {
-                        console.log("Jump to convertor page");
-                        if (currentPanel) {
-                            currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
-                            currentPanel.title = "转换器";
-                        }
-                    }
-                }
-                else if (data.project_info) {
-                    // 接收到webview 项目创建向导的消息，创建新的项目
-                    console.log("receive project create info");
-                    console.log("project name: " + data.project_info.project_name + ", project type=" + data.project_info.project_type
-                        + ", python_type: " + data.project_info.python_type + ", ann lib type:" + data.project_info.ann_lib_type);
-                    proj_desc_info.project_name = data.project_info.project_name;
-                    proj_desc_info.project_type = data.project_info.project_type;
-                    proj_desc_info.python_type = data.project_info.python_type;
-                    proj_desc_info.ann_lib_type = data.project_info.ann_lib_type;
-                    TreeViewProvider_1.addSlfProj(data.project_info.project_name);
-                    inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(data.project_info.project_name, [new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []),
-                            new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("ANN模型", [])], true));
-                    treeview.data = inMemTreeViewStruct;
-                    treeviewConvertor.data = inMemTreeViewStruct;
-                    treeViewSimulator.data = inMemTreeViewStruct;
-                    treeViewConvertDarLang.data = inMemTreeViewStruct;
-                    treeViewSNNModelView.data = inMemTreeViewStruct;
-                    treeViewNewProj.data = inMemTreeViewStruct;
-                    treeViewLoadProj.data = inMemTreeViewStruct;
-                    treeview.refresh();
-                    treeviewConvertor.refresh();
-                    treeViewSimulator.refresh();
-                    treeViewConvertDarLang.refresh();
-                    treeViewSNNModelView.refresh();
-                    treeViewNewProj.refresh();
-                    treeViewLoadProj.refresh();
-                    // treeViewBinConvertDarLang.refresh();
-                }
-                else if (data.project_refac_info) {
-                    // 接收到webview 项目属性修改的信息
-                    console.log("receive project refactor info");
-                    proj_desc_info.project_name = data.project_refac_info.project_name;
-                    proj_desc_info.project_type = data.project_refac_info.project_type;
-                    proj_desc_info.python_type = data.project_refac_info.python_type;
-                    proj_desc_info.ann_lib_type = data.project_refac_info.ann_lib_type;
-                    let treeItemsSize = inMemTreeViewStruct.length;
-                    inMemTreeViewStruct[treeItemsSize - 1].label = proj_desc_info.project_name;
-                    treeview.data = inMemTreeViewStruct;
-                    treeviewConvertor.data = inMemTreeViewStruct;
-                    treeViewSimulator.data = inMemTreeViewStruct;
-                    treeViewConvertDarLang.data = inMemTreeViewStruct;
-                    treeViewSNNModelView.data = inMemTreeViewStruct;
-                    treeViewNewProj.data = inMemTreeViewStruct;
-                    treeViewLoadProj.data = inMemTreeViewStruct;
-                    treeview.refresh();
-                    treeviewConvertor.refresh();
-                    treeViewSimulator.refresh();
-                    treeViewConvertDarLang.refresh();
-                    treeViewSNNModelView.refresh();
-                    treeViewNewProj.refresh();
-                    treeViewLoadProj.refresh();
-                    // treeViewBinConvertDarLang.refresh();
-                }
-                else if (data.model_convert_params) {
-                    // 接收到模型转换与仿真的参数配置，启动脚本
-                    // vscode.postMessage(JSON.stringify({"model_convert_params":{
-                    // 	"vthresh": v_thresh,
-                    // 	"neuron_dt": neuron_dt,
-                    // 	"synapse_dt":synapse_dt,
-                    // 	"delay":delay,
-                    // 	"dura":dura
-                    // }}));
-                    // 提取参数
-                    console.log("Fetch params for conversion from received message");
-                    let web_param_vthresh = data.model_convert_params.vthresh;
-                    let web_param_neurondt = data.model_convert_params.neuron_dt;
-                    let web_param_synapse_dt = data.model_convert_params.synapse_dt;
-                    let web_param_delay = data.model_convert_params.delay;
-                    let web_param_dura = data.model_convert_params.dura;
-                    console.log("Extension 接收到 webview的消息，启动脚本......");
-                    sleep(1000);
-                    let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + web_param_vthresh + " " +
-                        web_param_neurondt + " " + web_param_synapse_dt + " " + web_param_delay + " " + web_param_dura + " " + path.basename(proj_save_path).replace("\.dar2", ""));
-                    let command_str = "python " + scriptPath;
-                    currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.webview.postMessage(JSON.stringify({ "log_output": "模型转换程序启动中......" }));
-                    let log_output_channel = vscode.window.createOutputChannel("Darwin Convertor");
-                    log_output_channel.show();
-                    let scriptProcess = child_process_1.exec(command_str, {});
-                    (_a = scriptProcess.stdout) === null || _a === void 0 ? void 0 : _a.on("data", function (data) {
-                        // console.log(data);
-                        log_output_channel.append(data);
-                        if (data.indexOf("CONVERT_FINISH") !== -1) {
-                            if (currentPanel) {
-                                currentPanel.webview.postMessage(JSON.stringify({ "progress": "convert_finish" }));
-                            }
-                        }
-                        else if (data.indexOf("PREPROCESS_FINISH") !== -1) {
-                            if (currentPanel) {
-                                currentPanel.webview.postMessage(JSON.stringify({ "progress": "preprocess_finish" }));
-                            }
-                        }
-                        else if (data.indexOf("SEARCH_FINISH") !== -1) {
-                            if (currentPanel) {
-                                currentPanel.webview.postMessage(JSON.stringify({ "progress": "search_finish" }));
-                            }
-                        }
-                        if (currentPanel) {
-                            let formatted_data = data.split("\r\n").join("<br/>");
-                            currentPanel.webview.postMessage(JSON.stringify({ "log_output": formatted_data }));
-                        }
-                    });
-                    (_b = scriptProcess.stderr) === null || _b === void 0 ? void 0 : _b.on("data", function (data) {
-                        console.log(data);
-                    });
-                    scriptProcess.on("exit", function () {
-                        // 进程结束，发送结束消息
-                        if (currentPanel) {
-                            currentPanel.webview.postMessage(JSON.stringify({ "exec_finish": "yes" }));
-                            fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
-                                if (currentPanel) {
-                                    currentPanel.webview.postMessage(JSON.stringify({ "snn_info": data }));
-                                }
-                            });
-                            fs.readFile(path.join(__dirname, "inner_scripts", "convert_statistic_info.json"), "utf-8", (evt, data) => {
-                                if (currentPanel) {
-                                    currentPanel.webview.postMessage(JSON.stringify({ "convert_info": data }));
-                                }
-                            });
-                            fs.readFile(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", ""), "log", "gui", "test", "normalization", "99.9.json"), "utf-8", (evt, data) => {
-                                if (currentPanel) {
-                                    currentPanel.webview.postMessage(JSON.stringify({ "scale_factors": data }));
-                                }
-                            });
-                            vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
-                            // vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
-                            // 							// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
-                            // fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
-                            // 	if(panelSNNModelVis){
-                            // 		panelSNNModelVis.webview.postMessage(JSON.stringify({"snn_info":data}));
-                            // 	}
-                            // });
-                        }
-                    });
-                }
-                else if (data.select_save_proj_path_req) {
-                    // 选择项目的保存路径
-                    console.log("select path for saving project, proj name=" + data.select_save_proj_path_req);
-                    const options = {
-                        canSelectFiles: false,
-                        canSelectFolders: true,
-                        openLabel: "选择目录",
-                        title: "选择项目保存位置"
-                    };
-                    vscode.window.showOpenDialog(options).then(fileUri => {
-                        if (fileUri) {
-                            console.log("选择的项目保存路径为：" + fileUri[0].fsPath);
-                            proj_save_path = path.join(fileUri[0].fsPath, data.select_save_proj_path_req + ".dar2");
-                            if (currentPanel) {
-                                console.log("发送保存路径到webview..., 路径=" + proj_save_path);
-                                fs.open(proj_save_path, 'w', 0o777, (err, fd) => {
-                                    if (err) {
-                                        console.log("创建项目文件错误：" + err);
-                                    }
-                                    console.log("创建新项目文件，路径：" + proj_save_path);
-                                });
-                                currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": proj_save_path }));
-                            }
-                        }
-                    });
-                    // const options:vscode.SaveDialogOptions = {
-                    // 	saveLabel: "确认保存路径",
-                    // 	filters:{"Darwin2 Project":['dar2']},
-                    // 	defaultUri:vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req+".dar2"))
-                    // };
-                    // vscode.window.showSaveDialog(options).then(fileUri => {
-                    // 	if(fileUri){
-                    // 		console.log("Selected path for saving project is: "+fileUri.fsPath);
-                    // 		proj_save_path = fileUri.fsPath; // 记录项目保存路径
-                    // 		// 返回给webview 选择的目标路径
-                    // 		if(currentPanel){
-                    // 			console.log("发送保存路径到webview..., 路径="+fileUri.fsPath);
-                    // 			currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": fileUri.fsPath}));
-                    // 		}
-                    // 	}
-                    // });
-                }
-            });
+            bindCurrentPanelReceiveMsg(currentPanel);
         }
     });
-    function initCurrentPanel() {
-        currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
-        // 主界面由electron 应用启动
-        currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
+    // currentPanel webView 面板 onDidReceiveMessage 事件绑定
+    function bindCurrentPanelReceiveMsg(currentPanel) {
         currentPanel.webview.onDidReceiveMessage(function (msg) {
             var _a, _b;
             console.log("Receive message: " + msg);
@@ -780,53 +447,28 @@ function activate(context) {
                 console.log("receive project create info");
                 console.log("project name: " + data.project_info.project_name + ", project type=" + data.project_info.project_type
                     + ", python_type: " + data.project_info.python_type + ", ann lib type:" + data.project_info.ann_lib_type);
-                proj_desc_info.project_name = data.project_info.project_name;
-                proj_desc_info.project_type = data.project_info.project_type;
-                proj_desc_info.python_type = data.project_info.python_type;
-                proj_desc_info.ann_lib_type = data.project_info.ann_lib_type;
+                PROJ_DESC_INFO.project_name = data.project_info.project_name;
+                PROJ_DESC_INFO.project_type = data.project_info.project_type;
+                PROJ_DESC_INFO.python_type = data.project_info.python_type;
+                PROJ_DESC_INFO.ann_lib_type = data.project_info.ann_lib_type;
                 TreeViewProvider_1.addSlfProj(data.project_info.project_name);
                 inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(data.project_info.project_name, [new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []),
                         new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("ANN模型", [])], true));
                 treeview.data = inMemTreeViewStruct;
-                treeviewConvertor.data = inMemTreeViewStruct;
-                treeViewSimulator.data = inMemTreeViewStruct;
-                treeViewConvertDarLang.data = inMemTreeViewStruct;
-                treeViewSNNModelView.data = inMemTreeViewStruct;
-                treeViewNewProj.data = inMemTreeViewStruct;
-                treeViewLoadProj.data = inMemTreeViewStruct;
                 treeview.refresh();
-                treeviewConvertor.refresh();
-                treeViewSimulator.refresh();
-                treeViewConvertDarLang.refresh();
-                treeViewSNNModelView.refresh();
-                treeViewNewProj.refresh();
-                treeViewLoadProj.refresh();
                 // treeViewBinConvertDarLang.refresh();
             }
             else if (data.project_refac_info) {
                 // 接收到webview 项目属性修改的信息
                 console.log("receive project refactor info");
-                proj_desc_info.project_name = data.project_refac_info.project_name;
-                proj_desc_info.project_type = data.project_refac_info.project_type;
-                proj_desc_info.python_type = data.project_refac_info.python_type;
-                proj_desc_info.ann_lib_type = data.project_refac_info.ann_lib_type;
+                PROJ_DESC_INFO.project_name = data.project_refac_info.project_name;
+                PROJ_DESC_INFO.project_type = data.project_refac_info.project_type;
+                PROJ_DESC_INFO.python_type = data.project_refac_info.python_type;
+                PROJ_DESC_INFO.ann_lib_type = data.project_refac_info.ann_lib_type;
                 let treeItemsSize = inMemTreeViewStruct.length;
-                inMemTreeViewStruct[treeItemsSize - 1].label = proj_desc_info.project_name;
+                inMemTreeViewStruct[treeItemsSize - 1].label = PROJ_DESC_INFO.project_name;
                 treeview.data = inMemTreeViewStruct;
-                treeviewConvertor.data = inMemTreeViewStruct;
-                treeViewSimulator.data = inMemTreeViewStruct;
-                treeViewConvertDarLang.data = inMemTreeViewStruct;
-                treeViewSNNModelView.data = inMemTreeViewStruct;
-                treeViewNewProj.data = inMemTreeViewStruct;
-                treeViewLoadProj.data = inMemTreeViewStruct;
                 treeview.refresh();
-                treeviewConvertor.refresh();
-                treeViewSimulator.refresh();
-                treeViewConvertDarLang.refresh();
-                treeViewSNNModelView.refresh();
-                treeViewNewProj.refresh();
-                treeViewLoadProj.refresh();
-                // treeViewBinConvertDarLang.refresh();
             }
             else if (data.model_convert_params) {
                 // 接收到模型转换与仿真的参数配置，启动脚本
@@ -839,22 +481,22 @@ function activate(context) {
                 // }}));
                 // 提取参数
                 console.log("Fetch params for conversion from received message");
-                let web_param_vthresh = data.model_convert_params.vthresh;
-                let web_param_neurondt = data.model_convert_params.neuron_dt;
-                let web_param_synapse_dt = data.model_convert_params.synapse_dt;
-                let web_param_delay = data.model_convert_params.delay;
-                let web_param_dura = data.model_convert_params.dura;
+                let webParamVthresh = data.model_convert_params.vthresh;
+                let wevParamNeuronDt = data.model_convert_params.neuron_dt;
+                let webParamSynapseDt = data.model_convert_params.synapse_dt;
+                let webParamDelay = data.model_convert_params.delay;
+                let webParamDura = data.model_convert_params.dura;
                 console.log("Extension 接收到 webview的消息，启动脚本......");
                 sleep(1000);
-                let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + web_param_vthresh + " " +
-                    web_param_neurondt + " " + web_param_synapse_dt + " " + web_param_delay + " " + web_param_dura + " " + path.basename(proj_save_path).replace("\.dar2", ""));
-                let command_str = "python " + scriptPath;
+                let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
+                    wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""));
+                let commandStr = "python " + scriptPath;
                 currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.webview.postMessage(JSON.stringify({ "log_output": "模型转换程序启动中......" }));
-                let scriptProcess = child_process_1.exec(command_str, {});
-                let log_output_panel = vscode.window.createOutputChannel("Darwin Convertor");
-                log_output_panel.show();
+                let scriptProcess = child_process_1.exec(commandStr, {});
+                let logOutputPanel = vscode.window.createOutputChannel("Darwin Convertor");
+                logOutputPanel.show();
                 (_a = scriptProcess.stdout) === null || _a === void 0 ? void 0 : _a.on("data", function (data) {
-                    log_output_panel.append(data);
+                    logOutputPanel.append(data);
                     // console.log(data);
                     if (data.indexOf("CONVERT_FINISH") !== -1) {
                         if (currentPanel) {
@@ -872,8 +514,8 @@ function activate(context) {
                         }
                     }
                     if (currentPanel) {
-                        let formatted_data = data.split("\r\n").join("<br/>");
-                        currentPanel.webview.postMessage(JSON.stringify({ "log_output": formatted_data }));
+                        let formattedData = data.split("\r\n").join("<br/>");
+                        currentPanel.webview.postMessage(JSON.stringify({ "log_output": formattedData }));
                     }
                 });
                 (_b = scriptProcess.stderr) === null || _b === void 0 ? void 0 : _b.on("data", function (data) {
@@ -894,13 +536,6 @@ function activate(context) {
                             }
                         });
                         vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
-                        // vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
-                        // 							// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
-                        // fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
-                        // 	if(panelSNNModelVis){
-                        // 		panelSNNModelVis.webview.postMessage(JSON.stringify({"snn_info":data}));
-                        // 	}
-                        // });
                     }
                 });
             }
@@ -916,37 +551,27 @@ function activate(context) {
                 vscode.window.showOpenDialog(options).then(fileUri => {
                     if (fileUri) {
                         console.log("选择的项目保存路径为：" + fileUri[0].fsPath);
-                        proj_save_path = path.join(fileUri[0].fsPath, data.select_save_proj_path_req + ".dar2");
+                        PROJ_SAVE_PATH = path.join(fileUri[0].fsPath, data.select_save_proj_path_req + ".dar2");
                         if (currentPanel) {
-                            console.log("发送保存路径到webview..., 路径=" + proj_save_path);
-                            fs.open(proj_save_path, 'w', 0o777, (err, fd) => {
+                            console.log("发送保存路径到webview..., 路径=" + PROJ_SAVE_PATH);
+                            fs.open(PROJ_SAVE_PATH, 'w', 0o777, (err, fd) => {
                                 if (err) {
                                     console.log("创建项目文件错误：" + err);
                                 }
-                                console.log("创建新项目文件，路径：" + proj_save_path);
+                                console.log("创建新项目文件，路径：" + PROJ_SAVE_PATH);
                             });
-                            currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": proj_save_path }));
+                            currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": PROJ_SAVE_PATH }));
                         }
                     }
                 });
-                // const options:vscode.SaveDialogOptions = {
-                // 	saveLabel: "确认保存路径",
-                // 	filters:{"Darwin2 Project":['dar2']},
-                // 	defaultUri:vscode.Uri.file(path.join("C:\\", data.select_save_proj_path_req+".dar2"))
-                // };
-                // vscode.window.showSaveDialog(options).then(fileUri => {
-                // 	if(fileUri){
-                // 		console.log("Selected path for saving project is: "+fileUri.fsPath);
-                // 		proj_save_path = fileUri.fsPath; // 记录项目保存路径
-                // 		// 返回给webview 选择的目标路径
-                // 		if(currentPanel){
-                // 			console.log("发送保存路径到webview..., 路径="+fileUri.fsPath);
-                // 			currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": fileUri.fsPath}));
-                // 		}
-                // 	}
-                // });
             }
         });
+    }
+    function initCurrentPanel() {
+        currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+        // 主界面由electron 应用启动
+        currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
+        bindCurrentPanelReceiveMsg(currentPanel);
     }
     context.subscriptions.push(disposable);
     let disposable2 = vscode.commands.registerCommand("treeView-item.newproj", () => {
@@ -960,7 +585,7 @@ function activate(context) {
         console.log("项目属性修改");
         // 发消息到webview
         if (currentPanel) {
-            currentPanel.webview.postMessage({ "command": "ProjectRefactor", "project_desc": proj_desc_info });
+            currentPanel.webview.postMessage({ "command": "ProjectRefactor", "project_desc": PROJ_DESC_INFO });
         }
     }));
     //项目保存
@@ -968,20 +593,20 @@ function activate(context) {
         const options = {
             saveLabel: "保存项目",
             filters: { "Darwin2 Project": ['dar2'] },
-            defaultUri: vscode.Uri.file(proj_save_path)
+            defaultUri: vscode.Uri.file(PROJ_SAVE_PATH)
         };
         vscode.window.showSaveDialog(options).then(fileUri => {
             if (fileUri && fileUri) {
                 console.log("selected path: " + fileUri.fsPath);
                 // TODO 写入项目信息
                 let data = {
-                    "proj_info": proj_desc_info,
-                    "x_norm_path": x_norm_data_path,
-                    "x_test_path": x_test_data_path,
-                    "y_test_path": y_test_data_path,
-                    "model_path": model_file_path,
-                    "darwinlang_file_paths": darwinlang_file_paths,
-                    "darwinlang_bin_paths": darwinlang_bin_paths
+                    "proj_info": PROJ_DESC_INFO,
+                    "x_norm_path": X_NORM_DATA_PATH,
+                    "x_test_path": X_TEST_DATA_PATH,
+                    "y_test_path": Y_TEST_DATA_PATH,
+                    "model_path": ANN_MODEL_FILE_PATH,
+                    "darwinlang_file_paths": DARWIN_LANG_FILE_PATHS,
+                    "darwinlang_bin_paths": DARWIN_LANG_BIN_PATHS
                 };
                 fs.writeFileSync(fileUri.fsPath, JSON.stringify(data));
             }
@@ -997,143 +622,105 @@ function activate(context) {
             var _a, _b, _c, _d, _e, _f;
             if (fileUri) {
                 console.log("opened project path = " + fileUri[0].fsPath);
-                proj_save_path = fileUri[0].fsPath;
+                PROJ_SAVE_PATH = fileUri[0].fsPath;
                 let data = fs.readFileSync(fileUri[0].fsPath);
                 console.log("读取的信息：proj_info=" + data);
-                let proj_data = JSON.parse(data.toString());
-                proj_desc_info = proj_data.proj_info;
-                x_norm_data_path = proj_data.x_norm_path;
-                x_test_data_path = proj_data.x_test_path;
-                y_test_data_path = proj_data.y_test_path;
-                model_file_path = proj_data.model_path;
-                darwinlang_file_paths = proj_data.darwinlang_file_paths;
-                darwinlang_bin_paths = proj_data.darwinlang_bin_paths;
-                console.log("导入工程的x_norm 文件路径为：" + x_norm_data_path);
-                if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", "")))) {
-                    fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", "")));
+                let projData = JSON.parse(data.toString());
+                PROJ_DESC_INFO = projData.proj_info;
+                X_NORM_DATA_PATH = projData.x_norm_path;
+                X_TEST_DATA_PATH = projData.x_test_path;
+                Y_TEST_DATA_PATH = projData.y_test_path;
+                ANN_MODEL_FILE_PATH = projData.model_path;
+                DARWIN_LANG_FILE_PATHS = projData.darwinlang_file_paths;
+                DARWIN_LANG_BIN_PATHS = projData.darwinlang_bin_paths;
+                console.log("导入工程的x_norm 文件路径为：" + X_NORM_DATA_PATH);
+                if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
+                    fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
                 }
-                let target_proj_name = path.basename(proj_save_path).replace("\.dar2", "");
-                if (x_norm_data_path) {
-                    fs.copyFile(path.join(x_norm_data_path), path.join(__dirname, "darwin2sim", "target", target_proj_name, "x_norm.npz"), function (err) {
+                let targetProjName = path.basename(PROJ_SAVE_PATH).replace("\.dar2", "");
+                if (X_NORM_DATA_PATH) {
+                    fs.copyFile(path.join(X_NORM_DATA_PATH), path.join(__dirname, "darwin2sim", "target", targetProjName, "x_norm.npz"), function (err) {
                     });
                 }
-                if (x_test_data_path) {
-                    fs.copyFile(path.join(x_test_data_path), path.join(__dirname, "darwin2sim", "target", target_proj_name, "x_test.npz"), function (err) {
+                if (X_TEST_DATA_PATH) {
+                    fs.copyFile(path.join(X_TEST_DATA_PATH), path.join(__dirname, "darwin2sim", "target", targetProjName, "x_test.npz"), function (err) {
                     });
                 }
-                if (y_test_data_path) {
-                    fs.copyFile(path.join(y_test_data_path), path.join(__dirname, "darwin2sim", "target", target_proj_name, "y_test.npz"), function (err) {
+                if (Y_TEST_DATA_PATH) {
+                    fs.copyFile(path.join(Y_TEST_DATA_PATH), path.join(__dirname, "darwin2sim", "target", targetProjName, "y_test.npz"), function (err) {
                     });
                 }
-                if (model_file_path) {
-                    fs.copyFile(path.join(model_file_path), path.join(__dirname, "darwin2sim", "target", target_proj_name, "mnist_cnn.h5"), function (err) {
+                if (ANN_MODEL_FILE_PATH) {
+                    fs.copyFile(path.join(ANN_MODEL_FILE_PATH), path.join(__dirname, "darwin2sim", "target", targetProjName, "mnist_cnn.h5"), function (err) {
                     });
                 }
                 // 显示treeview
-                TreeViewProvider_1.addSlfProj(proj_desc_info.project_name);
-                inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(proj_desc_info.project_name, [new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []),
+                TreeViewProvider_1.addSlfProj(PROJ_DESC_INFO.project_name);
+                inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(PROJ_DESC_INFO.project_name, [new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []),
                         new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("ANN模型", [])], true));
-                let x_norm_file_origin_name = path.basename(x_norm_data_path), x_test_file_origin_name = path.basename(x_test_data_path), y_test_file_origin_name = path.basename(y_test_data_path);
+                let xNormFileOriginName = path.basename(X_NORM_DATA_PATH), xTestFileOriginName = path.basename(X_TEST_DATA_PATH), yTestFileOriginName = path.basename(Y_TEST_DATA_PATH);
                 // addSlfFile("x_norm");
                 // addSlfFile("x_test");
                 // addSlfFile("y_test");
-                TreeViewProvider_1.addSlfFile(x_norm_file_origin_name);
-                TreeViewProvider_1.addSlfFile(x_test_file_origin_name);
-                TreeViewProvider_1.addSlfFile(y_test_file_origin_name);
-                TreeViewProvider_1.addSlfFile(path.basename(proj_data.model_path));
-                if (proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children) {
+                TreeViewProvider_1.addSlfFile(xNormFileOriginName);
+                TreeViewProvider_1.addSlfFile(xTestFileOriginName);
+                TreeViewProvider_1.addSlfFile(yTestFileOriginName);
+                TreeViewProvider_1.addSlfFile(path.basename(projData.model_path));
+                if (projData.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children) {
                     if (inMemTreeViewStruct[0].children[0].children[0].children) {
-                        inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(x_norm_file_origin_name, [], false, "rmable"));
+                        inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(xNormFileOriginName, [], false, "rmable"));
                     }
                     if (inMemTreeViewStruct[0].children[0].children[1].children) {
-                        inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(x_test_file_origin_name, [], false, "rmable"));
+                        inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(xTestFileOriginName, [], false, "rmable"));
                     }
                     if (inMemTreeViewStruct[0].children[0].children[2].children) {
-                        inMemTreeViewStruct[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode(y_test_file_origin_name, [], false, "rmable"));
+                        inMemTreeViewStruct[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode(yTestFileOriginName, [], false, "rmable"));
                     }
                 }
-                if (proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]) {
-                    (_a = inMemTreeViewStruct[0].children[1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(proj_data.model_path)));
+                if (projData.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]) {
+                    (_a = inMemTreeViewStruct[0].children[1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(projData.model_path)));
                 }
                 // add darwinlang and bin files
                 // ITEM_ICON_MAP.set("SNN模型","imgs/darwin_icon_model_new.png");
                 TreeViewProvider_1.addDarwinFold("SNN模型");
                 (_b = inMemTreeViewStruct[0].children) === null || _b === void 0 ? void 0 : _b.push(new TreeViewProvider_1.TreeItemNode("SNN模型", []));
-                for (let i = 0; i < darwinlang_file_paths.length; ++i) {
+                for (let i = 0; i < DARWIN_LANG_FILE_PATHS.length; ++i) {
                     // ITEM_ICON_MAP.set(path.basename(darwinlang_file_paths[i].toString()),"imgs/data_file_icon_new.png");
-                    TreeViewProvider_1.addDarwinFiles(path.basename(darwinlang_file_paths[i].toString()));
+                    TreeViewProvider_1.addDarwinFiles(path.basename(DARWIN_LANG_FILE_PATHS[i].toString()));
                     if (inMemTreeViewStruct[0].children) {
-                        var child_len = inMemTreeViewStruct[0].children.length;
-                        (_c = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _c === void 0 ? void 0 : _c.push(new TreeViewProvider_1.TreeItemNode(path.basename(darwinlang_file_paths[i].toString())));
+                        var childLen = inMemTreeViewStruct[0].children.length;
+                        (_c = inMemTreeViewStruct[0].children[childLen - 1].children) === null || _c === void 0 ? void 0 : _c.push(new TreeViewProvider_1.TreeItemNode(path.basename(DARWIN_LANG_FILE_PATHS[i].toString())));
                     }
                 }
                 // ITEM_ICON_MAP.set("SNN二进制模型", "imgs/darwin_icon_model_new.png");
                 TreeViewProvider_1.addDarwinFold("SNN二进制模型");
                 (_d = inMemTreeViewStruct[0].children) === null || _d === void 0 ? void 0 : _d.push(new TreeViewProvider_1.TreeItemNode("SNN二进制模型", []));
-                for (let i = 0; i < darwinlang_bin_paths.length; ++i) {
-                    if (path.basename(darwinlang_bin_paths[i].toString()).indexOf("clear") >= 0 ||
-                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("enable") >= 0 ||
-                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("re_config") >= 0 ||
-                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("nodelist") >= 0 ||
-                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("linkout") >= 0 ||
-                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("layerWidth") >= 0 ||
-                        path.basename(darwinlang_bin_paths[i].toString()).indexOf("1_1config.txt") >= 0) {
+                for (let i = 0; i < DARWIN_LANG_BIN_PATHS.length; ++i) {
+                    if (path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("clear") >= 0 ||
+                        path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("enable") >= 0 ||
+                        path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("re_config") >= 0 ||
+                        path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("nodelist") >= 0 ||
+                        path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("linkout") >= 0 ||
+                        path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("layerWidth") >= 0 ||
+                        path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("1_1config.txt") >= 0) {
                         continue;
                     }
                     if (inMemTreeViewStruct[0].children) {
-                        var child_len = inMemTreeViewStruct[0].children.length;
+                        var childLen = inMemTreeViewStruct[0].children.length;
                         // ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
-                        if (darwinlang_bin_paths[i].toString().search("config.b") !== -1) {
+                        if (DARWIN_LANG_BIN_PATHS[i].toString().search("config.b") !== -1) {
                             TreeViewProvider_1.addDarwinFiles("config.b");
-                            (_e = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _e === void 0 ? void 0 : _e.push(new TreeViewProvider_1.TreeItemNode("config.b"));
+                            (_e = inMemTreeViewStruct[0].children[childLen - 1].children) === null || _e === void 0 ? void 0 : _e.push(new TreeViewProvider_1.TreeItemNode("config.b"));
                         }
-                        else if (darwinlang_bin_paths[i].toString().search("connfiles") !== -1) {
+                        else if (DARWIN_LANG_BIN_PATHS[i].toString().search("connfiles") !== -1) {
                             TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
-                            (_f = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _f === void 0 ? void 0 : _f.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                            (_f = inMemTreeViewStruct[0].children[childLen - 1].children) === null || _f === void 0 ? void 0 : _f.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
                         }
                         // inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
                     }
                 }
-                // // 挂载二进制模型的inputs 数据
-                // if(inMemTreeViewStruct[0].children){
-                // 	let par_dir_idx = inMemTreeViewStruct[0].children.length-1;
-                // 	ITEM_ICON_MAP.set("输入数据", "imgs/file.png");
-                // 	inMemTreeViewStruct[0].children[par_dir_idx].children?.push(new TreeItemNode("输入数据",[]));
-                // 	let sub_dir_idx = inMemTreeViewStruct[0].children[par_dir_idx].children!.length-1;
-                // 	fs.readdir(path.join(path.dirname(darwinlang_bin_paths[0].toString()), "inputs"), (err, files)=>{
-                // 		files.forEach(file => {
-                // 			ITEM_ICON_MAP.set(file, "imgs/file.png");
-                // 			inMemTreeViewStruct[0].children![par_dir_idx].children![sub_dir_idx].children?.push(new TreeItemNode(file));
-                // 		});
-                // 	});
-                // }
-                // if(inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children){
-                // 	inMemTreeViewStruct[0].children[0].children.push(new TreeItemNode("输入数据", []));
-                // 	ITEM_ICON_MAP.set("输入数据", "imgs/file.png");
-                // 	fs.readdir(path.join(path.dirname(darwinlang_bin_paths[0].toString()), "inputs"), (err, files)=>{
-                // 		files.forEach(file => {
-                // 			ITEM_ICON_MAP.set(file, "imgs/file.png");
-                // 			if(inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children){
-                // 				inMemTreeViewStruct[0].children[0].children[0].children?.push(new TreeItemNode(file));
-                // 			}
-                // 		});
-                // 	});
-                // }
                 treeview.data = inMemTreeViewStruct;
-                treeviewConvertor.data = inMemTreeViewStruct;
-                treeViewSimulator.data = inMemTreeViewStruct;
-                treeViewConvertDarLang.data = inMemTreeViewStruct;
-                treeViewSNNModelView.data = inMemTreeViewStruct;
-                treeViewNewProj.data = inMemTreeViewStruct;
-                treeViewLoadProj.data = inMemTreeViewStruct;
                 treeview.refresh();
-                treeviewConvertor.refresh();
-                treeViewSimulator.refresh();
-                treeViewConvertDarLang.refresh();
-                treeViewSNNModelView.refresh();
-                treeViewNewProj.refresh();
-                treeViewLoadProj.refresh();
-                // treeViewBinConvertDarLang.refresh();
             }
         });
     }));
@@ -1147,25 +734,7 @@ function activate(context) {
             }
         }
         treeview.data = inMemTreeViewStruct;
-        treeviewConvertor.data = inMemTreeViewStruct;
-        treeViewSimulator.data = inMemTreeViewStruct;
-        treeViewConvertDarLang.data = inMemTreeViewStruct;
-        treeViewSNNModelView.data = inMemTreeViewStruct;
-        treeViewNewProj.data = inMemTreeViewStruct;
-        treeViewLoadProj.data = inMemTreeViewStruct;
         treeview.refresh();
-        treeviewConvertor.refresh();
-        treeViewSimulator.refresh();
-        treeViewConvertDarLang.refresh();
-        treeViewSNNModelView.refresh();
-        treeViewNewProj.refresh();
-        treeViewLoadProj.refresh();
-        // treeViewBinConvertDarLang.refresh();
-        // 关闭所有窗口，重置为初始化界面
-        // let panelDataVis:vscode.WebviewPanel|undefined = undefined;
-        // let panelAnnModelVis:vscode.WebviewPanel|undefined = undefined;
-        // let panelSNNModelVis:vscode.WebviewPanel|undefined = undefined;
-        // let panelSNNVisWeb:vscode.WebviewPanel|undefined = undefined;
         if (currentPanel) {
             currentPanel.dispose();
             currentPanel = undefined;
@@ -1189,7 +758,7 @@ function activate(context) {
         initCurrentPanel();
         currentPanel.reveal();
     }));
-    let disposable_vis_command = vscode.commands.registerCommand("treeView-item.datavis", (itemNode) => {
+    let disposableVisCommand = vscode.commands.registerCommand("treeView-item.datavis", (itemNode) => {
         console.log("当前可视化目标:" + itemNode.label);
         if (currentPanel) {
             // 切换webview
@@ -1225,8 +794,8 @@ function activate(context) {
                 // 数据可视化展示
                 // 执行后台脚本
                 let scriptPath = path.join(__dirname, "inner_scripts", "data_analyze.py");
-                let command_str = "python " + scriptPath + " " + x_norm_data_path + " " + x_test_data_path + " " + y_test_data_path;
-                child_process_1.exec(command_str, function (err, stdout, stderr) {
+                let commandStr = "python " + scriptPath + " " + X_NORM_DATA_PATH + " " + X_TEST_DATA_PATH + " " + Y_TEST_DATA_PATH;
+                child_process_1.exec(commandStr, function (err, stdout, stderr) {
                     if (err) {
                         console.log("execute data analyze script error, msg: " + err);
                     }
@@ -1248,7 +817,7 @@ function activate(context) {
             if (panelAnnModelVis) {
                 panelAnnModelVis.title = "ANN模型";
                 var modelVisScriptPath = path.join(__dirname, "inner_scripts", "model_desc.py");
-                var commandExe = "python " + modelVisScriptPath + " " + x_norm_data_path + " " + x_test_data_path + " " + y_test_data_path + " " + model_file_path;
+                var commandExe = "python " + modelVisScriptPath + " " + X_NORM_DATA_PATH + " " + X_TEST_DATA_PATH + " " + Y_TEST_DATA_PATH + " " + ANN_MODEL_FILE_PATH;
                 child_process_1.exec(commandExe, function (err, stdout, stderr) {
                     console.log("model vis script running...");
                     console.log("__dirname is: " + __dirname);
@@ -1279,11 +848,8 @@ function activate(context) {
             }
         }
     });
-    context.subscriptions.push(disposable_vis_command);
-    vscode.commands.registerCommand("convertor.opt", () => {
-        console.log("convertor startxxxxxxxxxxxxxxxxxxxxxxxx");
-    });
-    let disposable_import_command = vscode.commands.registerCommand("treeView-item.import", (itemNode) => {
+    context.subscriptions.push(disposableVisCommand);
+    let disposableImportCommand = vscode.commands.registerCommand("treeView-item.import", (itemNode) => {
         console.log("当前导入目标：" + itemNode.label);
         if (itemNode.label === "训练数据") {
             const options = {
@@ -1295,26 +861,26 @@ function activate(context) {
             vscode.window.showOpenDialog(options).then(fileUri => {
                 if (fileUri && fileUri[0]) {
                     console.log("selected path: " + fileUri[0].fsPath);
-                    x_norm_data_path = fileUri[0].fsPath;
+                    X_NORM_DATA_PATH = fileUri[0].fsPath;
                     // 添加到treeview下
                     // ITEM_ICON_MAP.set("x_norm","imgs/file.png");
                     // addSlfFile("x_norm");
-                    let x_norm_file_origin_name = path.basename(x_norm_data_path);
-                    TreeViewProvider_1.addSlfFile(x_norm_file_origin_name);
+                    let xNormFileOriginName = path.basename(X_NORM_DATA_PATH);
+                    TreeViewProvider_1.addSlfFile(xNormFileOriginName);
                     if (treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children) {
                         console.log("添加新的文件");
-                        treeview.data[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(x_norm_file_origin_name, [], false, 'rmable'));
+                        treeview.data[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(xNormFileOriginName, [], false, 'rmable'));
                         treeview.refresh();
                     }
                     // 拷贝文件到项目并重命名
-                    if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", "")))) {
-                        fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", "")));
+                    if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
+                        fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
                     }
-                    if (x_norm_data_path) {
-                        fs.copyFile(path.join(x_norm_data_path), path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", ""), "x_norm.npz"), function (err) {
+                    if (X_NORM_DATA_PATH) {
+                        fs.copyFile(path.join(X_NORM_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "x_norm.npz"), function (err) {
                         });
                     }
-                    auto_save_with_check();
+                    autoSaveWithCheck();
                 }
             });
         }
@@ -1328,27 +894,28 @@ function activate(context) {
             vscode.window.showOpenDialog(options).then(fileUri => {
                 if (fileUri && fileUri[0]) {
                     console.log("selected path: " + fileUri[0].fsPath);
-                    x_test_data_path = fileUri[0].fsPath;
+                    X_TEST_DATA_PATH = fileUri[0].fsPath;
                     // 添加到treeview下
                     // ITEM_ICON_MAP.set("x_test","imgs/file.png");
                     // addSlfFile("x_test");
-                    let x_test_file_origin_name = path.basename(x_test_data_path);
+                    let xTestFileOriginName = path.basename(X_TEST_DATA_PATH);
+                    TreeViewProvider_1.addSlfFile(xTestFileOriginName);
                     if (treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[1].children) {
                         console.log("添加新的文件");
-                        treeview.data[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(x_test_file_origin_name, [], false, 'rmable'));
+                        treeview.data[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(xTestFileOriginName, [], false, 'rmable'));
                         treeview.refresh();
                     }
                     // 拷贝文件到项目并重命名
-                    if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", "")))) {
-                        fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", "")));
+                    if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
+                        fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
                     }
-                    if (x_test_data_path) {
-                        fs.copyFile(path.join(x_test_data_path), path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", ""), "x_test.npz"), function (err) {
+                    if (X_TEST_DATA_PATH) {
+                        fs.copyFile(path.join(X_TEST_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "x_test.npz"), function (err) {
                         });
                     }
                 }
             });
-            auto_save_with_check();
+            autoSaveWithCheck();
         }
         else if (itemNode.label === "测试数据标签") {
             const options = {
@@ -1360,28 +927,29 @@ function activate(context) {
             vscode.window.showOpenDialog(options).then(fileUri => {
                 if (fileUri && fileUri[0]) {
                     console.log("selected path: " + fileUri[0].fsPath);
-                    y_test_data_path = fileUri[0].fsPath;
+                    Y_TEST_DATA_PATH = fileUri[0].fsPath;
                     // 添加到treeview下
                     // FIXME
                     // ITEM_ICON_MAP.set("y_test","imgs/file.png");
                     // addSlfFile("y_test");
-                    let y_test_file_origin_name = path.basename(y_test_data_path);
+                    let yTestFileOriginName = path.basename(Y_TEST_DATA_PATH);
+                    TreeViewProvider_1.addSlfFile(yTestFileOriginName);
                     if (treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[2].children) {
                         console.log("添加新的文件");
-                        treeview.data[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode(y_test_file_origin_name, [], false, 'rmable'));
+                        treeview.data[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode(yTestFileOriginName, [], false, 'rmable'));
                         treeview.refresh();
                     }
                     // 拷贝文件到项目并重命名
-                    if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", "")))) {
-                        fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", "")));
+                    if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
+                        fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
                     }
-                    if (y_test_data_path) {
-                        fs.copyFile(path.join(y_test_data_path), path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", ""), "y_test.npz"), function (err) {
+                    if (Y_TEST_DATA_PATH) {
+                        fs.copyFile(path.join(Y_TEST_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "y_test.npz"), function (err) {
                         });
                     }
                 }
             });
-            auto_save_with_check();
+            autoSaveWithCheck();
         }
         else if (itemNode.label === "ANN模型") {
             const options = {
@@ -1393,32 +961,29 @@ function activate(context) {
             vscode.window.showOpenDialog(options).then(fileUri => {
                 if (fileUri && fileUri[0]) {
                     console.log("selected path: " + fileUri[0].fsPath);
-                    model_file_path = fileUri[0].fsPath;
+                    ANN_MODEL_FILE_PATH = fileUri[0].fsPath;
                     // 添加到treeview下
                     // ITEM_ICON_MAP.set("model_file","imgs/file.png");
                     // ITEM_ICON_MAP.set(path.basename(model_file_path), "imgs/file.png");
-                    TreeViewProvider_1.addSlfFile(path.basename(model_file_path));
+                    TreeViewProvider_1.addSlfFile(path.basename(ANN_MODEL_FILE_PATH));
                     if (treeview.data[0].children && treeview.data[0].children[1].children) {
-                        treeview.data[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(model_file_path)));
+                        treeview.data[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(ANN_MODEL_FILE_PATH)));
                         treeview.refresh();
                     }
                     // 拷贝文件到项目并重命名
-                    if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", "")))) {
-                        fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", "")));
+                    if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
+                        fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
                     }
-                    if (model_file_path) {
-                        fs.copyFile(path.join(model_file_path), path.join(__dirname, "darwin2sim", "target", path.basename(proj_save_path).replace("\.dar2", ""), "mnist_cnn.h5"), function (err) {
+                    if (ANN_MODEL_FILE_PATH) {
+                        fs.copyFile(path.join(ANN_MODEL_FILE_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "mnist_cnn.h5"), function (err) {
                         });
                     }
                 }
             });
-            auto_save_with_check();
+            autoSaveWithCheck();
         }
     });
-    context.subscriptions.push(disposable_import_command);
-    vscode.commands.registerCommand("convertor.new_proj", () => {
-        console.log("create new project");
-    });
+    context.subscriptions.push(disposableImportCommand);
     // 启动模型转换, 右键点击
     vscode.commands.registerCommand("item_convertor.start_convert", () => {
         if (currentPanel) {
@@ -1434,26 +999,6 @@ function activate(context) {
             else if (currentPanel) {
                 currentPanel.reveal();
             }
-            // 执行后台脚本，发送log 到webview 展示运行日志，执行结束之后发送消息通知ann_model
-            // let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py");
-            // let command_str = "python "+scriptPath;
-            // let scriptProcess = exec(command_str,{});
-            // scriptProcess.stdout?.on("data", function(data){
-            // 	console.log(data);
-            // 	if(currentPanel){
-            // 		let formatted_data = data.split("\r\n").join("<br/>");
-            // 		currentPanel.webview.postMessage(JSON.stringify({"log_output":formatted_data}));
-            // 	}
-            // });
-            // scriptProcess.stderr?.on("data", function(data){
-            // 	console.log(data);
-            // });
-            // scriptProcess.on("exit",function(){
-            // 	// 进程结束，发送结束消息
-            // 	if(currentPanel){
-            // 		currentPanel.webview.postMessage(JSON.stringify({"exec_finish":"yes"}));
-            // 	}
-            // });
         }
     });
     // 启动显示SNN模型的命令
@@ -1469,32 +1014,24 @@ function activate(context) {
         panelSNNVisWeb.webview.html = get_convertor_page_v2_1.getSNNModelPage();
         panelSNNVisWeb.title = "SNN模型";
         panelSNNVisWeb.reveal();
-        // fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
-        // 	console.log("panelSNNVisWeb is: "+panelSNNVisWeb+", send snn info......");
-        // 	panelSNNVisWeb!.webview.postMessage(JSON.stringify({ "snn_info": data })).then((onfullfill)=>{
-        // 		console.log("向SNN模型界面发送消息，on fullfill.");
-        // 	}, (onreject)=>{
-        // 		console.log("向SNN模型界面发送消息，on reject.");
-        // 	});
-        // });
         console.log("执行darwinlang map生成脚本...");
         // 执行 darwinlang map 生成脚本
-        let target_darlang_file_path = path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", "snn_digit_darlang.json");
-        let command_str = "python " + path.join(__dirname, "load_graph.py") + " " + target_darlang_file_path + " " + path.join(__dirname);
-        child_process_1.exec(command_str, function (err, stdout, stderr) {
+        let targetDarlangFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out", "snn_digit_darlang.json");
+        let commandStr = "python " + path.join(__dirname, "load_graph.py") + " " + targetDarlangFilePath + " " + path.join(__dirname);
+        child_process_1.exec(commandStr, function (err, stdout, stderr) {
             if (err) {
                 console.log("执行 load_graph.py 错误：" + err);
             }
             else {
                 // 读取map 文件
                 console.log("向SNN模型界面发送 snn_map 数据....");
-                let map_file_disk = vscode.Uri.file(path.join(__dirname, "map.json"));
-                let file_src = panelSNNVisWeb.webview.asWebviewUri(map_file_disk).toString();
-                panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_map": file_src })).then((fullfill) => {
+                let mapFileDisk = vscode.Uri.file(path.join(__dirname, "map.json"));
+                let fileSrc = panelSNNVisWeb.webview.asWebviewUri(mapFileDisk).toString();
+                panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_map": fileSrc })).then((fullfill) => {
                     console.log("snn_map 数据postmsg fullfill: " + fullfill);
-                    let snn_model_info_data = fs.readFileSync(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"));
+                    let snnModelInfoData = fs.readFileSync(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"));
                     console.log("加载完毕snn 模型数据.....");
-                    panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_info": snn_model_info_data.toString() })).then((fullfill) => {
+                    panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_info": snnModelInfoData.toString() })).then((fullfill) => {
                         console.log("snn_info 数据postmsg fullfill: " + fullfill);
                     }, (reject) => {
                         console.log("snn_info 数据postmsg reject :" + reject);
@@ -1543,31 +1080,24 @@ function activate(context) {
             // ITEM_ICON_MAP.set("SNN模型","imgs/file.png");
             TreeViewProvider_1.addDarwinFold("SNN模型");
             (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("SNN模型", []));
-            darwinlang_file_paths.splice(0);
+            DARWIN_LANG_FILE_PATHS.splice(0);
             if (inMemTreeViewStruct[0].children) {
-                var child_len = inMemTreeViewStruct[0].children.length;
-                fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out"), (err, files) => {
+                var childLen = inMemTreeViewStruct[0].children.length;
+                fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out"), (err, files) => {
                     files.forEach(file => {
                         var _a;
-                        darwinlang_file_paths.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", file));
+                        DARWIN_LANG_FILE_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out", file));
                         // ITEM_ICON_MAP.set(file, "imgs/file.png");
                         TreeViewProvider_1.addDarwinFiles(file);
                         if (inMemTreeViewStruct[0].children) {
-                            (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
+                            (_a = inMemTreeViewStruct[0].children[childLen - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode(file));
                         }
                     });
-                    auto_save_with_check();
+                    autoSaveWithCheck();
                 });
             }
             treeview.refresh();
-            treeviewConvertor.refresh();
-            treeViewSimulator.refresh();
-            treeViewConvertDarLang.refresh();
-            treeViewSNNModelView.refresh();
-            treeViewNewProj.refresh();
-            treeViewLoadProj.refresh();
         }
-        // treeViewBinConvertDarLang.refresh();
     });
     // // 启动将darwinlang 文件转换为二进制文件的操作
     vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function () {
@@ -1576,14 +1106,14 @@ function activate(context) {
             // ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
             TreeViewProvider_1.addSlfFile("SNN二进制模型");
             (_a = inMemTreeViewStruct[0].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("SNN二进制模型", []));
-            darwinlang_bin_paths.splice(0);
+            DARWIN_LANG_BIN_PATHS.splice(0);
             if (inMemTreeViewStruct[0].children) {
-                var child_len = inMemTreeViewStruct[0].children.length;
-                fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out"), (err, files) => {
+                var childLen = inMemTreeViewStruct[0].children.length;
+                fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out"), (err, files) => {
                     files.forEach(file => {
                         var _a, _b;
                         if (file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1) {
-                            darwinlang_bin_paths.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "bin_darwin_out", file));
+                            DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", file));
                             // ITEM_ICON_MAP.set(file, "imgs/file.png");
                             // addSlfFile(file);
                             // if(file.search("config.b") !== -1){
@@ -1597,26 +1127,21 @@ function activate(context) {
                                     // inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
                                     if (file.search("config.b") !== -1) {
                                         TreeViewProvider_1.addDarwinFiles("config.b");
-                                        (_a = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("config.b"));
+                                        (_a = inMemTreeViewStruct[0].children[childLen - 1].children) === null || _a === void 0 ? void 0 : _a.push(new TreeViewProvider_1.TreeItemNode("config.b"));
                                     }
                                     else if (file.search("connfiles") !== -1) {
                                         TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
-                                        (_b = inMemTreeViewStruct[0].children[child_len - 1].children) === null || _b === void 0 ? void 0 : _b.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                                        (_b = inMemTreeViewStruct[0].children[childLen - 1].children) === null || _b === void 0 ? void 0 : _b.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
                                     }
                                 }
                             }
                         }
                     });
-                    auto_save_with_check();
+                    autoSaveWithCheck();
                 });
             }
             treeview.refresh();
-            treeviewConvertor.refresh();
-            treeViewSimulator.refresh();
-            treeViewConvertDarLang.refresh();
-            treeViewSNNModelView.refresh();
         }
-        // treeViewBinConvertDarLang.refresh();
     });
     vscode.commands.registerCommand("item_darwinLang_convertor.convert_to_darwin2", function () {
         console.log("目标转换为darwin2二进制文件");
@@ -1626,20 +1151,20 @@ function activate(context) {
         console.log("目标转换为darwin3二进制文件");
     });
     vscode.commands.executeCommand("darwin2.helloWorld");
-    function auto_save_with_check() {
+    function autoSaveWithCheck() {
         // check if all necessary info get, auto save to proj_save_path
-        if (x_norm_data_path && x_test_data_path && y_test_data_path && model_file_path && darwinlang_file_paths && darwinlang_bin_paths) {
+        if (X_NORM_DATA_PATH && X_TEST_DATA_PATH && Y_TEST_DATA_PATH && ANN_MODEL_FILE_PATH && DARWIN_LANG_FILE_PATHS && DARWIN_LANG_BIN_PATHS) {
             console.log("all nessary info get, auto save");
-            let proj_info_data = {
-                "proj_info": proj_desc_info,
-                "x_norm_path": x_norm_data_path,
-                "x_test_path": x_test_data_path,
-                "y_test_path": y_test_data_path,
-                "model_path": model_file_path,
-                "darwinlang_file_paths": darwinlang_file_paths,
-                "darwinlang_bin_paths": darwinlang_bin_paths
+            let projInfoData = {
+                "proj_info": PROJ_DESC_INFO,
+                "x_norm_path": X_NORM_DATA_PATH,
+                "x_test_path": X_TEST_DATA_PATH,
+                "y_test_path": Y_TEST_DATA_PATH,
+                "model_path": ANN_MODEL_FILE_PATH,
+                "darwinlang_file_paths": DARWIN_LANG_FILE_PATHS,
+                "darwinlang_bin_paths": DARWIN_LANG_BIN_PATHS
             };
-            fs.writeFileSync(proj_save_path, JSON.stringify(proj_info_data));
+            fs.writeFileSync(PROJ_SAVE_PATH, JSON.stringify(projInfoData));
         }
     }
 }
@@ -5618,42 +5143,7 @@ exports.TreeViewProvider = TreeViewProvider;
 
 
 /***/ }),
-/* 52 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.MultiLevelTreeProvider = void 0;
-const vscode = __webpack_require__(1);
-class MultiLevelTreeProvider {
-    constructor() {
-        this.data = [new TreeItem('cars', [
-                new TreeItem('Ford', [new TreeItem('Fiesta'), new TreeItem('Focus'), new TreeItem('Mustang')]),
-                new TreeItem('BMW', [new TreeItem('320'), new TreeItem('X3'), new TreeItem('X5')])
-            ])];
-    }
-    getTreeItem(element) {
-        return element;
-    }
-    getChildren(element) {
-        if (element === undefined) {
-            return this.data;
-        }
-        return element.children;
-    }
-}
-exports.MultiLevelTreeProvider = MultiLevelTreeProvider;
-class TreeItem extends vscode.TreeItem {
-    constructor(label, children) {
-        super(label, children === undefined ? vscode.TreeItemCollapsibleState.None :
-            vscode.TreeItemCollapsibleState.Expanded);
-        this.children = children;
-    }
-}
-
-
-/***/ }),
+/* 52 */,
 /* 53 */
 /***/ ((__unused_webpack_module, exports) => {
 

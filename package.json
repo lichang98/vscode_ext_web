@@ -13,10 +13,6 @@
 		"onCommand:darwin2.helloWorld",
 		"onWebviewPanel:darwin2web",
 		"onCommand:itemClick",
-		"onCommand:new_project_act_view.opt",
-		"onCommand:new_project_act_view.viewFunc",
-		"onCommand:load_proj_act_view.opt",
-		"onCommand:load_proj_act_view.viewFunc",
 		"onCommand:treeView.opt",
 		"onCommand:treeView.viewFunc",
 		"onCommand:convertor.opt",
@@ -25,10 +21,7 @@
 		"onCommand:snn_model_ac.viewFunc",
 		"onCommand:simulator.opt",
 		"onCommand:simulator.viewFunc",
-		"onView:multiLevelTree",
 		"onView:treeView-item",
-		"onView:new_project_act_view-item",
-		"onView:load_proj_act_view-item",
 		"onView:item_convertor",
 		"onView:item_simulator",
 		"onView:item_darwinLang_convertor",
@@ -36,7 +29,6 @@
 		"onCommand:treeView-item.datavis",
 		"onCommand:treeView-item.import",
 		"onCommand:treeView-item.rm-item",
-		"onCommand:convertor.new_proj",
 		"onCommand:snn_model_ac.show_snn_model",
 		"onCommand:item_convertor.start_convert",
 		"onCommand:item_darwinLang_convertor.convert_to_darwin2",
@@ -49,11 +41,6 @@
 			{
 				"command": "darwin2.helloWorld",
 				"title": "darwin2"
-			},
-			{
-				"command": "multiLevelTree.newproj",
-				"title": "new_proj",
-				"icon": "src/resources/project.png"
 			},
 			{
 				"command": "treeView-item.datavis",
@@ -201,16 +188,6 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "new_project_act_view",
-					"title": "新建项目",
-					"icon": "src/resources/new_proj_act_icon.png"
-				},
-				{
-					"id": "load_proj_act_view",
-					"title": "加载项目",
-					"icon": "src/resources/load_proj_act_icon.png"
-				},
-				{
 					"id": "treeView",
 					"title": "导航栏",
 					"icon": "src/resources/dep.png"
@@ -238,20 +215,6 @@
 			]
 		},
 		"views": {
-			"new_project_act_view":[
-				{
-					"id": "new_project_act_view-item",
-					"name": "",
-					"when": ""
-				}
-			],
-			"load_proj_act_view":[
-				{
-					"id": "load_proj_act_view-item",
-					"name": "",
-					"when": ""
-				}
-			],
 			"treeView": [
 				{
 					"id": "treeView-item",
@@ -285,12 +248,6 @@
 					"id": "item_darwinLang_convertor",
 					"name": "",
 					"when": ""
-				}
-			],
-			"explorer": [
-				{
-					"id": "multiLevelTree",
-					"name": "multiLevelTree"
 				}
 			]
 		},

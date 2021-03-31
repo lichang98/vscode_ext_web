@@ -358,6 +358,27 @@ export function activate(context: vscode.ExtensionContext) {
 	let proj_save_path:string|undefined = undefined;
 	vscode.window.registerTreeDataProvider("multiLevelTree", new MultiLevelTreeProvider());
 
+
+	function rm_treeview_file_item(root: TreeItemNode, target_label_name:string){
+		if(root === undefined || root.children === undefined || root.children.length === 0){
+			return;
+		}
+		for(let i=0;i<root.children.length;++i){
+			if(root.children[i].label === target_label_name){
+				root.children.splice(i,1);
+				return;
+			}else{
+				rm_treeview_file_item(root.children[i], target_label_name);
+			}
+		}
+	}
+
+	context.subscriptions.push(vscode.commands.registerCommand("treeView-item.rm-item", (item: TreeItemNode)=>{
+		console.log("当前删除的treeview item 标签名称："+item.label);
+		rm_treeview_file_item(inMemTreeViewStruct[0], item.label);
+		treeview.refresh();
+	}));
+
 	context.subscriptions.push(vscode.commands.registerCommand("treeView.edit_file", (treeItem: TreeItemNode)=>{
 		// 编辑darwinlang
 		let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path!).replace("\.dar2",""),"darlang_out",treeItem.label));
@@ -1023,19 +1044,25 @@ export function activate(context: vscode.ExtensionContext) {
 				inMemTreeViewStruct.push(new TreeItemNode(proj_desc_info.project_name, [new TreeItemNode("数据", 
 							[new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), 
 							new TreeItemNode("测试数据标签",[])]), new TreeItemNode("ANN模型",[])], true));
-				addSlfFile("x_norm");
-				addSlfFile("x_test");
-				addSlfFile("y_test");
+				let x_norm_file_origin_name = path.basename(x_norm_data_path!),
+					x_test_file_origin_name = path.basename(x_test_data_path!),
+					y_test_file_origin_name = path.basename(y_test_data_path!);
+				// addSlfFile("x_norm");
+				// addSlfFile("x_test");
+				// addSlfFile("y_test");
+				addSlfFile(x_norm_file_origin_name);
+				addSlfFile(x_test_file_origin_name);
+				addSlfFile(y_test_file_origin_name);
 				addSlfFile(path.basename(proj_data.model_path));
 				if(proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children){
 					if(inMemTreeViewStruct[0].children[0].children[0].children){
-						inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeItemNode("x_norm"));
+						inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeItemNode(x_norm_file_origin_name, [], false, "rmable"));
 					}
 					if(inMemTreeViewStruct[0].children[0].children[1].children){
-						inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeItemNode("x_test"));
+						inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeItemNode(x_test_file_origin_name, [], false, "rmable"));
 					}
 					if(inMemTreeViewStruct[0].children[0].children[2].children){
-						inMemTreeViewStruct[0].children[0].children[2].children.push(new TreeItemNode("y_test"));
+						inMemTreeViewStruct[0].children[0].children[2].children.push(new TreeItemNode(y_test_file_origin_name, [], false, "rmable"));
 					}
 				}
 				if(proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]){
@@ -1309,10 +1336,12 @@ export function activate(context: vscode.ExtensionContext) {
 					x_norm_data_path = fileUri[0].fsPath;
 					// 添加到treeview下
 					// ITEM_ICON_MAP.set("x_norm","imgs/file.png");
-					addSlfFile("x_norm");
+					// addSlfFile("x_norm");
+					let x_norm_file_origin_name = path.basename(x_norm_data_path);
+					addSlfFile(x_norm_file_origin_name);
 					if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children){
 						console.log("添加新的文件");
-						treeview.data[0].children[0].children[0].children.push(new TreeItemNode("x_norm"));
+						treeview.data[0].children[0].children[0].children.push(new TreeItemNode(x_norm_file_origin_name, [], false, 'rmable'));
 						treeview.refresh();
 					}
 					// 拷贝文件到项目并重命名
@@ -1340,10 +1369,11 @@ export function activate(context: vscode.ExtensionContext) {
 					
 					// 添加到treeview下
 					// ITEM_ICON_MAP.set("x_test","imgs/file.png");
-					addSlfFile("x_test");
+					// addSlfFile("x_test");
+					let x_test_file_origin_name = path.basename(x_test_data_path);
 					if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[1].children){
 						console.log("添加新的文件");
-						treeview.data[0].children[0].children[1].children.push(new TreeItemNode("x_test"));
+						treeview.data[0].children[0].children[1].children.push(new TreeItemNode(x_test_file_origin_name, [], false, 'rmable'));
 						treeview.refresh();
 					}
 					// 拷贝文件到项目并重命名
@@ -1371,10 +1401,11 @@ export function activate(context: vscode.ExtensionContext) {
 					// 添加到treeview下
 					// FIXME
 					// ITEM_ICON_MAP.set("y_test","imgs/file.png");
-					addSlfFile("y_test");
+					// addSlfFile("y_test");
+					let y_test_file_origin_name = path.basename(y_test_data_path);
 					if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[2].children){
 						console.log("添加新的文件");
-						treeview.data[0].children[0].children[2].children.push(new TreeItemNode("y_test"));
+						treeview.data[0].children[0].children[2].children.push(new TreeItemNode(y_test_file_origin_name, [], false, 'rmable'));
 						treeview.refresh();
 					}
 					// 拷贝文件到项目并重命名

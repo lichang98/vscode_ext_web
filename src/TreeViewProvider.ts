@@ -39,13 +39,17 @@ export class TreeItemNode extends TreeItem {
         // readonly 只可读
         public label: string,
         public children?:TreeItemNode[],
-        public readonly isRoot?:boolean
+        public readonly isRoot?:boolean,
+        public contextVal?: string
     ){
         super(label, children === undefined ? vscode.TreeItemCollapsibleState.None :
             vscode.TreeItemCollapsibleState.Expanded);
         this.children = children ? children : [];
         // this.contextValue = isRoot ? "TreeViewProviderContext":undefined;
         this.contextValue = label;
+        if(contextVal !== undefined){
+            this.contextValue = contextVal;
+        }
         if(isRoot){
             this.contextValue = "root";
         }else if(label.search("darlang.json") !== -1){

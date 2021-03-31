@@ -350,6 +350,25 @@ function activate(context) {
     };
     let proj_save_path = undefined;
     vscode.window.registerTreeDataProvider("multiLevelTree", new multiLevelTree_1.MultiLevelTreeProvider());
+    function rm_treeview_file_item(root, target_label_name) {
+        if (root === undefined || root.children === undefined || root.children.length === 0) {
+            return;
+        }
+        for (let i = 0; i < root.children.length; ++i) {
+            if (root.children[i].label === target_label_name) {
+                root.children.splice(i, 1);
+                return;
+            }
+            else {
+                rm_treeview_file_item(root.children[i], target_label_name);
+            }
+        }
+    }
+    context.subscriptions.push(vscode.commands.registerCommand("treeView-item.rm-item", (item) => {
+        console.log("当前删除的treeview item 标签名称：" + item.label);
+        rm_treeview_file_item(inMemTreeViewStruct[0], item.label);
+        treeview.refresh();
+    }));
     context.subscriptions.push(vscode.commands.registerCommand("treeView.edit_file", (treeItem) => {
         // 编辑darwinlang
         let file_target = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", path.basename(proj_save_path).replace("\.dar2", ""), "darlang_out", treeItem.label));
@@ -1014,19 +1033,23 @@ function activate(context) {
                 TreeViewProvider_1.addSlfProj(proj_desc_info.project_name);
                 inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(proj_desc_info.project_name, [new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []),
                         new TreeViewProvider_1.TreeItemNode("测试数据标签", [])]), new TreeViewProvider_1.TreeItemNode("ANN模型", [])], true));
-                TreeViewProvider_1.addSlfFile("x_norm");
-                TreeViewProvider_1.addSlfFile("x_test");
-                TreeViewProvider_1.addSlfFile("y_test");
+                let x_norm_file_origin_name = path.basename(x_norm_data_path), x_test_file_origin_name = path.basename(x_test_data_path), y_test_file_origin_name = path.basename(y_test_data_path);
+                // addSlfFile("x_norm");
+                // addSlfFile("x_test");
+                // addSlfFile("y_test");
+                TreeViewProvider_1.addSlfFile(x_norm_file_origin_name);
+                TreeViewProvider_1.addSlfFile(x_test_file_origin_name);
+                TreeViewProvider_1.addSlfFile(y_test_file_origin_name);
                 TreeViewProvider_1.addSlfFile(path.basename(proj_data.model_path));
                 if (proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[0].children) {
                     if (inMemTreeViewStruct[0].children[0].children[0].children) {
-                        inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("x_norm"));
+                        inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(x_norm_file_origin_name, [], false, "rmable"));
                     }
                     if (inMemTreeViewStruct[0].children[0].children[1].children) {
-                        inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("x_test"));
+                        inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(x_test_file_origin_name, [], false, "rmable"));
                     }
                     if (inMemTreeViewStruct[0].children[0].children[2].children) {
-                        inMemTreeViewStruct[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode("y_test"));
+                        inMemTreeViewStruct[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode(y_test_file_origin_name, [], false, "rmable"));
                     }
                 }
                 if (proj_data.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]) {
@@ -1275,10 +1298,12 @@ function activate(context) {
                     x_norm_data_path = fileUri[0].fsPath;
                     // 添加到treeview下
                     // ITEM_ICON_MAP.set("x_norm","imgs/file.png");
-                    TreeViewProvider_1.addSlfFile("x_norm");
+                    // addSlfFile("x_norm");
+                    let x_norm_file_origin_name = path.basename(x_norm_data_path);
+                    TreeViewProvider_1.addSlfFile(x_norm_file_origin_name);
                     if (treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children) {
                         console.log("添加新的文件");
-                        treeview.data[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("x_norm"));
+                        treeview.data[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(x_norm_file_origin_name, [], false, 'rmable'));
                         treeview.refresh();
                     }
                     // 拷贝文件到项目并重命名
@@ -1306,10 +1331,11 @@ function activate(context) {
                     x_test_data_path = fileUri[0].fsPath;
                     // 添加到treeview下
                     // ITEM_ICON_MAP.set("x_test","imgs/file.png");
-                    TreeViewProvider_1.addSlfFile("x_test");
+                    // addSlfFile("x_test");
+                    let x_test_file_origin_name = path.basename(x_test_data_path);
                     if (treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[1].children) {
                         console.log("添加新的文件");
-                        treeview.data[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("x_test"));
+                        treeview.data[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(x_test_file_origin_name, [], false, 'rmable'));
                         treeview.refresh();
                     }
                     // 拷贝文件到项目并重命名
@@ -1338,10 +1364,11 @@ function activate(context) {
                     // 添加到treeview下
                     // FIXME
                     // ITEM_ICON_MAP.set("y_test","imgs/file.png");
-                    TreeViewProvider_1.addSlfFile("y_test");
+                    // addSlfFile("y_test");
+                    let y_test_file_origin_name = path.basename(y_test_data_path);
                     if (treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[2].children) {
                         console.log("添加新的文件");
-                        treeview.data[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode("y_test"));
+                        treeview.data[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode(y_test_file_origin_name, [], false, 'rmable'));
                         treeview.refresh();
                     }
                     // 拷贝文件到项目并重命名
@@ -5471,12 +5498,13 @@ exports.addDarwinFiles = addDarwinFiles;
 class TreeItemNode extends vscode_1.TreeItem {
     constructor(
     // readonly 只可读
-    label, children, isRoot) {
+    label, children, isRoot, contextVal) {
         super(label, children === undefined ? vscode.TreeItemCollapsibleState.None :
             vscode.TreeItemCollapsibleState.Expanded);
         this.label = label;
         this.children = children;
         this.isRoot = isRoot;
+        this.contextVal = contextVal;
         // command: 为每项添加点击事件的命令
         this.command = {
             title: this.label,
@@ -5491,6 +5519,9 @@ class TreeItemNode extends vscode_1.TreeItem {
         this.children = children ? children : [];
         // this.contextValue = isRoot ? "TreeViewProviderContext":undefined;
         this.contextValue = label;
+        if (contextVal !== undefined) {
+            this.contextValue = contextVal;
+        }
         if (isRoot) {
             this.contextValue = "root";
         }

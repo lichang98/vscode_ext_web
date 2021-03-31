@@ -35,6 +35,7 @@
 		"onCommand:treeView-item.newproj",
 		"onCommand:treeView-item.datavis",
 		"onCommand:treeView-item.import",
+		"onCommand:treeView-item.rm-item",
 		"onCommand:convertor.new_proj",
 		"onCommand:snn_model_ac.show_snn_model",
 		"onCommand:item_convertor.start_convert",
@@ -68,6 +69,10 @@
 				"command": "treeView-item.import",
 				"title": "导入",
 				"icon": "src/resources/import.png"
+			},
+			{
+				"command": "treeView-item.rm-item",
+				"title": "删除"
 			},
 			{
 				"command": "treeView.proj_rename",
@@ -170,6 +175,10 @@
 				{
 					"command": "treeView.proj_save",
 					"when": "view == treeView-item && viewItem == root"
+				},
+				{
+					"command": "treeView-item.rm-item",
+					"when": "view == treeView-item && viewItem == model_file || viewItem == rmable"
 				},
 				{
 					"command": "treeView.proj_remove",

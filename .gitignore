@@ -10,5 +10,7 @@ src/resources/debug.log
 **/*.h5
 .vscode
 **/*.db
+src/resources/script_res/*
 dist/darwin2sim/target
 dist/map.json
+**/__pycache__/

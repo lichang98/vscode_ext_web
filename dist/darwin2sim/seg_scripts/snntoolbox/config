@@ -1,0 +1,32 @@
+[paths]
+path_wd = e:/courses/ZJLab/IDE-related-docs/语义分割模型/project/darwin2/dist/darwin2sim\target\cnn_dig
+dataset_path = e:/courses/ZJLab/IDE-related-docs/语义分割模型/project/darwin2/dist/darwin2sim\target\cnn_dig
+filename_ann = mnist_cnn
+
+[tools]
+evaluate_ann = True
+normalize = True
+
+[simulation]
+simulator = brian2
+duration = 100
+num_to_test = 20
+batch_size = 1
+dt = 1
+
+[conversion]
+num_bits = 32
+
+[restrictions]
+snn_layers = ['Dense', 'Conv1D', 'Conv2D', 'DepthwiseConv2D', 'Conv2DTranspose', 'UpSampling2D', 'MaxPooling2D',
+                  'AveragePooling2D', 'Sparse', 'SparseConv2D',
+                  'SparseDepthwiseConv2D', 'Reshape', 'Flatten', 'Concatenate','ZeroPadding2D']
+
+[input]
+model_lib = keras
+dataset_format = npz
+poisson_input = False
+
+[cell]
+v_thresh = 1
+reset = Reset by subtraction

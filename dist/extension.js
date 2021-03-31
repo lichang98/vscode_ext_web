@@ -16,8 +16,8 @@ const fs = __webpack_require__(3);
 const axios = __webpack_require__(4);
 // 引入 TreeViewProvider 的类
 const TreeViewProvider_1 = __webpack_require__(51);
-const get_convertor_page_v2_1 = __webpack_require__(53);
-const child_process_1 = __webpack_require__(54);
+const get_convertor_page_v2_1 = __webpack_require__(52);
+const child_process_1 = __webpack_require__(53);
 // 点击darwinlang json 文件单独显示SNN结构的界面
 function darlangWebContent() {
     return `<!DOCTYPE html>
@@ -5143,8 +5143,7 @@ exports.TreeViewProvider = TreeViewProvider;
 
 
 /***/ }),
-/* 52 */,
-/* 53 */
+/* 52 */
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -8716,7 +8715,7 @@ exports.getSNNModelPage = getSNNModelPage;
 
 
 /***/ }),
-/* 54 */
+/* 53 */
 /***/ ((module) => {
 
 "use strict";

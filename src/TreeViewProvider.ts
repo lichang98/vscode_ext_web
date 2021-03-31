@@ -83,8 +83,6 @@ export class TreeItemNode extends TreeItem {
     // Uri.file(join(__filename,'..','assert', ITEM_ICON_MAP.get(label)+''));   写成这样图标出不来
     // 所以小伙伴们就以下面这种写法编写
     static getIconUriForLabel(label: string):Uri {
-        console.log("测试 getIconUriForLanel, label="+label);
-        console.log("path:"+Uri.file(join(__filename,'..', "resources", ITEM_ICON_MAP.get(label)+'')).toString());
         return Uri.file(join(__filename,'..',"..","src", "resources", ITEM_ICON_MAP.get(label)+''));
     }
 }

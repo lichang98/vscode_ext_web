@@ -14,3 +14,4 @@ src/resources/script_res/*
 dist/darwin2sim/target
 dist/map.json
 **/__pycache__/
+dist/inner_scripts/layer_vis_imgs/*

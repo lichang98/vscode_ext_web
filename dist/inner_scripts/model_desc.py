@@ -11,12 +11,18 @@ from PIL import Image
 import os
 import shutil
 
+from tensorflow.python.keras.backend import dtype
 
 base_path = os.path.dirname(os.path.abspath(__file__))
 
 x_norm_file = sys.argv[1]
 x_test_file = sys.argv[2]
 y_test_file = sys.argv[3]
+
+task_type = 0
+
+if len(sys.argv) > 5:
+    task_type = 1    
 
 
 x_norm = np.load(x_norm_file)["arr_0"]
@@ -62,21 +68,38 @@ max_vis_each_layer=5
 for layer in model.layers:
     idx +=1
     if layer.__class__.__name__ == "Conv2D" or layer.__class__.__name__ == "Activation":
-        layer_output = keras.models.Model(inputs=model.input, outputs=layer.output).predict(x_norm[0:1])
-        layer_output = layer_output[0]
-        print("shape of layer output={}".format(np.shape(layer_output)))
-        layer_vis_img_paths=[]
-        for i in range(min(np.shape(layer_output)[-1], max_vis_each_layer)):
-            img = np.array(layer_output[:,:,i],dtype="float32")*255.0
-            img = np.array(img, dtype="uint8")
-            img = Image.fromarray(img)
-            img = img.resize((32,32))
-            img.save(os.path.join(base_path,"layer_vis_imgs", "layer_{}_{}_vis.png".format(idx,i)))
-            layer_vis_img_paths.append("http://127.0.0.1:6003/img/layer_{}_{}_vis.png".format(idx,i))
-
-        layer_vis_data.append({"layer_name": layer.__class__.__name__, "layer_index":idx, \
-            "layer_vis_img_paths": layer_vis_img_paths})
-
+        if task_type == 0:
+            layer_output = keras.models.Model(inputs=model.input, outputs=layer.output).predict(x_norm[0:1])
+            layer_output = layer_output[0]
+            print("shape of layer output={}".format(np.shape(layer_output)))
+            layer_vis_img_paths=[]
+            for i in range(min(np.shape(layer_output)[-1], max_vis_each_layer)):
+                img = np.array(layer_output[:,:,i],dtype="float32")*255.0
+                img = np.array(img, dtype="uint8")
+                img = Image.fromarray(img)
+                img = img.resize((32,32))
+                img.save(os.path.join(base_path,"layer_vis_imgs", "layer_{}_{}_vis.png".format(idx,i)))
+                layer_vis_img_paths.append("http://127.0.0.1:6003/img/layer_{}_{}_vis.png".format(idx,i))
+            
+            layer_vis_data.append({"layer_name": layer.__class__.__name__, "layer_index":idx, \
+                "layer_vis_img_paths": layer_vis_img_paths})
+        elif task_type == 1:
+            layer_vis_img_paths=[]
+            selected_idxs = list(np.random.randint(20, size=max_vis_each_layer))
+            for i in range(max_vis_each_layer):
+                layer_output = keras.models.Model(inputs=model.input, outputs=layer.output).predict(x_norm[selected_idxs[i]: selected_idxs[i]+1])
+                layer_output = layer_output[0]
+                print('shape of layer output={}'.format(np.shape(layer_output)))
+                img = np.array(layer_output[:,:,0], dtype='float32')*255.0
+                img = np.array(img, dtype='uint8')
+                img = Image.fromarray(img)
+                img = img.resize((32,32))
+                img.save(os.path.join(base_path, 'layer_vis_imgs', 'layer_{}_{}_vis.png'.format(idx,i)))
+                layer_vis_img_paths.append("http://127.0.0.1:6003/img/layer_{}_{}_vis.png".format(idx, i))
+            
+            layer_vis_data.append({'layer_name':layer.__class__.__name__, "layer_index":idx, 'layer_vis_img_paths': layer_vis_img_paths})
+                
+                
 # save layer images info
 with open(os.path.join(base_path, "layer_vis_info.json"),"w+") as f:
     f.write(json.dumps(layer_vis_data))
@@ -120,7 +143,7 @@ draw_convnet.run_draw(conv_size_list=conv_sizes,
                     conv_num_list=conv_channels,
                     kernel_size_list=kernel_sizes,
                     dense_size_list=dense_sizes,
-                    save_fig_path=os.path.join(base_path, "ann_model_vis.png"))
+                    save_fig_path=os.path.join(base_path, "ann_model_vis.png"),task_type=task_type)
 
 shutil.move(os.path.join(base_path, "ann_model_vis.png"), os.path.join(base_path, "layer_vis_imgs","ann_model_vis.png"))
 model_vis_img_info = {"model_vis_img_path":os.path.join(base_path, "layer_vis_imgs","ann_model_vis.png")}

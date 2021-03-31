@@ -828,6 +828,10 @@ function activate(context) {
                 panelAnnModelVis.title = "ANN模型";
                 var modelVisScriptPath = path.join(__dirname, "inner_scripts", "model_desc.py");
                 var commandExe = "python " + modelVisScriptPath + " " + X_NORM_DATA_PATH + " " + X_TEST_DATA_PATH + " " + Y_TEST_DATA_PATH + " " + ANN_MODEL_FILE_PATH;
+                if (PROJ_DESC_INFO.project_type === '语义分割') {
+                    // FIXME task type
+                    commandExe += " 1";
+                }
                 child_process_1.exec(commandExe, function (err, stdout, stderr) {
                     console.log("model vis script running...");
                     console.log("__dirname is: " + __dirname);

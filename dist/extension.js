@@ -489,8 +489,15 @@ function activate(context) {
                 let webParamDura = data.model_convert_params.dura;
                 console.log("Extension 接收到 webview的消息，启动脚本......");
                 sleep(1000);
-                let scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
-                    wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""));
+                let scriptPath = undefined;
+                if (PROJ_DESC_INFO.project_type === '图像分类') {
+                    scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
+                        wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""));
+                }
+                else {
+                    scriptPath = path.join(__dirname, "darwin2sim", "seg_scripts", "convert_with_stb.py " + webParamVthresh + " " +
+                        wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""));
+                }
                 let commandStr = "python " + scriptPath;
                 currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.webview.postMessage(JSON.stringify({ "log_output": "模型转换程序启动中......" }));
                 let scriptProcess = child_process_1.exec(commandStr, {});
@@ -534,6 +541,11 @@ function activate(context) {
                         fs.readFile(path.join(__dirname, "inner_scripts", "convert_statistic_info.json"), "utf-8", (evt, data) => {
                             if (currentPanel) {
                                 currentPanel.webview.postMessage(JSON.stringify({ "convert_info": data }));
+                            }
+                        });
+                        fs.readFile(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "log", "gui", "test", "normalization", "99.9.json"), "utf-8", (evt, data) => {
+                            if (currentPanel) {
+                                currentPanel.webview.postMessage(JSON.stringify({ "scale_factors": data }));
                             }
                         });
                         vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");

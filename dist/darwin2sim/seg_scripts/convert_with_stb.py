@@ -150,28 +150,26 @@ config.set("paths", "filename_ann", os.path.basename(model_path))
 model_parser = model_lib.ModelParser(input_model['model'],config)
 model_parser.parse()
 parsed_model = model_parser.build_parsed_model()
-print(flush=True)
+print("CONVERT_FINISH...",flush=True)
+stage1_time_use = time.time()
 # Normalize
 norm_data = {'x_norm':testX}
 normalize_parameters(parsed_model, config,**norm_data)
 
 # score_norm = model_parser.evaluate(batch_size=1,num_to_test=50,x_test=testX[:50],y_test=testY[:50])
 
-
 parsed_model.save(os.path.join(dir_name, "parsed_model.h5"))
 tmp_model = keras.models.load_model(os.path.join(dir_name, "parsed_model.h5"))
 print("After parsing and normalization......")
 tmp_model.summary()
-print(flush=True)
+print("PREPROCESS_FINISH...",flush=True)
+stage2_time_use = time.time()
 # convert
 target_sim = import_module('snntoolbox.simulation.target_simulators.brian2_target_sim')
 spiking_model = target_sim.SNN(config)
 spiking_model.build(parsed_model)
 spiking_model.save(dir_name, "spike_snn")
 
-print("CONVERT_FINISH...",flush=True)
-
-stage1_time_use = time.time()
 # simulate
 test_set = {"x_test":testX[:50],"y_test":testY[:50], "is_obj_detection":True}
 accu, snn_test_input_spike_info, snn_test_output_spike_info, snn_test_img_url_info, \
@@ -179,7 +177,8 @@ accu, snn_test_input_spike_info, snn_test_output_spike_info, snn_test_img_url_in
     record_layers_wt_avg, record_layers_wt_std = spiking_model.run(**test_set)
 
 print("accu={}".format(accu),flush=True)
-
+print("SEARCH_FINISH...",flush=True)
+stage3_time_use = time.time()
 # save neurons group info list
 neurons_info=[]
 for i in range(len(spiking_model.layers)):
@@ -309,6 +308,33 @@ for i in range(len(spiking_model.connections)):
     info = np.array(info)
     with open(os.path.join(outputPath, "{}".format(snn_model_darlang["connectConfig"][i]["synapses"])), "wb+") as f:
         pickle.dump(info.tolist(), f)
+
+stage4_time_use = time.time()
+stage4_time_use = "{:.3f}".format(stage4_time_use - stage3_time_use)
+stage3_time_use = "{:.3f}".format(stage3_time_use - stage2_time_use)
+stage2_time_use = "{:.3f}".format(stage2_time_use - stage1_time_use)
+stage1_time_use = "{:.3f}".format(stage1_time_use - start_time)
+
+end_time = time.time()
+total_use_time = "{:.3f} 秒".format(end_time-start_time)
+
+wt_mean = np.mean([np.mean(e) for e in all_wts])
+wt_std = np.mean([np.std(e) for e in all_wts])
+
+convert_info = {
+    "total_use_time": total_use_time,
+    "wt_mean": "{:.3f}".format(float(wt_mean)),
+    "wt_std": "{:.3f}".format(float(wt_std)),
+    "spk_mean": "{:.3f}".format(float(record_layers_spk_avg[0])),
+    "spk_std": "{:.3f}".format(float(record_layers_spk_std[0])),
+    "stage1_time_use":stage1_time_use,
+    "stage2_time_use":stage2_time_use,
+    "stage3_time_use":stage3_time_use,
+    "stage4_time_use":stage4_time_use
+}
+
+with open(os.path.join(baseDirPath, "..", "..", "inner_scripts", "convert_statistic_info.json"), "w+") as f:
+    f.write(json.dumps(convert_info))
 
 
 # # records all weigths and fix point

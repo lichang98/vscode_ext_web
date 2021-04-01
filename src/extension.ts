@@ -7,7 +7,7 @@ import * as axios from 'axios';
 // 引入 TreeViewProvider 的类
 import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile ,addDarwinFold, addDarwinFiles} from './TreeViewProvider';
 import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage,getSNNModelPage} from "./get_convertor_page_v2";
-import {getSegDataVisPage, getSegSimulatePage} from "./get_seg_pages";
+import {getSegDataVisPage, getSegSimulatePage, getANNSNNConvertSegPage} from "./get_seg_pages";
 import {exec} from "child_process";
 
 // 点击darwinlang json 文件单独显示SNN结构的界面
@@ -575,14 +575,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		});
 	}
-
-	function initCurrentPanel(){
-		currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
-		// 主界面由electron 应用启动
-		currentPanel.webview.html =getConvertorPageV2();
-		bindCurrentPanelReceiveMsg(currentPanel);
-	}
-
+	
 	context.subscriptions.push(disposable);
 	let disposable2 = vscode.commands.registerCommand("treeView-item.newproj", () => {
 		console.log("创建新项目xxx");							
@@ -773,9 +766,10 @@ export function activate(context: vscode.ExtensionContext) {
 			panelSNNVisWeb.dispose();
 			panelSNNVisWeb = undefined;
 		}
-
-		initCurrentPanel();
-		currentPanel!.reveal();
+		currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+		// 主界面由electron 应用启动
+		currentPanel.webview.html =getConvertorPageV2();
+		bindCurrentPanelReceiveMsg(currentPanel);
 	}));
 
 	let disposableVisCommand = vscode.commands.registerCommand("treeView-item.datavis", (itemNode: TreeItemNode) => {
@@ -1041,7 +1035,11 @@ export function activate(context: vscode.ExtensionContext) {
 			console.log("模型转换页面打开");
 			// currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
 			if(currentPanel && currentPanel.title !== "模型转换"){
-				currentPanel.webview.html = getANNSNNConvertPage();
+				if(PROJ_DESC_INFO.project_type === '图像分类'){
+					currentPanel.webview.html = getANNSNNConvertPage();
+				}else{
+					currentPanel.webview.html = getANNSNNConvertSegPage();
+				}
 				currentPanel.reveal();
 				currentPanel.title = "模型转换";
 				console.log("显示currentpane  模型转换   1");

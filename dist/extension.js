@@ -580,12 +580,6 @@ function activate(context) {
             }
         });
     }
-    function initCurrentPanel() {
-        currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
-        // 主界面由electron 应用启动
-        currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
-        bindCurrentPanelReceiveMsg(currentPanel);
-    }
     context.subscriptions.push(disposable);
     let disposable2 = vscode.commands.registerCommand("treeView-item.newproj", () => {
         console.log("创建新项目xxx");
@@ -768,8 +762,10 @@ function activate(context) {
             panelSNNVisWeb.dispose();
             panelSNNVisWeb = undefined;
         }
-        initCurrentPanel();
-        currentPanel.reveal();
+        currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+        // 主界面由electron 应用启动
+        currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
+        bindCurrentPanelReceiveMsg(currentPanel);
     }));
     let disposableVisCommand = vscode.commands.registerCommand("treeView-item.datavis", (itemNode) => {
         console.log("当前可视化目标:" + itemNode.label);
@@ -1017,7 +1013,12 @@ function activate(context) {
             console.log("模型转换页面打开");
             // currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
             if (currentPanel && currentPanel.title !== "模型转换") {
-                currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
+                if (PROJ_DESC_INFO.project_type === '图像分类') {
+                    currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
+                }
+                else {
+                    currentPanel.webview.html = get_seg_pages_1.getANNSNNConvertSegPage();
+                }
                 currentPanel.reveal();
                 currentPanel.title = "模型转换";
                 console.log("显示currentpane  模型转换   1");
@@ -8751,7 +8752,7 @@ exports.getSNNModelPage = getSNNModelPage;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getSegSimulatePage = exports.getSegDataVisPage = void 0;
+exports.getANNSNNConvertSegPage = exports.getSegSimulatePage = exports.getSegDataVisPage = void 0;
 function getSegDataVisPage() {
     return `
     <!DOCTYPE html>
@@ -9901,6 +9902,845 @@ function getSegSimulatePage() {
   `;
 }
 exports.getSegSimulatePage = getSegSimulatePage;
+function getANNSNNConvertSegPage() {
+    return `
+  <!DOCTYPE html>
+  <html style="height: 640px;width: 100%;">
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>模型转换器</title>
+  </head>
+  
+  <body class="dark-mode" style="height: 100%;width: 100%;overflow: auto;white-space: nowrap;position: relative;">
+  
+      <div class="loading-div" id="loader_barchart" style="position: absolute;top: 400px;left: 50px;background: rgba(238,238,238);width: 600px;height: 500px;z-index: 2;">
+          <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="margin-top: 200px;"></i>
+          <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="margin-left: 240px;font-family: SourceHanSansCN-Normal;
+              font-size: 16px;
+              color: #333333;
+              letter-spacing: 0.91px;">等待转换结束...</font></span>
+      </div>
+  
+      <div class="loading-div" id="loader_tb" style="position: absolute;top: 400px;left: 740px;background: rgba(238,238,238);width: 720px;height: 500px;z-index: 2;">
+          <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="margin-top: 200px;"></i>
+          <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="margin-left: 300px;font-family: SourceHanSansCN-Normal;
+              font-size: 16px;
+              color: #333333;
+              letter-spacing: 0.91px;">等待转换结束...</font></span>
+      </div>
+  
+      <div style="height: 140px;background: rgba(238,238,238,0.4);width: 1500px;">
+          <div class="col-md-12">
+              <div style="text-align: center;margin-left: -60px;"><font style="font-family: SourceHanSansCN-Normal;
+                  font-size: 20px;
+                  color: #333333;
+                  letter-spacing: 1.14px;">转换参数配置</font></div>
+              <form role="form" class="row" style="margin-left: 80px;margin-top: 15px;" id="project_info_form">
+                  <div class="col-md-2" style="text-align: center;">
+                      <label for="select_vthresh"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                          font-size: 16px;
+                          color: #333333;
+                          letter-spacing: 0.91px;">脉冲发放阈值</font></label>
+                      <select class="form-control" id="select_vthresh">
+                          <option>21</option>
+                          <option>1</option>
+                          <option>2</option>
+                          <option>3</option>
+                          <option>4</option>
+                          <option>5</option>
+                          <option>6</option>
+                          <option>7</option>
+                          <option>8</option>
+                          <option>9</option>
+                          <option>10</option>
+                          <option>11</option>
+                          <option>12</option>
+                          <option>13</option>
+                          <option>14</option>
+                          <option>15</option>
+                          <option>16</option>
+                          <option>17</option>
+                          <option>18</option>
+                          <option>19</option>
+                          <option>20</option>
+                          <option>22</option>
+                          <option>23</option>
+                          <option>24</option>
+                          <option>25</option>
+                          <option>26</option>
+                          <option>27</option>
+                          <option>28</option>
+                          <option>29</option>
+                          <option>30</option>
+                      </select>
+                  </div>
+                  <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                      <label for="select_dt"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                          font-size: 16px;
+                          color: #333333;
+                          letter-spacing: 0.91px;">神经元dt</font></label>
+                      <select class="form-control" id="select_dt">
+                          <option>1ms</option>
+                          <option>0.1ms</option>
+                      </select>
+                  </div>
+      
+                  <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                      <label for="select_synapse_dt"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                          font-size: 16px;
+                          color: #333333;
+                          letter-spacing: 0.91px;">突触dt</font></label>
+                      <select class="form-control" id="select_synapse_dt">
+                          <option>0.1ms</option>
+                          <option>1ms</option>
+                      </select>
+                  </div>
+      
+                  <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                      <label for="select_delay"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                          font-size: 16px;
+                          color: #333333;
+                          letter-spacing: 0.91px;">delay</font></label>
+                      <select class="form-control" id="select_delay">
+                          <option>1ms</option>
+                          <option>0.1ms</option>
+                      </select>
+                  </div>
+      
+                  <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                      <label for="select_dura"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                          font-size: 16px;
+                          color: #333333;
+                          letter-spacing: 0.91px;">总时间</font></label>
+                      <select class="form-control" id="select_dura">
+                          <option>100ms</option>
+                          <option>200ms</option>
+                          <option>500ms</option>
+                      </select>
+                  </div>
+              </form>
+          </div>
+      </div>
+  
+  
+      <div style="margin-top: 10px;height: 160px;background: rgba(238,238,238,0.4);width: 1500px;">
+          <div>
+              <div style="text-align: center;margin-left: -60px;"><font style="font-family: SourceHanSansCN-Normal;
+                  font-size: 20px;
+                  color: #333333;
+                  letter-spacing: 1.14px;">转换进度</font></div>
+              <div class="row" style="margin-left: 30px;color: #333;">
+                  <div class="col-md-2" style="text-align: center;">
+                      <div style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      letter-spacing: 0.91px;">ANN转SNN</div>
+                      <div class="progress progress-striped active">
+                          <div id="model_convert_progress_div" class="progress-bar progress-bar-info" role="progressbar"
+                               aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                               style="width: 0%;">
+                          </div>
+                      </div>
+                  </div>
+              
+                  <div class="col-md-1" style="margin-top: -10px;">
+                      <i class="material-icons" style="font-size: 80px;transform: scaleY(0.4);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">arrow_forward</i>
+                  </div>
+              
+                  <div class="col-md-2" style="margin-left: -6px;text-align: center;">
+                      <div style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      letter-spacing: 0.91px;">预处理</div>
+                      <div class="progress  progress-striped active">
+                          <div id="preprocess_progress_div" class="progress-bar progress-bar-info" role="progressbar"
+                               aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                               style="width: 0%;">
+                          </div>
+                      </div>
+                  </div>
+  
+                  <div class="col-md-1" style="margin-top: -10px;">
+                      <i class="material-icons" style="font-size: 80px;transform: scaleY(0.4);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">arrow_forward</i>
+                  </div>
+  
+                  <div class="col-md-2" style="margin-left: -6px;text-align: center;">
+                      <div style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      letter-spacing: 0.91px;">参数调优</div>
+                      <div class="progress progress-striped active">
+                          <div id="search_progress_div" class="progress-bar progress-bar-info" role="progressbar"
+                               aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                               style="width: 0%;">
+                          </div>
+                      </div>
+                  </div>
+              
+                  <div class="col-md-1" style="margin-top: -10px;">
+                      <i class="material-icons" style="font-size: 80px;transform: scaleY(0.4);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">arrow_forward</i>
+                  </div>
+              
+                  <div class="col-md-2" style="margin-left: -6px;text-align: center;">
+                      <div style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      letter-spacing: 0.91px;">DarwinLang文件生成</div>
+                      <div class="progress progress-striped active">
+                          <div id="darlang_progress_div" class="progress-bar progress-bar-info" role="progressbar"
+                               aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                               style="width: 0%;">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          
+              <div class="row">
+                  <!-- <span>启动</span> -->
+                  <!-- <i id="start_convert_btn" class="large material-icons" style="margin-left: 0px;cursor: pointer;">play_circle_outline</i> -->
+                  <div class="progress progress-striped active" style="width: 85%;display: inline-block;margin-bottom: 0;margin-left: 60px;">
+                      <div id="total_progress_div" class="progress-bar progress-bar-success" role="progressbar"
+                           aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                           style="width: 0%;">
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  
+      <div style="height: 560px; margin-top: 10px;width: 1500px;margin-left: -20px;">
+          <div class="col-md-12">
+              <!-- <div style="width: 350px;height: 560px;display: inline-block;vertical-align: top;white-space:normal;background: rgba(238,238,238,0.4);">
+                  <div style="font-size: large;font-weight: bold;text-align: center;margin-left: -20px;"><font style="color: #333;font-weight: bold;">日志输出</font></div>
+                  <div id="log_output_div" style="margin-left: 20px;height: 340px; width: 300px; overflow: auto;margin-top: 60px;color: #333;">
+                  </div>
+              </div> -->
+              <div style="width: 660px;height: 560px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);margin-left: 10px;">
+                  <div style="text-align: center;margin-left: -40px;"><font style="font-family: SourceHanSansCN-Normal;
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;">转换性能分析</font></div>
+                  <div id="use_time_bar_chart" style="width: 560px;height: 440px;margin-top: 15px;margin-left: 40px;"></div>
+              </div>
+              <div style="height:560px;margin-left: 10px;width: 820px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
+                  <div id="model_layers_vis_tab_caption" style="text-align: center;margin-left: -20px;"><font style="font-family: SourceHanSansCN-Normal;
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;">转换过程信息</font></div>
+                  <table id="info_simu_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;color: #333;margin-left: 40px;">
+                      <tr style="border: solid 2px #D6D6D6;">
+                          <td style="border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 16px;
+                          color: #666666;">转换指标统计</td>
+                          <td style="border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 16px;
+                          color: #666666;">统计值</td>
+                      </tr>
+                      <tr style="border: solid 2px #D6D6D6;">
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">转换总耗时(秒)</td>
+                          <td id="total_use_time" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
+                      </tr>
+                      <tr>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">平均激发脉冲次数</td>
+                          <td id="avg_spike" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
+                      </tr>
+                      <tr>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">激发脉冲次数方差</td>
+                          <td id="std_spike" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
+                      </tr>
+                      <tr>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">连接权重均值</td>
+                          <td id="avg_conn_wt" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
+                      </tr>
+                      <tr>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">连接权重方差</td>
+                          <td id="std_conn_wt" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
+                      </tr>
+                      <tr>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">ANN转SNN耗时(秒)</td>
+                          <td id="stage1_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
+                      </tr>
+                      <tr>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">预处理耗时(秒)</td>
+                          <td id="stage2_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
+                      </tr>
+                      <tr>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">参数调优耗时(秒)</td>
+                          <td id="stage3_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
+                      </tr>
+                      <tr>
+                          <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">DarwinLang文件生成耗时(秒)</td>
+                          <td id="stage4_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
+                          font-size: 14px;
+                          color: #666666;">xxx</td>
+                      </tr>
+                  </table>
+                  <table id="scale_factors_table" style="margin-right: auto;margin-top: 60px;display: inline-block;vertical-align: top;border-spacing: 0px 5px;margin-left: 20px;color: #333;">
+                      <tr style="border: solid 2px #D6D6D6;">
+                          <td style="border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 16px;
+                          color: #666666;">神经层</td>
+                          <td style="border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;
+                          font-size: 16px;
+                          color: #666666;">参数缩放系数</td>
+                      </tr>
+                      <!-- <tr style="height: 35px;margin-top: 0px;">
+                          <td style="width: 100px;font-size: small;font-weight: bold;">层<br/>00Conv2D_26x26x8 参数缩放系数</td>
+                          <td>系数1</td>
+                      </tr>
+                      <tr style="height: 35px;">
+                          <td style="width: 100px;font-size: small;font-weight: bold;">缩放系数</td>
+                          <td>系数2</td>
+                      </tr> -->
+                  </table>
+      
+                  <!-- <div style="margin-top: 30px;">
+                      <div id="model_layers_vis_tab_caption" style="font-size: large;font-weight: bold;text-align: center;">脉冲神经网络输出层脉冲</div>
+                      <div id="model_layers_vis_tab_caption" style="font-size: small;font-weight: bold;text-align: center;">统计计数</div>
+                      <table id="spike_out_count_table" style="margin-left: 125px;">
+                          <tr id="out_labels">
+                          </tr>
+                          <tr id="out_counts_tr">
+                          </tr>
+                      </table>
+                      <ul id="sample_imgs_ul" style="height: 300px;width: 100px;overflow-x: hidden;display: inline-block;">
+                           <li style="list-style: none;margin-bottom: 10px;">
+                              <img style="height: 50px;width: 50px;">
+                              <span style="text-align: center;">测试标签</span>
+                          </li>
+                          <li style="list-style: none;margin-bottom: 10px;background-color: chocolate;">
+                              <img style="height: 50px;width: 50px;">
+                              <span style="text-align: center;">测试标签</span>
+                          </li> -->
+                      </ul>
+                      <!-- <div id="spike_charts" style="width: 420px;height: 340px;margin-left: 25px;display: inline-block;"></div>
+                  </div> -->
+              </div>
+          </div>
+      </div>
+  
+  </body>
+  <style>
+  
+  .titlebar {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+  }
+  
+  .titlebar-button {
+    -webkit-app-region: no-drag;
+  }
+  
+  body {
+    padding: 25px;
+    background-color: rgb(251, 255, 255);
+    color: white;
+    font-size: 25px;
+  }
+  
+  .dark-mode {
+    background-color: rgb(249, 251, 252);
+    color: white;
+  }
+    @font-face {
+      font-family: 'Material Icons';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.cnpmjs.org/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+    }
+  
+    .material-icons {
+      font-family: 'Material Icons';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      text-transform: none;
+      display: inline-block;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+  
+  .loading-div {
+      display: table-cell;
+      vertical-align: middle;
+      overflow: hidden;
+      text-align: center;
+  }
+  .loading-div::before {
+    display: inline-block;
+    vertical-align: middle;
+  } 
+  </style>
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  
+  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdn.staticfile.org/echarts/5.0.1/echarts.min.js"></script>
+  <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
+  
+  <script>
+  
+  const vscode = acquireVsCodeApi();
+  let stage1_convert_finish=false;
+  let stage2_preprocess_finish=false;
+  let stage3_search_finish=false;
+  let stage4_all_finish=false;
+  
+  let log_output_lists = new Array();
+  
+      let prev_clicked_img_li_id=undefined;
+  
+        $(document).ready(function(){
+            window.addEventListener("message", function(evt){
+                console.log("ANN 转SNN 模型接收到extension 消息："+evt.data);
+                const data = JSON.parse(evt.data);
+                if(data.log_output){
+                  log_output_lists = log_output_lists.concat(data.log_output.split("<br/>"));
+                  console.log("data.logoutput=["+data.log_output+"]");
+                  console.log("data split list len="+log_output_lists.length);
+                  // $("#log_output_div").html(log_output_lists.join("<br/>"));
+                  // document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
+                  if(log_output_lists.length <= 40){
+                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/40*100)+"%");
+                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/40*100)+"%";
+                  }
+                  if(stage1_convert_finish){
+                      if(log_output_lists.length < 80 && stage2_preprocess_finish !== true){
+                          console.log("increase sub progress bar 2");
+                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-38)/(80-38)*100)+"%";
+                      }
+                  }
+                  if(stage2_preprocess_finish){
+                      if(log_output_lists.length < 420 && stage3_search_finish !== true){
+                          console.log("increase sub progress bar 3");
+                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-78)/(420-78)*100)+"%";
+                      }
+                  }
+                  if(stage3_search_finish){
+                      if(log_output_lists.length < 440 && stage4_all_finish !== true){
+                          console.log("increase sub progress bar 4");
+                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-412)/(440-412)*100)+"%";
+                      }
+                  }
+                  if(stage4_all_finish !== true){
+                      console.log("increase sub progress bar total");
+                      document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/520*100)+"%";
+                  }
+                }else if(data.exec_finish){
+                    // 结束
+                  //   document.getElementById("start_convert_btn").style.backgroundColor = "";
+                    console.log("total finished, log_output_list length="+log_output_lists.length);
+                    document.getElementById("model_convert_progress_div").style.width = "100%";
+                    document.getElementById("preprocess_progress_div").style.width = "100%";
+                    document.getElementById("search_progress_div").style.width = "100%";
+                    document.getElementById("darlang_progress_div").style.width = "100%";
+                    document.getElementById("total_progress_div").style.width = "100%";
+                    console.log("LINE COUNT all_finish="+log_output_lists.length);
+                    $(".loading-div").hide();
+                    stage4_all_finish = true;
+                }else if(data.progress){
+                    // 处理进度信息
+                    if(data.progress === "convert_finish"){
+                        console.log("TMP, convert finish, log length="+log_output_lists.length);
+                        document.getElementById("model_convert_progress_div").style.width = "100%";
+                        console.log("LINE COUNT convert_finish="+log_output_lists.length);
+                        stage1_convert_finish = true;
+                    }else if(data.progress === "preprocess_finish"){
+                      console.log("TMP, preprocess finish, log length="+log_output_lists.length);
+                        document.getElementById("preprocess_progress_div").style.width = "100%";
+                        console.log("LINE COUNT preprocess_progress_div="+log_output_lists.length);
+                        stage2_preprocess_finish = true;
+                    }else if(data.progress === "search_finish"){
+                      console.log("TMP, search finish, log length="+log_output_lists.length);
+                        document.getElementById("search_progress_div").style.width = "100%";
+                        console.log("LINE COUNT search_progress_div="+log_output_lists.length);
+                        stage3_search_finish = true;
+                    }
+                }else if(data.snn_info){
+                    // snn 相关数据
+                  //   const infos = JSON.parse(data.snn_info);
+                  //   var test_img_uls = document.getElementById("sample_imgs_ul");
+                  //   var test_img_uris = infos.spikes.snn_test_imgs;
+                  //   var test_img_spikes = infos.spikes.snn_test_spikes;
+                  //   console.log("spiking img uris[0]"+test_img_uris[0]);
+                  //   console.log("spiking spike infos[0]="+test_img_spikes[0].cls_names);
+                  //   console.log("spike tuples[0]="+test_img_spikes[0].spike_tuples);
+  
+                  //   for(let i=0;i<test_img_uris.length;++i){
+                  //     var img_li = document.createElement("li");
+                  //     img_li.id = "img_li_"+i;
+                  //     img_li.style.listStyle = "none";
+                  //     img_li.style.marginBottom = "10px";
+                  //     var img_tag = document.createElement("img");
+                  //     img_tag.id = "sample_img_"+i;
+                  //     img_tag.src = test_img_uris[i];
+                  //     img_tag.style.width = "50px";
+                  //     img_tag.style.height = "50px";
+  
+                  //     img_li.appendChild(img_tag);
+                  //     test_img_uls.appendChild(img_li);
+  
+                  //     var label_span = document.createElement("span");
+                  //     label_span.innerText = "标签: "+test_img_uris[i].split("_")[5].split(".")[0];
+                  //     img_li.appendChild(label_span);
+  
+                  //     img_tag.onclick = function(){
+                  //       console.log("draw NO."+i+" img and spikes");
+                  //       console.log("reset background color of prev:"+prev_clicked_img_li_id);
+                  //       if(prev_clicked_img_li_id !== undefined){
+                  //           document.getElementById(prev_clicked_img_li_id).style.backgroundColor = "";
+                  //       }
+                  //       console.log("set background color of li: "+ "img_li_"+i);
+                  //       document.getElementById("img_li_"+i).style.backgroundColor = "chocolate";
+                  //       prev_clicked_img_li_id = "img_li_"+i;
+                  //       display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
+  
+                  //       // display counts in table
+                  //       let cls_idx = test_img_spikes[i].spike_tuples[0][0];
+                  //       let curr_count=1;
+                  //       let spike_counts = new Array();
+                  //       for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
+                  //           spike_counts.push(0);
+                  //       }
+                  //       for(let j=1;j<test_img_spikes[i].spike_tuples.length;++j){
+                  //           if(cls_idx === test_img_spikes[i].spike_tuples[j][0]){
+                  //               curr_count = curr_count+1;
+                  //           }else{
+                  //               spike_counts[cls_idx] = curr_count;
+                  //               curr_count=1;
+                  //               cls_idx = test_img_spikes[i].spike_tuples[j][0];
+                  //           }
+                  //       }
+                  //       spike_counts[spike_counts.length-1] = curr_count;
+                  //       document.getElementById("out_labels").innerHTML = "";
+                  //       let td_child = document.createElement("td");
+                  //       td_child.innerText = "计数值:";
+                  //       td_child.style.width = "60px";
+                  //       document.getElementById("out_labels").appendChild(td_child);
+  
+                  //       document.getElementById("out_counts_tr").innerHTML = '';
+                  //       td_child = document.createElement("td");
+                  //       td_child.innerText = "标签名称:";
+                  //       td_child.style.width = "60px";
+                  //       document.getElementById("out_counts_tr").appendChild(td_child);
+  
+                  //       for(let j=0;j<spike_counts.length;++j){
+                  //         let td_child = document.createElement("td");
+                  //         td_child.innerText = spike_counts[j];
+                  //         td_child.style.width = "33px";
+                  //         document.getElementById("out_counts_tr").appendChild(td_child);
+  
+                  //         td_child = document.createElement("td");
+                  //         td_child.innerText = test_img_spikes[i].cls_names[j];
+                  //         td_child.style.width = "33px";
+                  //         document.getElementById("out_labels").appendChild(td_child);
+                  //       }
+                  //     }
+                  //   }
+                }else if(data.convert_info){
+                    const convert_infos = JSON.parse(data.convert_info);
+                    $("#total_use_time").text(convert_infos.total_use_time.replace("秒",""));
+                    $("#avg_spike").text(convert_infos.spk_mean);
+                    $("#std_spike").text(convert_infos.spk_std);
+                    $("#avg_conn_wt").text(convert_infos.wt_mean);
+                    $("#std_conn_wt").text(convert_infos.wt_std);
+                    $("#stage1_time_use").text(convert_infos.stage1_time_use);
+                    $("#stage2_time_use").text(convert_infos.stage2_time_use);
+                    $("#stage3_time_use").text(convert_infos.stage3_time_use);
+                    $("#stage4_time_use").text(convert_infos.stage4_time_use);
+  
+                    let bar_chart_label_names = ["ANN转SNN", "预处理", "参数调优", "DarwinLang文件生成"];
+                    let bar_chart_label_counts = [parseFloat(convert_infos.stage1_time_use), parseFloat(convert_infos.stage2_time_use),
+                                  parseFloat(convert_infos.stage3_time_use), parseFloat(convert_infos.stage4_time_use)];
+                    display_bar_chart(bar_chart_label_names, bar_chart_label_counts, "","秒","use_time_bar_chart");
+                }else if(data.ann_model_start_convert){
+                    // 接收到启动转换的命令，初始化
+                  let v_thresh = $("#select_vthresh").val().replace("ms","");
+                  let neuron_dt = $("#select_dt").val().replace("ms","");
+                  let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
+                  let delay = $("#select_delay").val().replace("ms", "");
+                  let dura = $("#select_dura").val().replace("ms","");
+                  console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay);
+                  vscode.postMessage(JSON.stringify({"model_convert_params":{
+                      "vthresh": v_thresh,
+                      "neuron_dt": neuron_dt,
+                      "synapse_dt":synapse_dt,
+                      "delay":delay,
+                      "dura":dura
+                  }}));
+                  log_output_lists.splice(0);
+                  stage1_convert_finish = false;
+                  stage2_preprocess_finish = false;
+                  stage3_search_finish = false;
+                  stage4_all_finish = false;
+                  document.getElementById("model_convert_progress_div").style.width = "0%";
+                  document.getElementById("preprocess_progress_div").style.width = "0%";
+                  document.getElementById("search_progress_div").style.width = "0%";
+                  document.getElementById("darlang_progress_div").style.width = "0%";
+                  document.getElementById("total_progress_div").style.width = "0%";
+                }else if(data.scale_factors){
+                  // scale_factors_table
+                  // <tr style="margin-top: 15px;height: 35px;">
+                  //     <td style="width: 200px;font-size: medium;font-weight: bold;">缩放系数</td>
+                  //     <td>系数2</td>
+                  // </tr> -->
+                  scale_fac = JSON.parse(data.scale_factors);
+                  for(obj in scale_fac){
+                      let table_line = document.createElement("tr");
+                      table_line.style.height = "35px";
+                      table_line.style.border = "solid 2px #D6D6D6";
+                      table_line.style.color = "#333";
+                      let line_td1 = document.createElement("td");
+                      line_td1.style.border = "solid 2px #D6D6D6";
+                      line_td1.style.paddingTop = '15px';
+                      line_td1.style.paddingBottom = '15px';
+                      line_td1.style.paddingLeft = '10px';
+                      line_td1.style.paddingRight = '80px';
+                      line_td1.style.fontFamily = 'SourceHanSansCN-Medium';
+                      line_td1.style.fontSize = '14px';
+                      line_td1.style.color = '#666666';
+                      line_td1.innerHTML = ""+obj;
+                      table_line.appendChild(line_td1);
+                      let line_td2 = document.createElement("td");
+                      line_td2.style.border = "solid 2px #D6D6D6";
+                      line_td2.style.paddingTop = '15px';
+                      line_td2.style.paddingBottom = '15px';
+                      line_td2.style.paddingRight = '10px';
+                      line_td2.style.paddingLeft = '80px';
+                      line_td2.style.textAlign = 'right';
+                      line_td2.style.fontFamily = 'SourceHanSansCN-Medium';
+                      line_td2.style.fontSize = '14px';
+                      line_td2.style.color = '#666666';
+                      line_td2.innerText = parseFloat(scale_fac[obj]).toFixed(3);
+                      table_line.appendChild(line_td2);
+                      document.getElementById("scale_factors_table").appendChild(table_line);
+                  }
+                }
+            });
+  
+  
+            // 参数更改监听
+            $("#select_vthresh").change(()=>{
+              console.log("参数变动...");
+              reset_and_postmsg();
+            });
+            $("#select_dt").change(()=>{
+                console.log("参数变动...");
+                reset_and_postmsg();
+            });
+            $("#select_synapse_dt").change(()=>{
+                console.log("参数变动...");
+                reset_and_postmsg();
+            });
+            $("#select_delay").change(()=>{
+                console.log("参数变动...");
+                reset_and_postmsg();
+            });
+            $("#select_dura").change(()=>{
+                console.log("参数变动...");
+                reset_and_postmsg();
+            });
+          //   $("#start_convert_btn").on("click", ()=>{
+          //       let v_thresh = $("#select_vthresh").val().replace("ms","");
+          //       let neuron_dt = $("#select_dt").val().replace("ms","");
+          //       let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
+          //       let delay = $("#select_delay").val().replace("ms", "");
+          //       let dura = $("#select_dura").val().replace("ms","");
+          //       document.getElementById("start_convert_btn").style.backgroundColor = "chocolate";
+          //       console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay);
+          //       vscode.postMessage(JSON.stringify({"model_convert_params":{
+          //           "vthresh": v_thresh,
+          //           "neuron_dt": neuron_dt,
+          //           "synapse_dt":synapse_dt,
+          //           "delay":delay,
+          //           "dura":dura
+          //       }}));
+          //       document.getElementById("model_convert_progress_div").style.width = "0%";
+          //       document.getElementById("preprocess_progress_div").style.width = "0%";
+          //       document.getElementById("search_progress_div").style.width = "0%";
+          //       document.getElementById("darlang_progress_div").style.width = "0%";
+          //       document.getElementById("total_progress_div").style.width = "0%";
+  
+          //   });
+  
+        });
+  
+        function reset_and_postmsg(){
+              let v_thresh = $("#select_vthresh").val().replace("ms","");
+              let neuron_dt = $("#select_dt").val().replace("ms","");
+              let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
+              let delay = $("#select_delay").val().replace("ms", "");
+              let dura = $("#select_dura").val().replace("ms","");
+              console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay+", dura="+dura);
+              log_output_lists.splice(0);
+              stage1_convert_finish = false;
+              stage2_preprocess_finish = false;
+              stage3_search_finish = false;
+              stage4_all_finish = false;
+              // // 传递到插件
+              // vscode.postMessage(JSON.stringify({"convertor_params_change":{
+              //     "v_thresh":v_thresh,
+              //     "neuron_dt":neuron_dt,
+              //     "synapse_dt":synapse_dt,
+              //     "delay":delay,
+              //     "dura":dura
+              // }}));
+                document.getElementById("model_convert_progress_div").style.width = "0%";
+                document.getElementById("preprocess_progress_div").style.width = "0%";
+                document.getElementById("search_progress_div").style.width = "0%";
+                document.getElementById("darlang_progress_div").style.width = "0%";
+                document.getElementById("total_progress_div").style.width = "0%";
+        }
+  
+  
+      //   function display_spike_scatter_chart(labels, datas){
+      //       var opt={
+      //             xAxis: {
+      //                 type:'category',
+      //                 data: labels
+      //             },
+      //             yAxis: {
+      //                 splitLine:{show:false},
+      //                 axisLine: {show: false}, 
+      //                 axisTick: {show: false},
+      //                 axisLabel:{show:false}
+      //             },
+      //             series: [{
+      //                 symbolSize: 5,
+      //                 data: datas,
+      //                 type: 'scatter'
+      //             }]
+      //         };
+      //         var spike_chart = echarts.init(document.getElementById("spike_charts"));
+      //         spike_chart.setOption(opt);
+      //   }
+  
+  
+        function display_bar_chart(label_names, label_counts, title,series_name,target_id){
+          console.log("label names:"+label_names);
+          console.log("label counts:"+label_counts);
+          var option = {
+              tooltip: {
+                  trigger: 'axis',
+                  axisPointer: {
+                      type: 'cross',
+                      crossStyle: {
+                          color: '#999'
+                      }
+                  }
+              },
+              xAxis: [
+                  {
+                      type: 'category',
+                      data:label_names,
+                      axisPointer: {
+                          type: 'shadow'
+                      },
+                      axisLabel:{
+                          rotate:30,
+                          color:"#999999"
+                      }
+                  }
+              ],
+              yAxis: [
+                  {
+                      type: 'value',
+                      name: '时长(秒)',
+                      nameTextStyle:{
+                          color:"#999999"
+                      },
+                      scale:true,
+                      axisLabel: {
+                          formatter: '{value}',
+                          textStyle:{
+                              color:"#999999"
+                          }
+                      }
+                  }
+              ],
+              series: [
+                  {
+                      name: series_name,
+                      type: 'bar',
+                      data: label_counts,
+                      barWidth:"30px",
+                      itemStyle: {
+                          normal: {
+                              label: {
+                                  show: true, //开启显示
+                                  position: 'top', //在上方显示
+                                  textStyle: { //数值样式
+                                      color:"#999999",
+                                      fontSize: 16
+                                  }
+                              },
+                              color: new echarts.graphic.LinearGradient(
+                                0, 0, 0, 1,
+                              [
+                                  {offset: 0, color: '#77A4FF'},   
+                                  {offset: 1, color: '#A5CBFF'}
+                              ]
+                              )
+                          },
+                          emphasis: {
+                            color: new echarts.graphic.LinearGradient(
+                                  0, 0, 0, 1,
+                                [
+                                  {offset: 0, color: '#2FDECA'},
+                                  {offset: 1, color: '#2FDE80'}
+                                ]
+                            )
+                          }
+                      }
+                  }
+              ]
+          };
+          var bar_chart_data = echarts.init(document.getElementById(target_id));
+          bar_chart_data.setOption(option);
+      }
+  </script>
+  
+  </html>
+  `;
+}
+exports.getANNSNNConvertSegPage = getANNSNNConvertSegPage;
 
 
 /***/ }),

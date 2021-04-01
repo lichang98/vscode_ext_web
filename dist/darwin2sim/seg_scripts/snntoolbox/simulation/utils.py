@@ -605,6 +605,14 @@ class AbstractSNN:
                 eval(self.config.get('input', 'label_dict')))
             data_batch_kwargs['dvs_gen'] = dvs_gen
 
+
+        snn_test_output_spikes=[]
+        snn_test_input_spikes=[]
+        snn_test_img_uris = []
+        record_layer_v_vals=[]
+        record_layer_v_tms=[]
+        record_layers_spk_avg=[]
+        record_layers_spk_std=[]
         # Simulate the SNN on a batch of samples in parallel.
         for batch_idx in range(num_batches):
 
@@ -640,15 +648,32 @@ class AbstractSNN:
             # of the simulation.
             print("\nStarting new simulation...\n")
             data_batch_kwargs["is_obj_detection"] = kwargs["is_obj_detection"]
-            output_b_l_t = self.simulate(**data_batch_kwargs)
+            output_b_l_t, output_spike_infos, input_spike_infos, record_layer_v_vals11, \
+                        record_layer_v_vals12,record_layer_v_vals21, record_layer_v_vals22,\
+                        record_layer_v_tms1, record_layer_v_tms2, record_layers_spike_avg, \
+                        record_layers_spike_std,\
+                        record_layers_wt_avg, record_layers_wt_std = self.simulate(**data_batch_kwargs)
             print("output_b_l_t shape={}, y_b_l shape={}".format(np.shape(output_b_l_t), np.shape(y_b_l)))
+            snn_test_output_spikes.append(output_spike_infos)
+            snn_test_input_spikes.append(input_spike_infos)
+
+            record_layer_v_tms.append(record_layer_v_tms1)
+            record_layer_v_tms.append(record_layer_v_tms2)
+            record_layer_v_vals.append(record_layer_v_vals11)
+            record_layer_v_vals.append(record_layer_v_vals12)
+            record_layer_v_vals.append(record_layer_v_vals21)
+            record_layer_v_vals.append(record_layer_v_vals22)
+            record_layers_spk_avg = record_layers_spike_avg
+            record_layers_spk_std = record_layers_spike_std
 
 
             idx = batch_idx
-            Image.fromarray(np.array(np.squeeze(x_b_l)*255, dtype='uint8')).save('E:\\courses\\ZJLab\\IDE-related-docs\\语义分割模型\\project\\tmp\\{}.png'.format(idx))
+            Image.fromarray(np.array(np.squeeze(x_b_l)*255, dtype='uint8')).save(os.path.join(os.path.dirname(__file__), "..","..","..","model_out", "seg_cnn","bin_darwin_out", "inputs", "img_idx_{}.png".format(idx)))
+            snn_test_img_uris.append("http://localhost:6003/snn_imgs/{}/img_idx_{}.png".format('seg_cnn', idx))
+            # Image.fromarray(np.array(np.squeeze(x_b_l)*255, dtype='uint8')).save('E:\\courses\\ZJLab\\IDE-related-docs\\语义分割模型\\project\\tmp\\{}.png'.format(idx))
             mask_arr = np.zeros((64,64),dtype='uint8')
             mask_arr[output_b_l_t[:,:, 1] == 1] = 255
-            Image.fromarray(mask_arr).save("E:\\courses\\ZJLab\\IDE-related-docs\\语义分割模型\\project\\tmp\\{}_mask.png".format(idx))
+            # Image.fromarray(mask_arr).save("E:\\courses\\ZJLab\\IDE-related-docs\\语义分割模型\\project\\tmp\\{}_mask.png".format(idx))
 
             accu = np.mean(output_b_l_t == np.squeeze(y_b_l))
             print("accu={}".format(accu))
@@ -825,7 +850,10 @@ class AbstractSNN:
         else:
             top1acc_total = np.mean(np.array(truth_d) == np.array(guesses_d))
             
-        return top1acc_total
+        return top1acc_total, snn_test_input_spikes, snn_test_output_spikes,\
+             snn_test_img_uris, record_layer_v_vals, record_layer_v_tms, \
+                record_layers_spk_avg, record_layers_spk_std,\
+                record_layers_wt_avg, record_layers_wt_std
 
     def setup_layers(self, batch_shape):
         """Iterates over all layers to instantiate them in the simulator"""

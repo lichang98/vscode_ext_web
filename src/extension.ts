@@ -7,7 +7,7 @@ import * as axios from 'axios';
 // 引入 TreeViewProvider 的类
 import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile ,addDarwinFold, addDarwinFiles} from './TreeViewProvider';
 import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage,getSNNModelPage} from "./get_convertor_page_v2";
-import {getSegDataVisPage} from "./get_seg_pages";
+import {getSegDataVisPage, getSegSimulatePage} from "./get_seg_pages";
 import {exec} from "child_process";
 
 // 点击darwinlang json 文件单独显示SNN结构的界面
@@ -1108,7 +1108,11 @@ export function activate(context: vscode.ExtensionContext) {
 					});
 				}
 			});
-			panelSNNModelVis.webview.html = getSNNSimuPage();
+			if(PROJ_DESC_INFO.project_type === '图像分类'){
+				panelSNNModelVis.webview.html = getSNNSimuPage();
+			}else if(PROJ_DESC_INFO.project_type === '语义分割'){
+				panelSNNModelVis.webview.html = getSegSimulatePage();
+			}
 			panelSNNModelVis.title = "SNN仿真";
 			panelSNNModelVis.reveal();
 		}

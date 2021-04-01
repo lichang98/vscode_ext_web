@@ -96,8 +96,8 @@ class SNN(AbstractSNN):
         self.layers[0].label = 'InputLayer'
         self.spikemonitors.append(self.sim.SpikeMonitor(self.layers[0]))
         # Need placeholders "None" for layers without states:
-        self.statemonitors.append(self.sim.StateMonitor(self.layers[0], [],
-                                                        False))
+        self.statemonitors.append(self.sim.StateMonitor(self.layers[0], 'v',
+                                                        True))
 
     def add_layer(self, layer):
 
@@ -127,12 +127,12 @@ class SNN(AbstractSNN):
                 dt=self._dt * self.sim.ms))
         self.layers[-1].add_attribute('label')
         self.layers[-1].label = layer.name
-        if 'spiketrains' in self._plot_keys \
-                or 'spiketrains_n_b_l_t' in self._log_keys:
-            self.spikemonitors.append(self.sim.SpikeMonitor(self.layers[-1]))
-        if 'v_mem' in self._plot_keys or 'mem_n_b_l_t' in self._log_keys:
-            self.statemonitors.append(self.sim.StateMonitor(self.layers[-1],
-                                                            'v', True))
+        # if 'spiketrains' in self._plot_keys \
+        #         or 'spiketrains_n_b_l_t' in self._log_keys:
+        self.spikemonitors.append(self.sim.SpikeMonitor(self.layers[-1]))
+        # if 'v_mem' in self._plot_keys or 'mem_n_b_l_t' in self._log_keys:
+        #     self.statemonitors.append(self.sim.StateMonitor(self.layers[-1],
+        #                                                     'v', True))  
     
     def add_concatenate_layer(self, layer):
         prev_layer1 = layer.inbound_nodes[0].inbound_layers[0]
@@ -283,6 +283,8 @@ class SNN(AbstractSNN):
         self.output_spikemonitor = self.sim.SpikeMonitor(self.layers[-1])
         print("Tmp, compiling....., last layer neuron count={}".format(self.layers[-1].N))
         spikemonitors = self.spikemonitors + [self.output_spikemonitor]
+        self.statemonitors.append(self.sim.StateMonitor(self.layers[-1], 'v',
+                                                        True))
         self.snn = self.sim.Network(self.layers, self.connections,
                                     spikemonitors, self.statemonitors)
         self.snn.store()
@@ -311,6 +313,45 @@ class SNN(AbstractSNN):
         print("run cell params={}".format(self._cell_params))
         self.snn.run(self._duration * self.sim.ms, report='stdout',namespace=self._cell_params)
 
+        print("debug: length of spike monitors={}, length of state monitors={}".format(len(self.spikemonitors), len(self.statemonitors)))
+        # record spike infos
+        record_layers_spike_avg=[]
+        record_layers_spike_std=[]
+        input_spike_tuples = []
+        spike_tuples = []
+        record_layers_wt_avg=[]
+        record_layers_wt_std=[]
+        first_layer_spikes = [list(e/self.sim.ms) for e in self.spikemonitors[0].spike_trains().values()]
+        last_layer_spikes = [list(e/self.sim.ms) for e in self.spikemonitors[-1].spike_trains().values()]
+        for nidx in range(len(first_layer_spikes)):
+            for j in range(int(np.random.randint(8, size=1)[0]), len(first_layer_spikes[nidx]), 16):
+                input_spike_tuples.append([nidx, int(first_layer_spikes[nidx][j])])
+        
+        for nidx in range(len(last_layer_spikes)):
+            for j in range(int(np.random.randint(8, size=1)[0]), len(last_layer_spikes[nidx]), 16):
+                spike_tuples.append([nidx, int(last_layer_spikes[nidx][j])])
+
+        min_spike_input_idx = np.argmin([len(e) for e in first_layer_spikes])
+        max_spike_input_idx = np.argmax([len(e) for e in first_layer_spikes])
+        record_layer_v_vals11 = list(self.statemonitors[0].v[min_spike_input_idx])
+        record_layer_v_vals12 = list(self.statemonitors[0].v[max_spike_input_idx])
+        record_layer_v_tms1 = list(self.statemonitors[0].t/self.sim.ms)
+
+        min_spike_output_idx = np.argmin([len(e) for e in last_layer_spikes])
+        max_spike_output_idx = np.argmax([len(e) for e in last_layer_spikes])
+        record_layer_v_vals21 = list(self.statemonitors[-1].v[min_spike_output_idx])
+        record_layer_v_vals22 = list(self.statemonitors[-1].v[max_spike_output_idx])
+        record_layer_v_tms2 = list(self.statemonitors[-1].t/self.sim.ms)
+
+        for i in range(len(self.spikemonitors)):
+            counts = [len(e) for e in self.spikemonitors[i].spike_trains().values()]
+            record_layers_spike_avg.append("{:.3f}".format(np.mean(counts)))
+            record_layers_spike_std.append("{:.3f}".format(np.std(counts)))
+        
+        for i in range(len(self.connections)):
+            record_layers_wt_avg.append("{:.3f}".format(np.mean(self.connections[i].w)))
+            record_layers_wt_std.append("{:.3f}".format(np.std(self.connections[i].w)))
+
         if not kwargs['is_obj_detection']:
             output_b_l_t = self.get_recorded_vars(self.layers)
         else:
@@ -338,7 +379,9 @@ class SNN(AbstractSNN):
             #         output_b_l_t[int(i/2/64), int((i/2)%64), 0]=1
 
 
-        return output_b_l_t
+        return output_b_l_t, {'cls_names': [str(x) for x in range(len(last_layer_spikes))], 'spike_tuples': spike_tuples}, {'cls_names': [str(x) for x in range(len(first_layer_spikes))], 'spike_tuples': input_spike_tuples},\
+                record_layer_v_vals11, record_layer_v_vals12,record_layer_v_vals21, record_layer_v_vals22,record_layer_v_tms1, record_layer_v_tms2, record_layers_spike_avg, record_layers_spike_std,\
+                record_layers_wt_avg, record_layers_wt_std
 
     def reset(self, sample_idx):
         mod = self.config.getint('simulation', 'reset_between_nth_sample')

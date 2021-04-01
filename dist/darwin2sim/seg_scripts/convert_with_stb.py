@@ -8,7 +8,6 @@ import struct
 
 from numpy.core.records import record
 from tensorflow.python.platform.tf_logging import flush
-import darwin_ii
 import tqdm
 import brian2
 brian2.BrianLogger.log_level_error()
@@ -25,20 +24,20 @@ baseDirPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(baseDirPath, "snntoolbox"))
 # model_path = os.path.join(
 #     'E:\\courses\\ZJLab\\IDE-related-docs\\darwin2sim\\target\\mnist_cnn.h5')
-target_proj_name = "cnn_dig"
+target_proj_name = "seg_cnn"
 if len(sys.argv) > 6:
     target_proj_name = sys.argv[6]
 
-model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "target", target_proj_name, "mnist_cnn")
+model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..","target", target_proj_name, "mnist_cnn")
 
 config_path = os.path.join(baseDirPath, "snntoolbox","config")
 dir_name = baseDirPath
-outputPath = os.path.join(baseDirPath, "model_out", target_proj_name, "darlang_out")
+outputPath = os.path.join(baseDirPath, "..","model_out", target_proj_name, "darlang_out")
 
-if not os.path.exists(os.path.join(baseDirPath, "model_out", target_proj_name)):
-    os.mkdir(os.path.join(baseDirPath, "model_out", target_proj_name))
-if not os.path.exists(os.path.join(baseDirPath, "model_out", target_proj_name, "darlang_out")):
-    os.mkdir(os.path.join(baseDirPath, "model_out", target_proj_name, "darlang_out"))
+if not os.path.exists(os.path.join(baseDirPath, "..", "model_out", target_proj_name)):
+    os.mkdir(os.path.join(baseDirPath,"..",  "model_out", target_proj_name))
+if not os.path.exists(os.path.join(baseDirPath, "..", "model_out", target_proj_name, "darlang_out")):
+    os.mkdir(os.path.join(baseDirPath, "..", "model_out", target_proj_name, "darlang_out"))
 
 from snntoolbox.parsing.model_libs.keras_input_lib import load
 from snntoolbox.bin.utils import import_target_sim, update_setup
@@ -137,9 +136,9 @@ with open(os.path.join(os.path.dirname(__file__), "snntoolbox", "config"), "r") 
 config_file_content = [e for e in config_file_content.split('\n')]
 for i in range(len(config_file_content)):
     if 'path_wd' in config_file_content[i]:
-        config_file_content[i] = "path_wd = {}".format(os.path.join(os.path.dirname(__file__), "target", target_proj_name))
+        config_file_content[i] = "path_wd = {}".format(os.path.join(os.path.dirname(__file__), "..","target", target_proj_name))
     if 'dataset_path' in config_file_content[i]:
-        config_file_content[i] = "dataset_path = {}".format(os.path.join(os.path.dirname(__file__), "target", target_proj_name))
+        config_file_content[i] = "dataset_path = {}".format(os.path.join(os.path.dirname(__file__), "..","target", target_proj_name))
 
 with open(os.path.join(os.path.dirname(__file__), "snntoolbox", "config"), "w+") as f:
     f.write('\n'.join(config_file_content))
@@ -175,17 +174,88 @@ print("CONVERT_FINISH...",flush=True)
 stage1_time_use = time.time()
 # simulate
 test_set = {"x_test":testX[:50],"y_test":testY[:50], "is_obj_detection":True}
-accu = spiking_model.run(**test_set)
+accu, snn_test_input_spike_info, snn_test_output_spike_info, snn_test_img_url_info, \
+    record_layer_v_vals, record_layer_v_tms, record_layers_spk_avg, record_layers_spk_std,\
+    record_layers_wt_avg, record_layers_wt_std = spiking_model.run(**test_set)
 
 print("accu={}".format(accu),flush=True)
 
-# # records all weigths and fix point
-# all_wts = []
-# for i in range(len(spiking_model.connections)):
-#     print("connections {} weight shape={}".format(i, np.shape(spiking_model.connections[i].w)))
-#     all_wts.append(np.array(spiking_model.connections[i].w, dtype='float32'))
+# save neurons group info list
+neurons_info=[]
+for i in range(len(spiking_model.layers)):
+    print("neuron count={}, method={}, events={}, vthresh={}".format(spiking_model.layers[i].N, spiking_model.layers[i].method_choice, spiking_model.layers[i].events, 16))
+    neurons_info.append({"idx":i, "neuron_count": spiking_model.layers[i].N, "method": spiking_model.layers[i].method_choice, "vthresh": 16})
 
-# all_wts = fixpt(all_wts)
+
+all_wts = []
+for i in range(len(spiking_model.connections)):
+    print("connections {} weight shape={}".format(i, np.shape(spiking_model.connections[i].w)))
+    all_wts.append(np.array(spiking_model.connections[i].w, dtype='float32'))
+
+all_wts = fixpt(all_wts)
+wt_labels = set()
+for i in range(len(all_wts)):
+    wts = np.array(all_wts[i]).flatten().tolist()
+    wts = [int(x) for x in wts]
+    wt_labels |= set(wts)
+
+wt_counts = [0]*len(wt_labels)
+wt_labels = list(sorted(wt_labels))
+for i in range(len(all_wts)):
+    wts = np.array(all_wts[i]).flatten().tolist()
+    for w in wts:
+        wt_counts[wt_labels.index(w)] += 1
+
+wt_labels = [str(x) for x in wt_labels]
+layer_weights = {'wt_label': wt_labels, 'wt_count': wt_counts}
+
+# save neurons connection info
+layer_conn_info = []
+for i in range(len(all_wts)):
+    prev_layer_neuron_count = spiking_model.layers[i].N
+    current_layer_neuron_count = spiking_model.layers[i+1].N
+    connect_ratio = np.prod(np.shape(all_wts[i]))/ (prev_layer_neuron_count*current_layer_neuron_count)
+    curr_layer_avg_conn = len(list(spiking_model.connections[i].j))/len(set(list(spiking_model.connections[i].j)))
+    layer_conn_info.append({"idx":i, "ratio":["{:.3f}".format(connect_ratio)], "avg_conn":["{:.3f}".format(curr_layer_avg_conn)]})
+
+brian2_snn_info = {
+    "neurons_info": neurons_info,
+    "layers_weights": layer_weights,
+    "spikes":{
+        "snn_test_imgs": snn_test_img_url_info,
+        "snn_test_spikes": snn_test_output_spike_info,
+        "snn_input_spikes": snn_test_input_spike_info
+    },
+    "layer_conns": layer_conn_info,
+    "extra_simu_info":{
+        "simulate_vthresh": 16,
+        "simulate_neuron_dt": 1,
+        "simulate_synapse_dt": 1,
+        "simulate_delay": 1,
+        "simulate_dura": 100,
+        "simulate_acc": "{:.2%}".format(accu)
+    },
+    "record_layer_v":{
+        "tms": record_layer_v_tms,
+        "vals": record_layer_v_vals
+    },
+    "record_spike_out_info":{
+        "spike_count_avgs": record_layers_spk_avg,
+        "spike_count_stds": record_layers_spk_std
+    },
+    "record_layers_wt_info":{
+        "record_wts_avg": record_layers_wt_avg,
+        "record_wts_std": record_layers_wt_std
+    }
+}
+
+with open(os.path.join(baseDirPath, "brian2_snn_info.json"), "w+") as f:
+    f.write(json.dumps(brian2_snn_info))
+# move to ../inner_scripts directory
+shutil.move(os.path.join(baseDirPath, "brian2_snn_info.json"), os.path.join(baseDirPath, "..","..", "inner_scripts","brian2_snn_info.json"))
+
+# # records all weigths and fix point
+
 # for i in range(len(spiking_model.connections)):
 #     spiking_model.connections[i].w = all_wts[i]
 #     print("After assign connections {}, max wt={}, min wt={}".format(i, np.max(spiking_model.connections[i].w), 

@@ -1,6 +1,6 @@
 [paths]
-path_wd = e:/courses/ZJLab/IDE-related-docs/语义分割模型/project/darwin2/dist/darwin2sim\target\cnn_dig
-dataset_path = e:/courses/ZJLab/IDE-related-docs/语义分割模型/project/darwin2/dist/darwin2sim\target\cnn_dig
+path_wd = .\..\target\seg_cnn
+dataset_path = .\..\target\seg_cnn
 filename_ann = mnist_cnn
 
 [tools]

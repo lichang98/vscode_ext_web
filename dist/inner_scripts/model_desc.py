@@ -65,6 +65,8 @@ layer_vis_data=[]
 idx=0
 max_vis_each_layer=5
 
+selected_idxs = list(np.random.randint(20, size=max_vis_each_layer))
+
 for layer in model.layers:
     idx +=1
     if layer.__class__.__name__ == "Conv2D" or layer.__class__.__name__ == "Activation":
@@ -85,7 +87,6 @@ for layer in model.layers:
                 "layer_vis_img_paths": layer_vis_img_paths})
         elif task_type == 1:
             layer_vis_img_paths=[]
-            selected_idxs = list(np.random.randint(20, size=max_vis_each_layer))
             for i in range(max_vis_each_layer):
                 layer_output = keras.models.Model(inputs=model.input, outputs=layer.output).predict(x_norm[selected_idxs[i]: selected_idxs[i]+1])
                 layer_output = layer_output[0]

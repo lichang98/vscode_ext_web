@@ -631,14 +631,14 @@ export function getConvertorModelPageV2(){
                 color: #333333;
                 letter-spacing: 1.14px;">卷积与激活层输出可视化</div>
                 <!--动态创建-->
-                <div id="layers_vis_div" class="row" style="width: 620px;margin-left: 40px;margin-top: 40px;margin-bottom: 0px; margin-right: 40px;padding: 0px;background: rgb(238,238,238);color: #333;border: 2px solid #333;height: 60px;border-color: #D6D6D6;">
-                  <div class="col-md-3" style="border-right: 2px solid #333;height: 58px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
+                <div id="layers_vis_div" class="row" style="width: 620px;margin-left: 40px;margin-top: 40px;margin-bottom: 0px; margin-right: 40px;padding: 0px;background: rgb(238,238,238);color: #333;border: 2px solid #333;height: 58px;border-color: #D6D6D6;">
+                  <div class="col-md-3" style="border-right: 2px solid #333;height: 56px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
                   font-size: 16px;
                   color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">layer 名称</div>
-                  <div class="col-md-3" style="border-right: 2px solid #333;height: 58px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
+                  <div class="col-md-3" style="border-right: 2px solid #333;height: 56px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
                   font-size: 16px;
                   color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">layer 编号</div>
-                  <div class="col-md-6" style="height: 58px;font-family: SourceHanSansCN-Regular;
+                  <div class="col-md-6" style="height: 56px;font-family: SourceHanSansCN-Regular;
                   font-size: 16px;
                   color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">输出可视化</div>
                 </div>
@@ -829,16 +829,16 @@ export function getConvertorModelPageV2(){
                   
                   var img_div = document.createElement("div");
                   img_div.setAttribute("class","row");
-                  img_div.style = "margin-left: 40px;margin-right: 40px;color: #333;border: 3px solid #333;margin-top: 0px; height:60px;margin-bottom: 0px; padding: 0px;border-color: #D6D6D6;";
+                  img_div.style = "margin-left: 40px;margin-right: 40px;color: #333;border: 3px solid #333;margin-top: 0px; height:58px;margin-bottom: 0px; padding: 0px;border-color: #D6D6D6;";
   
                   var layer_name_div = document.createElement("div");
                   layer_name_div.setAttribute("class", "col-md-3");
-                  layer_name_div.style = "border-right: 2px solid #333;height: 60px;border-color: #D6D6D6;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 20px;";
+                  layer_name_div.style = "border-right: 2px solid #333;height: 58px;border-color: #D6D6D6;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 20px;";
                   layer_name_div.innerText = layer_name;
                   img_div.appendChild(layer_name_div);
   
                   var layer_index_div = document.createElement("div");
-                  layer_index_div.style = "border-right: 2px solid #333;height: 60px;border-color: #D6D6D6;text-align: right; padding-right: 15px;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 20px;";
+                  layer_index_div.style = "border-right: 2px solid #333;height: 58px;border-color: #D6D6D6;text-align: right; padding-right: 15px;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 20px;";
                   layer_index_div.setAttribute("class", "col-md-3");
   
                   layer_index_div.innerText = layer_idx;

@@ -254,6 +254,63 @@ with open(os.path.join(baseDirPath, "brian2_snn_info.json"), "w+") as f:
 # move to ../inner_scripts directory
 shutil.move(os.path.join(baseDirPath, "brian2_snn_info.json"), os.path.join(baseDirPath, "..","..", "inner_scripts","brian2_snn_info.json"))
 
+# saving darwinlang file
+snn_model_darlang = {
+    'projectName': 'semantic_segmentation',
+    'version': '0.0.1',
+    'target':'darwin2',
+    'netDepth': len(spiking_model.layers),
+    'delayType': [0,0],
+    'leakSign': -1,
+    'neuronGroups':[
+        {
+            'layerName': 'input',
+            'neuronSize': spiking_model.layers[0].N
+        }
+    ],
+    'connectConfig':[]
+}
+
+for i in range(1, len(spiking_model.layers)-1):
+    snn_model_darlang['neuronGroups'].append({
+        'layerName': 'layer_'+str(i),
+        'neuronSize': spiking_model.layers[i].N,
+        'neuronTypr':'IF',
+        'leakMode':0,
+        'leakValue':0,
+        'resetMode':1,
+        'vThreshold': 16
+    })
+
+snn_model_darlang['neuronGroups'].append({
+    'layerName':'out',
+    'neuronSize': spiking_model.layers[-1].N,
+    'neuronType':'IF',
+    'leakMode':0,
+    'leakValue':0,
+    'resetMode':1,
+    'vThreshold': 16
+})
+
+for i in range(len(spiking_model.connections)):
+    snn_model_darlang['connectConfig'].append({
+        'name': snn_model_darlang['neuronGroups'][i]['layerName'],
+        'src': snn_model_darlang['neuronGroups'][i]['layerName'],
+        'dst': snn_model_darlang['neuronGroups'][i+1]['layerName'],
+        'synapses': '{}_to_{}.pickle'.format(snn_model_darlang['neuronGroups'][i]['layerName'], snn_model_darlang['neuronGroups'][i+1]['layerName'])
+    })
+
+with open(os.path.join(outputPath, "snn_digit_darlang.json"),"w+") as f:
+    f.write(json.dumps(snn_model_darlang))
+
+# save weights files, each synapses a file, [(src index, dest index, weight, delay),...]
+for i in range(len(spiking_model.connections)):
+    info = list(zip(spiking_model.connections[i].i, spiking_model.connections[i].j, spiking_model.connections[i].w, [1]*len(spiking_model.connections[i].w)))
+    info = np.array(info)
+    with open(os.path.join(outputPath, "{}".format(snn_model_darlang["connectConfig"][i]["synapses"])), "wb+") as f:
+        pickle.dump(info.tolist(), f)
+
+
 # # records all weigths and fix point
 
 # for i in range(len(spiking_model.connections)):

@@ -10,6 +10,14 @@ import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getAN
 import {getSegDataVisPage, getSegSimulatePage, getANNSNNConvertSegPage} from "./get_seg_pages";
 import {exec} from "child_process";
 
+let PYTHON_INTERPRETER = 'python ';
+let NEWLINE = '\r\n';
+if(process.platform === 'linux'){
+	PYTHON_INTERPRETER = 'python3 ';
+	NEWLINE = '\n';
+}
+
+
 // 点击darwinlang json 文件单独显示SNN结构的界面
 function darlangWebContent() {
     return `<!DOCTYPE html>
@@ -308,7 +316,7 @@ export function activate(context: vscode.ExtensionContext) {
 		tmpDarlangWebview.webview.html = darlangWebContent();
 		tmpDarlangWebview.title = "darwin lang";
 		let targetDarlangFilePath = path.join(__dirname, "darwin2sim", "model_out" , path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "darlang_out","snn_digit_darlang.json");
-		let commandStr: string = "python " + path.join(__dirname, "load_graph.py") + " " + targetDarlangFilePath + " " + path.join(__dirname);
+		let commandStr: string = PYTHON_INTERPRETER + path.join(__dirname, "load_graph.py") + " " + targetDarlangFilePath + " " + path.join(__dirname);
 		exec(commandStr, (err, stdout, stderr)=>{
 			tmpDarlangWebview.reveal();
 			if(err){
@@ -343,7 +351,7 @@ export function activate(context: vscode.ExtensionContext) {
 			// let file_target:vscode.Uri = vscode.Uri.file(path.join(__dirname, "darwin2sim", "model_out", "bin_darwin_out", "inputs",label));
 			let targetFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),"bin_darwin_out", "inputs",label);
 			var modelVisScriptPath = path.join(__dirname, "inner_scripts", "parse_pickle.py");
-			var commandStr = "python "+modelVisScriptPath + " "+ targetFilePath;
+			var commandStr = PYTHON_INTERPRETER+modelVisScriptPath + " "+ targetFilePath;
 			exec(commandStr, function(err, stdout, stderr){
 				console.log("pickle 文件解析结束");
 				let fileTarget:vscode.Uri = vscode.Uri.file(path.join(__dirname, "inner_scripts", label));
@@ -362,7 +370,7 @@ export function activate(context: vscode.ExtensionContext) {
 			console.log("显示layer 连接pickle文件");
 			let targetFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),"darlang_out", label);
 			let modelVisScriptPath = path.join(__dirname, "inner_scripts", "parse_pickle.py");
-			let commandStr = "python "+modelVisScriptPath+" "+targetFilePath;
+			let commandStr = PYTHON_INTERPRETER+modelVisScriptPath+" "+targetFilePath;
 			exec(commandStr, function(err, stdout, stderr){
 				console.log("layer 连接pickle 文件 "+label+" 解析结束");
 				let fileTarget:vscode.Uri = vscode.Uri.file(path.join(__dirname, "inner_scripts", label));
@@ -407,7 +415,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('darwin2.helloWorld', () => {
 		// 启动后台资源server
 		let scriptPath = path.join(__dirname,"inner_scripts","img_server.py");
-		let commandStr = "python "+scriptPath;
+		let commandStr = PYTHON_INTERPRETER+scriptPath;
 		console.log("prepare to start img server.");
 		exec(commandStr, function(err, stdout, stderr){
 			console.log("img server started");
@@ -495,7 +503,7 @@ export function activate(context: vscode.ExtensionContext) {
 					scriptPath = path.join(__dirname, "darwin2sim", "seg_scripts","convert_with_stb.py "+ webParamVthresh+" "+ 
 					wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""));
 				}
-				let commandStr = "python "+scriptPath;
+				let commandStr = PYTHON_INTERPRETER+scriptPath;
 				currentPanel?.webview.postMessage(JSON.stringify({"log_output":"模型转换程序启动中......"}));
 				let scriptProcess = exec(commandStr,{});
 				let logOutputPanel = vscode.window.createOutputChannel("Darwin Convertor");
@@ -518,7 +526,7 @@ export function activate(context: vscode.ExtensionContext) {
 						}
 					}
 					if(currentPanel){
-						let formattedData = data.split("\r\n").join("<br/>");
+						let formattedData = data.split(NEWLINE).join("<br/>");
 						currentPanel.webview.postMessage(JSON.stringify({"log_output":formattedData}));
 					}
 				});
@@ -832,7 +840,7 @@ export function activate(context: vscode.ExtensionContext) {
 				// 数据可视化展示
 				// 执行后台脚本
 				let scriptPath = path.join(__dirname,"inner_scripts","data_analyze.py");
-				let commandStr = "python "+scriptPath+" "+X_NORM_DATA_PATH+" "+X_TEST_DATA_PATH + " "+Y_TEST_DATA_PATH;
+				let commandStr = PYTHON_INTERPRETER+scriptPath+" "+X_NORM_DATA_PATH+" "+X_TEST_DATA_PATH + " "+Y_TEST_DATA_PATH;
 				if(PROJ_DESC_INFO.project_type === '语义分割'){
 					// FIXME extra task type and num classes in semantic segmentation task
 					commandStr += " 1 2";
@@ -857,7 +865,7 @@ export function activate(context: vscode.ExtensionContext) {
 			if(panelAnnModelVis){
 				panelAnnModelVis.title = "ANN模型";
 				var modelVisScriptPath = path.join(__dirname, "inner_scripts", "model_desc.py");
-				var commandExe = "python "+modelVisScriptPath+" "+X_NORM_DATA_PATH+" "+X_TEST_DATA_PATH+" "+Y_TEST_DATA_PATH+" "+ANN_MODEL_FILE_PATH;
+				var commandExe = PYTHON_INTERPRETER+modelVisScriptPath+" "+X_NORM_DATA_PATH+" "+X_TEST_DATA_PATH+" "+Y_TEST_DATA_PATH+" "+ANN_MODEL_FILE_PATH;
 				if(PROJ_DESC_INFO.project_type === '语义分割'){
 					// FIXME task type
 					commandExe += " 1";
@@ -1067,7 +1075,7 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log("执行darwinlang map生成脚本...");
 		// 执行 darwinlang map 生成脚本
 		let targetDarlangFilePath = path.join(__dirname, "darwin2sim", "model_out" , path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "darlang_out","snn_digit_darlang.json");
-		let commandStr: string = "python " + path.join(__dirname, "load_graph.py") + " " + targetDarlangFilePath + " " + path.join(__dirname);
+		let commandStr: string = PYTHON_INTERPRETER + path.join(__dirname, "load_graph.py") + " " + targetDarlangFilePath + " " + path.join(__dirname);
 		exec(commandStr, function (err, stdout, stderr) {
 			if(err){
 				console.log("执行 load_graph.py 错误：" + err);

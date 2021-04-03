@@ -180,7 +180,7 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
     # num_list = [3, 32, 32, 48, 48]
     size_list = conv_size_list
     num_list = conv_num_list
-    x_diff_list = [0, layer_width, layer_width, layer_width, layer_width,layer_width]
+    x_diff_list = [0, layer_width, layer_width, layer_width, layer_width]
     if task_type == 1:
         x_diff_list = [0, layer_width*2,layer_width*2,layer_width*2,layer_width*2,layer_width*2,layer_width*2]
     text_list = ['Inputs'] + ['Feature\nmaps'] * (len(size_list) - 1)
@@ -207,8 +207,11 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
 
     ############################
     # in between layers
-    start_ratio_list = [[0.4, 0.5], [0.4, 0.8], [0.4, 0.5], [0.4, 0.8],[0.4, 0.5], [0.4, 0.8], [0.4, 0.5], [0.4, 0.8]]
-    end_ratio_list = [[0.4, 0.5], [0.4, 0.8], [0.4, 0.5], [0.4, 0.8],[0.4, 0.5], [0.4, 0.8], [0.4, 0.5], [0.4, 0.8]]
+    start_ratio_list = [[0.4, 0.5], [0.4, 0.8], [0.4, 0.5], [0.4, 0.8]]
+    end_ratio_list = [[0.4, 0.5], [0.4, 0.8], [0.4, 0.5], [0.4, 0.8]]
+    if task_type == 1:
+        start_ratio_list = [[0.4, 0.5], [0.4, 0.8], [0.4, 0.5], [0.4, 0.8],[0.4, 0.5], [0.4, 0.8], [0.4, 0.5], [0.4, 0.8]]
+        end_ratio_list = [[0.4, 0.5], [0.4, 0.8], [0.4, 0.5], [0.4, 0.8],[0.4, 0.5], [0.4, 0.8], [0.4, 0.5], [0.4, 0.8]]
     # patch_size_list = [(5, 5), (2, 2), (5, 5), (2, 2)]
     patch_size_list = kernel_size_list
     ind_bgn_list = range(len(patch_size_list))

@@ -3098,7 +3098,7 @@ export function getSNNModelPage():string{
                 <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                   font-size: 16px;
-                  color: #666666;padding-top: 12px; padding-bottom: 12px;">layer编号</td>
+                  color: #666666;padding-top: 12px; padding-bottom: 12px;">突触连接编号</td>
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                   font-size: 16px;
                   color: #666666;padding-top: 12px; padding-bottom: 12px;">权重均值</td>
@@ -3121,7 +3121,7 @@ export function getSNNModelPage():string{
                     <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 16px;
-                      color: #666666;padding-top: 12px; padding-bottom: 12px;">layer编号</td>
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">突触连接编号</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">连接稠密度</td>
@@ -3262,7 +3262,7 @@ export function getSNNModelPage():string{
                         line.style = "margin-top: 15px; border: solid 3px #D6D6D6; color:#333;";
                         var col_1 = document.createElement("td");
                         col_1.style = "text-align:center; padding-right:15px;border: solid 3px #D6D6D6;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
-                        col_1.innerText = synaps_info[i].idx;
+                        col_1.innerText = synaps_info[i].idx + "-"+(synaps_info[i].idx+1);
   
                         var col_2 = document.createElement("td");
                         col_2.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
@@ -3313,7 +3313,7 @@ export function getSNNModelPage():string{
                       td_id.style.paddingRight = "15px";
                       td_id.style.paddingTop = "12px";
                       td_id.style.paddingBottom = "12px";
-                      td_id.innerText = ""+i;
+                      td_id.innerText = ""+i+"-"+(i+1);
                       table_line.appendChild(td_id);
   
                       let td_avg = document.createElement("td");

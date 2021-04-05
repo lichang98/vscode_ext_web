@@ -4,6 +4,7 @@ This is for data analyze
 Generate file with json format content provided for html to display
 """
 import json
+import os
 import numpy as np
 import sys
 from os import path
@@ -84,6 +85,10 @@ data_info.update({"cls_counts":cls_counts})
 data_info.update({"hist_bin_names":hist_bin_names})
 data_info.update({"sample_imgs":[]})
 data_info.update({"test_sample_imgs":[]})
+
+# clear prev data under directory resources/script_res/
+for file in os.listdir(path.join(path.abspath(path.dirname(__file__)),"..","..","src","resources","script_res")):
+    os.remove(path.join(path.abspath(path.dirname(__file__)),"..","..","src","resources","script_res", file))
 
 if task_type == 0:
     idx=0

@@ -673,6 +673,8 @@ class AbstractSNN:
             # Image.fromarray(np.array(np.squeeze(x_b_l)*255, dtype='uint8')).save('E:\\courses\\ZJLab\\IDE-related-docs\\语义分割模型\\project\\tmp\\{}.png'.format(idx))
             mask_arr = np.zeros((64,64),dtype='uint8')
             mask_arr[output_b_l_t[:,:, 1] == 1] = 255
+            Image.fromarray(np.array(mask_arr, dtype='uint8')).save(os.path.join(os.path.dirname(__file__), "..","..","..","model_out", "seg_cnn","bin_darwin_out", "inputs", "img_idx_{}_mask.png".format(idx)))
+
             # Image.fromarray(mask_arr).save("E:\\courses\\ZJLab\\IDE-related-docs\\语义分割模型\\project\\tmp\\{}_mask.png".format(idx))
 
             accu = np.mean(output_b_l_t == np.squeeze(y_b_l))

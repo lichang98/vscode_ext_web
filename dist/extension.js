@@ -9398,7 +9398,7 @@ function getSegSimulatePage() {
                   </tr>
               </table> -->
               <div id="spike_charts" style="width: 660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
-              <ul id="sample_imgs_ul" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
+              <ul id="sample_imgs_ul" style="height: 120px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
               </ul>
           </div>
       </div>
@@ -9558,7 +9558,15 @@ function getSegSimulatePage() {
                       img_tag.style.width = "50px";
                       img_tag.style.height = "50px";
   
+                      let img_tag_mask = document.createElement("img");
+                      img_tag_mask.style = "opacity:0.5; display:block;width:50px; height:50px";
+                      img_tag_mask.id = "img_mask_"+i;
+                      img_tag_mask.src = test_img_uris[i].split(".").splice(0, test_img_uris[i].split(".").length-1).join(".")+"_mask.png";
+                      console.log("test image mask src="+test_img_uris[i].split(".").splice(0, test_img_uris[i].split(".").length-1).join(".")+"_mask.png");
+  
+  
                       img_li.appendChild(img_tag);
+                      img_li.appendChild(img_tag_mask);
                       test_img_uls.appendChild(img_li);
                     }
   

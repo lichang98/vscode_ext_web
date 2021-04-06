@@ -87,6 +87,9 @@ data_info.update({"sample_imgs":[]})
 data_info.update({"test_sample_imgs":[]})
 
 # clear prev data under directory resources/script_res/
+if not os.path.exists(path.join(path.abspath(path.dirname(__file__)),"..","..","src","resources","script_res")):
+    os.mkdir(path.join(path.abspath(path.dirname(__file__)),"..","..","src","resources","script_res"))
+    
 for file in os.listdir(path.join(path.abspath(path.dirname(__file__)),"..","..","src","resources","script_res")):
     os.remove(path.join(path.abspath(path.dirname(__file__)),"..","..","src","resources","script_res", file))
 

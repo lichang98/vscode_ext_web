@@ -1533,62 +1533,106 @@ export function getANNSNNConvertPage(){
                       <div style="font-family: SourceHanSansCN-Normal;
                       font-size: 16px;
                       color: #333333;
-                      letter-spacing: 0.91px;">ANN转SNN</div>
-                      <div class="progress progress-striped active">
+                      letter-spacing: 0.91px;"><div style="font-size: 2rem;
+    width: 2rem;
+    opacity: 0.5;
+    background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;">1</div>ANN转SNN</div>
+                      <div class="progress" style="background: #E6E6E6;
+                      border-radius: 15px;">
                           <div id="model_convert_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                               style="width: 0%;">
+                               style="width: 0%; opacity: 0.7;
+                               background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+                               border-radius: 15px;
+                               border-radius: 15px;">
                           </div>
                       </div>
                   </div>
               
                   <div class="col-md-1" style="margin-top: -10px;">
-                      <i class="material-icons" style="font-size: 80px;transform: scaleY(0.4);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">arrow_forward</i>
+                      <i class="material-icons" style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">remove</i>
                   </div>
               
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
                       <div style="font-family: SourceHanSansCN-Normal;
                       font-size: 16px;
                       color: #333333;
-                      letter-spacing: 0.91px;">预处理</div>
-                      <div class="progress  progress-striped active">
+                      letter-spacing: 0.91px;"><div style="font-size: 2rem;
+    width: 2rem;
+    opacity: 0.5;
+    background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;">2</div>预处理</div>
+                      <div class="progress" style="background: #E6E6E6;
+                      border-radius: 15px;">
                           <div id="preprocess_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                               style="width: 0%;">
+                               style="width: 0%; opacity: 0.7;
+                               background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+                               border-radius: 15px;
+                               border-radius: 15px;">
                           </div>
                       </div>
                   </div>
   
                   <div class="col-md-1" style="margin-top: -10px;">
-                      <i class="material-icons" style="font-size: 80px;transform: scaleY(0.4);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">arrow_forward</i>
+                      <i class="material-icons" style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">remove</i>
                   </div>
   
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
                       <div style="font-family: SourceHanSansCN-Normal;
                       font-size: 16px;
                       color: #333333;
-                      letter-spacing: 0.91px;">参数调优</div>
-                      <div class="progress progress-striped active">
+                      letter-spacing: 0.91px;"><div style="font-size: 2rem;
+    width: 2rem;
+    opacity: 0.5;
+    background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;">3</div>参数调优</div>
+                      <div class="progress" style="background: #E6E6E6;
+                      border-radius: 15px;">
                           <div id="search_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                               style="width: 0%;">
+                               style="width: 0%; opacity: 0.7;
+                               background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+                               border-radius: 15px;
+                               border-radius: 15px;">
                           </div>
                       </div>
                   </div>
               
                   <div class="col-md-1" style="margin-top: -10px;">
-                      <i class="material-icons" style="font-size: 80px;transform: scaleY(0.4);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">arrow_forward</i>
+                      <i class="material-icons" style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">remove</i>
                   </div>
               
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
                       <div style="font-family: SourceHanSansCN-Normal;
                       font-size: 16px;
                       color: #333333;
-                      letter-spacing: 0.91px;">DarwinLang文件生成</div>
-                      <div class="progress progress-striped active">
+                      letter-spacing: 0.91px;"><div style="font-size: 2rem;
+    width: 2rem;
+    opacity: 0.5;
+    background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;">4</div>DarwinLang文件生成</div>
+                      <div class="progress" style="background: #E6E6E6;
+                      border-radius: 15px;">
                           <div id="darlang_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                               style="width: 0%;">
+                               style="width: 0%; opacity: 0.7;
+                               background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+                               border-radius: 15px;
+                               border-radius: 15px;">
                           </div>
                       </div>
                   </div>
@@ -1597,10 +1641,13 @@ export function getANNSNNConvertPage(){
               <div class="row">
                   <!-- <span>启动</span> -->
                   <!-- <i id="start_convert_btn" class="large material-icons" style="margin-left: 0px;cursor: pointer;">play_circle_outline</i> -->
-                  <div class="progress progress-striped active" style="width: 85%;display: inline-block;margin-bottom: 0;margin-left: 60px;">
+                  <div class="progress" style="width: 85%;display: inline-block;margin-bottom: 0;margin-left: 60px;background: #E6E6E6;
+                  border-radius: 15px;">
                       <div id="total_progress_div" class="progress-bar progress-bar-success" role="progressbar"
                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                           style="width: 0%;">
+                           style="width: 0%; opacity: 0.76;
+                           background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+                           border-radius: 15px;">
                       </div>
                   </div>
               </div>
@@ -1754,6 +1801,26 @@ export function getANNSNNConvertPage(){
   
   </body>
   <style>
+  
+  /* progress {
+    border-radius: 7px; 
+    width: 80%;
+    height: 22px;
+    margin-left: -11.5%;
+    box-shadow: 1px 1px 4px rgba( 0, 0, 0, 0.2 );
+  }
+  progress::-webkit-progress-bar {
+      background: #E6E6E6;
+      border-radius: 15px;
+      border-radius: 15px;
+  }
+  progress::-webkit-progress-value {
+      background-color: blue;
+      opacity: 0.7;
+      background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+      border-radius: 15px;
+  } */
+  
   
   .titlebar {
     -webkit-user-select: none;

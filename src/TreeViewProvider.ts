@@ -12,12 +12,12 @@ export let ITEM_ICON_MAP = new Map<string, string>([
     ['训练数据', "imgs/train_data_new.png"],
     ['测试数据', "imgs/train_data_new.png"],
     ['测试数据标签', "imgs/data_label_icon_new.png"],
-    ['SNN模型',"imgs/data_icon_new.png"],
-    ['连接文件',"imgs/data_icon_new.png"],
-    ['模拟', "imgs/data_icon_new.png"],
-    ['编译',"imgs/data_icon_new.png"],
-    ['Darwin二进制文件',"imgs/data_icon_new.png"],
-    ["模型转换","imgs/data_icon_new.png"]
+    ['SNN模型',"imgs/ann_model.png"],
+    ['连接文件',"imgs/conn_files_icon.png"],
+    ['模拟', "imgs/simulate_icon.png"],
+    ['编译',"imgs/compile_icon.png"],
+    ['Darwin二进制文件',"imgs/darwin_model_icon_new.png"],
+    ["模型转换","imgs/convert_icon.png"]
     // ['转换与仿真',"imgs/simulate_run.png"],
     // ['测试添加',"imgs/simulate_run.png"]
 ]);

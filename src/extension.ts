@@ -719,7 +719,7 @@ export function activate(context: vscode.ExtensionContext) {
 				inMemTreeViewStruct[0].children![0].children![0].children!.push(new TreeItemNode("model_file_"+path.basename(projData.model_path)));
 				// add darwinlang and bin files
 				// ITEM_ICON_MAP.set("SNN模型","imgs/darwin_icon_model_new.png");
-				addDarwinFold("SNN模型");
+				// addDarwinFold("SNN模型");
 				// inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN模型",[]));
 				
 				// for(let i=0;i<DARWIN_LANG_FILE_PATHS.length;++i){

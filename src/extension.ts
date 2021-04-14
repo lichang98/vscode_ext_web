@@ -464,7 +464,7 @@ export function activate(context: vscode.ExtensionContext) {
 					new TreeItemNode("ANN模型",[]),
 					new TreeItemNode("SNN模型", [new TreeItemNode("连接文件", [])]),
 					new TreeItemNode("数据", [new TreeItemNode("训练数据", []), new TreeItemNode("测试数据", []), new TreeItemNode("测试数据标签", [])])
-				]), new TreeItemNode("模拟器", []), new TreeItemNode("编译", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件")])])], true, "root"));
+				]), new TreeItemNode("模拟器", []), new TreeItemNode("编译映射", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件")])])], true, "root"));
 				treeview.data = inMemTreeViewStruct;
 				treeview.refresh();
 				// inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("数据", 
@@ -682,7 +682,7 @@ export function activate(context: vscode.ExtensionContext) {
 					new TreeItemNode("ANN模型",[]),
 					new TreeItemNode("SNN模型", [new TreeItemNode("连接文件", [])]),
 					new TreeItemNode("数据", [new TreeItemNode("训练数据", []), new TreeItemNode("测试数据", []), new TreeItemNode("测试数据标签", [])])
-				]), new TreeItemNode("模拟器", []), new TreeItemNode("编译", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件", [])])])], true, "root"));
+				]), new TreeItemNode("模拟器", []), new TreeItemNode("编译映射", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件", [])])])], true, "root"));
 				let xNormFileOriginName = path.basename(X_NORM_DATA_PATH!),
 					xTestFileOriginName = path.basename(X_TEST_DATA_PATH!),
 					yTestFileOriginName = path.basename(Y_TEST_DATA_PATH!);

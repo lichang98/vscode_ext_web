@@ -465,7 +465,7 @@ function activate(context) {
                         new TreeViewProvider_1.TreeItemNode("ANN模型", []),
                         new TreeViewProvider_1.TreeItemNode("SNN模型", [new TreeViewProvider_1.TreeItemNode("连接文件", [])]),
                         new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []), new TreeViewProvider_1.TreeItemNode("测试数据标签", [])])
-                    ]), new TreeViewProvider_1.TreeItemNode("模拟器", []), new TreeViewProvider_1.TreeItemNode("编译", [new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [new TreeViewProvider_1.TreeItemNode("模型文件", []), new TreeViewProvider_1.TreeItemNode("编解码配置文件")])])], true, "root"));
+                    ]), new TreeViewProvider_1.TreeItemNode("模拟器", []), new TreeViewProvider_1.TreeItemNode("编译映射", [new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [new TreeViewProvider_1.TreeItemNode("模型文件", []), new TreeViewProvider_1.TreeItemNode("编解码配置文件")])])], true, "root"));
                 treeview.data = inMemTreeViewStruct;
                 treeview.refresh();
                 // inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("数据", 
@@ -682,7 +682,7 @@ function activate(context) {
                         new TreeViewProvider_1.TreeItemNode("ANN模型", []),
                         new TreeViewProvider_1.TreeItemNode("SNN模型", [new TreeViewProvider_1.TreeItemNode("连接文件", [])]),
                         new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []), new TreeViewProvider_1.TreeItemNode("测试数据标签", [])])
-                    ]), new TreeViewProvider_1.TreeItemNode("模拟器", []), new TreeViewProvider_1.TreeItemNode("编译", [new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [new TreeViewProvider_1.TreeItemNode("模型文件", []), new TreeViewProvider_1.TreeItemNode("编解码配置文件", [])])])], true, "root"));
+                    ]), new TreeViewProvider_1.TreeItemNode("模拟器", []), new TreeViewProvider_1.TreeItemNode("编译映射", [new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [new TreeViewProvider_1.TreeItemNode("模型文件", []), new TreeViewProvider_1.TreeItemNode("编解码配置文件", [])])])], true, "root"));
                 let xNormFileOriginName = path.basename(X_NORM_DATA_PATH), xTestFileOriginName = path.basename(X_TEST_DATA_PATH), yTestFileOriginName = path.basename(Y_TEST_DATA_PATH);
                 // addSlfFile("x_norm");
                 // addSlfFile("x_test");
@@ -5130,7 +5130,7 @@ exports.ITEM_ICON_MAP = new Map([
     ['SNN模型', "imgs/ann_model.png"],
     ['连接文件', "imgs/conn_files_icon.png"],
     ['模拟器', "imgs/simulate_icon.png"],
-    ['编译', "imgs/compile_icon.png"],
+    ['编译映射', "imgs/compile_icon.png"],
     ['Darwin二进制文件', "imgs/darwin_model_icon_new.png"],
     ["模型转换", "imgs/convert_icon.png",],
     ["模型文件", "imgs/ann_model.png"],

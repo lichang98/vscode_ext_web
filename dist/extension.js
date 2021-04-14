@@ -465,7 +465,7 @@ function activate(context) {
                         new TreeViewProvider_1.TreeItemNode("ANN模型", []),
                         new TreeViewProvider_1.TreeItemNode("SNN模型", [new TreeViewProvider_1.TreeItemNode("连接文件", [])]),
                         new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []), new TreeViewProvider_1.TreeItemNode("测试数据标签", [])])
-                    ]), new TreeViewProvider_1.TreeItemNode("模拟", []), new TreeViewProvider_1.TreeItemNode("编译", [new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [])])], true, "root"));
+                    ]), new TreeViewProvider_1.TreeItemNode("模拟器", []), new TreeViewProvider_1.TreeItemNode("编译", [new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [new TreeViewProvider_1.TreeItemNode("模型文件", []), new TreeViewProvider_1.TreeItemNode("编解码配置文件")])])], true, "root"));
                 treeview.data = inMemTreeViewStruct;
                 treeview.refresh();
                 // inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("数据", 
@@ -682,7 +682,7 @@ function activate(context) {
                         new TreeViewProvider_1.TreeItemNode("ANN模型", []),
                         new TreeViewProvider_1.TreeItemNode("SNN模型", [new TreeViewProvider_1.TreeItemNode("连接文件", [])]),
                         new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []), new TreeViewProvider_1.TreeItemNode("测试数据标签", [])])
-                    ]), new TreeViewProvider_1.TreeItemNode("模拟", []), new TreeViewProvider_1.TreeItemNode("编译", [new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [])])], true, "root"));
+                    ]), new TreeViewProvider_1.TreeItemNode("模拟器", []), new TreeViewProvider_1.TreeItemNode("编译", [new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [new TreeViewProvider_1.TreeItemNode("模型文件", []), new TreeViewProvider_1.TreeItemNode("编解码配置文件", [])])])], true, "root"));
                 let xNormFileOriginName = path.basename(X_NORM_DATA_PATH), xTestFileOriginName = path.basename(X_TEST_DATA_PATH), yTestFileOriginName = path.basename(Y_TEST_DATA_PATH);
                 // addSlfFile("x_norm");
                 // addSlfFile("x_test");
@@ -755,11 +755,11 @@ function activate(context) {
                     }
                     if (DARWIN_LANG_BIN_PATHS[i].toString().search("config.b") !== -1) {
                         TreeViewProvider_1.addDarwinFiles("config.b");
-                        inMemTreeViewStruct[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
+                        inMemTreeViewStruct[0].children[2].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
                     }
                     else if (DARWIN_LANG_BIN_PATHS[i].toString().search("connfiles") !== -1) {
                         TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
-                        inMemTreeViewStruct[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                        inMemTreeViewStruct[0].children[2].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
                     }
                     // if(inMemTreeViewStruct[0].children){
                     // 	var childLen = inMemTreeViewStruct[0].children.length;
@@ -1225,11 +1225,11 @@ function activate(context) {
                             file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {
                             if (file.search("config.b") !== -1) {
                                 TreeViewProvider_1.addDarwinFiles("config.b");
-                                inMemTreeViewStruct[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
+                                inMemTreeViewStruct[0].children[2].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
                             }
                             else if (file.search("connfiles") !== -1) {
                                 TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
-                                inMemTreeViewStruct[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                                inMemTreeViewStruct[0].children[2].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
                             }
                         }
                     }
@@ -5129,10 +5129,12 @@ exports.ITEM_ICON_MAP = new Map([
     ['测试数据标签', "imgs/data_label_icon_new.png"],
     ['SNN模型', "imgs/ann_model.png"],
     ['连接文件', "imgs/conn_files_icon.png"],
-    ['模拟', "imgs/simulate_icon.png"],
+    ['模拟器', "imgs/simulate_icon.png"],
     ['编译', "imgs/compile_icon.png"],
     ['Darwin二进制文件', "imgs/darwin_model_icon_new.png"],
-    ["模型转换", "imgs/convert_icon.png"]
+    ["模型转换", "imgs/convert_icon.png",],
+    ["模型文件", "imgs/ann_model.png"],
+    ["编解码配置文件", "imgs/data_icon_new.png"]
     // ['转换与仿真',"imgs/simulate_run.png"],
     // ['测试添加',"imgs/simulate_run.png"]
 ]);
@@ -5163,7 +5165,6 @@ class TreeItemNode extends vscode_1.TreeItem {
         this.children = children;
         this.isRoot = isRoot;
         this.contextVal = contextVal;
-        // command: 为每项添加点击事件的命令
         this.command = {
             title: this.label,
             command: 'itemClick',
@@ -5194,6 +5195,24 @@ class TreeItemNode extends vscode_1.TreeItem {
             this.label = label;
         }
         this.iconPath = TreeItemNode.getIconUriForLabel(this.label);
+        this.tooltip = TreeItemNode.getToolTip(this.label);
+    }
+    // command: 为每项添加点击事件的命令
+    static getToolTip(currLabel) {
+        console.log("添加提示文字 for " + currLabel);
+        if (currLabel.indexOf("darlang") !== -1) {
+            return "DarwinDML";
+        }
+        else if (currLabel.indexOf("brian2") !== -1) {
+            return "仿真数据";
+        }
+        else if (currLabel.indexOf("config.b") !== -1) {
+            return "二进制可部署模型文件";
+        }
+        else if (currLabel.indexOf("packed_bin") !== -1) {
+            return "用于模型部署运行时数据编码";
+        }
+        return currLabel;
     }
     // __filename：当前文件的路径
     // 重点讲解 Uri.file(join(__filename,'..', '..') 算是一种固定写法

@@ -14,10 +14,12 @@ export let ITEM_ICON_MAP = new Map<string, string>([
     ['测试数据标签', "imgs/data_label_icon_new.png"],
     ['SNN模型',"imgs/ann_model.png"],
     ['连接文件',"imgs/conn_files_icon.png"],
-    ['模拟', "imgs/simulate_icon.png"],
+    ['模拟器', "imgs/simulate_icon.png"],
     ['编译',"imgs/compile_icon.png"],
     ['Darwin二进制文件',"imgs/darwin_model_icon_new.png"],
-    ["模型转换","imgs/convert_icon.png"]
+    ["模型转换","imgs/convert_icon.png",],
+    ["模型文件","imgs/ann_model.png"],
+    ["编解码配置文件","imgs/data_icon_new.png"]
     // ['转换与仿真',"imgs/simulate_run.png"],
     // ['测试添加',"imgs/simulate_run.png"]
 ]);
@@ -69,9 +71,24 @@ export class TreeItemNode extends TreeItem {
             this.label = label;
         }
         this.iconPath = TreeItemNode.getIconUriForLabel(this.label);
+        this.tooltip = TreeItemNode.getToolTip(this.label);
     }
 
     // command: 为每项添加点击事件的命令
+    static getToolTip(currLabel:string):string {
+        console.log("添加提示文字 for "+currLabel);
+        if(currLabel.indexOf("darlang") !==-1){
+            return "DarwinDML";
+        }else if(currLabel.indexOf("brian2") !== -1){
+            return "仿真数据";
+        }else if(currLabel.indexOf("config.b") !== -1){
+            return "二进制可部署模型文件";
+        }else if(currLabel.indexOf("packed_bin") !== -1){
+            return "用于模型部署运行时数据编码";
+        }
+        return currLabel;
+    }
+
     command = {
         title: this.label,          // 标题
         command: 'itemClick',       // 命令 ID

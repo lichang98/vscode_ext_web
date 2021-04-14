@@ -464,7 +464,7 @@ export function activate(context: vscode.ExtensionContext) {
 					new TreeItemNode("ANN模型",[]),
 					new TreeItemNode("SNN模型", [new TreeItemNode("连接文件", [])]),
 					new TreeItemNode("数据", [new TreeItemNode("训练数据", []), new TreeItemNode("测试数据", []), new TreeItemNode("测试数据标签", [])])
-				]), new TreeItemNode("模拟", []), new TreeItemNode("编译", [new TreeItemNode("Darwin二进制文件", [])])], true, "root"));
+				]), new TreeItemNode("模拟器", []), new TreeItemNode("编译", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件")])])], true, "root"));
 				treeview.data = inMemTreeViewStruct;
 				treeview.refresh();
 				// inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("数据", 
@@ -682,7 +682,7 @@ export function activate(context: vscode.ExtensionContext) {
 					new TreeItemNode("ANN模型",[]),
 					new TreeItemNode("SNN模型", [new TreeItemNode("连接文件", [])]),
 					new TreeItemNode("数据", [new TreeItemNode("训练数据", []), new TreeItemNode("测试数据", []), new TreeItemNode("测试数据标签", [])])
-				]), new TreeItemNode("模拟", []), new TreeItemNode("编译", [new TreeItemNode("Darwin二进制文件", [])])], true, "root"));
+				]), new TreeItemNode("模拟器", []), new TreeItemNode("编译", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件", [])])])], true, "root"));
 				let xNormFileOriginName = path.basename(X_NORM_DATA_PATH!),
 					xTestFileOriginName = path.basename(X_TEST_DATA_PATH!),
 					yTestFileOriginName = path.basename(Y_TEST_DATA_PATH!);
@@ -758,10 +758,10 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 					if(DARWIN_LANG_BIN_PATHS[i].toString().search("config.b") !== -1){
 						addDarwinFiles("config.b");
-						inMemTreeViewStruct[0].children![2].children![0].children!.push(new TreeItemNode("config.b"));
+						inMemTreeViewStruct[0].children![2].children![0].children![0].children!.push(new TreeItemNode("config.b"));
 					}else if(DARWIN_LANG_BIN_PATHS[i].toString().search("connfiles") !== -1){
 						addDarwinFiles("packed_bin_files.dat");
-						inMemTreeViewStruct[0].children![2].children![0].children!.push(new TreeItemNode("packed_bin_files.dat"));
+						inMemTreeViewStruct[0].children![2].children![0].children![1].children!.push(new TreeItemNode("packed_bin_files.dat"));
 					}
 					// if(inMemTreeViewStruct[0].children){
 					// 	var childLen = inMemTreeViewStruct[0].children.length;
@@ -1250,10 +1250,10 @@ export function activate(context: vscode.ExtensionContext) {
 									file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1){
 							if(file.search("config.b") !== -1){
 								addDarwinFiles("config.b");
-								inMemTreeViewStruct[0].children![2].children![0].children!.push(new TreeItemNode("config.b"));
+								inMemTreeViewStruct[0].children![2].children![0].children![0].children!.push(new TreeItemNode("config.b"));
 							}else if(file.search("connfiles") !==-1){
 								addDarwinFiles("packed_bin_files.dat");
-								inMemTreeViewStruct[0].children![2].children![0].children!.push(new TreeItemNode("packed_bin_files.dat"));
+								inMemTreeViewStruct[0].children![2].children![0].children![1].children!.push(new TreeItemNode("packed_bin_files.dat"));
 							}
 						}
 					}

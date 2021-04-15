@@ -455,6 +455,12 @@ export function activate(context: vscode.ExtensionContext) {
 				console.log("receive project create info");
 				console.log("project name: " + data.project_info.project_name+", project type="+data.project_info.project_type
 						+", python_type: "+data.project_info.python_type+", ann lib type:"+data.project_info.ann_lib_type);
+				fs.open(PROJ_SAVE_PATH!, 'w', 0o777 , (err, fd)=>{
+					if(err){
+						console.log("创建项目文件错误："+err);
+					}
+					console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
+				});
 				PROJ_DESC_INFO.project_name = data.project_info.project_name;
 				PROJ_DESC_INFO.project_type = data.project_info.project_type;
 				PROJ_DESC_INFO.python_type = data.project_info.python_type;
@@ -579,12 +585,12 @@ export function activate(context: vscode.ExtensionContext) {
 						PROJ_SAVE_PATH = path.join(fileUri[0].fsPath, data.select_save_proj_path_req+".dar2");
 						if(currentPanel){
 							console.log("发送保存路径到webview..., 路径="+PROJ_SAVE_PATH);
-							fs.open(PROJ_SAVE_PATH, 'w', 0o777 , (err, fd)=>{
-								if(err){
-									console.log("创建项目文件错误："+err);
-								}
-								console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
-							});
+							// fs.open(PROJ_SAVE_PATH, 'w', 0o777 , (err, fd)=>{
+							// 	if(err){
+							// 		console.log("创建项目文件错误："+err);
+							// 	}
+							// 	console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
+							// });
 							currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": PROJ_SAVE_PATH}));
 						}
 					}

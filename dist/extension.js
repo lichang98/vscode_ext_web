@@ -456,6 +456,12 @@ function activate(context) {
                 console.log("receive project create info");
                 console.log("project name: " + data.project_info.project_name + ", project type=" + data.project_info.project_type
                     + ", python_type: " + data.project_info.python_type + ", ann lib type:" + data.project_info.ann_lib_type);
+                fs.open(PROJ_SAVE_PATH, 'w', 0o777, (err, fd) => {
+                    if (err) {
+                        console.log("创建项目文件错误：" + err);
+                    }
+                    console.log("创建新项目文件，路径：" + PROJ_SAVE_PATH);
+                });
                 PROJ_DESC_INFO.project_name = data.project_info.project_name;
                 PROJ_DESC_INFO.project_type = data.project_info.project_type;
                 PROJ_DESC_INFO.python_type = data.project_info.python_type;
@@ -583,12 +589,12 @@ function activate(context) {
                         PROJ_SAVE_PATH = path.join(fileUri[0].fsPath, data.select_save_proj_path_req + ".dar2");
                         if (currentPanel) {
                             console.log("发送保存路径到webview..., 路径=" + PROJ_SAVE_PATH);
-                            fs.open(PROJ_SAVE_PATH, 'w', 0o777, (err, fd) => {
-                                if (err) {
-                                    console.log("创建项目文件错误：" + err);
-                                }
-                                console.log("创建新项目文件，路径：" + PROJ_SAVE_PATH);
-                            });
+                            // fs.open(PROJ_SAVE_PATH, 'w', 0o777 , (err, fd)=>{
+                            // 	if(err){
+                            // 		console.log("创建项目文件错误："+err);
+                            // 	}
+                            // 	console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
+                            // });
                             currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": PROJ_SAVE_PATH }));
                         }
                     }
@@ -6450,7 +6456,7 @@ function getConvertorPageV2() {
     font-size: 22px;
     color: #999999;
     letter-spacing: 0;
-    line-height: 14px;">
+    line-height: 14px;" readonly='readonly'>
                         </div>
                         <div style="margin-top: 20px;">
                             <label for="select_type_refac" style="font-family: SourceHanSansCN-Normal;
@@ -6588,6 +6594,7 @@ function getConvertorPageV2() {
             document.getElementById("alert_sheet").style.display = "none";
             document.getElementById("project_name").style.borderColor = '#D9D9D9';
             document.getElementById("lb_project_name").style.color = '#333333';
+            vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val()}));
            });
     
             $("#create").on("click",function(){

@@ -1233,6 +1233,8 @@ function activate(context) {
                             }
                         }
                     }
+                    treeview.data = inMemTreeViewStruct;
+                    treeview.refresh();
                 });
                 autoSaveWithCheck();
             });

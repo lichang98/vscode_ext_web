@@ -1257,6 +1257,8 @@ export function activate(context: vscode.ExtensionContext) {
 							}
 						}
 					}
+					treeview.data = inMemTreeViewStruct;
+					treeview.refresh();
 				});
 				autoSaveWithCheck();
 			});

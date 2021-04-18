@@ -1032,11 +1032,11 @@ export function getConvertorPageV2(){
                             <label for="project_name" id="lb_project_name" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
-                            letter-spacing: 1.26px;margin-left: 186px;">项目名称: </label>
+                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 285px;">项目名称: </label>
                             <input type="text" id="project_name" style="background: #EEEEEE;
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
-                            border-radius: 6px;width: 476px;font-family: PingFangSC-Regular;
+                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #999999;
     letter-spacing: 0;
@@ -1046,7 +1046,7 @@ export function getConvertorPageV2(){
                             <label for="select_type" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
-                            letter-spacing: 1.26px;margin-left: 140px;">选择项目类别: </label>
+                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 285px;">选择项目类别: </label>
                             <select id="select_type" style="background: #EEEEEE;
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
@@ -1065,7 +1065,7 @@ export function getConvertorPageV2(){
                             <label for="python_type" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
-                            letter-spacing: 1.26px;margin-left: 100px;">选择python版本: </label>
+                            letter-spacing: 1.26px;text-align: right;padding-right: 5px;width: 285px;">选择python版本: </label>
                             <select id="python_type" style="background: #EEEEEE;
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
@@ -1083,11 +1083,11 @@ export function getConvertorPageV2(){
                           <label for="ann_lib_type" style="font-family: SourceHanSansCN-Normal;
                           font-size: 22px;
                           color: #333333;
-                          letter-spacing: 1.26px;margin-left: 46px;">模型使用的神经网络库: </label>
+                          letter-spacing: 1.26px;text-align: right;padding-right: 5px;width: 285px;">模型使用的神经网络库: </label>
                           <select id="ann_lib_type" style="background: #EEEEEE;
                           border: 1px solid #D9D9D9;
                           border-radius: 6px;
-                          border-radius: 6px;width: 480px;font-family: PingFangSC-Regular;
+                          border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #999999;
     letter-spacing: 0;
@@ -1097,12 +1097,12 @@ export function getConvertorPageV2(){
                         </div>
                         <div class="input-group" style="background: #EEEEEE;
                         border-radius: 6px;
-                        border-radius: 6px;margin-left: 100px;margin-right: 22px;">
+                        border-radius: 6px;">
                           <span id="span_save_path" class="input-group-addon" style="cursor:pointer;background: #DFDFDF;font-family: SourceHanSansCN-Normal;
                           font-size: 22px;
                           color: #333333;
-                          letter-spacing: 1.26px;">点击选择保存路径</span>
-                          <input id="proj_save_path_input" type="text" class="form-control" style="background: #EEEEEE;
+                          letter-spacing: 1.26px;width: 295px;text-align: right;padding-right: 5px;">点击选择保存路径</span>
+                          <input id="proj_save_path_input" type="text" class="form-control" style="width: 478px;background: #EEEEEE;
                           border-radius: 6px;
                           border-radius: 6px;font-family: PingFangSC-Regular;
     font-size: 22px;
@@ -1148,11 +1148,11 @@ export function getConvertorPageV2(){
                             <label for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
-                            letter-spacing: 1.26px;margin-left: 186px;">项目名称</label>
+                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 260px;">项目名称: </label>
                             <input type="text" id="project_name_projrefac" style="background: #EEEEEE;
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
-                            border-radius: 6px;width: 476px;font-family: PingFangSC-Regular;
+                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #999999;
     letter-spacing: 0;
@@ -1162,7 +1162,7 @@ export function getConvertorPageV2(){
                             <label for="select_type_refac" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
-                            letter-spacing: 1.26px;margin-left: 140px;">选择项目类别</label>
+                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 260px;">选择项目类别</label>
                             <select id="select_type_refac" style="background: #EEEEEE;
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
@@ -1180,7 +1180,7 @@ export function getConvertorPageV2(){
                             <label for="python_type_projrefac" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
-                            letter-spacing: 1.26px;margin-left: 100px;">选择python版本</label>
+                            letter-spacing: 1.26px;text-align: right;padding-right: 5px;width: 260px;">选择python版本</label>
                             <select id="python_type_projrefac" style="background: #EEEEEE;
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
@@ -1198,11 +1198,11 @@ export function getConvertorPageV2(){
                           <label for="ann_lib_type_projrefac" style="font-family: SourceHanSansCN-Normal;
                           font-size: 22px;
                           color: #333333;
-                          letter-spacing: 1.26px;margin-left: 46px;">模型使用的神经网络库</label>
+                          letter-spacing: 1.26px;text-align: right;padding-right: 5px;width: 260px;">模型使用的神经网络库</label>
                           <select id="ann_lib_type_projrefac" style="background: #EEEEEE;
                           border: 1px solid #D9D9D9;
                           border-radius: 6px;
-                          border-radius: 6px;width: 480px;font-family: PingFangSC-Regular;
+                          border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #999999;
     letter-spacing: 0;

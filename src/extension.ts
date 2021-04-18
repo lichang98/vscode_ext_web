@@ -470,7 +470,7 @@ export function activate(context: vscode.ExtensionContext) {
 					new TreeItemNode("ANN模型",[]),
 					new TreeItemNode("SNN模型", [new TreeItemNode("连接文件", [])]),
 					new TreeItemNode("数据", [new TreeItemNode("训练数据", []), new TreeItemNode("测试数据", []), new TreeItemNode("测试数据标签", [])])
-				]), new TreeItemNode("模拟器", []), new TreeItemNode("编译映射", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件")])])], true, "root"));
+				]), new TreeItemNode("模拟器", []), new TreeItemNode("编译映射", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件", [])])])], true, "root"));
 				treeview.data = inMemTreeViewStruct;
 				treeview.refresh();
 				// inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("数据", 
@@ -821,6 +821,11 @@ export function activate(context: vscode.ExtensionContext) {
 			panelSNNVisWeb.dispose();
 			panelSNNVisWeb = undefined;
 		}
+		PROJ_SAVE_PATH = undefined;
+		X_NORM_DATA_PATH = undefined;
+		X_TEST_DATA_PATH = undefined;
+		Y_TEST_DATA_PATH = undefined;
+		ANN_MODEL_FILE_PATH = undefined;
 		currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 		// 主界面由electron 应用启动
 		currentPanel.webview.html =getConvertorPageV2();
@@ -842,26 +847,26 @@ export function activate(context: vscode.ExtensionContext) {
 				// currentPanel.webview.html = getConvertorDataPageV2(
 					if(PROJ_DESC_INFO.project_type === '图像分类'){
 						panelDataVis.webview.html = getConvertorDataPageV2(
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample0.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample1.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample2.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample3.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample4.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample5.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample6.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample7.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample8.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample9.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample0.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample1.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample2.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample3.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample4.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample5.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample6.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample7.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample8.png"))),
-							currentPanel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample9.png")))
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample0.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample1.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample2.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample3.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample4.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample5.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample6.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample7.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample8.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample9.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample0.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample1.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample2.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample3.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample4.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample5.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample6.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample7.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample8.png"))),
+							panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","test_sample9.png")))
 						);
 					}else if(PROJ_DESC_INFO.project_type === '语义分割'){
 						panelDataVis.webview.html = getSegDataVisPage();
@@ -882,7 +887,7 @@ export function activate(context: vscode.ExtensionContext) {
 			}
 		}
 		if(itemNode.label === "数据"){
-			if(panelDataVis){
+			if(panelDataVis && X_NORM_DATA_PATH){
 				panelDataVis.title = "数据集";
 				// 数据可视化展示
 				// 执行后台脚本
@@ -907,9 +912,11 @@ export function activate(context: vscode.ExtensionContext) {
 						});
 					}
 				});
+			}else if(!X_NORM_DATA_PATH){
+				vscode.window.showErrorMessage("请先导入数据！！！");
 			}
 		}else if(itemNode.label === "ANN模型"){
-			if(panelAnnModelVis){
+			if(panelAnnModelVis && ANN_MODEL_FILE_PATH){
 				panelAnnModelVis.title = "ANN模型";
 				var modelVisScriptPath = path.join(__dirname, "inner_scripts", "model_desc.py");
 				var commandExe = PYTHON_INTERPRETER+modelVisScriptPath+" "+X_NORM_DATA_PATH+" "+X_TEST_DATA_PATH+" "+Y_TEST_DATA_PATH+" "+ANN_MODEL_FILE_PATH;
@@ -944,6 +951,8 @@ export function activate(context: vscode.ExtensionContext) {
 						}
 					});
 				});
+			}else if(!ANN_MODEL_FILE_PATH){
+				vscode.window.showErrorMessage("请先导入ANN模型文件！！！");
 			}
 		}
 	});
@@ -967,6 +976,9 @@ export function activate(context: vscode.ExtensionContext) {
 					// addSlfFile("x_norm");
 					let xNormFileOriginName = path.basename(X_NORM_DATA_PATH);
 					addSlfFile(xNormFileOriginName);
+					if(inMemTreeViewStruct[0].children![0].children![2].children![0].children!.length > 0){
+						inMemTreeViewStruct[0].children![0].children![2].children![0].children!.splice(0,1);
+					}
 					inMemTreeViewStruct[0].children![0].children![2].children![0].children!.push(new TreeItemNode(xNormFileOriginName, [], false, 'rmable'));
 					// if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children){
 					// 	console.log("添加新的文件");
@@ -1003,6 +1015,9 @@ export function activate(context: vscode.ExtensionContext) {
 					// addSlfFile("x_test");
 					let xTestFileOriginName = path.basename(X_TEST_DATA_PATH);
 					addSlfFile(xTestFileOriginName);
+					if(inMemTreeViewStruct[0].children![0].children![2].children![1].children!.length > 0){
+						inMemTreeViewStruct[0].children![0].children![2].children![1].children!.splice(0,1);
+					}
 					inMemTreeViewStruct[0].children![0].children![2].children![1].children!.push(new TreeItemNode(xTestFileOriginName, [], false, 'rmable'));
 					treeview.data = inMemTreeViewStruct;
 					treeview.refresh();
@@ -1039,6 +1054,9 @@ export function activate(context: vscode.ExtensionContext) {
 					// addSlfFile("y_test");
 					let yTestFileOriginName = path.basename(Y_TEST_DATA_PATH);
 					addSlfFile(yTestFileOriginName);
+					if(inMemTreeViewStruct[0].children![0].children![2].children![2].children!.length > 0){
+						inMemTreeViewStruct[0].children![0].children![2].children![2].children!.splice(0,1);
+					}
 					inMemTreeViewStruct[0].children![0].children![2].children![2].children!.push(new TreeItemNode(yTestFileOriginName, [], false, 'rmable'));
 					treeview.data = inMemTreeViewStruct;
 					treeview.refresh();
@@ -1077,6 +1095,9 @@ export function activate(context: vscode.ExtensionContext) {
 					// 	treeview.data[0].children[1].children.push(new TreeItemNode("model_file_"+path.basename(ANN_MODEL_FILE_PATH)));
 					// 	treeview.refresh();
 					// }
+					if(inMemTreeViewStruct[0].children![0].children![0].children!.length > 0){
+						inMemTreeViewStruct[0].children![0].children![0].children!.splice(0,1);
+					}
 					inMemTreeViewStruct[0].children![0].children![0].children!.push(new TreeItemNode("model_file_"+path.basename(ANN_MODEL_FILE_PATH)));
 					treeview.data = inMemTreeViewStruct;
 					treeview.refresh();
@@ -1132,6 +1153,10 @@ export function activate(context: vscode.ExtensionContext) {
 		panelSNNVisWeb.title = "SNN模型";
 		panelSNNVisWeb.reveal();
 		console.log("执行darwinlang map生成脚本...");
+		if(DARWIN_LANG_FILE_PATHS.length === 0){
+			vscode.window.showErrorMessage("请先完成转换步骤！！！");
+			return;
+		}
 		// 执行 darwinlang map 生成脚本
 		let targetDarlangFilePath = path.join(__dirname, "darwin2sim", "model_out" , path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "darlang_out","snn_digit_darlang.json");
 		let commandStr: string = PYTHON_INTERPRETER + path.join(__dirname, "load_graph.py") + " " + targetDarlangFilePath + " " + path.join(__dirname);
@@ -1171,8 +1196,15 @@ export function activate(context: vscode.ExtensionContext) {
 				panelSNNModelVis = undefined;
 			},null, context.subscriptions);
 			panelSNNModelVis.webview.onDidReceiveMessage((evt)=>{
+				if(DARWIN_LANG_FILE_PATHS.length === 0){
+					vscode.window.showErrorMessage("请先完成转换步骤！！！");
+					return;
+				}
 				let simuInfoFile = path.join(__dirname, "inner_scripts", "brian2_snn_info.json");
 				addSlfFile(path.basename(simuInfoFile));
+				if(inMemTreeViewStruct[0].children![1].children!.length > 0){
+					inMemTreeViewStruct[0].children![1].children!.splice(0,1);
+				}
 				inMemTreeViewStruct[0].children![1].children!.push(new TreeItemNode(path.basename(simuInfoFile)));
 				treeview.data = inMemTreeViewStruct;
 				treeview.refresh();
@@ -1206,6 +1238,8 @@ export function activate(context: vscode.ExtensionContext) {
 			// ITEM_ICON_MAP.set("SNN模型","imgs/file.png");
 			// addDarwinFold("SNN模型");
 			DARWIN_LANG_FILE_PATHS.splice(0);
+			inMemTreeViewStruct[0].children![0].children![1].children!.splice(1);
+			inMemTreeViewStruct[0].children![0].children![1].children![0].children!.splice(0);
 			fs.readdir(path.join(__dirname, "darwin2sim","model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "darlang_out"), (err, files) => {
 				files.forEach(file=>{
 					DARWIN_LANG_FILE_PATHS.push(path.join(__dirname, "darwin2sim","model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "darlang_out", file));
@@ -1248,6 +1282,8 @@ export function activate(context: vscode.ExtensionContext) {
 			addSlfFile("SNN二进制模型");
 			// inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN二进制模型",[]));
 			DARWIN_LANG_BIN_PATHS.splice(0);
+			inMemTreeViewStruct[0].children![2].children![0].children![0].children!.splice(0);
+			inMemTreeViewStruct[0].children![2].children![0].children![1].children!.splice(0);
 			fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out"), (err, files)=>{
 				files.forEach(file => {
 					if(file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1){

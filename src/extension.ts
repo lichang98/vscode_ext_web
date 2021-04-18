@@ -310,7 +310,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('itemClick', (label) => {
 		// vscode.window.showInformationMessage(label);
 		console.log("label is :["+label+"]");
-		if(label.search("json") !== -1){
+		if(label.search("snn_digit_darlang") !== -1){
 		// 执行 darwinlang map 生成脚本
 		let tmpDarlangWebview = vscode.window.createWebviewPanel("darwin lang", label,vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 		tmpDarlangWebview.webview.html = darlangWebContent();

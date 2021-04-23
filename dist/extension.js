@@ -306,7 +306,7 @@ function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('itemClick', (label) => {
         // vscode.window.showInformationMessage(label);
         console.log("label is :[" + label + "]");
-        if (label.search("json") !== -1) {
+        if (label.search("snn_digit_darlang") !== -1) {
             // 执行 darwinlang map 生成脚本
             let tmpDarlangWebview = vscode.window.createWebviewPanel("darwin lang", label, vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
             tmpDarlangWebview.webview.html = darlangWebContent();
@@ -577,28 +577,38 @@ function activate(context) {
             else if (data.select_save_proj_path_req) {
                 // 选择项目的保存路径
                 console.log("select path for saving project, proj name=" + data.select_save_proj_path_req);
-                const options = {
-                    canSelectFiles: false,
-                    canSelectFolders: true,
-                    openLabel: "选择目录",
-                    title: "选择项目保存位置"
-                };
-                vscode.window.showOpenDialog(options).then(fileUri => {
-                    if (fileUri) {
-                        console.log("选择的项目保存路径为：" + fileUri[0].fsPath);
-                        PROJ_SAVE_PATH = path.join(fileUri[0].fsPath, data.select_save_proj_path_req + ".dar2");
-                        if (currentPanel) {
-                            console.log("发送保存路径到webview..., 路径=" + PROJ_SAVE_PATH);
-                            // fs.open(PROJ_SAVE_PATH, 'w', 0o777 , (err, fd)=>{
-                            // 	if(err){
-                            // 		console.log("创建项目文件错误："+err);
-                            // 	}
-                            // 	console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
-                            // });
-                            currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": PROJ_SAVE_PATH }));
-                        }
+                if (data.is_change_proj_name && PROJ_SAVE_PATH) {
+                    console.log("Just changing proj name, no need to open dialog.");
+                    PROJ_SAVE_PATH = path.join(path.dirname(PROJ_SAVE_PATH), data.select_save_proj_path_req + ".dar2");
+                    if (currentPanel) {
+                        console.log("项目名称修改，发送到webview，路径=" + PROJ_SAVE_PATH);
+                        currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": PROJ_SAVE_PATH }));
                     }
-                });
+                }
+                else {
+                    const options = {
+                        canSelectFiles: false,
+                        canSelectFolders: true,
+                        openLabel: "选择目录",
+                        title: "选择项目保存位置"
+                    };
+                    vscode.window.showOpenDialog(options).then(fileUri => {
+                        if (fileUri) {
+                            console.log("选择的项目保存路径为：" + fileUri[0].fsPath);
+                            PROJ_SAVE_PATH = path.join(fileUri[0].fsPath, data.select_save_proj_path_req + ".dar2");
+                            if (currentPanel) {
+                                console.log("发送保存路径到webview..., 路径=" + PROJ_SAVE_PATH);
+                                // fs.open(PROJ_SAVE_PATH, 'w', 0o777 , (err, fd)=>{
+                                // 	if(err){
+                                // 		console.log("创建项目文件错误："+err);
+                                // 	}
+                                // 	console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
+                                // });
+                                currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": PROJ_SAVE_PATH }));
+                            }
+                        }
+                    });
+                }
             }
         });
     }
@@ -957,7 +967,7 @@ function activate(context) {
                     if (inMemTreeViewStruct[0].children[0].children[2].children[0].children.length > 0) {
                         inMemTreeViewStruct[0].children[0].children[2].children[0].children.splice(0, 1);
                     }
-                    inMemTreeViewStruct[0].children[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode(xNormFileOriginName, [], false, 'rmable'));
+                    inMemTreeViewStruct[0].children[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode(xNormFileOriginName, undefined, false, 'rmable'));
                     // if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children){
                     // 	console.log("添加新的文件");
                     // 	treeview.data[0].children[0].children[0].children.push(new TreeItemNode(xNormFileOriginName, [], false, 'rmable'));
@@ -996,7 +1006,7 @@ function activate(context) {
                     if (inMemTreeViewStruct[0].children[0].children[2].children[1].children.length > 0) {
                         inMemTreeViewStruct[0].children[0].children[2].children[1].children.splice(0, 1);
                     }
-                    inMemTreeViewStruct[0].children[0].children[2].children[1].children.push(new TreeViewProvider_1.TreeItemNode(xTestFileOriginName, [], false, 'rmable'));
+                    inMemTreeViewStruct[0].children[0].children[2].children[1].children.push(new TreeViewProvider_1.TreeItemNode(xTestFileOriginName, undefined, false, 'rmable'));
                     treeview.data = inMemTreeViewStruct;
                     treeview.refresh();
                     // if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[1].children){
@@ -1036,7 +1046,7 @@ function activate(context) {
                     if (inMemTreeViewStruct[0].children[0].children[2].children[2].children.length > 0) {
                         inMemTreeViewStruct[0].children[0].children[2].children[2].children.splice(0, 1);
                     }
-                    inMemTreeViewStruct[0].children[0].children[2].children[2].children.push(new TreeViewProvider_1.TreeItemNode(yTestFileOriginName, [], false, 'rmable'));
+                    inMemTreeViewStruct[0].children[0].children[2].children[2].children.push(new TreeViewProvider_1.TreeItemNode(yTestFileOriginName, undefined, false, 'rmable'));
                     treeview.data = inMemTreeViewStruct;
                     treeview.refresh();
                     // if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[2].children){
@@ -1078,7 +1088,7 @@ function activate(context) {
                     if (inMemTreeViewStruct[0].children[0].children[0].children.length > 0) {
                         inMemTreeViewStruct[0].children[0].children[0].children.splice(0, 1);
                     }
-                    inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(ANN_MODEL_FILE_PATH)));
+                    inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(ANN_MODEL_FILE_PATH), undefined, false, 'rmable'));
                     treeview.data = inMemTreeViewStruct;
                     treeview.refresh();
                     // 拷贝文件到项目并重命名
@@ -1255,66 +1265,103 @@ function activate(context) {
     // // 启动将darwinlang 文件转换为二进制文件的操作
     vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function () {
         if (!TreeViewProvider_1.ITEM_ICON_MAP.has("SNN二进制模型")) {
-            // ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
             TreeViewProvider_1.addSlfFile("SNN二进制模型");
-            // inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN二进制模型",[]));
-            DARWIN_LANG_BIN_PATHS.splice(0);
-            inMemTreeViewStruct[0].children[2].children[0].children[0].children.splice(0);
-            inMemTreeViewStruct[0].children[2].children[0].children[1].children.splice(0);
-            fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out"), (err, files) => {
-                files.forEach(file => {
-                    if (file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1) {
-                        DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", file));
-                        if (file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
-                            file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {
-                            if (file.search("config.b") !== -1) {
-                                TreeViewProvider_1.addDarwinFiles("config.b");
-                                inMemTreeViewStruct[0].children[2].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
-                            }
-                            else if (file.search("connfiles") !== -1) {
-                                TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
-                                inMemTreeViewStruct[0].children[2].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+        }
+        let genScript = path.join(__dirname, "darwin2sim", "gen_darwin2_bin_files.py");
+        let cmdStr = PYTHON_INTERPRETER + " " + genScript + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "");
+        vscode.window.showInformationMessage("二进制文件生成中，请稍等......");
+        child_process_1.exec(cmdStr, (err, stdout, stderr) => {
+            if (err) {
+                console.log("执行darwin2二进制部署文件错误...");
+            }
+            else {
+                DARWIN_LANG_BIN_PATHS.splice(0);
+                inMemTreeViewStruct[0].children[2].children[0].children[0].children.splice(0);
+                inMemTreeViewStruct[0].children[2].children[0].children[1].children.splice(0);
+                fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out"), (err, files) => {
+                    files.forEach(file => {
+                        if (file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1) {
+                            DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", file));
+                            if (file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
+                                file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {
+                                if (file.search("config.b") !== -1) {
+                                    TreeViewProvider_1.addDarwinFiles("config.b");
+                                    inMemTreeViewStruct[0].children[2].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
+                                }
+                                else if (file.search("connfiles") !== -1) {
+                                    TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
+                                    inMemTreeViewStruct[0].children[2].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                                }
                             }
                         }
-                    }
-                    treeview.data = inMemTreeViewStruct;
-                    treeview.refresh();
+                        treeview.data = inMemTreeViewStruct;
+                        treeview.refresh();
+                    });
+                    autoSaveWithCheck();
                 });
-                autoSaveWithCheck();
-            });
-            // if(inMemTreeViewStruct[0].children){
-            // 	var childLen = inMemTreeViewStruct[0].children.length;
-            // 	fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out"), (err, files)=>{
-            // 		files.forEach(file =>{
-            // 			if(file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1){
-            // 				DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out", file));
-            // 				// ITEM_ICON_MAP.set(file, "imgs/file.png");
-            // 				// addSlfFile(file);
-            // 				// if(file.search("config.b") !== -1){
-            // 				// 	addDarwinFiles("config.b");
-            // 				// }else if(file.search("connfiles") !== -1){
-            // 				// 	addDarwinFiles("packed_bin_files.dat");
-            // 				// }
-            // 				if(inMemTreeViewStruct[0].children){
-            // 					if(file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
-            // 						file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1){
-            // 							// inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
-            // 							if(file.search("config.b") !== -1){
-            // 								addDarwinFiles("config.b");
-            // 								inMemTreeViewStruct[0].children[childLen-1].children?.push(new TreeItemNode("config.b"));
-            // 							}else if(file.search("connfiles") !== -1){
-            // 								addDarwinFiles("packed_bin_files.dat");
-            // 								inMemTreeViewStruct[0].children[childLen-1].children?.push(new TreeItemNode("packed_bin_files.dat"));
-            // 							}
-            // 					}
-            // 				}
-            // 			}
-            // 		});
-            // 		autoSaveWithCheck();
-            // 	});
-            // }
-            treeview.refresh();
-        }
+                vscode.window.showInformationMessage("二进制文件生成结束!");
+            }
+        });
+        // if(!ITEM_ICON_MAP.has("SNN二进制模型")){
+        // 	// ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
+        // 	addSlfFile("SNN二进制模型");
+        // 	// inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN二进制模型",[]));
+        // 	DARWIN_LANG_BIN_PATHS.splice(0);
+        // 	inMemTreeViewStruct[0].children![2].children![0].children![0].children!.splice(0);
+        // 	inMemTreeViewStruct[0].children![2].children![0].children![1].children!.splice(0);
+        // 	fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out"), (err, files)=>{
+        // 		files.forEach(file => {
+        // 			if(file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1){
+        // 				DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out", file));
+        // 				if(file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
+        // 							file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1){
+        // 					if(file.search("config.b") !== -1){
+        // 						addDarwinFiles("config.b");
+        // 						inMemTreeViewStruct[0].children![2].children![0].children![0].children!.push(new TreeItemNode("config.b"));
+        // 					}else if(file.search("connfiles") !==-1){
+        // 						addDarwinFiles("packed_bin_files.dat");
+        // 						inMemTreeViewStruct[0].children![2].children![0].children![1].children!.push(new TreeItemNode("packed_bin_files.dat"));
+        // 					}
+        // 				}
+        // 			}
+        // 			treeview.data = inMemTreeViewStruct;
+        // 			treeview.refresh();
+        // 		});
+        // 		autoSaveWithCheck();
+        // 	});
+        // if(inMemTreeViewStruct[0].children){
+        // 	var childLen = inMemTreeViewStruct[0].children.length;
+        // 	fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out"), (err, files)=>{
+        // 		files.forEach(file =>{
+        // 			if(file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1){
+        // 				DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out", file));
+        // 				// ITEM_ICON_MAP.set(file, "imgs/file.png");
+        // 				// addSlfFile(file);
+        // 				// if(file.search("config.b") !== -1){
+        // 				// 	addDarwinFiles("config.b");
+        // 				// }else if(file.search("connfiles") !== -1){
+        // 				// 	addDarwinFiles("packed_bin_files.dat");
+        // 				// }
+        // 				if(inMemTreeViewStruct[0].children){
+        // 					if(file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
+        // 						file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1){
+        // 							// inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(file));
+        // 							if(file.search("config.b") !== -1){
+        // 								addDarwinFiles("config.b");
+        // 								inMemTreeViewStruct[0].children[childLen-1].children?.push(new TreeItemNode("config.b"));
+        // 							}else if(file.search("connfiles") !== -1){
+        // 								addDarwinFiles("packed_bin_files.dat");
+        // 								inMemTreeViewStruct[0].children[childLen-1].children?.push(new TreeItemNode("packed_bin_files.dat"));
+        // 							}
+        // 					}
+        // 				}
+        // 			}
+        // 		});
+        // 		autoSaveWithCheck();
+        // 	});
+        // }
+        // 	treeview.refresh();
+        // }
     });
     vscode.commands.registerCommand("item_darwinLang_convertor.convert_to_darwin2", function () {
         console.log("目标转换为darwin2二进制文件");
@@ -6632,7 +6679,7 @@ function getConvertorPageV2() {
             document.getElementById("alert_sheet").style.display = "none";
             document.getElementById("project_name").style.borderColor = '#D9D9D9';
             document.getElementById("lb_project_name").style.color = '#333333';
-            vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val()}));
+            vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val(), "is_change_proj_name":true}));
            });
     
             $("#create").on("click",function(){

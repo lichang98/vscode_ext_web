@@ -835,6 +835,8 @@ export function activate(context: vscode.ExtensionContext) {
 		X_TEST_DATA_PATH = undefined;
 		Y_TEST_DATA_PATH = undefined;
 		ANN_MODEL_FILE_PATH = undefined;
+		DARWIN_LANG_BIN_PATHS.splice(0);
+		DARWIN_LANG_FILE_PATHS.splice(0);
 		currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 		// 主界面由electron 应用启动
 		currentPanel.webview.html =getConvertorPageV2();

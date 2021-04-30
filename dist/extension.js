@@ -519,7 +519,7 @@ function activate(context) {
                         wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""));
                 }
                 else {
-                    scriptPath = path.join(__dirname, "darwin2sim", "seg_scripts", "convert_with_stb.py " + webParamVthresh + " " +
+                    scriptPath = path.join(__dirname, "darwin2sim", "seg_cls_scripts", "convert_with_stb.py " + webParamVthresh + " " +
                         wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""));
                 }
                 let commandStr = PYTHON_INTERPRETER + scriptPath;
@@ -10251,7 +10251,7 @@ function getANNSNNConvertSegPage() {
                           color: #333333;
                           letter-spacing: 0.91px;">脉冲发放阈值</font></label>
                       <select class="form-control" id="select_vthresh">
-                          <option>21</option>
+                          <option>44</option>
                           <option>1</option>
                           <option>2</option>
                           <option>3</option>
@@ -10272,6 +10272,7 @@ function getANNSNNConvertSegPage() {
                           <option>18</option>
                           <option>19</option>
                           <option>20</option>
+                          <option>21</option>
                           <option>22</option>
                           <option>23</option>
                           <option>24</option>
@@ -10692,31 +10693,31 @@ function getANNSNNConvertSegPage() {
                   console.log("data split list len="+log_output_lists.length);
                   // $("#log_output_div").html(log_output_lists.join("<br/>"));
                   // document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
-                  if(log_output_lists.length <= 40){
-                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/40*100)+"%");
-                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/40*100)+"%";
+                  if(log_output_lists.length <= 158){
+                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/158*100)+"%");
+                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/158*100)+"%";
                   }
                   if(stage1_convert_finish){
-                      if(log_output_lists.length < 80 && stage2_preprocess_finish !== true){
+                      if(log_output_lists.length < 1145 && stage2_preprocess_finish !== true){
                           console.log("increase sub progress bar 2");
-                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-38)/(80-38)*100)+"%";
+                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-158)/(1145-158)*100)+"%";
                       }
                   }
                   if(stage2_preprocess_finish){
-                      if(log_output_lists.length < 420 && stage3_search_finish !== true){
+                      if(log_output_lists.length < 1247 && stage3_search_finish !== true){
                           console.log("increase sub progress bar 3");
-                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-78)/(420-78)*100)+"%";
+                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-1145)/(1247-1145)*100)+"%";
                       }
                   }
                   if(stage3_search_finish){
-                      if(log_output_lists.length < 440 && stage4_all_finish !== true){
+                      if(log_output_lists.length < 1314 && stage4_all_finish !== true){
                           console.log("increase sub progress bar 4");
-                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-412)/(440-412)*100)+"%";
+                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-1247)/(1314-1247)*100)+"%";
                       }
                   }
                   if(stage4_all_finish !== true){
                       console.log("increase sub progress bar total");
-                      document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/520*100)+"%";
+                      document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/1314*100)+"%";
                   }
                 }else if(data.exec_finish){
                     // 结束

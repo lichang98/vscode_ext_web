@@ -517,7 +517,7 @@ export function activate(context: vscode.ExtensionContext) {
 					scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
 									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""));
 				}else{
-					scriptPath = path.join(__dirname, "darwin2sim", "seg_scripts","convert_with_stb.py "+ webParamVthresh+" "+ 
+					scriptPath = path.join(__dirname, "darwin2sim", "seg_cls_scripts","convert_with_stb.py "+ webParamVthresh+" "+ 
 					wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""));
 				}
 				let commandStr = PYTHON_INTERPRETER+scriptPath;

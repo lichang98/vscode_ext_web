@@ -1294,7 +1294,9 @@ export function getConvertorPageV2(){
             document.getElementById("alert_sheet").style.display = "none";
             document.getElementById("project_name").style.borderColor = '#D9D9D9';
             document.getElementById("lb_project_name").style.color = '#333333';
-            vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val(), "is_change_proj_name":true}));
+            if($("#proj_save_path_input").val().toString().trim().length !== 0){
+              vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val(), "is_change_proj_name":true}));
+            }
            });
     
             $("#create").on("click",function(){

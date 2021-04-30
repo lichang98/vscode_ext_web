@@ -49,11 +49,10 @@ from snntoolbox.utils.utils import import_configparser
 # valX = np.load("valX.npz")["arr_0"]
 # valY = np.load("valY.npz")["arr_0"]
 
-testX = np.load(os.path.join(os.path.dirname(model_path), "x_test.npz"))["arr_0"]
-testY = np.load(os.path.join(os.path.dirname(model_path), "y_test.npz"))["arr_0"]
-valX = np.load(os.path.join(os.path.dirname(model_path), "x_test.npz"))["arr_0"]
-valY = np.load(os.path.join(os.path.dirname(model_path), "y_test.npz"))["arr_0"]
-
+testX = np.load(os.path.join(os.path.dirname(model_path), "x_test.npz"))["arr_0"][:20]
+testY = np.load(os.path.join(os.path.dirname(model_path), "y_test.npz"))["arr_0"][:20]
+valX = np.load(os.path.join(os.path.dirname(model_path), "x_test.npz"))["arr_0"][:20]
+valY = np.load(os.path.join(os.path.dirname(model_path), "y_test.npz"))["arr_0"][:20]
 sys_param_vthresh = None
 sys_param_neurondt = None
 sys_param_synapsedt = None
@@ -126,7 +125,7 @@ model_lib = import_module("snntoolbox.parsing.model_libs.keras_input_lib")
 input_model = model_lib.load(os.path.dirname(model_path), os.path.basename(model_path))
 
 # acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=testX[:50],y_test=testY[:50])
-score =keras.models.load_model(os.path.join(os.path.dirname(model_path), "mnist_cnn.h5")).evaluate(testX[:50], testY[:50], batch_size=1)
+score =keras.models.load_model(os.path.join(os.path.dirname(model_path), "mnist_cnn.h5")).evaluate(testX,testY, batch_size=1)
 print("score={}".format(score))
 
 # set path
@@ -171,7 +170,7 @@ spiking_model.build(parsed_model)
 spiking_model.save(dir_name, "spike_snn")
 
 # simulate
-test_set = {"x_test":testX[:50],"y_test":testY[:50], "is_obj_detection":True}
+test_set = {"x_test":testX[:20],"y_test":testY[:20], "is_obj_detection":False}
 accu, snn_test_input_spike_info, snn_test_output_spike_info, snn_test_img_url_info, \
     record_layer_v_vals, record_layer_v_tms, record_layers_spk_avg, record_layers_spk_std,\
     record_layers_wt_avg, record_layers_wt_std = spiking_model.run(**test_set)

@@ -43,12 +43,12 @@ for i in range(len(y_test)):
     cls = np.argmax(y_test[i])
     cls_counts[cls] += 1
 
-if task_type == 1:
-    cls_counts = [0]*num_classes
-    for i in range(len(y_test)):
-        for j in range(len(cls_counts)):
-            if np.sum(y_test[i, :, :, j]) !=0:
-                cls_counts[j] +=1
+# if task_type == 1:
+    # cls_counts = [0]*num_classes
+    # for i in range(len(y_test)):
+    #     for j in range(len(cls_counts)):
+    #         if np.sum(y_test[i, :, :, j]) !=0:
+    #             cls_counts[j] +=1
 
 
 class_labels = set([np.argmax(e) for e in y_test])
@@ -143,7 +143,7 @@ if task_type == 0:
         json.dump(data_info, f)
 elif task_type == 1:
     for i in range(20):
-        sample_img = np.array(np.squeeze(x_norm[i])*255.0, dtype='uint8')
+        sample_img = np.array(np.squeeze(x_test[i])*255.0, dtype='uint8')
         hist_gram_bin_sample = get_hist_grem_bins(sample_img, hist_gram_splits)
         sample_img = Image.fromarray(sample_img)
         sample_img.save(path.join(path.abspath(path.dirname(__file__)), "sample_"+str(i)+".png"))

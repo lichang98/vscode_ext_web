@@ -256,6 +256,8 @@ export function activate(context: vscode.ExtensionContext) {
 	let inMemTreeViewStruct:Array<TreeItemNode>=new Array();
 	// treeViewBinConvertDarLang.data = inMemTreeViewStruct;
 	let X_NORM_DATA_PATH:string|undefined = undefined;
+	let X_COLOR_DATA_PATH:string|undefined = undefined; // rgb colored image data, for semantic segmentation task
+	let X_ORIGIN_COLOR_DATA_PATH:string| undefined = undefined; // rgb origin un-segmented image
 	let X_TEST_DATA_PATH:string|undefined = undefined;
 	let Y_TEST_DATA_PATH:string|undefined = undefined;
 	let ANN_MODEL_FILE_PATH:string|undefined = undefined;
@@ -665,6 +667,8 @@ export function activate(context: vscode.ExtensionContext) {
 				let projData = JSON.parse(data.toString());
 				PROJ_DESC_INFO = projData.proj_info;
 				X_NORM_DATA_PATH = projData.x_norm_path;
+				X_COLOR_DATA_PATH = path.join(path.dirname(projData.x_norm_path), "colorX.npz"); // TODO: for compatibility with other tasks
+				X_ORIGIN_COLOR_DATA_PATH = path.join(path.dirname(projData.x_norm_path), "originColorX.npz"); // TODO: same
 				X_TEST_DATA_PATH = projData.x_test_path;
 				Y_TEST_DATA_PATH = projData.y_test_path;
 				ANN_MODEL_FILE_PATH = projData.model_path;
@@ -677,6 +681,10 @@ export function activate(context: vscode.ExtensionContext) {
 				let targetProjName = path.basename(PROJ_SAVE_PATH).replace("\.dar2","");
 				if(X_NORM_DATA_PATH){
 					fs.copyFile(path.join(X_NORM_DATA_PATH), path.join(__dirname, "darwin2sim", "target", targetProjName,"x_norm.npz"),function(err){
+					});
+					fs.copyFile(path.join(X_COLOR_DATA_PATH), path.join(__dirname, "darwin2sim", "target", targetProjName,"colorX.npz"),function(err){
+					});
+					fs.copyFile(path.join(X_ORIGIN_COLOR_DATA_PATH), path.join(__dirname, "darwin2sim", "target", targetProjName,"originColorX.npz"),function(err){
 					});
 				}
 				if(X_TEST_DATA_PATH){
@@ -832,6 +840,8 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		PROJ_SAVE_PATH = undefined;
 		X_NORM_DATA_PATH = undefined;
+		X_COLOR_DATA_PATH = undefined;
+		X_ORIGIN_COLOR_DATA_PATH = undefined;
 		X_TEST_DATA_PATH = undefined;
 		Y_TEST_DATA_PATH = undefined;
 		ANN_MODEL_FILE_PATH = undefined;
@@ -903,9 +913,12 @@ export function activate(context: vscode.ExtensionContext) {
 				// 数据可视化展示
 				// 执行后台脚本
 				let scriptPath = path.join(__dirname,"inner_scripts","data_analyze.py");
+				console.log("目标文件路径："+X_NORM_DATA_PATH+", "+X_TEST_DATA_PATH+", "+Y_TEST_DATA_PATH);
 				let commandStr = PYTHON_INTERPRETER+scriptPath+" "+X_NORM_DATA_PATH+" "+X_TEST_DATA_PATH + " "+Y_TEST_DATA_PATH;
 				if(PROJ_DESC_INFO.project_type === '语义分割'){
 					// FIXME extra task type and num classes in semantic segmentation task
+					console.log("目标文件路径："+X_NORM_DATA_PATH+", "+X_ORIGIN_COLOR_DATA_PATH+", "+Y_TEST_DATA_PATH);
+					commandStr = PYTHON_INTERPRETER+scriptPath+" "+X_NORM_DATA_PATH+" "+X_ORIGIN_COLOR_DATA_PATH + " "+Y_TEST_DATA_PATH;
 					commandStr += " 1 2";
 				}
 				exec(commandStr, function(err, stdout, stderr){
@@ -982,6 +995,8 @@ export function activate(context: vscode.ExtensionContext) {
 				if(fileUri && fileUri[0]){
 					console.log("selected path: "+fileUri[0].fsPath);
 					X_NORM_DATA_PATH = fileUri[0].fsPath;
+					X_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "colorX.npz");
+					X_ORIGIN_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "originColorX.npz");
 					// 添加到treeview下
 					// ITEM_ICON_MAP.set("x_norm","imgs/file.png");
 					// addSlfFile("x_norm");

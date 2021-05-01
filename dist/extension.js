@@ -9678,7 +9678,7 @@ function getSegSimulatePage() {
                 font-size: 20px;
                 color: #333333;
                 letter-spacing: 1.14px;">脉冲神经网络输出层脉冲</font></div>
-              <!-- <span style="margin-left: 280px;font-family: SourceHanSansCN-Normal;
+              <span style="margin-left: 280px;font-family: SourceHanSansCN-Normal;
               font-size: 14px;
               color: #e71f1fe0;
               letter-spacing: 0.8px;">红色标记图像为输出层预测错误</span>
@@ -9690,9 +9690,9 @@ function getSegSimulatePage() {
                   </tr>
                   <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
                   </tr>
-              </table> -->
-              <div id="spike_charts" style="width: 660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
-              <ul id="sample_imgs_ul" style="height: 120px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
+              </table>
+              <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
+              <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
               </ul>
           </div>
       </div>
@@ -9768,14 +9768,14 @@ function getSegSimulatePage() {
     let prev_clicked_input_li = undefined;
     let prev_clicked_img = undefined;
     let prev_clicked_input_img = undefined;
-  //   let need_red_img_li = new Array();
+    let need_red_img_li = new Array();
   
         $(document).ready(function(){
           vscode.postMessage(JSON.stringify({"snn_simulate_ready":true}));
           console.log("SNN仿真Webview 界面ready.");
             window.addEventListener("message", function(evt){
               console.log("SNN 仿真接收到extension 消息");
-              // need_red_img_li.splice(0);
+              need_red_img_li.splice(0);
                 const data = JSON.parse(evt.data);
                 if(data.snn_info){
                     var infos =JSON.parse(data.snn_info);
@@ -9787,8 +9787,8 @@ function getSegSimulatePage() {
                     console.log("spiking spike infos[0]="+test_img_spikes[0].cls_names);
                     console.log("spike tuples[0]="+test_img_spikes[0].spike_tuples);
   
-                  //   calc_need_red(test_img_spikes, test_img_uris);
-                  //   console.log("call calc_need_red function finish, start for img uris...");
+                    calc_need_red(test_img_spikes, test_img_uris);
+                    console.log("call calc_need_red function finish, start for img uris...");
                     for(let i=0;i<test_img_uris.length;++i){
                       var img_li = document.createElement("li");
                       img_li.style.listStyle = "none";
@@ -9846,21 +9846,96 @@ function getSegSimulatePage() {
                           console.log("spike counts="+spike_counts);
                           spike_counts[cls_idx] = curr_count; 
                         }
+                        document.getElementById("out_labels").innerHTML = "";
+                        let td_child = document.createElement("td");
+                        td_child.innerText = "标签名称:";
+                        td_child.style.width = "80px";
+                        td_child.style.fontFamily = 'PingFangSC-Regular';
+                        td_child.style.fontSize = '14px';
+                        td_child.style.color = '#333333';
+                        td_child.style.backgroundColor = "#EEEEEE";
+                        td_child.style.border = "solid 2px #D6D6D6";
+                        td_child.style.paddingLeft = '5px';
+                        document.getElementById("out_labels").appendChild(td_child);
+  
+                        document.getElementById("out_counts_tr").innerHTML = '';
+                        td_child = document.createElement("td");
+                        td_child.style.backgroundColor = "#EEEEEE";
+                        td_child.style.border = "solid 2px #D6D6D6";
+                        td_child.style.fontFamily = 'PingFangSC-Regular';
+                        td_child.style.fontSize = '14px';
+                        td_child.style.color = '#333333';
+                        td_child.innerText = "计数值:";
+                        td_child.style.width = "80px";
+                        td_child.style.paddingLeft = '5px';
+                        document.getElementById("out_counts_tr").appendChild(td_child);
+  
+  
+                        for(let j=0;j<spike_counts.length;++j){
+                          let td_child = document.createElement("td");
+                          td_child.innerText = spike_counts[j];
+                          td_child.style.width = "33px";
+                          td_child.style.border = "solid 2px #D6D6D6";
+                          td_child.style.fontFamily = 'PingFangSC-Regular';
+                          td_child.style.fontSize = '14px';
+                          td_child.style.color = '#333333';
+                          td_child.style.textAlign = 'right';
+                          td_child.style.paddingRight = '5px';
+                          document.getElementById("out_counts_tr").appendChild(td_child);
+  
+                          td_child = document.createElement("td");
+                          if(test_img_spikes[i].cls_names[j] === '1'){
+                            td_child.innerText = '车辆';
+                          }else{
+                            td_child.innerText = "其他";
+                          }
+                          td_child.style.width = "33px";
+                          td_child.style.border = "solid 2px #D6D6D6";
+                          td_child.style.fontFamily = 'PingFangSC-Regular';
+                          td_child.style.fontSize = '14px';
+                          td_child.style.color = '#333333';
+                          td_child.style.textAlign = 'right';
+                          td_child.style.paddingRight = '5px';
+                          document.getElementById("out_labels").appendChild(td_child);
+                        }
+                        console.log("check spike_counts of "+i+", ="+spike_counts);
+                        // mark reds
+                        for(let k=0;k<need_red_img_li.length;++k){
+                          if(prev_clicked_li === need_red_img_li[k]){
+                            // document.getElementById(need_red_img_li[k]).style.backgroundColor = "yellow";  
+                            document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '10px outset orange';
+                          }else{
+                            // document.getElementById(need_red_img_li[k]).style.backgroundColor = "red";
+                            // document.getElementById(need_red_img_li[k]).style.border = '2px dashed red';
+                            document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '5px dashed red';
+                          }
+                        }
                       }
                       img_tag.src = test_img_uris[i];
                       img_tag.id = "img_"+i;
                       img_tag.style.width = "50px";
                       img_tag.style.height = "50px";
   
-                      let img_tag_mask = document.createElement("img");
-                      img_tag_mask.style = "opacity:0.5; display:block;width:50px; height:50px";
-                      img_tag_mask.id = "img_mask_"+i;
-                      img_tag_mask.src = test_img_uris[i].split(".").splice(0, test_img_uris[i].split(".").length-1).join(".")+"_mask.png";
-                      console.log("test image mask src="+test_img_uris[i].split(".").splice(0, test_img_uris[i].split(".").length-1).join(".")+"_mask.png");
+                      // let img_tag_mask = document.createElement("img");
+                      // img_tag_mask.style = "opacity:0.5; display:block;width:50px; height:50px";
+                      // img_tag_mask.id = "img_mask_"+i;
+                      // img_tag_mask.src = test_img_uris[i].split(".").splice(0, test_img_uris[i].split(".").length-1).join(".")+"_mask.png";
+                      // console.log("test image mask src="+test_img_uris[i].split(".").splice(0, test_img_uris[i].split(".").length-1).join(".")+"_mask.png");
   
+                      var label_span = document.createElement("span");
+                      label_span.style = "color: #333; font-family: SourceHanSansCN-Medium; font-size:10px;"
+                      console.log("图片 i="+i+", uri="+test_img_uris[i]);
+                      // a.split("/")[5].split("_")[4].split(".")[0]
+                      // label_span.innerText = "标签: "+test_img_uris[i].split("_")[5].split(".")[0];
+                      if(test_img_uris[i].split("/")[5].split("_")[4].split(".")[0] === '1'){
+                        label_span.innerText = "标签: 车辆";
+                      }else{
+                        label_span.innerText = "标签：其他";
+                      }
   
                       img_li.appendChild(img_tag);
-                      img_li.appendChild(img_tag_mask);
+                      img_li.appendChild(label_span);
+                      // img_li.appendChild(img_tag_mask);
                       test_img_uls.appendChild(img_li);
                     }
   
@@ -10041,6 +10116,44 @@ function getSegSimulatePage() {
             }
           }
           return max_idx;
+        }
+  
+        function calc_need_red(test_img_spikes, test_img_uris){
+          // label_span.innerText = "标签: "+test_img_uris[i].split("/")[5].split("_")[4].split(".")[0];
+          for(let i=0;i<test_img_spikes.length;++i){
+            console.log("test_img_spikes i="+i+"  spike tuples="+test_img_spikes[i].spike_tuples);
+            let cls_idx = 0;
+            if(test_img_spikes[i].spike_tuples.length > 0){
+              cls_idx = test_img_spikes[i].spike_tuples[0][0];
+            }
+            let curr_count=1;
+            let spike_counts = new Array();
+            for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
+                spike_counts.push(0);
+            }
+            for(let j=1;j<test_img_spikes[i].spike_tuples.length;++j){
+                if(cls_idx === test_img_spikes[i].spike_tuples[j][0]){
+                    curr_count = curr_count+1;
+                }else{
+                    spike_counts[cls_idx] = curr_count;
+                    curr_count=1;
+                    cls_idx = test_img_spikes[i].spike_tuples[j][0];
+                }
+            }
+            if(spike_counts.length > 0){
+              spike_counts[cls_idx] = curr_count;
+            }
+            console.log("current check img:"+i+", spike_counts="+spike_counts);
+            if(parseInt(test_img_uris[i].split("/")[5].split("_")[4].split(".")[0]) !== my_argmax(spike_counts)){
+              need_red_img_li.push("img_li_"+i);
+            }else if(multiple_argmax(spike_counts)){
+              console.log("--after check multiple armax, true");
+              need_red_img_li.push("img_li_"+i);
+              console.log("img: "+i+" need mark.");
+            }else{
+              console.log("img " +  i+ " ok");
+            }
+          }
         }
   
         function display_spike_scatter_chart(labels, datas){

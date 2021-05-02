@@ -165,6 +165,7 @@ function activate(context) {
     let treeViewSim = vscode.window.createTreeView("item_simulator", { treeDataProvider: treeViewSimulator });
     let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", { treeDataProvider: treeViewConvertDarLang });
     let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", { treeDataProvider: treeViewSNNModelView });
+    let currPanelDisposed = false;
     function isAllOtherTreeViewInvisible() {
         return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible
             && !treeViewSNNMD.visible;
@@ -312,7 +313,7 @@ function activate(context) {
             // 执行 darwinlang map 生成脚本
             let tmpDarlangWebview = vscode.window.createWebviewPanel("darwin lang", label, vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
             tmpDarlangWebview.webview.html = darlangWebContent();
-            tmpDarlangWebview.title = "darwin lang";
+            tmpDarlangWebview.title = label;
             let targetDarlangFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out", "snn_digit_darlang.json");
             let commandStr = PYTHON_INTERPRETER + path.join(__dirname, "load_graph.py") + " " + targetDarlangFilePath + " " + path.join(__dirname);
             child_process_1.exec(commandStr, (err, stdout, stderr) => {
@@ -343,6 +344,9 @@ function activate(context) {
         else if (label.search("config.b") !== -1) {
             console.log("解析显示1_1config.b 文件内容");
             let targetFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt");
+            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt"), path.join(path.dirname(PROJ_SAVE_PATH), "config.b"));
+            targetFilePath = path.join(path.dirname(PROJ_SAVE_PATH), "config.b");
+            console.log("显示config.b文件内容，文件路径：" + targetFilePath);
             vscode.workspace.openTextDocument(targetFilePath).then((doc) => {
                 vscode.window.showTextDocument(doc, 1, false);
             });
@@ -436,9 +440,23 @@ function activate(context) {
             currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
             bindCurrentPanelReceiveMsg(currentPanel);
         }
+        setInterval(() => {
+            if (currPanelDisposed) {
+                currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+                // 主界面由electron 应用启动
+                currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
+                currentPanel.title = "模型转换器";
+                bindCurrentPanelReceiveMsg(currentPanel);
+                currPanelDisposed = false;
+            }
+        }, 500);
     });
     // currentPanel webView 面板 onDidReceiveMessage 事件绑定
     function bindCurrentPanelReceiveMsg(currentPanel) {
+        currentPanel.onDidDispose(e => {
+            vscode.window.showWarningMessage("该tab页不可关闭！！！");
+            currPanelDisposed = true;
+        });
         currentPanel.webview.onDidReceiveMessage(function (msg) {
             var _a, _b;
             console.log("Receive message: " + msg);
@@ -449,7 +467,7 @@ function activate(context) {
                     console.log("Jump to convertor page");
                     if (currentPanel) {
                         currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
-                        currentPanel.title = "转换器";
+                        currentPanel.title = "模型转换器";
                     }
                 }
             }
@@ -623,7 +641,12 @@ function activate(context) {
     });
     context.subscriptions.push(disposable2);
     context.subscriptions.push(vscode.commands.registerCommand("treeView.proj_rename", () => {
+        if (!currentPanel || currentPanel.title.trim() === "模型转换") {
+            vscode.window.showErrorMessage("当前项目属性不可修改!!!");
+            return;
+        }
         console.log("项目属性修改");
+        currentPanel.reveal();
         // 发消息到webview
         if (currentPanel) {
             currentPanel.webview.postMessage({ "command": "ProjectRefactor", "project_desc": PROJ_DESC_INFO });
@@ -727,13 +750,13 @@ function activate(context) {
                 // 	}
                 // }
                 if (projData.x_norm_path) {
-                    inMemTreeViewStruct[0].children[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode(xNormFileOriginName, [], false, "rmable"));
+                    inMemTreeViewStruct[0].children[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode(xNormFileOriginName, undefined, false, "rmable"));
                 }
                 if (projData.x_test_path) {
-                    inMemTreeViewStruct[0].children[0].children[2].children[1].children.push(new TreeViewProvider_1.TreeItemNode(xTestFileOriginName, [], false, "rmable"));
+                    inMemTreeViewStruct[0].children[0].children[2].children[1].children.push(new TreeViewProvider_1.TreeItemNode(xTestFileOriginName, undefined, false, "rmable"));
                 }
                 if (projData.y_test_path) {
-                    inMemTreeViewStruct[0].children[0].children[2].children[2].children.push(new TreeViewProvider_1.TreeItemNode(yTestFileOriginName, [], false, "rmable"));
+                    inMemTreeViewStruct[0].children[0].children[2].children[2].children.push(new TreeViewProvider_1.TreeItemNode(yTestFileOriginName, undefined, false, "rmable"));
                 }
                 // if(projData.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]){
                 // 	inMemTreeViewStruct[0].children[1].children?.push(new TreeItemNode("model_file_"+path.basename(projData.model_path)));
@@ -1128,11 +1151,19 @@ function activate(context) {
             // 发送消息到web view ，开始模型的转换
             console.log("模型转换页面打开");
             // currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
+            console.log("current pane=" + currentPanel);
+            console.log("current pane=" + currentPanel);
+            console.log("current pane=" + currentPanel);
+            console.log("current pane=" + currentPanel);
+            console.log("title=" + currentPanel.title);
             if (currentPanel && currentPanel.title !== "模型转换") {
+                console.log("PROJ_DESC_INFO=" + PROJ_DESC_INFO);
                 if (PROJ_DESC_INFO.project_type === '图像分类') {
+                    console.log("currentpanel=" + currentPanel);
                     currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
                 }
                 else {
+                    console.log("currentpanel  2=" + currentPanel);
                     currentPanel.webview.html = get_seg_pages_1.getANNSNNConvertSegPage();
                 }
                 currentPanel.reveal();
@@ -1281,6 +1312,10 @@ function activate(context) {
     });
     // // 启动将darwinlang 文件转换为二进制文件的操作
     vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function () {
+        if (DARWIN_LANG_FILE_PATHS.length === 0) {
+            vscode.window.showErrorMessage("请先完成转换步骤！！！");
+            return;
+        }
         if (!TreeViewProvider_1.ITEM_ICON_MAP.has("SNN二进制模型")) {
             TreeViewProvider_1.addSlfFile("SNN二进制模型");
         }
@@ -1315,8 +1350,8 @@ function activate(context) {
                         treeview.refresh();
                     });
                     autoSaveWithCheck();
+                    vscode.window.showInformationMessage("二进制文件生成结束!");
                 });
-                vscode.window.showInformationMessage("二进制文件生成结束!");
             }
         });
         // if(!ITEM_ICON_MAP.has("SNN二进制模型")){

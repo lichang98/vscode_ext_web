@@ -2,6 +2,7 @@ import { TreeItem, TreeItemCollapsibleState, TreeDataProvider, Uri, window } fro
 import { join } from 'path';
 import * as vscode from "vscode";
 import { Console } from 'console';
+import { type } from 'os';
 
 // 创建每一项 label 对应的图片名称
 // 其实就是一个Map集合，用 ts 的写法

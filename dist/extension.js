@@ -344,7 +344,7 @@ function activate(context) {
         else if (label.search("config.b") !== -1) {
             console.log("解析显示1_1config.b 文件内容");
             let targetFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt");
-            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt"), path.join(path.dirname(PROJ_SAVE_PATH), "config.b"));
+            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt"), path.join(path.dirname(PROJ_SAVE_PATH), path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + "_config.b"));
             targetFilePath = path.join(path.dirname(PROJ_SAVE_PATH), "config.b");
             console.log("显示config.b文件内容，文件路径：" + targetFilePath);
             vscode.workspace.openTextDocument(targetFilePath).then((doc) => {
@@ -416,6 +416,8 @@ function activate(context) {
     console.log('Congratulations, your extension "darwin2" is now active!');
     // track current webview panel
     let currentPanel = undefined;
+    let currentPanelInterval = undefined;
+    let isCurrentPanelClosedByRemoveProj = false;
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with registerCommand
     // The commandId parameter must match the command field in package.json
@@ -440,7 +442,7 @@ function activate(context) {
             currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
             bindCurrentPanelReceiveMsg(currentPanel);
         }
-        setInterval(() => {
+        currentPanelInterval = setInterval(() => {
             if (currPanelDisposed) {
                 currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
                 // 主界面由electron 应用启动
@@ -448,13 +450,16 @@ function activate(context) {
                 currentPanel.title = "模型转换器";
                 bindCurrentPanelReceiveMsg(currentPanel);
                 currPanelDisposed = false;
+                isCurrentPanelClosedByRemoveProj = false;
             }
         }, 500);
     });
     // currentPanel webView 面板 onDidReceiveMessage 事件绑定
     function bindCurrentPanelReceiveMsg(currentPanel) {
         currentPanel.onDidDispose(e => {
-            vscode.window.showWarningMessage("该tab页不可关闭！！！");
+            if (!isCurrentPanelClosedByRemoveProj) {
+                vscode.window.showWarningMessage("该tab页不可关闭！！！");
+            }
             currPanelDisposed = true;
         });
         currentPanel.webview.onDidReceiveMessage(function (msg) {
@@ -838,6 +843,7 @@ function activate(context) {
         treeview.data = inMemTreeViewStruct;
         treeview.refresh();
         if (currentPanel) {
+            isCurrentPanelClosedByRemoveProj = true;
             currentPanel.dispose();
             currentPanel = undefined;
         }
@@ -866,10 +872,10 @@ function activate(context) {
         ANN_MODEL_FILE_PATH = undefined;
         DARWIN_LANG_BIN_PATHS.splice(0);
         DARWIN_LANG_FILE_PATHS.splice(0);
-        currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
-        // 主界面由electron 应用启动
-        currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
-        bindCurrentPanelReceiveMsg(currentPanel);
+        // currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+        // // 主界面由electron 应用启动
+        // currentPanel.webview.html =getConvertorPageV2();
+        // bindCurrentPanelReceiveMsg(currentPanel);
     }));
     let disposableVisCommand = vscode.commands.registerCommand("treeView-item.datavis", (itemNode) => {
         console.log("当前可视化目标:" + itemNode.label);

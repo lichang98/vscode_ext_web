@@ -1044,6 +1044,17 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 					if(X_NORM_DATA_PATH){
 						fs.copyFile(path.join(X_NORM_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "x_norm.npz"),function(err){
+							console.log("copy file x_norm.npz error: "+ err);
+						});
+					}
+					if(X_COLOR_DATA_PATH){
+						fs.copyFile(path.join(X_COLOR_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "colorX.npz"), function(err){
+							console.log("copy file colorX.npz error: "+err)
+						});
+					}
+					if(X_ORIGIN_COLOR_DATA_PATH){
+						fs.copyFile(X_ORIGIN_COLOR_DATA_PATH, path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "originColorX.npz"), function(err){
+							console.log("copy file originColorX.npz error: "+err);
 						});
 					}
 					autoSaveWithCheck();

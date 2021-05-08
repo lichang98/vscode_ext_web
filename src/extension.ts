@@ -348,7 +348,7 @@ export function activate(context: vscode.ExtensionContext) {
 			let targetFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),"bin_darwin_out", "1_1config.txt");
 			fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),"bin_darwin_out", "1_1config.txt"),
 						path.join(path.dirname(PROJ_SAVE_PATH!), path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")+"_config.b"));
-			targetFilePath = path.join(path.dirname(PROJ_SAVE_PATH!), "config.b");
+			targetFilePath = path.join(path.dirname(PROJ_SAVE_PATH!), path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")+"_config.b");
 			console.log("显示config.b文件内容，文件路径："+targetFilePath);
 			vscode.workspace.openTextDocument(targetFilePath).then((doc:vscode.TextDocument) => {
 				vscode.window.showTextDocument(doc, 1, false);

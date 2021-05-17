@@ -68,7 +68,7 @@ if len(sys.argv) > 5:
 else:
     sys_param_vthresh = 21
     sys_param_neurondt = 1
-    sys_param_synapsedt = 0.1
+    sys_param_synapsedt = 1
     sys_param_delay = 1
     sys_param_total_dura = 100
 

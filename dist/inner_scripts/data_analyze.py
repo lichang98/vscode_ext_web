@@ -10,20 +10,29 @@ import sys
 from os import path
 from PIL import Image
 import shutil
+import soundfile
+import librosa.display
+import matplotlib.pyplot as plt
 
 x_norm_file = sys.argv[1]
 x_test_file = sys.argv[2]
 y_test_file = sys.argv[3]
 
+plt.rcParams['font.sans-serif']=['SimHei']
+plt.rcParams['axes.unicode_minus']=False
+
 # other type of task
 # TODO
-# argv[4] task type: 1 semantic segmentation
+# argv[4] task type: 0 default mnist classification; 1 semantic segmentation; 2 speech classification
 # argv[5] extra info: integer for semantic segmantation num of classes
 task_type =0
 
 if len(sys.argv) > 5:
     task_type = int(sys.argv[4])
-    extra_val1 = int(sys.argv[5])
+    if task_type == 1:
+        extra_val1 = int(sys.argv[5])
+    elif task_type == 2:
+        extra_val1 = sys.argv[5]
     
 
 x_norm = np.load(x_norm_file)["arr_0"]
@@ -37,6 +46,8 @@ total_data_count = norm_data_count + test_data_count
 num_classes = len(y_test[0])
 if task_type == 1 and extra_val1:
     num_classes = int(extra_val1)
+elif task_type == 2:
+    num_classes = len(y_test[0])
 
 cls_counts = [0]*num_classes
 for i in range(len(y_test)):
@@ -166,6 +177,56 @@ elif task_type == 1:
     
     with open(path.join(path.abspath(path.dirname(__file__)), "data_info.json"),"w+",encoding="utf-8") as f:
         json.dump(data_info, f)
+elif task_type == 2:
+    # speech classification, the data is mfcc features
+    # extra_vals provides the npz file which containing the audio_seq and sampling rate
+    audio_seqs = np.load(extra_val1)["arr_0"]
+    srs = np.load(extra_val1)["arr_1"]
+
+    for i in range(min(20, len(audio_seqs))):
+        plt.figure()
+        plt.subplots(facecolor="#999999")
+        librosa.display.waveplot(audio_seqs[i], sr=int(srs[i]))
+        x_label = plt.xlabel("时间(秒)")
+        x_label.set_color("#999999")
+        y_label = plt.ylabel("振幅(分贝)")
+        y_label.set_color("#999999")
+        plt.grid(axis="y")
+        plt.tick_params(axis="x", colors="#999999")
+        plt.tick_params(axis="y", colors="#999999")
+        plt.savefig(path.join(path.abspath(path.dirname(__file__)), "test_sample_amp_"+str(i)+".png"), facecolor=(238/255,238/255,238/255,0.4))
+        # move amplititude plot under directory resources
+        shutil.move(path.join(path.abspath(path.dirname(__file__)), "test_sample_amp_"+str(i)+".png"),
+                    path.join(path.abspath(path.dirname(__file__)), "..", "..", "src", "resources", "script_res", "test_sample_amp_"+str(i)+".png"))
+        soundfile.write(path.join(path.abspath(path.dirname(__file__)), "test_sample_audio_"+str(i)+".wav"), audio_seqs[i], int(srs[i]), "PCM_24")
+        shutil.move(path.join(path.abspath(path.dirname(__file__)), "test_sample_audio_"+str(i)+".wav"),
+                    path.join(path.abspath(path.dirname(__file__)),"..", "..", "src", "resources", "script_res", "test_sample_audio_"+str(i)+".wav"))
+        data_info["sample_imgs"].append({"test_sample_img_path": "http://localhost:6003/speech_cls/data_vis/test_sample_amp_"+str(i)+".png", "label": int(np.argmax(y_test[i])), 
+                                        "test_sample_audio_path": "http://localhost:6003/speech_cls/audio/test_sample_audio_"+str(i)+".wav"})    
+        
+        x = librosa.stft(audio_seqs[i])
+        xdb = librosa.amplitude_to_db(abs(x))
+        plt.figure()
+        librosa.display.specshow(xdb, sr=srs[i], x_axis="time", y_axis="hz")
+        x_label = plt.xlabel("时间(秒)")
+        x_label.set_color("#999999")
+        y_label = plt.ylabel("频率(赫兹)")
+        y_label.set_color("#999999")
+        plt.grid(axis="y")
+        plt.tick_params(axis="x", colors="#999999")
+        plt.tick_params(axis="y", colors="#999999")
+        plt.savefig(path.join(path.abspath(path.dirname(__file__)), "test_sample_freq_"+str(i)+".png"), facecolor=(238/255,238/255,238/255,0.4))
+        plt.close()
+        # move freq plot under directory resources
+        shutil.move(path.join(path.abspath(path.dirname(__file__)), "test_sample_freq_"+str(i)+".png"),
+                    path.join(path.abspath(path.dirname(__file__)), "..", "..", "src", "resources", "script_res", "test_sample_freq_"+str(i)+".png"))
+        data_info["test_sample_imgs"].append({"test_sample_img_path": "http://localhost:6003/speech_cls/data_vis/test_sample_freq_"+str(i)+".png", "label": int(np.argmax(y_test[i])),
+                                                "test_sample_audio_path": "http://localhost:6003/speech_cls/audio/test_sample_audio_"+str(i)+".wav"})
+    
+    with open(path.join(path.abspath(path.dirname(__file__)), "data_info.json"), "w+", encoding="utf-8") as f:
+        json.dump(data_info, f)
+
+
 
 # save data
 # data_info = {"total_data_count":total_data_count, "norm_data_count":norm_data_count, "test_data_count":test_data_count, \

@@ -229,7 +229,7 @@
 					"when": ""
 				}
 			],
-			"snn_model_ac":[
+			"snn_model_ac": [
 				{
 					"id": "item_snn_model_view",
 					"name": "",
@@ -286,6 +286,7 @@
 		"webpack-cli": "^4.2.0"
 	},
 	"dependencies": {
+		"audio-decode": "^1.4.0",
 		"axios": "^0.21.1"
 	}
 }

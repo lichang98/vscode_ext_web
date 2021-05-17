@@ -34,6 +34,20 @@ def getImg(imgres):
         img = f.read()
         return Response(img, mimetype="image/png")
 
+@app.route("/speech_cls/data_vis/<imgres>")
+def getSpeechImg(imgres):
+    with open(path.join(base_path, "..", "..", "src", "resources","script_res",imgres), "rb") as f:
+        img = f.read()
+        return Response(img, mimetype="image/png")
+
+@app.route("/speech_cls/audio/<audiores>")
+def getSpeechAudio(audiores):
+    with open(path.join(base_path, "..", "..", "src", "resources", "script_res", audiores), "rb") as f:
+        ad_f = f.read()
+        resp = Response(ad_f, mimetype="audio/wav")
+        return resp
+
+
 @app.route("/snn_imgs/<dir_name>/<imgres>")
 def getSnnTestImg(dir_name, imgres):
     with open(path.join(base_path, "..", "darwin2sim", "model_out", dir_name,"bin_darwin_out","inputs", imgres), "rb") as f:

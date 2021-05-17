@@ -8,7 +8,9 @@ import * as axios from 'axios';
 import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile ,addDarwinFold, addDarwinFiles} from './TreeViewProvider';
 import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage,getSNNModelPage} from "./get_convertor_page_v2";
 import {getSegDataVisPage, getSegSimulatePage, getANNSNNConvertSegPage} from "./get_seg_pages";
+import {getSpeechClsDataPage} from "./get_speech_pages";
 import {exec} from "child_process";
+const decode = require('audio-decode');
 
 let PYTHON_INTERPRETER = 'python ';
 let NEWLINE = '\r\n';
@@ -259,7 +261,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// treeViewBinConvertDarLang.data = inMemTreeViewStruct;
 	let X_NORM_DATA_PATH:string|undefined = undefined;
 	let X_COLOR_DATA_PATH:string|undefined = undefined; // rgb colored image data, for semantic segmentation task
-	let X_ORIGIN_COLOR_DATA_PATH:string| undefined = undefined; // rgb origin un-segmented image
+	let X_ORIGIN_COLOR_DATA_PATH:string| undefined = undefined; // rgb origin un-segmented image or original audio seq for speech classification
 	let X_TEST_DATA_PATH:string|undefined = undefined;
 	let Y_TEST_DATA_PATH:string|undefined = undefined;
 	let ANN_MODEL_FILE_PATH:string|undefined = undefined;
@@ -894,6 +896,16 @@ export function activate(context: vscode.ExtensionContext) {
 					panelDataVis.onDidDispose(function(){
 						panelDataVis = undefined;
 					}, null, context.subscriptions);
+					panelDataVis.webview.onDidReceiveMessage((e)=>{
+						if(e.fetch_audio) {
+							console.log("接收到webview 请求audio! "+e.fetch_audio);
+							axios.default.get(e.fetch_audio, {responseType: "arraybuffer"}).then(res=>{
+								decode(res.data).then((audioBuf:any)=>{
+									panelDataVis!.webview.postMessage({"audioBuf":audioBuf});
+								});
+							});
+						}
+					});
 				}
 				panelDataVis.reveal();
 				// currentPanel.webview.html = getConvertorDataPageV2(
@@ -922,6 +934,8 @@ export function activate(context: vscode.ExtensionContext) {
 						);
 					}else if(PROJ_DESC_INFO.project_type === '语义分割'){
 						panelDataVis.webview.html = getSegDataVisPage();
+					} else if(PROJ_DESC_INFO.project_type === "语音识别") {
+						panelDataVis.webview.html = getSpeechClsDataPage();
 					}
 			}else if(itemNode.label === "ANN模型"){
 				if(panelAnnModelVis){
@@ -951,12 +965,16 @@ export function activate(context: vscode.ExtensionContext) {
 					console.log("目标文件路径："+X_NORM_DATA_PATH+", "+X_ORIGIN_COLOR_DATA_PATH+", "+Y_TEST_DATA_PATH);
 					commandStr = PYTHON_INTERPRETER+scriptPath+" "+X_NORM_DATA_PATH+" "+X_ORIGIN_COLOR_DATA_PATH + " "+Y_TEST_DATA_PATH;
 					commandStr += " 1 2";
+				}else if(PROJ_DESC_INFO.project_type === "语音识别") {
+					// last param is npz file path contains original audio seq and sampling rates
+					console.log("语音识别路径："+X_NORM_DATA_PATH+" "+X_TEST_DATA_PATH+" "+Y_TEST_DATA_PATH+" "+X_ORIGIN_COLOR_DATA_PATH);
+					commandStr = PYTHON_INTERPRETER+scriptPath+" "+X_NORM_DATA_PATH+" "+X_TEST_DATA_PATH+" "+Y_TEST_DATA_PATH+" 2 "+X_ORIGIN_COLOR_DATA_PATH;
 				}
 				exec(commandStr, function(err, stdout, stderr){
 					if(err){
 						console.log("execute data analyze script error, msg: "+err);
 					}else{
-						console.log("execute data analyze script....");
+						console.log("execute data analyze script finish....");
 						fs.readFile(path.join(__dirname, "inner_scripts", "data_info.json"), "utf-8", (err, data)=>{
 							console.log("Read data info");
 							console.log("data info : "+data);

@@ -1,0 +1,458 @@
+import * as vscode from "vscode";
+
+export function getSpeechClsDataPage():string{
+    return `
+    <!DOCTYPE html>
+    <html style="height: 100%;width: 100%;">
+    
+    <head>
+      <meta charset="UTF-8">
+      <title>模型转换器</title>
+    </head>
+    <body class="dark-mode" style="height: 100%;width: 100%;overflow: auto;">
+        <!-- 左侧导航栏 主面板与配置面板 -->
+        <div class="row" style="height: 100%;width: 100%;">
+          <!-- 加载提示 -->
+          <div id="loader_tip" class="preloader-wrapper big active" style="position: absolute;margin-left: 600px;margin-top: 100px;display: none;">
+            <div class="spinner-layer spinner-green-only">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+          <div class="loading-div">
+            <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i>
+            <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
+          </div>
+    
+          <!--展示的主面板-->
+          <div class="row" style="height: 45%;width: 100%;">
+              <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 400px;margin-left: 50px;width: 700px;">
+                <!-- 数据基本信息表格 -->
+                <div style="text-align: center;color: #333;"><font style="font-family: SourceHanSansCN-Normal;
+                  font-size: 20px;
+                  color: #333333;
+                  letter-spacing: 1.14px;">导入数据统计</font></div>
+                <table id="data_general_table" style="width:500px; margin-left:75px;color: #333;margin-top: 30px;">
+                  <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
+                      <td style="background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+                        font-size: 18px;
+                        color: #333333;">指标</font></td>
+                      <td style="background: #EEEEEE;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+                        font-size: 18px;
+                        color: #333333;">指标值</font></td>               
+                  </tr>
+                  <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
+                    <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      text-align: right;">总数据量</font></td>
+                    <td id="total_data_amount" style="text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
+                  </tr>
+                  <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
+                    <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      text-align: right;">测试数据量</font></td>
+                    <td id="test_data_amount" style="text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
+                  </tr>
+                  <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
+                    <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      text-align: right;">验证数据量</font></td>
+                    <td id="val_data_amount" style="text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
+                  </tr>
+                  <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
+                    <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      color: #333333;
+                      text-align: right;">数据类别</font></td>
+                    <td id="class_counts" style="text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 400px;margin-left: 15px;width: 760px;">
+                <div style="text-align: center;margin-bottom:20px;color: #333;font-family: SourceHanSansCN-Normal;
+                font-size: 20px;
+                color: #333333;
+                letter-spacing: 1.14px;">
+                  数据类别分布
+                </div>
+                <div id="bar_chart_testdata_container" style="width: 700px;height: 400px;margin-left:20px;margin-top: -30px;"></div>
+              </div>
+          </div>
+          <div class="row" style="height: 45%;width: 100%;margin-top:30px;">
+            <div id="sample_data_div" class="col-md-5" style="height:410;width: 700px;background: rgba(238,238,238,0.4);margin-left: 50px;">
+              <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;">
+                波形图
+              </div>
+              <div id="bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
+              <ul id="sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 640px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
+              </ul>
+            </div>
+            <div id="sample_testdataset_data_div" class="col-md-5" style="height: 410px;width: 760px;background: rgba(238,238,238,0.4);margin-left: 15px;">
+              <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;">
+                频谱图
+              </div>
+    
+              <div id="test_bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
+              <ul id="test_sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 700px;overflow: auto;display: block;white-space: nowrap;">
+              </ul>
+            </div>
+          </div>
+        </div>
+    </body>
+    <style>
+    
+    .editor-sidenav{
+      background-color: #333;
+    }
+    
+    body {
+      padding: 25px;
+      background-color: rgb(251, 255, 255);
+      color: white;
+      font-size: 25px;
+    }
+    
+    .dark-mode {
+      background-color: rgb(249, 251, 252);
+      color: white;
+    }
+      @font-face {
+        font-family: 'Material Icons';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+      }
+    
+      .material-icons {
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1;
+        text-transform: none;
+        display: inline-block;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+      }
+    
+      .resizable {
+        resize: both;
+        overflow: scroll;
+        border: 1px solid rgb(0, 0, 0);
+      }
+      .dropdown-content{
+       width: max-content !important;
+       height:auto !important;
+    }
+    
+    .loading-div {
+          width: calc(100vw);
+          height: calc(100vh);
+          display: table-cell;
+          vertical-align: middle;
+          color: #555;
+          overflow: hidden;
+          text-align: center;
+        }
+    .loading-div::before {
+      display: inline-block;
+      vertical-align: middle;
+    } 
+    </style>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.0.1/echarts.min.js" integrity="sha512-vMD/IRB4/cFDdU2MrTwKXOLmIJ1ULs18mzmMIWLCNYg/nZZkCdjBX+UPrtQdkleuuf0YaqXssaKk8ZXOpHo3qg==" crossorigin="anonymous"></script> -->
+    
+    <link rel="stylesheet" href="http://localhost:6003/css/materialize.min.css">
+    <link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
+    
+    <script src="http://localhost:6003/js/jquery.min.js"></script>
+    <script src="http://localhost:6003/js/materialize.min.js"></script>
+    <script src="http://localhost:6003/js/bootstrap.min.js"></script>
+    <script src="http://localhost:6003/js/echarts.min.js"></script>
+    
+    <script>
+    const vscode = acquireVsCodeApi();
+    // var prev_click_img_li_id = undefined;
+    // var prev_click_img_li_test_id = undefined;
+    let prev_click_img_id = undefined;
+    let prev_click_img_test_id = undefined;
+    var data_info=undefined;
+    $(document).ready(function(){
+    
+      // display_data_bar_chart(['0','1','2','3','4','5','6','7','8','9'],
+      //       [0.098,0.1135,0.1032,0.101,0.0982,0.0892,0.0958,0.1028,0.0974,0.1009],"训练数据集各类别分布", "数据占比","pie_chart_container");
+      // display_data_bar_chart(["0-28","28-56","56-85","85-113","113-141","141-170","170-198","198-226","226-255"],
+      //         [639,8,7,1,19,18,8,9,79,0],"像素分布","该范围内像素点个数","bar_chart_histgram");
+      // display_data_bar_chart(['0','1','2','3','4','5','6','7','8','9'],
+      //   [0.098,0.101,0.1028,0.0974,0.1009,0.1135,0.0982,0.0892,0.0958,0.1032],"测试数据集各类别分布","数据占比","bar_chart_testdata_container")
+        window.addEventListener("message", async(event)=>{
+          if(event.data.audioBuf){
+            let data = event.data;
+            const audio_context = new AudioContext({sampleRate: data.audioBuf.sampleRate});
+            console.log("音频采样率="+data.audioBuf.sampleRate);
+            const audio_buffer = audio_context.createBuffer(data.audioBuf.numberOfChannels, data.audioBuf.length, data.audioBuf.sampleRate);
+            for(var ch=0; ch < audio_buffer.numberOfChannels;++ch){
+              const f32a = new Float32Array(audio_buffer.length);
+              for(var i=0;i<audio_buffer.length;++i){
+                f32a[i] = data.audioBuf._channelData[ch][i];
+              }
+              audio_buffer.copyToChannel(f32a, ch);
+            }
+            // play
+            var source = audio_context.createBufferSource();
+            source.buffer = audio_buffer;
+            source.connect(audio_context.destination);
+            source.start(audio_context.currentTime, 0);
+            return;
+          }
+          const data = JSON.parse(event.data);
+          data_info = data
+          console.log("data vis webview receive data: "+data);
+          $("#total_data_amount").text(data.total_data_count);
+          $("#test_data_amount").text(data.norm_data_count);
+          $("#val_data_amount").text(data.test_data_count);
+          $("#class_counts").text(data.num_classes);
+    
+          var class_labels = new Array();
+          var class_ratios = new Array();
+          var class_total_count = 0;
+          console.log("cls_counts="+data.cls_counts);
+          console.log("num_class="+data.num_classes);
+          for(var i=0;i<data.cls_counts.length;++i){
+            class_total_count += data.cls_counts[i];
+          }
+          for(var i=0;i<data.cls_counts.length;++i){
+            class_ratios.push(data.cls_counts[i]/class_total_count);
+          }
+          for(var i=0;i<data.num_classes;++i){
+            class_labels.push(""+i);
+          }
+    
+          $(".loading-div").hide(); // 隐藏加载提示
+          console.log("display test data distribution...");
+          display_data_bar_chart(class_labels, class_ratios, "测试数据集各类别分布",  "数据占比","类别", "占比", "bar_chart_testdata_container");
+          console.log("test data distribution bar chart displayed.");
+    
+          let amp_uls = document.getElementById("sample_imgs_ul");
+          // 显示波形图与频谱图
+          for (let i=0;i< data.sample_imgs.length;++i) {
+            let amp_img_li = document.createElement("li");
+            amp_img_li.style = "list-style: none;display: inline-block;height: 60px;width: 70px;";
+            amp_img_li.id = "sample_img"+i+"_li";
+            amp_img_li.innerHTML = "<img id='sample_img"+i+"' onclick='sample_img_click(this);' src='http://localhost:6003/speech_cls/data_vis/test_sample_amp_"+i+".png' style='opacity:1.0; width: 50px; height:50px; margin-left:20px;'>\
+                                    <div id='sample_label"+i+"' style='color: black;margin-left:15px;'>标签："+data.sample_imgs[i].label+"</div>";
+            amp_uls.appendChild(amp_img_li);
+          }
+    
+          let freq_uls = document.getElementById("test_sample_imgs_ul");
+          for (let i=0;i<data.test_sample_imgs.length;++i){
+            let freq_img_li = document.createElement("li");
+            freq_img_li.style = "list-style: none;display: inline-block;height: 60px;width: 70px;";
+            freq_img_li.id = "test_sample_img"+i+"_li";
+            freq_img_li.innerHTML = "<img id='test_sample_img"+i+"' onclick='sample_img_click(this);' src='http://localhost:6003/speech_cls/data_vis/test_sample_freq_"+i+".png' style='opacity:1.0; width: 50px; height:50px; margin-left:20px;'>\
+                                    <div id='test_sample_label'"+i+"' style='color:black;margin-left:15px;'>标签："+data.test_sample_imgs[i].label+"</div>";
+            freq_uls.appendChild(freq_img_li);
+          }
+    
+          // click first at beginning
+          $("#sample_img0").click();
+          $("#test_sample_img0").click();
+      });
+    });
+    
+    function sample_img_click(e){
+      var sampleId = $(e).attr("id");
+      if(sampleId.substring(0,4) === "test"){
+        if(prev_click_img_test_id !== undefined){
+          document.getElementById(prev_click_img_test_id).style.border = "";
+        }
+        console.log("点击目标："+sampleId+", 设置边框颜色...");
+        prev_click_img_test_id = sampleId;
+        let img_clicked = document.getElementById(prev_click_img_test_id);
+        // document.getElementById(sampleId+"_li").removeChild(img_clicked);
+        img_clicked.style.border = "10px outset red";
+        // document.getElementById(sampleId+"_li").appendChild(img_clicked);
+        // document.getElementById(sampleId+"_li").insertBefore(img_clicked, document.getElementById("test_sample_label"+sampleId.substr(15)))
+        // document.getElementById(prev_click_img_test_id).style.border = "10px outset red;";
+        // if(prev_click_img_li_test_id !== undefined){
+        //   document.getElementById(prev_click_img_li_test_id).style.backgroundColor="";
+        //   document.getElementById(prev_click_img_li_test_id).style.opacity = "";
+        // }
+        // prev_click_img_li_test_id = sampleId+"_li";
+        // document.getElementById(prev_click_img_li_test_id).style.backgroundColor = "#00868B";
+        // document.getElementById(prev_click_img_li_test_id).style.opacity = "0.5";
+      }else{
+        if(prev_click_img_id !== undefined){
+          document.getElementById(prev_click_img_id).style.border = "";
+        }
+        console.log("点击目标："+sampleId+", 设置边框颜色...");
+        prev_click_img_id = sampleId;
+        let img_clicked = document.getElementById(prev_click_img_id);
+        // document.getElementById(sampleId+"_li").removeChild(img_clicked);
+        img_clicked.style.border = "10px outset red";
+        // document.getElementById(sampleId+"_li").appendChild(img_clicked);
+        // document.getElementById(sampleId+"_li").insertBefore(img_clicked, document.getElementById("sample_label"+sampleId.substr(10)));
+        // document.getElementById(prev_click_img_id).style.border = "10px outset red;";
+        // if(prev_click_img_li_id !== undefined){
+        //   document.getElementById(prev_click_img_li_id).style.backgroundColor = "";
+        //   document.getElementById(prev_click_img_li_id).style.opacity = "";
+        // }
+        // prev_click_img_li_id = sampleId+"_li";
+        // document.getElementById(prev_click_img_li_id).style.backgroundColor = "#00868B";
+        // document.getElementById(prev_click_img_li_id).style.opacity = "0.5";
+      }
+      console.log("current click img id="+sampleId);
+      var sampleIdx = parseInt(sampleId.substring(sampleId.length-1));
+      if(sampleId.substring(0,4) === "test"){
+        let test_img_tag = document.createElement("img");
+        test_img_tag.style = "width:640px; height:500px; margin-left:40px;"
+        test_img_tag.src = "http://localhost:6003/speech_cls/data_vis/test_sample_freq_"+sampleId.substr(15)+".png";
+        document.getElementById("test_bar_chart_histgram").innerHTML = "";
+        document.getElementById("test_bar_chart_histgram").appendChild(test_img_tag);
+        // var sound = webaudio.createSound();
+        // sound.load("http://localhost:6003/speech_cls/audio/test_sample_audio_0.wav", function(sound){
+        //   sound.loop(true).play();
+        // });
+        vscode.postMessage({"fetch_audio": "http://localhost:6003/speech_cls/audio/test_sample_audio_"+sampleId.substr(15)+".wav"});
+        // display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","区间","数量(log_10)", "test_bar_chart_histgram");
+      }else{
+        let test_img_tag = document.createElement("img");
+        test_img_tag.style = "width:640px; height:500px; margin-left: 40px;"
+        test_img_tag.src = "http://localhost:6003/speech_cls/data_vis/test_sample_amp_"+sampleId.substr(10)+".png";
+        document.getElementById("bar_chart_histgram").innerHTML = "";
+        document.getElementById("bar_chart_histgram").appendChild(test_img_tag);
+        vscode.postMessage({"fetch_audio":  "http://localhost:6003/speech_cls/audio/test_sample_audio_"+sampleId.substr(10)+".wav"})
+        // display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","区间","数量(log_10)", "bar_chart_histgram");
+      }
+    }
+    
+    
+    
+        function display_data_bar_chart(label_names, label_counts, title,series_name,x_axis_name, y_axis_name,target_id){
+          console.log("label names:"+label_names);
+          console.log("label counts:"+label_counts);
+          var option = {
+                tooltip:{
+                    trigger:"axis"
+                  },
+                xAxis: {
+                  type: 'category',
+                      data: label_names,
+                      scale:true,
+                      name:x_axis_name,
+                      nameTextStyle:{
+                        color:"#999999"
+                      },
+                      axisLabel:{
+                        textStyle:{
+                          color:"#999999"
+                        },
+                        fontFamily: 'Helvetica',
+                        fontSize: '12px',
+                      }
+                },
+                yAxis: [
+                    {
+                      type: 'value',
+                      scale:true,
+                      name:y_axis_name,
+                      nameTextStyle:{
+                        color:"#999999"
+                      },
+                      axisLabel:{
+                        textStyle:{
+                          color:"#999999"
+                        },
+                        fontFamily: 'Helvetica',
+                        fontSize: '12px',
+                      }
+                    },
+                    {
+                      type: 'value',
+                      scale:true,
+                      name:"",
+                      show:false,
+                      nameTextStyle:{
+                        color:"#999999"
+                      },
+                      fontFamily: 'Helvetica',
+                      fontSize: '12px',
+                      axisLabel:{
+                        show:false,
+                        textStyle:{
+                          ccolor:"#999999"
+                        },
+                        fontFamily: 'Helvetica',
+                        fontSize: '12px',
+                      }
+                    }
+                ],
+                series: [
+                    {
+                        name: series_name,
+                        type: 'bar',
+                        data: label_counts,
+                        itemStyle: {
+                          normal: {
+                            color: new echarts.graphic.LinearGradient(
+                                  0, 0, 0, 1,
+                                [
+                                    {offset: 0, color: '#BBFFFF'},   
+                                    {offset: 1, color: '#2FDECA'}
+                                ]
+                                )
+                            },
+                            emphasis: {
+                              color: new echarts.graphic.LinearGradient(
+                                    0, 0, 0, 1,
+                                  [
+                                    {offset: 0, color: '#2FDECA'},
+                                    {offset: 1, color: '#2FDE80'}
+                                  ]
+                              )
+                            }
+                        }
+                    },
+                    {
+                        name: series_name,
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: label_counts,
+                        itemStyle:{
+                            normal:{
+                                lineStyle:{
+                                    color:"#FF994B"
+                                }
+                            }
+                        }
+                    }
+                ]
+            };
+            var bar_chart_data = echarts.init(document.getElementById(target_id));
+            bar_chart_data.setOption(option);
+        }
+    </script>
+    `;
+}
+
+

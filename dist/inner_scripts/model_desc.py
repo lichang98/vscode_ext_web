@@ -22,7 +22,7 @@ y_test_file = sys.argv[3]
 task_type = 0
 
 if len(sys.argv) > 5:
-    task_type = 1    
+    task_type = sys.argv[5]    
 
 
 x_norm = np.load(x_norm_file)["arr_0"]

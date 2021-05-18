@@ -1,6 +1,6 @@
 [paths]
-path_wd = e:\courses\ZJLab\IDE-related-docs\darwin2\dist\darwin2sim\target\mnist_dig
-dataset_path = e:\courses\ZJLab\IDE-related-docs\darwin2\dist\darwin2sim\target\mnist_dig
+path_wd = e:\courses\ZJLab\IDE-related-docs\darwin2\dist\darwin2sim\target\spc_cls
+dataset_path = e:\courses\ZJLab\IDE-related-docs\darwin2\dist\darwin2sim\target\spc_cls
 filename_ann = mnist_cnn
 
 [tools]
@@ -9,8 +9,8 @@ normalize = True
 
 [simulation]
 simulator = brian2
-duration = 100
-num_to_test = 20
+duration = 1000
+num_to_test = 50
 batch_size = 1
 dt = 1
 

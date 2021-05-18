@@ -27,6 +27,13 @@ target_proj_name = "cnn_dig"
 if len(sys.argv) > 6:
     target_proj_name = sys.argv[6]
 
+# 0 mnist
+# 1 semantic segmentation
+# 2 speech
+task_type = 0
+if len(sys.argv) > 7:
+    task_type = sys.argv[7]
+
 model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "target", target_proj_name, "mnist_cnn")
 
 config_path = os.path.join(baseDirPath, "snntoolbox","config")
@@ -103,6 +110,51 @@ def fixpt(weights,bit_width=8):
 
     return weights
 
+
+def fixpt_integer_vth(weights, conn_pairs,bit_width=8):
+    fltpt_wts = copy.deepcopy(weights)
+
+    range_pos = (2**(bit_width-1))-1
+    range_neg = -(2**(bit_width-1))
+
+    max_pos_wt = np.max([np.max(wt) for wt in weights])
+    min_pos_wt = np.min([np.min(wt[wt >=0]) for wt in weights if len(wt[wt >=0]) > 0])
+    near0_neg_wt = np.max([np.max(wt[wt <0]) for wt in weights if len(wt[wt < 0]) > 0])
+    far0_neg_wt = np.min([np.min(wt[wt <0]) for wt in weights if len(wt[wt < 0]) > 0])
+    print("max_pos_wt={}, min_pos_wt={}, near0 neg wt={}, far0_neg_wt={}".format(max_pos_wt, min_pos_wt, near0_neg_wt, far0_neg_wt),flush=True)
+    scale_fac_pos = range_pos / (max_pos_wt-min_pos_wt)
+    scale_fac_neg = range_neg/(far0_neg_wt - near0_neg_wt)
+    for i in range(len(weights)):
+        weights[i][weights[i] >=0] = scale_fac_pos * (weights[i][weights[i] >=0]-min_pos_wt)
+        weights[i][weights[i] <0] = scale_fac_neg * (weights[i][weights[i] <0]-near0_neg_wt)
+        weights[i] = np.floor(weights[i])
+        # weights[i][weights[i] >=0] = np.floor(weights[i][weights[i] >=0])
+        # weights[i][weights[i] <0] = np.ceil(weights[i][weights[i] <0])
+        wt_statics.extend(np.array(copy.deepcopy(weights[i]), dtype="int32").flatten())
+
+
+    v_ths = []
+    for i in range(len(weights)):
+        neuron_wt_maps = {}
+        neuron_wt_int_maps = {}
+        for j in range(len(weights[i])):
+            conn_i, conn_j = conn_pairs[i][0][j], conn_pairs[i][1][j]
+            if conn_j not in neuron_wt_maps.keys():
+                neuron_wt_maps.update({conn_j: 0.0})
+                neuron_wt_int_maps.update({conn_j: 0.0})
+            neuron_wt_maps[conn_j] += fltpt_wts[i][j]
+            neuron_wt_int_maps[conn_j] += weights[i][j]
+        
+        neuron_wt_vals = list(sorted(neuron_wt_maps.items(), key=lambda x: x[0]))
+        neuron_wt_vals = [e[1] for e in neuron_wt_vals]
+        neuron_wt_int_vals = list(sorted(neuron_wt_int_maps.items(), key=lambda x: x[0]))
+        neuron_wt_int_vals = [e[1] for e in neuron_wt_int_vals]
+
+        v_ths.append(np.ceil(np.abs(np.mean(np.array(neuron_wt_int_vals) / np.array(neuron_wt_vals)))))
+
+
+    print("vthresholds={}, all mean={}".format(v_ths, np.mean(v_ths)))
+    return weights, v_ths
     
 
 model_lib = import_module("snntoolbox.parsing.model_libs.keras_input_lib")
@@ -155,7 +207,6 @@ accu = spiking_model.run(**test_set)
 
 spiking_model.end_sim()
 print("accu={}".format(accu),flush=True)
-
 # print("layers count={}, layers={}".format(len(spiking_model.layers), spiking_model.layers))
 # print("connections len={}, conns={}".format(len(spiking_model.connections), spiking_model.connections))
 # print("spike monitor len={}, monitors={}".format(len(spiking_model.spikemonitors), spiking_model.spikemonitors))
@@ -170,10 +221,14 @@ for i in range(len(spiking_model.layers)):
     num_neuron = spiking_model.layers[i].N
     model_eqs = spiking_model.layers[i].equations
     print("build layer={}, num neurons={}, model eqs={}".format(i, num_neuron, model_eqs),flush=True)
-    br2_neurons.append(brian2.NeuronGroup(num_neuron, model_eqs, method="euler",threshold="v >= v_thresh", reset="v = v - v_thresh",dt=sys_param_neurondt*brian2.ms))
+    if task_type == 2:
+        br2_neurons.append(brian2.NeuronGroup(num_neuron, model_eqs, method="euler",threshold="v >= v_th_{}".format(i), reset="v = v - v_th_{}".format(i),dt=sys_param_neurondt*brian2.ms))
+    else:
+        br2_neurons.append(brian2.NeuronGroup(num_neuron, model_eqs, method="euler", threshold="v >= v_thresh", reset="v = v - v_thresh", dt=sys_param_neurondt*brian2.ms))
 
 br2_synapses=[]
 all_wts=[]
+layer_connections_pairs = []
 for i in range(len(spiking_model.connections)):
     br2_synapses.append(brian2.Synapses(br2_neurons[i],br2_neurons[i+1],model="w:1",\
         on_pre="v+=w",dt=sys_param_synapsedt*brian2.ms))
@@ -181,6 +236,8 @@ for i in range(len(spiking_model.connections)):
         j=np.array(spiking_model.connections[i].j, dtype="int32"))
 
     all_wts.append(np.array(spiking_model.connections[i].w, dtype="float32"))
+    if task_type == 2:
+        layer_connections_pairs.append([np.array(spiking_model.connections[i].i, dtype="int32"), np.array(spiking_model.connections[i].j, dtype="int32")])
     br2_synapses[-1].w = np.array(spiking_model.connections[i].w, dtype="float32")
     print("build synapse={},i={},j={},w{}".format(i,np.array(spiking_model.connections[i].i,dtype="int32"),\
         np.array(spiking_model.connections[i].j, dtype="int32"),\
@@ -188,7 +245,13 @@ for i in range(len(spiking_model.connections)):
     print("----max weight={}, min weight={}".format(np.max(np.array(spiking_model.connections[i].w)),\
         np.min(np.array(spiking_model.connections[i].w))), flush=True)
 
-all_wts = fixpt(all_wts)
+if task_type == 2:
+    all_wts, vths = fixpt_integer_vth(all_wts, layer_connections_pairs)
+    vths = [int(e) for e in vths]
+    print("vths={}".format(vths))
+else:
+    all_wts = fixpt(all_wts)
+
 for i in range(len(br2_synapses)):
     br2_synapses[i].w = all_wts[i]
     print("fix point weights of synapse {} = {}".format(i,all_wts[i]), flush=True)
@@ -241,14 +304,24 @@ stage2_time_use = time.time()
 
 best_vthresh = sys_param_vthresh
 
-br2_model = {
-    "neurons":[e.N for e in br2_neurons],
-    "synapses_i":[list(e.i) for e in br2_synapses],
-    "synapses_j":[list(e.j) for e in br2_synapses],
-    "synapses_w":[list(e.w) for e in br2_synapses],
-    "v_thresh": best_vthresh,
-    "run_dura": sys_param_total_dura
-}
+if task_type == 2:
+    br2_model = {
+        "neurons":[e.N for e in br2_neurons],
+        "synapses_i":[list(e.i) for e in br2_synapses],
+        "synapses_j":[list(e.j) for e in br2_synapses],
+        "synapses_w":[list(e.w) for e in br2_synapses],
+        "vths": vths,
+        "run_dura": sys_param_total_dura
+    }
+else:    
+    br2_model = {
+        "neurons":[e.N for e in br2_neurons],
+        "synapses_i":[list(e.i) for e in br2_synapses],
+        "synapses_j":[list(e.j) for e in br2_synapses],
+        "synapses_w":[list(e.w) for e in br2_synapses],
+        "v_thresh": best_vthresh,
+        "run_dura": sys_param_total_dura
+    }
 if not os.path.exists(os.path.join(baseDirPath, "model_out","br2_models")):
     os.mkdir(os.path.join(baseDirPath, "model_out","br2_models"))
 if not os.path.exists(os.path.join(baseDirPath, "model_out","br2_models", target_proj_name)):
@@ -270,11 +343,22 @@ if not os.path.exists(os.path.join(baseDirPath, "model_out",target_proj_name, "b
 if not os.path.exists(os.path.join(baseDirPath, "model_out",target_proj_name, "bin_darwin_out", "inputs")):
     os.mkdir(os.path.join(baseDirPath, "model_out",target_proj_name, "bin_darwin_out", "inputs"))
 
+
+br2_params = {}
+if task_type == 2:
+    print("v_ths={}".format(vths))
+    br2_params.update({"v_th_0": 1})
+    for i in range(1, len(br2_neurons)):
+        br2_params.update({"v_th_{}".format(i): vths[i-1]})
+
 for i in range(50):
     br2_net.restore()
     sample = valX[i].flatten()/brian2.ms
     br2_neurons[0].bias = sample
-    br2_net.run(sys_param_total_dura*brian2.ms,namespace={'v_thresh': best_vthresh},report=None)
+    if task_type == 2:
+        br2_net.run(sys_param_total_dura*brian2.ms,namespace=br2_params,report=None)
+    else:
+        br2_net.run(sys_param_total_dura*brian2.ms, namespace={"v_thresh": best_vthresh}, report=None)
     input_spike = br2_input_monitor.spike_trains()
     output_spike = br2_monitor.spike_trains()
     input_spike_arrs=[]
@@ -374,9 +458,42 @@ snn_model_darlang = {
 
 # add neuron groups to darlang
 for i in range(1, len(spiking_model.layers)-1):
+    if task_type == 2:
+        snn_model_darlang["neuronGroups"].append({
+            "layerName":"layer_"+str(i),
+            "neuronSize":spiking_model.layers[i].N,
+            "neuronType":"IF",
+            "leakMode":0,
+            "leakValue":0,
+            "resetMode":1,
+            "vThreshold":vths[i-1]
+        })
+    else:      
+        snn_model_darlang["neuronGroups"].append({
+            "layerName":"layer_"+str(i),
+            "neuronSize":spiking_model.layers[i].N,
+            "neuronType":"IF",
+            "leakMode":0,
+            "leakValue":0,
+            "resetMode":1,
+            "vThreshold":best_vthresh
+        })
+
+
+if task_type == 2:
     snn_model_darlang["neuronGroups"].append({
-        "layerName":"layer_"+str(i),
-        "neuronSize":spiking_model.layers[i].N,
+        "layerName":"out",
+        "neuronSize":spiking_model.layers[-1].N,
+        "neuronType":"IF",
+        "leakMode":0,
+        "leakValue":0,
+        "resetMode":1,
+        "vThreshold":vths[-1]
+    })
+else:
+    snn_model_darlang["neuronGroups"].append({
+        "layerName":"out",
+        "neuronSize":spiking_model.layers[-1].N,
         "neuronType":"IF",
         "leakMode":0,
         "leakValue":0,
@@ -384,15 +501,6 @@ for i in range(1, len(spiking_model.layers)-1):
         "vThreshold":best_vthresh
     })
 
-snn_model_darlang["neuronGroups"].append({
-    "layerName":"out",
-    "neuronSize":spiking_model.layers[-1].N,
-    "neuronType":"IF",
-    "leakMode":0,
-    "leakValue":0,
-    "resetMode":1,
-    "vThreshold":best_vthresh
-})
 # add connection config
 for i in range(len(br2_synapses)):
     snn_model_darlang["connectConfig"].append({

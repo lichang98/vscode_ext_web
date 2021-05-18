@@ -8,8 +8,9 @@ import * as axios from 'axios';
 import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile ,addDarwinFold, addDarwinFiles} from './TreeViewProvider';
 import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage,getSNNModelPage} from "./get_convertor_page_v2";
 import {getSegDataVisPage, getSegSimulatePage, getANNSNNConvertSegPage} from "./get_seg_pages";
-import {getSpeechClsDataPage} from "./get_speech_pages";
+import {getSpeechClsDataPage, getANNSNNConvertSpeechPage} from "./get_speech_pages";
 import {exec} from "child_process";
+import { AssertionError } from 'assert';
 const decode = require('audio-decode');
 
 let PYTHON_INTERPRETER = 'python ';
@@ -543,9 +544,14 @@ export function activate(context: vscode.ExtensionContext) {
 				if(PROJ_DESC_INFO.project_type === '图像分类'){
 					scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
 									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""));
-				}else{
+				}else if(PROJ_DESC_INFO.project_type === "语义分割"){
 					scriptPath = path.join(__dirname, "darwin2sim", "seg_cls_scripts","convert_with_stb.py "+ webParamVthresh+" "+ 
 					wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""));
+				}else if(PROJ_DESC_INFO.project_type === "语音识别"){
+					scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
+									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""))+ " 2";
+				}else {
+					//TODO Other task type
 				}
 				let commandStr = PYTHON_INTERPRETER+scriptPath;
 				currentPanel?.webview.postMessage(JSON.stringify({"log_output":"模型转换程序启动中......"}));
@@ -1208,19 +1214,18 @@ export function activate(context: vscode.ExtensionContext) {
 			// 发送消息到web view ，开始模型的转换
 			console.log("模型转换页面打开");
 			// currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
-			console.log("current pane="+currentPanel);
-			console.log("current pane="+currentPanel);
-			console.log("current pane="+currentPanel);
-			console.log("current pane="+currentPanel);
 			console.log("title="+currentPanel.title);
 			if(currentPanel && currentPanel.title !== "模型转换"){
 				console.log("PROJ_DESC_INFO="+PROJ_DESC_INFO);
 				if(PROJ_DESC_INFO.project_type === '图像分类'){
 					console.log("currentpanel="+currentPanel);
 					currentPanel.webview.html = getANNSNNConvertPage();
-				}else{
+				}else if(PROJ_DESC_INFO.project_type === "语义分割"){
 					console.log("currentpanel  2="+currentPanel);
 					currentPanel.webview.html = getANNSNNConvertSegPage();
+				}else if(PROJ_DESC_INFO.project_type === "语音识别"){
+					console.log("语音识别模型转换界面");
+					currentPanel.webview.html = getANNSNNConvertSpeechPage();
 				}
 				currentPanel.reveal();
 				currentPanel.title = "模型转换";

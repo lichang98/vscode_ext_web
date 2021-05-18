@@ -1295,20 +1295,6 @@ export function activate(context: vscode.ExtensionContext) {
 				panelSNNModelVis = undefined;
 			},null, context.subscriptions);
 
-
-			// panelDataVis.webview.onDidReceiveMessage((e)=>{
-			// 	if(e.fetch_audio) {
-			// 		console.log("接收到webview 请求audio! "+e.fetch_audio);
-			// 		axios.default.get(e.fetch_audio, {responseType: "arraybuffer"}).then(res=>{
-			// 			decode(res.data).then((audioBuf:any)=>{
-			// 				panelDataVis!.webview.postMessage({"audioBuf":audioBuf});
-			// 			});
-			// 		});
-			// 	}
-			// });
-
-
-
 			panelSNNModelVis.webview.onDidReceiveMessage((evt)=>{
 				if(DARWIN_LANG_FILE_PATHS.length === 0){
 					vscode.window.showErrorMessage("请先完成转换步骤！！！");
@@ -1418,7 +1404,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		let genScript = path.join(__dirname, "darwin2sim", "gen_darwin2_bin_files.py");
-		let cmdStr = PYTHON_INTERPRETER+" "+genScript+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2", "");
+		let cmdStr = PYTHON_INTERPRETER+" "+genScript+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2", "")+" "+path.join(path.dirname(PROJ_SAVE_PATH!), "packed_bin_files.dat");
 		vscode.window.showInformationMessage("二进制文件生成中，请稍等......");
 		exec(cmdStr, (err, stdout, stderr)=>{
 			if(err){

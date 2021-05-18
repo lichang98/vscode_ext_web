@@ -8,7 +8,7 @@ import * as axios from 'axios';
 import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile ,addDarwinFold, addDarwinFiles} from './TreeViewProvider';
 import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage,getSNNModelPage} from "./get_convertor_page_v2";
 import {getSegDataVisPage, getSegSimulatePage, getANNSNNConvertSegPage} from "./get_seg_pages";
-import {getSpeechClsDataPage, getANNSNNConvertSpeechPage} from "./get_speech_pages";
+import {getSpeechClsDataPage, getANNSNNConvertSpeechPage, getSNNSimuSpeechPage} from "./get_speech_pages";
 import {exec} from "child_process";
 import { AssertionError } from 'assert';
 const decode = require('audio-decode');
@@ -1294,6 +1294,21 @@ export function activate(context: vscode.ExtensionContext) {
 			panelSNNModelVis.onDidDispose(()=>{
 				panelSNNModelVis = undefined;
 			},null, context.subscriptions);
+
+
+			// panelDataVis.webview.onDidReceiveMessage((e)=>{
+			// 	if(e.fetch_audio) {
+			// 		console.log("接收到webview 请求audio! "+e.fetch_audio);
+			// 		axios.default.get(e.fetch_audio, {responseType: "arraybuffer"}).then(res=>{
+			// 			decode(res.data).then((audioBuf:any)=>{
+			// 				panelDataVis!.webview.postMessage({"audioBuf":audioBuf});
+			// 			});
+			// 		});
+			// 	}
+			// });
+
+
+
 			panelSNNModelVis.webview.onDidReceiveMessage((evt)=>{
 				if(DARWIN_LANG_FILE_PATHS.length === 0){
 					vscode.window.showErrorMessage("请先完成转换步骤！！！");
@@ -1314,9 +1329,25 @@ export function activate(context: vscode.ExtensionContext) {
 					console.log("SNN仿真界面就绪.....");
 					fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
 						if(panelSNNModelVis){
-							console.log("SNN仿真界面发送 snn_info 数据....");
-							panelSNNModelVis.webview.postMessage(JSON.stringify({"snn_info":data}));
+							if(PROJ_DESC_INFO.project_type === "图像分类" || PROJ_DESC_INFO.project_type === "语义分割") {
+								console.log("SNN仿真界面发送 snn_info 数据....");
+								panelSNNModelVis.webview.postMessage(JSON.stringify({"snn_info":data}));
+							}else if(PROJ_DESC_INFO.project_type === "语音识别") {
+								console.log("语音识别SNN模型仿真界面snn_info 以及样例数据...");
+								fs.readFile(path.join(__dirname, "inner_scripts", "data_info.json"), "utf-8", (err, sampleData)=>{
+									console.log("Load sample data....");
+									panelSNNModelVis!.webview.postMessage(JSON.stringify({"snn_info": data, "sample_audio":sampleData}));
+								});
+							}
 						}
+					});
+				} else if(data.fetch_audio){
+					// 获取音频
+					console.log("snn speech simulate page 获取音频..."+data.fetch_audio);
+					axios.default.get(data.fetch_audio, {responseType: "arraybuffer"}).then(res=>{
+						decode(res.data).then((audioBuf:any)=>{
+							panelSNNModelVis!.webview.postMessage(JSON.stringify({"audioBuf": audioBuf}));
+						});
 					});
 				}
 			});
@@ -1324,6 +1355,8 @@ export function activate(context: vscode.ExtensionContext) {
 				panelSNNModelVis.webview.html = getSNNSimuPage();
 			}else if(PROJ_DESC_INFO.project_type === '语义分割'){
 				panelSNNModelVis.webview.html = getSegSimulatePage();
+			}else if(PROJ_DESC_INFO.project_type === "语音识别") {
+				panelSNNModelVis.webview.html = getSNNSimuSpeechPage();
 			}
 			panelSNNModelVis.title = "SNN仿真";
 			panelSNNModelVis.reveal();

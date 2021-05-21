@@ -346,8 +346,9 @@ function activate(context) {
         else if (label.search("config.b") !== -1) {
             console.log("解析显示1_1config.b 文件内容");
             let targetFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt");
-            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt"), path.join(path.dirname(PROJ_SAVE_PATH), path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + "_config.b"));
-            targetFilePath = path.join(path.dirname(PROJ_SAVE_PATH), path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + "_config.b");
+            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt"), path.join(path.dirname(PROJ_SAVE_PATH), path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + "_config.txt"));
+            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.b"), path.join(path.dirname(PROJ_SAVE_PATH), path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + "_config.b"));
+            targetFilePath = path.join(path.dirname(PROJ_SAVE_PATH), path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + "_config.txt");
             console.log("显示config.b文件内容，文件路径：" + targetFilePath);
             vscode.workspace.openTextDocument(targetFilePath).then((doc) => {
                 vscode.window.showTextDocument(doc, 1, false);
@@ -11816,36 +11817,22 @@ function getANNSNNConvertSpeechPage() {
                           color: #333333;
                           letter-spacing: 0.91px;">脉冲发放阈值</font></label>
                       <select class="form-control" id="select_vthresh">
-                          <option>21</option>
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                          <option>6</option>
-                          <option>7</option>
-                          <option>8</option>
-                          <option>9</option>
-                          <option>10</option>
-                          <option>11</option>
-                          <option>12</option>
-                          <option>13</option>
-                          <option>14</option>
-                          <option>15</option>
-                          <option>16</option>
-                          <option>17</option>
-                          <option>18</option>
-                          <option>19</option>
-                          <option>20</option>
-                          <option>22</option>
-                          <option>23</option>
-                          <option>24</option>
-                          <option>25</option>
-                          <option>26</option>
-                          <option>27</option>
-                          <option>28</option>
-                          <option>29</option>
-                          <option>30</option>
+                          <option>87</option>
+                          <option>80</option>
+                          <option>81</option>
+                          <option>82</option>
+                          <option>83</option>
+                          <option>84</option>
+                          <option>85</option>
+                          <option>86</option>
+                          <option>88</option>
+                          <option>89</option>
+                          <option>90</option>
+                          <option>91</option>
+                          <option>92</option>
+                          <option>93</option>
+                          <option>94</option>
+                          <option>95</option>
                       </select>
                   </div>
                   <div class="col-md-2" style="margin-left: 28px;text-align: center;">
@@ -11887,9 +11874,9 @@ function getANNSNNConvertSpeechPage() {
                           color: #333333;
                           letter-spacing: 0.91px;">总时间</font></label>
                       <select class="form-control" id="select_dura">
+                          <option>500ms</option>
                           <option>100ms</option>
                           <option>200ms</option>
-                          <option>500ms</option>
                       </select>
                   </div>
               </form>
@@ -12912,9 +12899,9 @@ function getSNNSimuSpeechPage() {
           console.log("SNN仿真Webview 界面ready.");
             window.addEventListener("message", function(evt){
               console.log("SNN 仿真接收到extension 消息");
-              need_red_img_li.splice(0);
                 const data = JSON.parse(evt.data);
                 if(data.snn_info){
+                    need_red_img_li.splice(0);
                     var infos =JSON.parse(data.snn_info);
                     var sample_audio_info = JSON.parse(data.sample_audio);
                     console.log("SNN Speech simulate page, sample_audio_info="+sample_audio_info+", sample img0="+sample_audio_info.sample_imgs[0].label);
@@ -13035,9 +13022,10 @@ function getSNNSimuSpeechPage() {
                           document.getElementById("out_labels").appendChild(td_child);
                         }
   
-                        console.log("check spike_counts of "+i+", ="+spike_counts);
+                        console.log("check spike_counts of "+i+", ="+spike_counts+", need_red_img_li len="+need_red_img_li);
                         // mark reds
                         for(let k=0;k<need_red_img_li.length;++k){
+                          console.log("in onclick function , 当前检查 idx="+k+", prev clicked_li="+prev_clicked_li);
                           if(prev_clicked_li === need_red_img_li[k]){
                             // document.getElementById(need_red_img_li[k]).style.backgroundColor = "yellow";  
                             document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '10px outset orange';
@@ -13059,6 +13047,7 @@ function getSNNSimuSpeechPage() {
   
                       // // mark reds
                       // for(let k=0;k<need_red_img_li.length;++k){
+                      //   console.log("检查当前mark red img idx="+k+", prev_clicked_li="+prev_clicked_li);
                       //   if(prev_clicked_li === need_red_img_li[k]){
                       //     // document.getElementById(need_red_img_li[k]).style.backgroundColor = "yellow";  
                       //     document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '10px outset orange';
@@ -13331,20 +13320,27 @@ function getSNNSimuSpeechPage() {
                     cls_idx = test_img_spikes[i].spike_tuples[j][0];
                 }
             }
-            if(spike_counts.length > 0){
+            if(curr_count > 0){
               spike_counts[cls_idx] = curr_count;
             }
             console.log("current check img:"+i+", spike_counts="+spike_counts);
-            var img_label = sample_audio_info.sample_imgs[i].label;
-            if(parseInt(img_label) !== my_argmax(spike_counts)){
+            var arg_max_spikes = my_argmax(spike_counts);
+            if (arg_max_spikes !== parseInt(sample_audio_info.sample_imgs[i].label)){
               need_red_img_li.push("img_li_"+i);
-            }else if(multiple_argmax(spike_counts)){
-              console.log("--after check multiple armax, true");
-              need_red_img_li.push("img_li_"+i);
-              console.log("img: "+i+" need mark.");
+              console.log("img idx "+i+" need mark red!");
             }else{
-              console.log("img " +  i+ " ok");
+              console.log("img idx "+i+" is correct.");
             }
+          //   var img_label = sample_audio_info.sample_imgs[i].label;
+          //   if(parseInt(img_label) !== my_argmax(spike_counts)){
+          //     need_red_img_li.push("img_li_"+i);
+          //   }else if(multiple_argmax(spike_counts)){
+          //     console.log("--after check multiple armax, true");
+          //     need_red_img_li.push("img_li_"+i);
+          //     console.log("img: "+i+" need mark.");
+          //   }else{
+          //     console.log("img " +  i+ " ok");
+          //   }
           }
         }
   

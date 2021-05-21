@@ -230,9 +230,9 @@ body {
         console.log("SNN仿真Webview 界面ready.");
           window.addEventListener("message", function(evt){
             console.log("SNN 仿真接收到extension 消息");
-            need_red_img_li.splice(0);
               const data = JSON.parse(evt.data);
               if(data.snn_info){
+                  need_red_img_li.splice(0);
                   var infos =JSON.parse(data.snn_info);
                   var sample_audio_info = JSON.parse(data.sample_audio);
                   console.log("SNN Speech simulate page, sample_audio_info="+sample_audio_info+", sample img0="+sample_audio_info.sample_imgs[0].label);
@@ -353,9 +353,10 @@ body {
                         document.getElementById("out_labels").appendChild(td_child);
                       }
 
-                      console.log("check spike_counts of "+i+", ="+spike_counts);
+                      console.log("check spike_counts of "+i+", ="+spike_counts+", need_red_img_li len="+need_red_img_li);
                       // mark reds
                       for(let k=0;k<need_red_img_li.length;++k){
+                        console.log("in onclick function , 当前检查 idx="+k+", prev clicked_li="+prev_clicked_li);
                         if(prev_clicked_li === need_red_img_li[k]){
                           // document.getElementById(need_red_img_li[k]).style.backgroundColor = "yellow";  
                           document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '10px outset orange';
@@ -377,6 +378,7 @@ body {
 
                     // // mark reds
                     // for(let k=0;k<need_red_img_li.length;++k){
+                    //   console.log("检查当前mark red img idx="+k+", prev_clicked_li="+prev_clicked_li);
                     //   if(prev_clicked_li === need_red_img_li[k]){
                     //     // document.getElementById(need_red_img_li[k]).style.backgroundColor = "yellow";  
                     //     document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '10px outset orange';
@@ -649,20 +651,27 @@ body {
                   cls_idx = test_img_spikes[i].spike_tuples[j][0];
               }
           }
-          if(spike_counts.length > 0){
+          if(curr_count > 0){
             spike_counts[cls_idx] = curr_count;
           }
           console.log("current check img:"+i+", spike_counts="+spike_counts);
-          var img_label = sample_audio_info.sample_imgs[i].label;
-          if(parseInt(img_label) !== my_argmax(spike_counts)){
+          var arg_max_spikes = my_argmax(spike_counts);
+          if (arg_max_spikes !== parseInt(sample_audio_info.sample_imgs[i].label)){
             need_red_img_li.push("img_li_"+i);
-          }else if(multiple_argmax(spike_counts)){
-            console.log("--after check multiple armax, true");
-            need_red_img_li.push("img_li_"+i);
-            console.log("img: "+i+" need mark.");
+            console.log("img idx "+i+" need mark red!");
           }else{
-            console.log("img " +  i+ " ok");
+            console.log("img idx "+i+" is correct.");
           }
+        //   var img_label = sample_audio_info.sample_imgs[i].label;
+        //   if(parseInt(img_label) !== my_argmax(spike_counts)){
+        //     need_red_img_li.push("img_li_"+i);
+        //   }else if(multiple_argmax(spike_counts)){
+        //     console.log("--after check multiple armax, true");
+        //     need_red_img_li.push("img_li_"+i);
+        //     console.log("img: "+i+" need mark.");
+        //   }else{
+        //     console.log("img " +  i+ " ok");
+        //   }
         }
       }
 

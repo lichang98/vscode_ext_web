@@ -55,7 +55,8 @@ target_files = [os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.b"),
                 os.path.join(outputPath,"..", "bin_darwin_out", "layerWidth1_1"),
                 os.path.join(outputPath,"..", "bin_darwin_out", "linkout"),
                 os.path.join(outputPath,"..", "bin_darwin_out", "nodelist1_1"),
-                os.path.join(outputPath,"..", "bin_darwin_out", "re_config.txt")]
+                os.path.join(outputPath,"..", "bin_darwin_out", "re_config.txt",
+                os.path.join(outputPath,"..", ".." ,"br2_models", sys.argv[1], "br2.pkl"))]
 darwin_lang_files = list(os.listdir(outputPath))
 darwin_lang_files = [os.path.join(outputPath, e) for e in darwin_lang_files]
 target_files.extend(darwin_lang_files)

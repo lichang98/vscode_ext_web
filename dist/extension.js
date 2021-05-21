@@ -7406,31 +7406,31 @@ function getANNSNNConvertPage() {
                   console.log("data split list len="+log_output_lists.length);
                   // $("#log_output_div").html(log_output_lists.join("<br/>"));
                   // document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
-                  if(log_output_lists.length <= 180){
-                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/180*100)+"%");
-                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/180*100)+"%";
+                  if(log_output_lists.length <= 161){
+                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/161*100)+"%");
+                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/161*100)+"%";
                   }
                   if(stage1_convert_finish){
-                      if(log_output_lists.length < 360 && stage2_preprocess_finish !== true){
+                      if(log_output_lists.length < 697 && stage2_preprocess_finish !== true){
                           console.log("increase sub progress bar 2");
-                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-176)/(360-176)*100)+"%";
+                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-161)/(697-161)*100)+"%";
                       }
                   }
                   if(stage2_preprocess_finish){
-                      if(log_output_lists.length < 460 && stage3_search_finish !== true){
+                      if(log_output_lists.length < 799 && stage3_search_finish !== true){
                           console.log("increase sub progress bar 3");
-                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-347)/(450-347)*100)+"%";
+                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-697)/(799-697)*100)+"%";
                       }
                   }
                   if(stage3_search_finish){
-                      if(log_output_lists.length < 520 && stage4_all_finish !== true){
+                      if(log_output_lists.length < 866 && stage4_all_finish !== true){
                           console.log("increase sub progress bar 4");
-                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-450)/(520-450)*100)+"%";
+                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-799)/(866-799)*100)+"%";
                       }
                   }
                   if(stage4_all_finish !== true){
                       console.log("increase sub progress bar total");
-                      document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/520*100)+"%";
+                      document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/866*100)+"%";
                   }
                 }else if(data.exec_finish){
                     // 结束

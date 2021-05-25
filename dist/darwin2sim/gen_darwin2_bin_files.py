@@ -48,7 +48,9 @@ def convert(file_name,save_name):
 convert(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.txt"), os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.b"))
 
 # pack generated darwin files and binary files
-target_files = [os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.b"),
+# rename 1_1config.b to config.b
+os.rename(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.b"), os.path.join(outputPath,"..", "bin_darwin_out", "config.b"))
+target_files = [os.path.join(outputPath,"..", "bin_darwin_out", "config.b"),
                 os.path.join(outputPath,"..", "bin_darwin_out", "1_1clear.txt"),
                 os.path.join(outputPath,"..", "bin_darwin_out", "1_1enable.txt"),
                 os.path.join(outputPath,"..", "bin_darwin_out", "connfiles1_1"),

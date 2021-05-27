@@ -44,11 +44,11 @@ def convert(file_name,save_name):
         file.write(bytes("{}".format(line),'ascii'))
         file.write(send_bytes)
 
-
 convert(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.txt"), os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.b"))
-
 # pack generated darwin files and binary files
 # rename 1_1config.b to config.b
+if os.path.exists(os.path.join(outputPath,"..", "bin_darwin_out", "config.b")):
+    os.remove(os.path.join(outputPath,"..", "bin_darwin_out", "config.b"))
 os.rename(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.b"), os.path.join(outputPath,"..", "bin_darwin_out", "config.b"))
 target_files = [os.path.join(outputPath,"..", "bin_darwin_out", "config.b"),
                 os.path.join(outputPath,"..", "bin_darwin_out", "1_1clear.txt"),

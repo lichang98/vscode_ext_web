@@ -347,7 +347,7 @@ function activate(context) {
             console.log("解析显示1_1config.b 文件内容");
             let targetFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt");
             fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.txt"), path.join(path.dirname(PROJ_SAVE_PATH), path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + "_config.txt"));
-            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "1_1config.b"), path.join(path.dirname(PROJ_SAVE_PATH), path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + "_config.b"));
+            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(path.dirname(PROJ_SAVE_PATH), "config.b"));
             targetFilePath = path.join(path.dirname(PROJ_SAVE_PATH), path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + "_config.txt");
             console.log("显示config.b文件内容，文件路径：" + targetFilePath);
             vscode.workspace.openTextDocument(targetFilePath).then((doc) => {
@@ -1391,8 +1391,10 @@ function activate(context) {
         child_process_1.exec(cmdStr, (err, stdout, stderr) => {
             if (err) {
                 console.log("执行darwin2二进制部署文件错误...");
+                vscode.window.showErrorMessage("二进制文件生成错误!!!");
             }
             else {
+                fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(path.dirname(PROJ_SAVE_PATH), "config.b"));
                 DARWIN_LANG_BIN_PATHS.splice(0);
                 inMemTreeViewStruct[0].children[2].children[0].children[0].children.splice(0);
                 inMemTreeViewStruct[0].children[2].children[0].children[1].children.splice(0);
@@ -1487,6 +1489,7 @@ function activate(context) {
     });
     vscode.commands.registerCommand("item_darwinLang_convertor.convert_to_darwin3", function () {
         console.log("目标转换为darwin3二进制文件");
+        vscode.window.showWarningMessage("目前尚不支持darwin3!");
     });
     vscode.commands.executeCommand("darwin2.helloWorld");
     function autoSaveWithCheck() {

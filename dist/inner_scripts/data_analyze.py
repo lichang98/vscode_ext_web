@@ -23,7 +23,7 @@ plt.rcParams['axes.unicode_minus']=False
 
 # other type of task
 # TODO
-# argv[4] task type: 0 default mnist classification; 1 semantic segmentation; 2 speech classification
+# argv[4] task type: 0 default mnist classification; 1 semantic segmentation; 2 speech classification; 3 fatigue detection
 # argv[5] extra info: integer for semantic segmantation num of classes
 task_type =0
 
@@ -224,6 +224,33 @@ elif task_type == 2:
                                                 "test_sample_audio_path": "http://localhost:6003/speech_cls/audio/test_sample_audio_"+str(i)+".wav"})
     
     with open(path.join(path.abspath(path.dirname(__file__)), "data_info.json"), "w+", encoding="utf-8") as f:
+        json.dump(data_info, f)
+
+elif task_type == 3:
+    # fatigue detection
+    sample_hist_grams = []
+    for i in range(20):
+        sample_img = np.array(np.squeeze(x_test[i])*255.0, dtype='uint8')
+        sample_img = Image.fromarray(sample_img)
+        sample_img = sample_img.resize((40,40))
+        sample_img = np.array(sample_img, dtype="uint8")
+        hist_gram_bin_sample = get_hist_grem_bins(sample_img, hist_gram_splits)
+        sample_hist_grams.append(hist_gram_bin_sample)
+        sample_img = Image.fromarray(sample_img)
+        sample_img.save(path.join(path.abspath(path.dirname(__file__)), "sample_"+str(i)+".png"))
+        # move to directory under resources
+        shutil.move(path.join(path.abspath(path.dirname(__file__)), "sample_"+str(i)+".png"),
+                    path.join(path.abspath(path.dirname(__file__)),"..","..","src","resources","script_res", "sample_"+str(i)+".png"))
+        data_info['sample_imgs'].append({'test_sample_img_path': 'http://localhost:6003/seg/data_vis/sample_'+str(i)+'.png', 'hist_gram_bins':hist_gram_bin_sample.tolist()})
+        # data_info['test_sample_imgs'].append({"test_sample_img_path": path.join(path.abspath(path.dirname(__file__)),"..","..","src","resources","script_res", "test_sample_"+str(i)+".png"),
+        #                                     "hist_gram_bins":hist_gram_bin_sample.tolist()})
+    
+    for i in range(20):
+        shutil.copy(path.join(path.abspath(path.dirname(__file__)),"..","..","src","resources","script_res", "sample_"+str(i)+".png"),
+                    path.join(path.abspath(path.dirname(__file__)),"..","..","src","resources","script_res", "test_sample_"+str(i)+".png"))
+        data_info['test_sample_imgs'].append({'test_sample_img_path': 'http://localhost:6003/seg/data_vis/test_sample_'+str(i)+'.png', 'hist_gram_bins': sample_hist_grams[i].tolist()})
+    
+    with open(path.join(path.abspath(path.dirname(__file__)), "data_info.json"),"w+",encoding="utf-8") as f:
         json.dump(data_info, f)
 
 

@@ -180,7 +180,10 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
     # num_list = [3, 32, 32, 48, 48]
     size_list = conv_size_list
     num_list = conv_num_list
-    x_diff_list = [0, layer_width, layer_width, layer_width, layer_width]
+    if task_type == 3:
+        x_diff_list = [0, layer_width, layer_width, layer_width, layer_width,layer_width,layer_width]
+    else:
+        x_diff_list = [0, layer_width, layer_width, layer_width, layer_width]
     if task_type == 1:
         x_diff_list = [0, layer_width*2,layer_width*2,layer_width*2,layer_width*2,layer_width*2,layer_width*2]
     text_list = ['Inputs'] + ['Feature\nmaps'] * (len(size_list) - 1)
@@ -189,21 +192,22 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
     num_show_list = list(map(min, num_list, [NumConvMax] * len(num_list)))
     top_left_list = np.c_[np.cumsum(x_diff_list), np.zeros(len(x_diff_list))]
 
-    for ind in range(len(size_list)-1,-1,-1):
-        if flag_omit:
-            add_layer_with_omission(patches, colors, size=size_list[ind],
-                                    num=num_list[ind],
-                                    num_max=NumConvMax,
-                                    num_dots=NumDots,
-                                    top_left=top_left_list[ind],
-                                    loc_diff=loc_diff_list[ind],
-                                    layer_ind=ind)
-        else:
-            add_layer(patches, colors, size=size_list[ind],
-                      num=num_show_list[ind],
-                      top_left=top_left_list[ind], loc_diff=loc_diff_list[ind])
-        label(top_left_list[ind], text_list[ind] + '\n{}@{}x{}'.format(
-            num_list[ind], size_list[ind][0], size_list[ind][1]))
+    if task_type != 3:
+        for ind in range(len(size_list)-1,-1,-1):
+            if flag_omit:
+                add_layer_with_omission(patches, colors, size=size_list[ind],
+                                        num=num_list[ind],
+                                        num_max=NumConvMax,
+                                        num_dots=NumDots,
+                                        top_left=top_left_list[ind],
+                                        loc_diff=loc_diff_list[ind],
+                                        layer_ind=ind)
+            else:
+                add_layer(patches, colors, size=size_list[ind],
+                        num=num_show_list[ind],
+                        top_left=top_left_list[ind], loc_diff=loc_diff_list[ind])
+            label(top_left_list[ind], text_list[ind] + '\n{}@{}x{}'.format(
+                num_list[ind], size_list[ind][0], size_list[ind][1]))
 
     ############################
     # in between layers
@@ -235,7 +239,10 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
     # num_list = [768, 500, 2]
     num_list = dense_size_list
     num_show_list = list(map(min, num_list, [NumFcMax] * len(num_list)))
-    x_diff_list = [sum(x_diff_list) + layer_width, layer_width, layer_width]
+    if task_type == 3:
+        x_diff_list = [sum(x_diff_list) + layer_width, layer_width, layer_width, layer_width, layer_width]
+    else:
+        x_diff_list = [sum(x_diff_list) + layer_width, layer_width, layer_width]
     top_left_list = np.c_[np.cumsum(x_diff_list), np.zeros(len(x_diff_list))]
     loc_diff_list = [[fc_unit_size, -fc_unit_size]] * len(top_left_list)
     text_list = ['Hidden\nunits'] * (len(size_list) - 1) + ['Outputs']
@@ -256,7 +263,7 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
         label(top_left_list[ind], text_list[ind] + '\n{}'.format(
             num_list[ind]))
 
-    text_list = ['Flatten\n', 'Fully\nconnected', 'Fully\nconnected']
+    text_list = ['Flatten\n', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected']
 
     for ind in range(len(size_list)):
         label(top_left_list[ind], text_list[ind], xy_off=[-10, -65])

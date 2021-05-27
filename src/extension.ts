@@ -9,6 +9,7 @@ import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile ,ad
 import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage,getSNNModelPage} from "./get_convertor_page_v2";
 import {getSegDataVisPage, getSegSimulatePage, getANNSNNConvertSegPage} from "./get_seg_pages";
 import {getSpeechClsDataPage, getANNSNNConvertSpeechPage, getSNNSimuSpeechPage} from "./get_speech_pages";
+import {getFatigueDataVisPage} from "./get_fatigue_pages";
 import {exec} from "child_process";
 import { AssertionError } from 'assert';
 const decode = require('audio-decode');
@@ -944,6 +945,8 @@ export function activate(context: vscode.ExtensionContext) {
 						panelDataVis.webview.html = getSegDataVisPage();
 					} else if(PROJ_DESC_INFO.project_type === "语音识别") {
 						panelDataVis.webview.html = getSpeechClsDataPage();
+					} else if(PROJ_DESC_INFO.project_type === "疲劳检测") {
+						panelDataVis.webview.html = getFatigueDataVisPage();
 					}
 			}else if(itemNode.label === "ANN模型"){
 				if(panelAnnModelVis){
@@ -977,6 +980,9 @@ export function activate(context: vscode.ExtensionContext) {
 					// last param is npz file path contains original audio seq and sampling rates
 					console.log("语音识别路径："+X_NORM_DATA_PATH+" "+X_TEST_DATA_PATH+" "+Y_TEST_DATA_PATH+" "+X_ORIGIN_COLOR_DATA_PATH);
 					commandStr = PYTHON_INTERPRETER+scriptPath+" "+X_NORM_DATA_PATH+" "+X_TEST_DATA_PATH+" "+Y_TEST_DATA_PATH+" 2 "+X_ORIGIN_COLOR_DATA_PATH;
+				} else if(PROJ_DESC_INFO.project_type === "疲劳检测") {
+					console.log("疲劳检测模型路径："+X_NORM_DATA_PATH+ " "+X_TEST_DATA_PATH+" "+Y_TEST_DATA_PATH+" "+X_ORIGIN_COLOR_DATA_PATH);
+					commandStr = PYTHON_INTERPRETER+scriptPath+" "+X_NORM_DATA_PATH+" "+X_ORIGIN_COLOR_DATA_PATH+" "+Y_TEST_DATA_PATH+" 3 "+X_ORIGIN_COLOR_DATA_PATH;
 				}
 				exec(commandStr, function(err, stdout, stderr){
 					if(err){
@@ -1004,6 +1010,8 @@ export function activate(context: vscode.ExtensionContext) {
 				if(PROJ_DESC_INFO.project_type === '语义分割'){
 					// FIXME task type
 					commandExe += " 1";
+				}else if(PROJ_DESC_INFO.project_type === "疲劳检测") {
+					commandExe += " 3";
 				}
 				exec(commandExe, function(err, stdout, stderr){
 					console.log("model vis script running...");

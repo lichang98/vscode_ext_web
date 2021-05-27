@@ -1058,7 +1058,7 @@ export function getConvertorPageV2(){
                                 <option>图像分类</option>
                                 <option>语义分割</option>
                                 <option>语音识别</option>
-                                <option>目标检测</option>
+                                <option>疲劳检测</option>
                             </select>
                         </div>
                         <div class="form-group" style="margin-top: 20px;">
@@ -1174,6 +1174,7 @@ export function getConvertorPageV2(){
                                 <option>图像分类</option>
                                 <option>语音识别</option>
                                 <option>目标检测</option>
+                                <option>疲劳检测</option>
                             </select>
                         </div>
                         <div class="form-group" style="margin-top: 20px;">

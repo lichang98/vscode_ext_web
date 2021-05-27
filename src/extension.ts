@@ -9,7 +9,7 @@ import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile ,ad
 import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage,getSNNModelPage} from "./get_convertor_page_v2";
 import {getSegDataVisPage, getSegSimulatePage, getANNSNNConvertSegPage} from "./get_seg_pages";
 import {getSpeechClsDataPage, getANNSNNConvertSpeechPage, getSNNSimuSpeechPage} from "./get_speech_pages";
-import {getFatigueDataVisPage, getANNSNNConvertFatiguePage} from "./get_fatigue_pages";
+import {getFatigueDataVisPage, getANNSNNConvertFatiguePage, getSNNSimuFatiguePage} from "./get_fatigue_pages";
 import {exec} from "child_process";
 import { AssertionError } from 'assert';
 const decode = require('audio-decode');
@@ -1331,7 +1331,7 @@ export function activate(context: vscode.ExtensionContext) {
 					console.log("SNN仿真界面就绪.....");
 					fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
 						if(panelSNNModelVis){
-							if(PROJ_DESC_INFO.project_type === "图像分类" || PROJ_DESC_INFO.project_type === "语义分割") {
+							if(PROJ_DESC_INFO.project_type === "图像分类" || PROJ_DESC_INFO.project_type === "语义分割" || PROJ_DESC_INFO.project_type === "疲劳检测") {
 								console.log("SNN仿真界面发送 snn_info 数据....");
 								panelSNNModelVis.webview.postMessage(JSON.stringify({"snn_info":data}));
 							}else if(PROJ_DESC_INFO.project_type === "语音识别") {
@@ -1359,6 +1359,8 @@ export function activate(context: vscode.ExtensionContext) {
 				panelSNNModelVis.webview.html = getSegSimulatePage();
 			}else if(PROJ_DESC_INFO.project_type === "语音识别") {
 				panelSNNModelVis.webview.html = getSNNSimuSpeechPage();
+			}else if(PROJ_DESC_INFO.project_type === "疲劳检测") {
+				panelSNNModelVis.webview.html = getSNNSimuFatiguePage();
 			}
 			panelSNNModelVis.title = "SNN仿真";
 			panelSNNModelVis.reveal();

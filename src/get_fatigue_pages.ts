@@ -1387,3 +1387,787 @@ export function getANNSNNConvertFatiguePage():string{
     </html>
     `;
 }
+
+export function getSNNSimuFatiguePage():string{
+    return `
+    <!DOCTYPE html>
+    <html style="height: 640px;width: 100%;">
+    
+    <head>
+      <meta charset="UTF-8">
+      <title>模型转换器</title>
+    </head>
+    
+    <body class="dark-mode" style="height: 100%;width: 100%;white-space: nowrap;overflow: auto;">
+    
+      <div class="loading-div">
+        <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;"></i>
+        <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">仿真数据加载中...</font></span>
+      </div>
+    
+        <div style="margin-top: 5px;display: block;">
+    
+            <div style="background: rgba(238,238,238,0.4);width: 400px;height: 380px;display: inline-block;">
+              <div>
+                <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+                  font-size: 20px;
+                  color: #333333;
+                  letter-spacing: 1.14px;">仿真配置结果评估</font></div>
+                <table id="layer_conf_val" style="width: 320px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
+                    <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
+                    <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
+                      <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                      font-size: 16px;
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">统计指标</td>
+                      <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                      font-size: 16px;
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">指标值</td>
+                    </tr>
+                    <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
+                      <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                      font-size: 14px;
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">膜电位阈值</td>
+                      <td id="simulate_vthresh" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+                    </tr>
+                    <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                      <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                      font-size: 14px;
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">神经元时间步长</td>
+                      <td id="simulate_neuron_dt" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+                    </tr>
+                    <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                      <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                      font-size: 14px;
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">突触时间步长</td>
+                      <td id="simulate_synapse_dt" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+                    </tr>
+                    <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                      <td  style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                      font-size: 14px;
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">延迟</td>
+                      <td id="simulate_delay" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+                    </tr>
+                    <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                      <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                      font-size: 14px;
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">仿真时长</td>
+                      <td id="simulate_dura" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+                    </tr>
+                    <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                      <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                      font-size: 14px;
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">准确率</td>
+                      <td id="simulate_acc" style="color: #e71f1fe0;text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+                    </tr>    
+                </table>
+              </div>
+            </div>
+    
+            <div style="background: rgba(238,238,238,0.4);width: 500px;height: 380px;display: inline-block;">
+              <div style="text-align: center;margin-left: 40px;"><font style="font-family: SourceHanSansCN-Normal;
+                font-size: 20px;
+                color: #333333;
+                letter-spacing: 1.14px;">放电次数均值方差统计</font></div>
+              <table id="snn_layers_spike_table" style="width: 420px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
+                <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
+                <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
+                  <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                  font-size: 16px;
+                  color: #666666;padding-top: 12px;padding-bottom: 12px;">层编号</td>
+                  <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                  font-size: 16px;
+                  color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数均值</td>
+                  <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                  font-size: 16px;
+                  color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数方差</td>
+                </tr>
+              </table>
+            </div>
+    
+            <div style="background: rgba(238,238,238,0.4);width: 600px;height: 380px;display: inline-block;">
+              <div>
+                <div id="neurons_v_out_div" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+                  font-size: 20px;
+                  color: #333333;
+                  letter-spacing: 1.14px;">神经元放电</font></div>
+                <div style="width: 360px;margin-left: 40px;margin-top: 20px;">
+                  <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                      <label class="control-label col-md-8" for="select_which_layer"><font style="font-family: PingFangSC-Regular;font-weight: normal;
+                        font-size: 16px;
+                        color: #000000;
+                        text-align: left;">选择神经元层</font></label>
+                      <div class="col-md-4">
+                        <select class="form-control" id="select_which_layer">
+                          <option>输入层</option>
+                          <option>输出层</option>
+                      </select>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div id="neurons_v_chart" style="width: 540px;height: 320px;margin-left: 40px;margin-top: 20px;"></div>
+              </div>
+            </div>
+        </div>
+        <div style="margin-top: 5px;display: block;">
+            <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
+              <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+                font-size: 20px;
+                color: #333333;
+                letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
+              <div id="input_spike_charts" style="width:660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
+              <ul id="input_spike_sample_imgs_ul" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
+              </ul>
+            </div>
+            <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
+                <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+                  font-size: 20px;
+                  color: #333333;
+                  letter-spacing: 1.14px;">脉冲神经网络输出层脉冲</font></div>
+                <span style="margin-left: 280px;font-family: SourceHanSansCN-Normal;
+                font-size: 14px;
+                color: #e71f1fe0;
+                letter-spacing: 0.8px;">红色标记图像为输出层预测错误</span>
+                <div id="model_layers_vis_tab_caption" style="text-align: center;background: rgba(238,238,238,1.00);border: solid 1px #D6D6D6;width: 460px;margin-left: 180px;"><font style="font-family: SourceHanSansCN-Medium;
+                  font-size: 14px;
+                  color: #666666;">统计计数</font></div>
+                <table id="spike_out_count_table" style="margin-left: 180px;border: solid 3px #D6D6D6;color: #333;width: 460px;">
+                    <tr id="out_labels" style="border: solid 2px #D6D6D6;">
+                    </tr>
+                    <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
+                    </tr>
+                </table>
+                <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
+                <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
+                </ul>
+            </div>
+        </div>
+    </body>
+    <style>
+    
+    .titlebar {
+      -webkit-user-select: none;
+      -webkit-app-region: drag;
+    }
+    
+    .titlebar-button {
+      -webkit-app-region: no-drag;
+    }
+    
+    body {
+      padding: 25px;
+      background-color: rgb(251, 255, 255);
+      color: white;
+      font-size: 25px;
+    }
+    
+    .dark-mode {
+      background-color: rgb(249, 251, 252);
+      color: white;
+    }
+    
+      @font-face {
+        font-family: 'Material Icons';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+      }
+    
+      .material-icons {
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1;
+        text-transform: none;
+        display: inline-block;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+      }
+    
+    .loading-div {
+        width: calc(100vw);
+        height: calc(100vh);
+        display: table-cell;
+        vertical-align: middle;
+        color: #555;
+        overflow: hidden;
+        text-align: center;
+      }
+    .loading-div::before {
+      display: inline-block;
+      vertical-align: middle;
+    } 
+    
+    </style>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
+    
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.staticfile.org/echarts/5.0.1/echarts.min.js"></script>
+    
+    <script>
+      const vscode = acquireVsCodeApi();
+      let prev_clicked_li = undefined;
+      let prev_clicked_input_li = undefined;
+      let prev_clicked_img = undefined;
+      let prev_clicked_input_img = undefined;
+      let need_red_img_li = new Array();
+    
+          $(document).ready(function(){
+            vscode.postMessage(JSON.stringify({"snn_simulate_ready":true}));
+            console.log("SNN仿真Webview 界面ready.");
+              window.addEventListener("message", function(evt){
+                console.log("SNN 仿真接收到extension 消息");
+                need_red_img_li.splice(0);
+                  const data = JSON.parse(evt.data);
+                  if(data.snn_info){
+                      var infos =JSON.parse(data.snn_info);
+    
+                      var test_img_uls = document.getElementById("sample_imgs_ul");
+                      var test_img_uris = infos.spikes.snn_test_imgs;
+                      var test_img_spikes = infos.spikes.snn_test_spikes;
+                      console.log("spiking img uris[0]"+test_img_uris[0]);
+                      console.log("spiking spike infos[0]="+test_img_spikes[0].cls_names);
+                      console.log("spike tuples[0]="+test_img_spikes[0].spike_tuples);
+    
+                      calc_need_red(test_img_spikes, test_img_uris);
+                      console.log("call calc_need_red function finish, start for img uris...");
+                      for(let i=0;i<Math.min(test_img_uris.length, 20);++i){
+                        var img_li = document.createElement("li");
+                        img_li.style.listStyle = "none";
+                        img_li.style.display = "inline-block";
+                        img_li.id = "img_li_"+i;
+                        img_li.style.width = "53px";
+                        img_li.style.height = "50px";
+                        img_li.style.marginRight = "20px";
+                        var img_tag = document.createElement("img");
+                        // img_tag.id = "sample_img_"+i;
+                        img_tag.style.opacity = "0.5";
+                        img_tag.style.display = "block";
+                        img_tag.onclick = function(){
+                          console.log("draw NO."+i+" img and spikes");
+                          console.log("current click cls_names="+test_img_spikes[i].cls_names);
+                          console.log("current click spike tuples="+test_img_spikes[i].spike_tuples);
+                          // if(prev_clicked_li !== undefined){
+                          //   document.getElementById(prev_clicked_li).style.backgroundColor = "";
+                          // }
+                          // document.getElementById("img_li_"+i).style.backgroundColor = "chocolate";
+                          prev_clicked_li = "img_li_"+i;
+                          if(prev_clicked_img !== undefined){
+                            document.getElementById(prev_clicked_img).style.border = '';
+                          }
+                          prev_clicked_img = "img_"+i;
+                          document.getElementById(prev_clicked_img).style.border = "10px outset orange";
+                          display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
+    
+                          // display counts in table
+                          console.log("start display counts in table....");
+                          let num_classes = test_img_spikes[i].cls_names.length;
+                          let curr_count=1;
+                          let spike_counts = new Array();
+                          if(test_img_spikes[i].spike_tuples.length === 0){
+                            for(let k=0;k<num_classes;++k){
+                              spike_counts.push(0);
+                            }
+                          }else{
+                            let cls_idx = test_img_spikes[i].spike_tuples[0][0];
+                            console.log("cls_idx="+cls_idx);
+                            for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
+                                spike_counts.push(0);
+                            }
+                            console.log("test_img_spikes[i].spike_tuples.length="+test_img_spikes[i].spike_tuples.length);
+                            for(let j=1;j<test_img_spikes[i].spike_tuples.length;++j){
+                                if(cls_idx === test_img_spikes[i].spike_tuples[j][0]){
+                                    curr_count = curr_count+1;
+                                }else{
+                                    spike_counts[cls_idx] = curr_count;
+                                    curr_count=1;
+                                    cls_idx = test_img_spikes[i].spike_tuples[j][0];
+                                }
+                            }
+                            console.log("--- calc finished.");
+                            console.log("spike counts="+spike_counts);
+                            spike_counts[cls_idx] = curr_count; 
+                          }
+                          document.getElementById("out_labels").innerHTML = "";
+                          let td_child = document.createElement("td");
+                          td_child.innerText = "标签名称:";
+                          td_child.style.width = "80px";
+                          td_child.style.fontFamily = 'PingFangSC-Regular';
+                          td_child.style.fontSize = '14px';
+                          td_child.style.color = '#333333';
+                          td_child.style.backgroundColor = "#EEEEEE";
+                          td_child.style.border = "solid 2px #D6D6D6";
+                          td_child.style.paddingLeft = '5px';
+                          document.getElementById("out_labels").appendChild(td_child);
+    
+                          document.getElementById("out_counts_tr").innerHTML = '';
+                          td_child = document.createElement("td");
+                          td_child.style.backgroundColor = "#EEEEEE";
+                          td_child.style.border = "solid 2px #D6D6D6";
+                          td_child.style.fontFamily = 'PingFangSC-Regular';
+                          td_child.style.fontSize = '14px';
+                          td_child.style.color = '#333333';
+                          td_child.innerText = "计数值:";
+                          td_child.style.width = "80px";
+                          td_child.style.paddingLeft = '5px';
+                          document.getElementById("out_counts_tr").appendChild(td_child);
+    
+    
+                          for(let j=0;j<spike_counts.length;++j){
+                            let td_child = document.createElement("td");
+                            td_child.innerText = spike_counts[j];
+                            td_child.style.width = "33px";
+                            td_child.style.border = "solid 2px #D6D6D6";
+                            td_child.style.fontFamily = 'PingFangSC-Regular';
+                            td_child.style.fontSize = '14px';
+                            td_child.style.color = '#333333';
+                            td_child.style.textAlign = 'right';
+                            td_child.style.paddingRight = '5px';
+                            document.getElementById("out_counts_tr").appendChild(td_child);
+    
+                            td_child = document.createElement("td");
+                            if(test_img_spikes[i].cls_names[j] === '1'){
+                              td_child.innerText = '疲劳';
+                            }else{
+                              td_child.innerText = "正常";
+                            }
+                            td_child.style.width = "33px";
+                            td_child.style.border = "solid 2px #D6D6D6";
+                            td_child.style.fontFamily = 'PingFangSC-Regular';
+                            td_child.style.fontSize = '14px';
+                            td_child.style.color = '#333333';
+                            td_child.style.textAlign = 'right';
+                            td_child.style.paddingRight = '5px';
+                            document.getElementById("out_labels").appendChild(td_child);
+                          }
+                          console.log("check spike_counts of "+i+", ="+spike_counts);
+                          // mark reds
+                          for(let k=0;k<need_red_img_li.length;++k){
+                            if(prev_clicked_li === need_red_img_li[k]){
+                              // document.getElementById(need_red_img_li[k]).style.backgroundColor = "yellow";  
+                              document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '10px outset orange';
+                            }else{
+                              // document.getElementById(need_red_img_li[k]).style.backgroundColor = "red";
+                              // document.getElementById(need_red_img_li[k]).style.border = '2px dashed red';
+                              document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '5px dashed red';
+                            }
+                          }
+                        }
+                        // img_tag.src = test_img_uris[i];
+                        img_tag.src = "http://localhost:6003/seg/data_vis/test_sample_"+i+".png";
+                        img_tag.id = "img_"+i;
+                        img_tag.style.width = "50px";
+                        img_tag.style.height = "50px";
+    
+                        // let img_tag_mask = document.createElement("img");
+                        // img_tag_mask.style = "opacity:0.5; display:block;width:50px; height:50px";
+                        // img_tag_mask.id = "img_mask_"+i;
+                        // img_tag_mask.src = test_img_uris[i].split(".").splice(0, test_img_uris[i].split(".").length-1).join(".")+"_mask.png";
+                        // console.log("test image mask src="+test_img_uris[i].split(".").splice(0, test_img_uris[i].split(".").length-1).join(".")+"_mask.png");
+    
+                        var label_span = document.createElement("span");
+                        label_span.style = "color: #333; font-family: SourceHanSansCN-Medium; font-size:10px;"
+                        console.log("图片 i="+i+", uri="+test_img_uris[i]);
+                        // a.split("/")[5].split("_")[4].split(".")[0]
+                        // label_span.innerText = "标签: "+test_img_uris[i].split("_")[5].split(".")[0];
+                        if(test_img_uris[i].split("/")[5].split("_")[4].split(".")[0] === '1'){
+                          label_span.innerText = "标签: 疲劳";
+                        }else{
+                          label_span.innerText = "标签：正常";
+                        }
+    
+                        img_li.appendChild(img_tag);
+                        img_li.appendChild(label_span);
+                        // img_li.appendChild(img_tag_mask);
+                        test_img_uls.appendChild(img_li);
+                      }
+    
+                      console.log("创建输入层脉冲激发图......");
+                      // 创建输入层脉冲激发图
+                      for(let i=0;i<Math.min(infos.spikes.snn_input_spikes.length, 20);++i){
+                        var input_img_li = document.createElement("li");
+                        input_img_li.style.listStyle = "none";
+                        input_img_li.id = "inputimg_li_"+i;
+                        input_img_li.style.width = "53px";
+                        input_img_li.style.height = "50px";
+                        input_img_li.style.display = "inline-block";
+                        input_img_li.style.marginRight = "10px";
+                        var input_img_tag = document.createElement("img");
+                        // input_img_tag.src = test_img_uris[i];
+                        input_img_tag.src = "http://localhost:6003/seg/data_vis/test_sample_"+i+".png";
+                        input_img_tag.id = "inputimg_"+i;
+                        input_img_tag.style.width = "50px";
+                        input_img_tag.style.height = "50px";
+                        input_img_tag.style.opacity = "0.5";
+                        input_img_tag.onclick = ()=>{
+                          console.log("input spike display img idx "+i);
+                          // if(prev_clicked_input_li !== undefined){
+                          //   document.getElementById(prev_clicked_input_li).style.backgroundColor ="";
+                          // }
+                          // document.getElementById("input_img_li_"+i).style.backgroundColor = "chocolate";
+                          prev_clicked_input_li = "inputimg_li_"+i;
+                          if(prev_clicked_input_img !== undefined){
+                            document.getElementById(prev_clicked_input_img).style.border = '';
+                          }
+                          prev_clicked_input_img = 'inputimg_'+i;
+                          document.getElementById(prev_clicked_input_img).style.border = '10px outset orange';
+                          console.log("Current cls_names="+infos.spikes.snn_input_spikes[i].cls_names);
+                          console.log("Current spike data="+infos.spikes.snn_input_spikes[i].spike_tuples);
+                          display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
+                        };
+                        input_img_li.appendChild(input_img_tag);
+                        document.getElementById("input_spike_sample_imgs_ul").appendChild(input_img_li);
+                      }
+                     
+                      // 神经元放电图
+                      let tms = infos.record_layer_v.tms;
+                      let v_vals = infos.record_layer_v.vals;
+                      let data_series_input = new Array();
+                      let data_series_output = new Array();
+    
+                      data_series_input.push({
+                        "data": v_vals[0],
+                        "type":"line",
+                        "smooth":true,
+                        "name":"脉冲激发次数最少的神经元膜电位"
+                      });
+                      data_series_input.push({
+                        "data":v_vals[1],
+                        "type":"line",
+                        "smooth":true,
+                        "yAxisIndex":1,
+                        "name":"脉冲激发次数最多的神经元膜电位"
+                      });
+    
+                      data_series_output.push({
+                        "data": v_vals[2],
+                        "type": "line",
+                        "smooth":true,
+                        "name": "脉冲激发次数最少的神经元膜电位"
+                      });
+    
+                      data_series_output.push({
+                        "data": v_vals[3],
+                        "type":"line",
+                        "smooth":true,
+                        "yAxisIndex":1,
+                        "name":"脉冲激发次数最多的神经元膜电位"
+                      });
+    
+                      display_neuron_v_linechart(tms[0], data_series_input);
+    
+                      $("#select_which_layer").change(()=>{
+                        let select_layer_val = $("#select_which_layer").val();
+                        if(select_layer_val === "输入层"){
+                          display_neuron_v_linechart(tms[0], data_series_input);
+                          console.log("显示输入层：tms[0]="+tms[0]);
+                          console.log("显示输入层：data_series="+data_series_input);
+                        }else{
+                          display_neuron_v_linechart(tms[0], data_series_output);
+                          console.log("显示输出层：tms[0]="+tms[0]);
+                          console.log("显示输出层：data_series="+JSON.stringify(data_series_output));
+                        }
+                      });
+    
+                      // fill tables
+                      console.log("填充表格数据.....");
+                      $("#simulate_vthresh").text(infos.extra_simu_info.simulate_vthresh);
+                      $("#simulate_neuron_dt").text(infos.extra_simu_info.simulate_neuron_dt);
+                      $("#simulate_synapse_dt").text(infos.extra_simu_info.simulate_synapse_dt);
+                      $("#simulate_delay").text(infos.extra_simu_info.simulate_delay);
+                      $("#simulate_dura").text(infos.extra_simu_info.simulate_dura);
+                      $("#simulate_acc").text(infos.extra_simu_info.simulate_acc);
+    
+    
+                      // fill layers spike info table
+                      // $("#snn_layers_spike_table")
+                      for(let j=0;j<infos.record_spike_out_info.spike_count_avgs.length;++j){
+                        let table_line = document.createElement("tr");
+                        table_line.style.height = "25px";
+                        table_line.style.border = "solid 2px #D6D6D6";
+                        table_line.style.color = "#333";
+    
+                        let td_id = document.createElement("td");
+                        td_id.style.fontFamily = 'ArialMT';
+                        td_id.style.fontSize = '14px';
+                        td_id.style.color = '#333333';
+                        td_id.style.textAlign = 'right';
+                        td_id.style.paddingRight = '15px';
+                        td_id.style.textAlign = 'center';
+                        td_id.style.border = "solid 2px #D6D6D6";
+                        td_id.style.paddingTop = '12px';
+                        td_id.style.paddingBottom = '12px';
+                        td_id.innerText = ""+j;
+                        table_line.appendChild(td_id);
+    
+                        let td_spike_avg = document.createElement("td");
+                        td_spike_avg.style.fontFamily = 'ArialMT';
+                        td_spike_avg.style.fontSize = '14px';
+                        td_spike_avg.style.color = '#333333';
+                        td_spike_avg.style.textAlign = 'right';
+                        td_spike_avg.style.paddingRight = '15px';
+                        td_spike_avg.style.order = "solid 2px #D6D6D6";
+                        td_spike_avg.style.paddingTop = '12px';
+                        td_spike_avg.style.paddingBottom = '12px';
+                        td_spike_avg.innerText = infos.record_spike_out_info.spike_count_avgs[j];
+                        table_line.appendChild(td_spike_avg);
+    
+                        let td_spike_std = document.createElement("td");
+                        td_spike_std.style.fontFamily = 'ArialMT';
+                        td_spike_std.style.fontSize = '14px';
+                        td_spike_std.style.color = '#333333';
+                        td_spike_std.style.textAlign = 'right';
+                        td_spike_std.style.paddingRight = '15px';
+                        td_spike_std.style.border = "solid 2px #D6D6D6";
+                        td_spike_std.style.paddingTop = '12px';
+                        td_spike_std.style.paddingBottom = '12px';
+                        td_spike_std.innerText = infos.record_spike_out_info.spike_count_stds[j];
+                        table_line.appendChild(td_spike_std);
+    
+                        document.getElementById("snn_layers_spike_table").appendChild(table_line);
+                      }
+                      console.log("Auto click first image.......");
+                      document.getElementById("img_0").click();
+                      document.getElementById("inputimg_0").click();
+                      
+                      $(".loading-div").hide(); // 隐藏加载提示
+                  }
+              });
+          });
+    
+          function multiple_argmax(lst){
+            tmp_lst = new Array();
+            for(let i=0;i<lst.length;++i){
+              tmp_lst.push(parseInt(lst[i]));
+            }
+            tmp_lst.sort((a,b)=>{return a-b;}).reverse()
+            console.log("check with multiple_argmax, lst="+tmp_lst);
+            console.log("---after sort [0]="+tmp_lst[0]+" [1]="+tmp_lst[1]);
+            if(tmp_lst[0] === tmp_lst[1]){
+              return true;
+            }else{
+              return false;
+            }
+          }
+    
+    
+          function my_argmax(lst){
+            let max_val=0, max_idx=0;
+            for(let i=0;i<lst.length;++i){
+              if(lst[i] > max_val){
+                max_val = lst[i];
+                max_idx = i;
+              }
+            }
+            return max_idx;
+          }
+    
+          function calc_need_red(test_img_spikes, test_img_uris){
+            // label_span.innerText = "标签: "+test_img_uris[i].split("/")[5].split("_")[4].split(".")[0];
+            for(let i=0;i<test_img_spikes.length;++i){
+              console.log("test_img_spikes i="+i+"  spike tuples="+test_img_spikes[i].spike_tuples);
+              let cls_idx = 0;
+              if(test_img_spikes[i].spike_tuples.length > 0){
+                cls_idx = test_img_spikes[i].spike_tuples[0][0];
+              }
+              let curr_count=1;
+              let spike_counts = new Array();
+              for(let j=0;j<test_img_spikes[i].cls_names.length;++j){
+                  spike_counts.push(0);
+              }
+              for(let j=1;j<test_img_spikes[i].spike_tuples.length;++j){
+                  if(cls_idx === test_img_spikes[i].spike_tuples[j][0]){
+                      curr_count = curr_count+1;
+                  }else{
+                      spike_counts[cls_idx] = curr_count;
+                      curr_count=1;
+                      cls_idx = test_img_spikes[i].spike_tuples[j][0];
+                  }
+              }
+              if(spike_counts.length > 0){
+                spike_counts[cls_idx] = curr_count;
+              }
+              console.log("current check img:"+i+", spike_counts="+spike_counts);
+              if(parseInt(test_img_uris[i].split("/")[5].split("_")[4].split(".")[0]) !== my_argmax(spike_counts)){
+                need_red_img_li.push("img_li_"+i);
+              }else if(multiple_argmax(spike_counts)){
+                console.log("--after check multiple armax, true");
+                need_red_img_li.push("img_li_"+i);
+                console.log("img: "+i+" need mark.");
+              }else{
+                console.log("img " +  i+ " ok");
+              }
+            }
+          }
+    
+          function display_spike_scatter_chart(labels, datas){
+              var opt={
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#999'
+                            }
+                        }
+                    },
+                    xAxis: {
+                        type:'category',
+                        data: labels,
+                        name: "类别",
+                        nameTextStyle:{
+                          color:"#999999"
+                        },
+                        axisLabel:{
+                          textStyle:{
+                            color:"#999999"
+                          }
+                       }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        scale:true,
+                        name:"时间(brian2 ms)",
+                        nameTextStyle:{
+                          color:"#999999"
+                        },
+                        axisLabel: {
+                            formatter: '{value}',
+                            textStyle:{
+                              color:"#999999"
+                            }
+                        }
+                    },
+                    series: [{
+                        symbolSize: 5,
+                        data: datas,
+                        type: 'scatter'
+                    }]
+                };
+                var spike_chart = echarts.init(document.getElementById("spike_charts"));
+                spike_chart.setOption(opt);
+          }
+    
+    
+    
+          function display_input_spikes_scatter_chart(labels, datas){
+              var opt={
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#999'
+                            }
+                        }
+                    },
+                    xAxis: {
+                        type:'category',
+                        data: labels,
+                        name: "ID",
+                        nameTextStyle:{
+                          color:"#999999"
+                        },
+                        axisLabel:{
+                          textStyle:{
+                            color:"#999999"
+                          }
+                       }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        scale:true,
+                        name:"时间(brian2 ms)",
+                        nameTextStyle:{
+                          color:"#999999"
+                        },
+                        axisLabel: {
+                            formatter: '{value}',
+                            textStyle:{
+                              color:"#999999"
+                            }
+                        }
+                    },
+                    series: [{
+                        symbolSize: 5,
+                        data: datas,
+                        type: 'scatter'
+                    }]
+                };
+                var spike_chart = echarts.init(document.getElementById("input_spike_charts"));
+                spike_chart.setOption(opt);
+          }
+    
+          function display_neuron_v_linechart(labels, series_vals){
+              let option = {
+                  tooltip:{
+                    trigger:"axis"
+                  },
+                  legend:{
+                    data:["脉冲激发次数最少的神经元膜电位", "脉冲激发次数最多的神经元膜电位"],
+                    textStyle:{
+                      color:"#999999"
+                    }
+                  },
+                  grid:{
+                    right:100
+                  },
+                  xAxis: {
+                      type: 'category',
+                      data: labels,
+                      scale:true,
+                      name:"时间",
+                      nameGap:40,
+                      nameTextStyle:{
+                        color:"#999999"
+                      },
+                      axisLabel:{
+                        textStyle:{
+                          color:"#999999"
+                        }
+                      }
+                  },
+                  yAxis: [
+                    {
+                        type: 'value',
+                        scale:true,
+                        name:"膜电位(左)",
+                        nameTextStyle:{
+                          color:"#999999"
+                        },
+                        axisLabel:{
+                          textStyle:{
+                            color:"#999999"
+                          }
+                        }
+                    },
+                    {
+                      type: 'value',
+                        scale:true,
+                        name:"膜电位(右)",
+                        nameTextStyle:{
+                          color:"#999999"
+                        },
+                        axisLabel:{
+                          textStyle:{
+                            color:"#999999"
+                          }
+                        } 
+                    }
+                  ],
+                  series: series_vals
+              };
+    
+              var v_val_chart = echarts.init(document.getElementById("neurons_v_chart"));
+              v_val_chart.setOption(option);
+          }
+    </script>
+    
+    </html>
+    `;
+}

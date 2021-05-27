@@ -88,6 +88,8 @@ def FNN(network):
     max_neuron = network['max_neuron']
     layer = {}
     x = int(max_neuron / 200)
+    if x == 0:
+        x = 1
     map_json = {"data": [], "links": [], "layers": [], "ratio": x, "nums": []}
 
     for neuron in neurongroup: #输入层

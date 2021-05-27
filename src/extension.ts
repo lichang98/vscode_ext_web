@@ -9,7 +9,7 @@ import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile ,ad
 import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage,getSNNModelPage} from "./get_convertor_page_v2";
 import {getSegDataVisPage, getSegSimulatePage, getANNSNNConvertSegPage} from "./get_seg_pages";
 import {getSpeechClsDataPage, getANNSNNConvertSpeechPage, getSNNSimuSpeechPage} from "./get_speech_pages";
-import {getFatigueDataVisPage} from "./get_fatigue_pages";
+import {getFatigueDataVisPage, getANNSNNConvertFatiguePage} from "./get_fatigue_pages";
 import {exec} from "child_process";
 import { AssertionError } from 'assert';
 const decode = require('audio-decode');
@@ -553,6 +553,9 @@ export function activate(context: vscode.ExtensionContext) {
 				}else if(PROJ_DESC_INFO.project_type === "语音识别"){
 					scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
 									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""))+ " 2";
+				}else if(PROJ_DESC_INFO.project_type === "疲劳检测") {
+					scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
+									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""));
 				}else {
 					//TODO Other task type
 				}
@@ -1236,6 +1239,9 @@ export function activate(context: vscode.ExtensionContext) {
 				}else if(PROJ_DESC_INFO.project_type === "语音识别"){
 					console.log("语音识别模型转换界面");
 					currentPanel.webview.html = getANNSNNConvertSpeechPage();
+				}else if(PROJ_DESC_INFO.project_type === "疲劳检测") {
+					console.log("疲劳检测模型转换界面");
+					currentPanel.webview.html = getANNSNNConvertFatiguePage();
 				}
 				currentPanel.reveal();
 				currentPanel.title = "模型转换";

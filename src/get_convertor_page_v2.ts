@@ -3289,7 +3289,9 @@ export function getSNNModelPage():string{
   <script src="https://cdn.bootcdn.net/ajax/libs/echarts/4.8.0/echarts-en.min.js"></script>
   
   <script>
+  const vscode = acquireVsCodeApi();
         $(document).ready(function(){
+            vscode.postMessage(JSON.stringify({"ready": true}));
             window.addEventListener("message", function(evt){
               console.log("SNN 模型可视化接收到extension 消息: ");
                 const data = JSON.parse(evt.data);

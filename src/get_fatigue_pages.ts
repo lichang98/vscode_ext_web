@@ -95,7 +95,7 @@ export function getFatigueDataVisPage():string{
                 训练集样例数据
               </div>
               <div id="bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
-              <ul id="sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 640px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
+              <ul id="sample_imgs_ul" class="scale_img" style="margin-top: -40px;height: 80px;width: 640px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
               </ul>
               
             </div>
@@ -108,7 +108,7 @@ export function getFatigueDataVisPage():string{
               </div>
     
               <div id="test_bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
-              <ul id="test_sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 700px;overflow: auto;display: block;white-space: nowrap;">
+              <ul id="test_sample_imgs_ul" class="scale_img" style="margin-top: -40px;height: 80px;width: 700px;overflow: auto;display: block;white-space: nowrap;">
               </ul>
             </div>
           </div>
@@ -173,6 +173,16 @@ export function getFatigueDataVisPage():string{
       display: inline-block;
       vertical-align: middle;
     } 
+    
+    .scale_img {
+      transition: all 500ms;
+    }
+    
+    .scale_img:hover {
+      cursor: crosshair;
+      position: absolute;
+      transform: scale(3);
+    }
     </style>
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -1517,7 +1527,7 @@ export function getSNNSimuFatiguePage():string{
                 color: #333333;
                 letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
               <div id="input_spike_charts" style="width:660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
-              <ul id="input_spike_sample_imgs_ul" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
+              <ul id="input_spike_sample_imgs_ul" class="scale_img" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
               </ul>
             </div>
             <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
@@ -1539,7 +1549,7 @@ export function getSNNSimuFatiguePage():string{
                     </tr>
                 </table>
                 <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
-                <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
+                <ul id="sample_imgs_ul" class="scale_img" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
                 </ul>
             </div>
         </div>
@@ -1600,6 +1610,16 @@ export function getSNNSimuFatiguePage():string{
       vertical-align: middle;
     } 
     
+    .scale_img {
+      transition: all 500ms;
+    }
+    
+    .scale_img:hover {
+      cursor: crosshair;
+      position: absolute;
+      transform: scale(3);
+    }
+    
     </style>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -1646,7 +1666,6 @@ export function getSNNSimuFatiguePage():string{
                         img_li.style.marginRight = "20px";
                         var img_tag = document.createElement("img");
                         // img_tag.id = "sample_img_"+i;
-                        img_tag.style.opacity = "0.5";
                         img_tag.style.display = "block";
                         img_tag.onclick = function(){
                           console.log("draw NO."+i+" img and spikes");
@@ -1803,7 +1822,6 @@ export function getSNNSimuFatiguePage():string{
                         input_img_tag.id = "inputimg_"+i;
                         input_img_tag.style.width = "50px";
                         input_img_tag.style.height = "50px";
-                        input_img_tag.style.opacity = "0.5";
                         input_img_tag.onclick = ()=>{
                           console.log("input spike display img idx "+i);
                           // if(prev_clicked_input_li !== undefined){

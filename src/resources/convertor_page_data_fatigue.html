@@ -91,7 +91,7 @@
             训练集样例数据
           </div>
           <div id="bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
-          <ul id="sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 640px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
+          <ul id="sample_imgs_ul" class="scale_img" style="margin-top: -40px;height: 80px;width: 640px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
           </ul>
           
         </div>
@@ -104,7 +104,7 @@
           </div>
 
           <div id="test_bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
-          <ul id="test_sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 700px;overflow: auto;display: block;white-space: nowrap;">
+          <ul id="test_sample_imgs_ul" class="scale_img" style="margin-top: -40px;height: 80px;width: 700px;overflow: auto;display: block;white-space: nowrap;">
           </ul>
         </div>
       </div>
@@ -169,6 +169,16 @@ body {
   display: inline-block;
   vertical-align: middle;
 } 
+
+.scale_img {
+  transition: all 500ms;
+}
+
+.scale_img:hover {
+  cursor: crosshair;
+  position: absolute;
+  transform: scale(3);
+}
 </style>
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">

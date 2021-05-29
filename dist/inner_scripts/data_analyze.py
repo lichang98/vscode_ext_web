@@ -232,7 +232,7 @@ elif task_type == 3:
     for i in range(20):
         sample_img = np.array(np.squeeze(x_test[i])*255.0, dtype='uint8')
         sample_img = Image.fromarray(sample_img)
-        sample_img = sample_img.resize((40,40))
+        sample_img = sample_img.resize((128, 128))
         sample_img = np.array(sample_img, dtype="uint8")
         hist_gram_bin_sample = get_hist_grem_bins(sample_img, hist_gram_splits)
         sample_hist_grams.append(hist_gram_bin_sample)

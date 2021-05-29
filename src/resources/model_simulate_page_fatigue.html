@@ -125,7 +125,7 @@
             color: #333333;
             letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
           <div id="input_spike_charts" style="width:660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
-          <ul id="input_spike_sample_imgs_ul" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
+          <ul id="input_spike_sample_imgs_ul" class="scale_img" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
           </ul>
         </div>
         <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
@@ -147,7 +147,7 @@
                 </tr>
             </table>
             <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
-            <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
+            <ul id="sample_imgs_ul" class="scale_img" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
             </ul>
         </div>
     </div>
@@ -208,6 +208,16 @@ body {
   vertical-align: middle;
 } 
 
+.scale_img {
+  transition: all 500ms;
+}
+
+.scale_img:hover {
+  cursor: crosshair;
+  position: absolute;
+  transform: scale(3);
+}
+
 </style>
 <!-- Compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -254,7 +264,6 @@ body {
                     img_li.style.marginRight = "20px";
                     var img_tag = document.createElement("img");
                     // img_tag.id = "sample_img_"+i;
-                    img_tag.style.opacity = "0.5";
                     img_tag.style.display = "block";
                     img_tag.onclick = function(){
                       console.log("draw NO."+i+" img and spikes");
@@ -411,7 +420,6 @@ body {
                     input_img_tag.id = "inputimg_"+i;
                     input_img_tag.style.width = "50px";
                     input_img_tag.style.height = "50px";
-                    input_img_tag.style.opacity = "0.5";
                     input_img_tag.onclick = ()=>{
                       console.log("input spike display img idx "+i);
                       // if(prev_clicked_input_li !== undefined){

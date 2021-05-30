@@ -497,22 +497,20 @@ export function getANNSNNConvertSpeechPage():string{
                           color: #333333;
                           letter-spacing: 0.91px;">脉冲发放阈值</font></label>
                       <select class="form-control" id="select_vthresh">
-                          <option>87</option>
-                          <option>80</option>
-                          <option>81</option>
-                          <option>82</option>
-                          <option>83</option>
+                          <option>92</option>
                           <option>84</option>
                           <option>85</option>
                           <option>86</option>
+                          <option>87</option>
                           <option>88</option>
                           <option>89</option>
                           <option>90</option>
                           <option>91</option>
-                          <option>92</option>
                           <option>93</option>
                           <option>94</option>
                           <option>95</option>
+                          <option>96</option>
+                          <option>97</option>
                       </select>
                   </div>
                   <div class="col-md-2" style="margin-left: 28px;text-align: center;">

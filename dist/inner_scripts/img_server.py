@@ -47,6 +47,11 @@ def getSpeechAudio(audiores):
         resp = Response(ad_f, mimetype="audio/wav")
         return resp
 
+@app.route("/src/img/<imgres>")
+def getSrcImg(imgres):
+    with open(path.join(base_path, "..", "..", "src", "resources", "imgs", imgres), "rb") as f:
+        img = f.read()
+        return Response(img, mimetype="image/png")
 
 @app.route("/snn_imgs/<dir_name>/<imgres>")
 def getSnnTestImg(dir_name, imgres):

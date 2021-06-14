@@ -2,6 +2,7 @@
 	"name": "darwin2",
 	"displayName": "darwin2",
 	"description": "VSCode Darwin2 IDE extension",
+	"publisher":"lc",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.52.0"
@@ -254,7 +255,7 @@
 		"viewsWelcome": [
 			{
 				"view": "treeView-item",
-				"contents": "欢迎使用达尔文IDE模型转换器!\n创建新的项目或者加载已有项目\n[创建新项目](command:treeView-item.newproj)\n[加载已有项目](command:treeView.proj_load)"
+				"contents": "欢迎使用达尔文类脑应用集成开发环境！\n[创建新项目](command:treeView-item.newproj)\n[加载已有项目](command:treeView.proj_load)"
 			}
 		]
 	},

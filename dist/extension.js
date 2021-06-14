@@ -433,7 +433,7 @@ function activate(context) {
         child_process_1.exec(commandStr, function (err, stdout, stderr) {
             console.log("img server started");
         });
-        sleep(1000);
+        sleep(3000);
         // The code you place here will be executed every time your command is executed
         const columnToShowIn = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined;
         treeviewHome.reveal(treeview.data[0]);
@@ -6767,8 +6767,36 @@ function getConvertorPageV2() {
       </div><!-- /.modal -->
     </div>
     
+    <!-- 背景主界面 -->
+    <div id="login" class="login_body_bg">
+      <div style="line-height: normal;margin: auto;">
+          <img src="http://127.0.0.1:6003/src/img/zhijiang-logo.png" alt="zhejiang lab" style="vertical-align: middle;"/>
+          <span style="vertical-align: middle;color: #333;margin-left: 100px;">达尔文类脑应用集成开发环境</span>
+          <img src="http://127.0.0.1:6003/src/img/zheda-logo.png" alt="zhejiang university" style="vertical-align: middle;margin-left: 100px;"/>
+      </div>
+    
+    </div>
+    
     </body>
     <style>
+    
+    .login_body_bg {
+      text-align: center;
+    }
+    
+    .login_body_bg::after {
+        content: "";
+        background: url("http://127.0.0.1:6003/src/img/zhijiang.png");
+        opacity: 0.3;
+        top: 25px;
+        left: 25px;
+        bottom: 25px;
+        right: 25px;
+        position: absolute;
+        z-index: -1;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
     
     .editor-sidenav{
       background-color: #333;

@@ -396,11 +396,11 @@ function activate(context) {
             // vscode.commands.executeCommand<TreeItemNode>("treeView-item.datavis", inMemTreeViewStruct[0].children![0]);
             vscode.commands.executeCommand("treeView-item.datavis", inMemTreeViewStruct[0].children[0].children[0]);
         }
-        else if (label === "ANN模型") {
+        else if (ANN_MODEL_FILE_PATH && label.replace("model_file_", "") === path.basename(ANN_MODEL_FILE_PATH)) {
             // ANN模型可视化
             console.log("单击可视化，ANN模型");
             // vscode.commands.executeCommand<TreeItemNode>("treeView-item.datavis", inMemTreeViewStruct[0].children![1]);
-            vscode.commands.executeCommand("treeView-item.datavis", inMemTreeViewStruct[0].children[0].children[1]);
+            vscode.commands.executeCommand("treeView-item.datavis", inMemTreeViewStruct[0].children[0].children[1].children[0]);
         }
         else if (label === "SNN模型") {
             console.log("SNN模型可视化");
@@ -963,7 +963,7 @@ function activate(context) {
                     currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先导入数据!" }));
                 }
             }
-            else if (itemNode.label === "ANN模型") {
+            else if (itemNode.label === path.basename(ANN_MODEL_FILE_PATH)) {
                 if (ANN_MODEL_FILE_PATH) {
                     if (panelAnnModelVis) {
                         panelAnnModelVis.dispose();
@@ -1028,7 +1028,7 @@ function activate(context) {
                 // vscode.window.showErrorMessage("请先导入数据！！！");
             }
         }
-        else if (itemNode.label === "ANN模型") {
+        else if (itemNode.label.replace("model_file_", "") === path.basename(ANN_MODEL_FILE_PATH)) {
             if (panelAnnModelVis && ANN_MODEL_FILE_PATH) {
                 panelAnnModelVis.title = "ANN模型";
                 var modelVisScriptPath = path.join(__dirname, "inner_scripts", "model_desc.py");

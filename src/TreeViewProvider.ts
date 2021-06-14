@@ -8,7 +8,7 @@ import { type } from 'os';
 // 其实就是一个Map集合，用 ts 的写法
 export let ITEM_ICON_MAP = new Map<string, string>([
     ['项目', 'imgs/proj_icon_new.png'],
-    ['数据', 'imgs/data_icon_new.png'],
+    ['数据集', 'imgs/data_icon_new.png'],
     ['ANN模型', 'imgs/ann_model.png'],
     ['训练数据', "imgs/train_data_new.png"],
     ['测试数据', "imgs/train_data_new.png"],
@@ -16,7 +16,7 @@ export let ITEM_ICON_MAP = new Map<string, string>([
     ['SNN模型',"imgs/ann_model.png"],
     ['连接文件',"imgs/conn_files_icon.png"],
     ['模拟器', "imgs/simulate_icon.png"],
-    ['编译映射',"imgs/compile_icon.png"],
+    ['模型编译',"imgs/compile_icon.png"],
     ['Darwin二进制文件',"imgs/darwin_model_icon_new.png"],
     ["模型转换","imgs/convert_icon.png",],
     ["模型文件","imgs/ann_model.png"],
@@ -70,6 +70,13 @@ export class TreeItemNode extends TreeItem {
             this.contextValue = "model_file";
         }else{
             this.label = label;
+        }
+        if (contextVal === "root" || label === "模型转换") {
+            this.collapsibleState = 2; // expand
+        } else if(contextVal === 'rmable' || label.search("json") >=0 || label.search(".b") >=0 || label.search(".dat") >=0 || label.search(".pickle") >=0){
+            this.collapsibleState = 0;
+        } else {
+            this.collapsibleState = 1; // collapse
         }
         this.iconPath = TreeItemNode.getIconUriForLabel(this.label);
         this.tooltip = TreeItemNode.getToolTip(this.label);

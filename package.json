@@ -143,7 +143,7 @@
 			"view/item/context": [
 				{
 					"command": "treeView-item.datavis",
-					"when": "viewItem == 数据 || viewItem == ANN模型",
+					"when": "viewItem == 数据集 || viewItem == ANN模型",
 					"group": "navigation"
 				},
 				{

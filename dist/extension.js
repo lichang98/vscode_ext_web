@@ -394,13 +394,13 @@ function activate(context) {
             // 数据可视化
             console.log("单击可视化,数据");
             // vscode.commands.executeCommand<TreeItemNode>("treeView-item.datavis", inMemTreeViewStruct[0].children![0]);
-            vscode.commands.executeCommand("treeView-item.datavis", inMemTreeViewStruct[0].children[0].children[2]);
+            vscode.commands.executeCommand("treeView-item.datavis", inMemTreeViewStruct[0].children[0].children[0]);
         }
         else if (label === "ANN模型") {
             // ANN模型可视化
             console.log("单击可视化，ANN模型");
             // vscode.commands.executeCommand<TreeItemNode>("treeView-item.datavis", inMemTreeViewStruct[0].children![1]);
-            vscode.commands.executeCommand("treeView-item.datavis", inMemTreeViewStruct[0].children[0].children[0]);
+            vscode.commands.executeCommand("treeView-item.datavis", inMemTreeViewStruct[0].children[0].children[1]);
         }
         else if (label === "SNN模型") {
             console.log("SNN模型可视化");
@@ -483,8 +483,7 @@ function activate(context) {
             else if (data.project_info) {
                 // 接收到webview 项目创建向导的消息，创建新的项目
                 console.log("receive project create info");
-                console.log("project name: " + data.project_info.project_name + ", project type=" + data.project_info.project_type
-                    + ", python_type: " + data.project_info.python_type + ", ann lib type:" + data.project_info.ann_lib_type);
+                console.log("project name: " + data.project_info.project_name + ", project type=" + data.project_info.project_type);
                 fs.open(PROJ_SAVE_PATH, 'w', 0o777, (err, fd) => {
                     if (err) {
                         console.log("创建项目文件错误：" + err);
@@ -493,14 +492,29 @@ function activate(context) {
                 });
                 PROJ_DESC_INFO.project_name = data.project_info.project_name;
                 PROJ_DESC_INFO.project_type = data.project_info.project_type;
-                PROJ_DESC_INFO.python_type = data.project_info.python_type;
-                PROJ_DESC_INFO.ann_lib_type = data.project_info.ann_lib_type;
                 TreeViewProvider_1.addSlfProj(data.project_info.project_name);
-                inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(data.project_info.project_name, [new TreeViewProvider_1.TreeItemNode("模型转换", [
+                inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(data.project_info.project_name, [
+                    new TreeViewProvider_1.TreeItemNode("模型转换", [
+                        new TreeViewProvider_1.TreeItemNode("数据集", [
+                            new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []), new TreeViewProvider_1.TreeItemNode("测试数据标签", [])
+                        ]),
                         new TreeViewProvider_1.TreeItemNode("ANN模型", []),
-                        new TreeViewProvider_1.TreeItemNode("SNN模型", [new TreeViewProvider_1.TreeItemNode("连接文件", [])]),
-                        new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []), new TreeViewProvider_1.TreeItemNode("测试数据标签", [])])
-                    ]), new TreeViewProvider_1.TreeItemNode("模拟器", []), new TreeViewProvider_1.TreeItemNode("编译映射", [new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [new TreeViewProvider_1.TreeItemNode("模型文件", []), new TreeViewProvider_1.TreeItemNode("编解码配置文件", [])])])], true, "root"));
+                        new TreeViewProvider_1.TreeItemNode("SNN模型", [
+                            new TreeViewProvider_1.TreeItemNode("连接文件", [])
+                        ]),
+                    ]),
+                    new TreeViewProvider_1.TreeItemNode("模型编译", [
+                        new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [
+                            new TreeViewProvider_1.TreeItemNode("模型文件", []),
+                            new TreeViewProvider_1.TreeItemNode("编解码配置文件", [])
+                        ])
+                    ])
+                ], true, "root"));
+                // inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("模型转换", [
+                // 	new TreeItemNode("ANN模型",[]),
+                // 	new TreeItemNode("SNN模型", [new TreeItemNode("连接文件", [])]),
+                // 	new TreeItemNode("数据", [new TreeItemNode("训练数据", []), new TreeItemNode("测试数据", []), new TreeItemNode("测试数据标签", [])])
+                // ]), new TreeItemNode("模拟器", []), new TreeItemNode("编译映射", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件", [])])])], true, "root"));
                 treeview.data = inMemTreeViewStruct;
                 treeview.refresh();
                 // inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("数据", 
@@ -515,8 +529,6 @@ function activate(context) {
                 console.log("receive project refactor info");
                 PROJ_DESC_INFO.project_name = data.project_refac_info.project_name;
                 PROJ_DESC_INFO.project_type = data.project_refac_info.project_type;
-                PROJ_DESC_INFO.python_type = data.project_refac_info.python_type;
-                PROJ_DESC_INFO.ann_lib_type = data.project_refac_info.ann_lib_type;
                 let treeItemsSize = inMemTreeViewStruct.length;
                 inMemTreeViewStruct[treeItemsSize - 1].label = PROJ_DESC_INFO.project_name;
                 treeview.data = inMemTreeViewStruct;
@@ -745,11 +757,28 @@ function activate(context) {
                 }
                 // 显示treeview
                 TreeViewProvider_1.addSlfProj(PROJ_DESC_INFO.project_name);
-                inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(PROJ_DESC_INFO.project_name, [new TreeViewProvider_1.TreeItemNode("模型转换", [
+                inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(PROJ_DESC_INFO.project_name, [
+                    new TreeViewProvider_1.TreeItemNode("模型转换", [
+                        new TreeViewProvider_1.TreeItemNode("数据集", [
+                            new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []), new TreeViewProvider_1.TreeItemNode("测试数据标签", [])
+                        ]),
                         new TreeViewProvider_1.TreeItemNode("ANN模型", []),
-                        new TreeViewProvider_1.TreeItemNode("SNN模型", [new TreeViewProvider_1.TreeItemNode("连接文件", [])]),
-                        new TreeViewProvider_1.TreeItemNode("数据", [new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []), new TreeViewProvider_1.TreeItemNode("测试数据标签", [])])
-                    ]), new TreeViewProvider_1.TreeItemNode("模拟器", []), new TreeViewProvider_1.TreeItemNode("编译映射", [new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [new TreeViewProvider_1.TreeItemNode("模型文件", []), new TreeViewProvider_1.TreeItemNode("编解码配置文件", [])])])], true, "root"));
+                        new TreeViewProvider_1.TreeItemNode("SNN模型", [
+                            new TreeViewProvider_1.TreeItemNode("连接文件", [])
+                        ]),
+                    ]),
+                    new TreeViewProvider_1.TreeItemNode("模型编译", [
+                        new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [
+                            new TreeViewProvider_1.TreeItemNode("模型文件", []),
+                            new TreeViewProvider_1.TreeItemNode("编解码配置文件", [])
+                        ])
+                    ])
+                ], true, "root"));
+                // inMemTreeViewStruct.push(new TreeItemNode(PROJ_DESC_INFO.project_name, [new TreeItemNode("模型转换", [
+                // 	new TreeItemNode("ANN模型",[]),
+                // 	new TreeItemNode("SNN模型", [new TreeItemNode("连接文件", [])]),
+                // 	new TreeItemNode("数据", [new TreeItemNode("训练数据", []), new TreeItemNode("测试数据", []), new TreeItemNode("测试数据标签", [])])
+                // ]), new TreeItemNode("模拟器", []), new TreeItemNode("编译映射", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件", [])])])], true, "root"));
                 let xNormFileOriginName = path.basename(X_NORM_DATA_PATH), xTestFileOriginName = path.basename(X_TEST_DATA_PATH), yTestFileOriginName = path.basename(Y_TEST_DATA_PATH);
                 // addSlfFile("x_norm");
                 // addSlfFile("x_test");
@@ -770,18 +799,18 @@ function activate(context) {
                 // 	}
                 // }
                 if (projData.x_norm_path) {
-                    inMemTreeViewStruct[0].children[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode(xNormFileOriginName, undefined, false, "rmable"));
+                    inMemTreeViewStruct[0].children[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(xNormFileOriginName, undefined, false, "rmable"));
                 }
                 if (projData.x_test_path) {
-                    inMemTreeViewStruct[0].children[0].children[2].children[1].children.push(new TreeViewProvider_1.TreeItemNode(xTestFileOriginName, undefined, false, "rmable"));
+                    inMemTreeViewStruct[0].children[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(xTestFileOriginName, undefined, false, "rmable"));
                 }
                 if (projData.y_test_path) {
-                    inMemTreeViewStruct[0].children[0].children[2].children[2].children.push(new TreeViewProvider_1.TreeItemNode(yTestFileOriginName, undefined, false, "rmable"));
+                    inMemTreeViewStruct[0].children[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode(yTestFileOriginName, undefined, false, "rmable"));
                 }
                 // if(projData.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]){
                 // 	inMemTreeViewStruct[0].children[1].children?.push(new TreeItemNode("model_file_"+path.basename(projData.model_path)));
                 // }
-                inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(projData.model_path)));
+                inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(projData.model_path)));
                 // add darwinlang and bin files
                 // ITEM_ICON_MAP.set("SNN模型","imgs/darwin_icon_model_new.png");
                 // addDarwinFold("SNN模型");
@@ -798,15 +827,15 @@ function activate(context) {
                     let fname = path.basename(DARWIN_LANG_FILE_PATHS[i].toString());
                     TreeViewProvider_1.addSlfFile(fname);
                     if (fname.indexOf("json") !== -1) {
-                        inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(fname));
+                        inMemTreeViewStruct[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode(fname));
                     }
                     else {
-                        inMemTreeViewStruct[0].children[0].children[1].children[0].children.push(new TreeViewProvider_1.TreeItemNode(fname));
+                        inMemTreeViewStruct[0].children[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode(fname));
                     }
                 }
-                let simuInfoFile = path.join(__dirname, "inner_scripts", "brian2_snn_info.json");
-                TreeViewProvider_1.addSlfFile(path.basename(simuInfoFile));
-                inMemTreeViewStruct[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(path.basename(simuInfoFile)));
+                // let simuInfoFile = path.join(__dirname, "inner_scripts", "brian2_snn_info.json");
+                // addSlfFile(path.basename(simuInfoFile));
+                // inMemTreeViewStruct[0].children![1].children!.push(new TreeItemNode(path.basename(simuInfoFile)));
                 // ITEM_ICON_MAP.set("SNN二进制模型", "imgs/darwin_icon_model_new.png");
                 TreeViewProvider_1.addDarwinFold("SNN二进制模型");
                 // inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN二进制模型",[]));
@@ -822,11 +851,11 @@ function activate(context) {
                     }
                     if (DARWIN_LANG_BIN_PATHS[i].toString().search("config.b") !== -1) {
                         TreeViewProvider_1.addDarwinFiles("config.b");
-                        inMemTreeViewStruct[0].children[2].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
+                        inMemTreeViewStruct[0].children[1].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
                     }
                     else if (DARWIN_LANG_BIN_PATHS[i].toString().search("connfiles") !== -1) {
                         TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
-                        inMemTreeViewStruct[0].children[2].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                        inMemTreeViewStruct[0].children[1].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
                     }
                     // if(inMemTreeViewStruct[0].children){
                     // 	var childLen = inMemTreeViewStruct[0].children.length;
@@ -1053,10 +1082,10 @@ function activate(context) {
                     // addSlfFile("x_norm");
                     let xNormFileOriginName = path.basename(X_NORM_DATA_PATH);
                     TreeViewProvider_1.addSlfFile(xNormFileOriginName);
-                    if (inMemTreeViewStruct[0].children[0].children[2].children[0].children.length > 0) {
-                        inMemTreeViewStruct[0].children[0].children[2].children[0].children.splice(0, 1);
+                    if (inMemTreeViewStruct[0].children[0].children[0].children[0].children.length > 0) {
+                        inMemTreeViewStruct[0].children[0].children[0].children[0].children.splice(0, 1);
                     }
-                    inMemTreeViewStruct[0].children[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode(xNormFileOriginName, undefined, false, 'rmable'));
+                    inMemTreeViewStruct[0].children[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(xNormFileOriginName, undefined, false, 'rmable'));
                     // if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children){
                     // 	console.log("添加新的文件");
                     // 	treeview.data[0].children[0].children[0].children.push(new TreeItemNode(xNormFileOriginName, [], false, 'rmable'));
@@ -1103,10 +1132,10 @@ function activate(context) {
                     // addSlfFile("x_test");
                     let xTestFileOriginName = path.basename(X_TEST_DATA_PATH);
                     TreeViewProvider_1.addSlfFile(xTestFileOriginName);
-                    if (inMemTreeViewStruct[0].children[0].children[2].children[1].children.length > 0) {
-                        inMemTreeViewStruct[0].children[0].children[2].children[1].children.splice(0, 1);
+                    if (inMemTreeViewStruct[0].children[0].children[0].children[1].children.length > 0) {
+                        inMemTreeViewStruct[0].children[0].children[0].children[1].children.splice(0, 1);
                     }
-                    inMemTreeViewStruct[0].children[0].children[2].children[1].children.push(new TreeViewProvider_1.TreeItemNode(xTestFileOriginName, undefined, false, 'rmable'));
+                    inMemTreeViewStruct[0].children[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(xTestFileOriginName, undefined, false, 'rmable'));
                     treeview.data = inMemTreeViewStruct;
                     treeview.refresh();
                     // if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[1].children){
@@ -1143,10 +1172,10 @@ function activate(context) {
                     // addSlfFile("y_test");
                     let yTestFileOriginName = path.basename(Y_TEST_DATA_PATH);
                     TreeViewProvider_1.addSlfFile(yTestFileOriginName);
-                    if (inMemTreeViewStruct[0].children[0].children[2].children[2].children.length > 0) {
-                        inMemTreeViewStruct[0].children[0].children[2].children[2].children.splice(0, 1);
+                    if (inMemTreeViewStruct[0].children[0].children[0].children[2].children.length > 0) {
+                        inMemTreeViewStruct[0].children[0].children[0].children[2].children.splice(0, 1);
                     }
-                    inMemTreeViewStruct[0].children[0].children[2].children[2].children.push(new TreeViewProvider_1.TreeItemNode(yTestFileOriginName, undefined, false, 'rmable'));
+                    inMemTreeViewStruct[0].children[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode(yTestFileOriginName, undefined, false, 'rmable'));
                     treeview.data = inMemTreeViewStruct;
                     treeview.refresh();
                     // if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[2].children){
@@ -1185,10 +1214,10 @@ function activate(context) {
                     // 	treeview.data[0].children[1].children.push(new TreeItemNode("model_file_"+path.basename(ANN_MODEL_FILE_PATH)));
                     // 	treeview.refresh();
                     // }
-                    if (inMemTreeViewStruct[0].children[0].children[0].children.length > 0) {
-                        inMemTreeViewStruct[0].children[0].children[0].children.splice(0, 1);
+                    if (inMemTreeViewStruct[0].children[0].children[1].children.length > 0) {
+                        inMemTreeViewStruct[0].children[0].children[1].children.splice(0, 1);
                     }
-                    inMemTreeViewStruct[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(ANN_MODEL_FILE_PATH), undefined, false, 'rmable'));
+                    inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(ANN_MODEL_FILE_PATH), undefined, false, 'rmable'));
                     treeview.data = inMemTreeViewStruct;
                     treeview.refresh();
                     // 拷贝文件到项目并重命名
@@ -1311,12 +1340,12 @@ function activate(context) {
                     vscode.window.showErrorMessage("请先完成转换步骤！！！");
                     return;
                 }
-                let simuInfoFile = path.join(__dirname, "inner_scripts", "brian2_snn_info.json");
-                TreeViewProvider_1.addSlfFile(path.basename(simuInfoFile));
-                if (inMemTreeViewStruct[0].children[1].children.length > 0) {
-                    inMemTreeViewStruct[0].children[1].children.splice(0, 1);
-                }
-                inMemTreeViewStruct[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(path.basename(simuInfoFile)));
+                // let simuInfoFile = path.join(__dirname, "inner_scripts", "brian2_snn_info.json");
+                // addSlfFile(path.basename(simuInfoFile));
+                // if(inMemTreeViewStruct[0].children![1].children!.length > 0){
+                // 	inMemTreeViewStruct[0].children![1].children!.splice(0,1);
+                // }
+                // inMemTreeViewStruct[0].children![1].children!.push(new TreeItemNode(path.basename(simuInfoFile)));
                 treeview.data = inMemTreeViewStruct;
                 treeview.refresh();
                 console.log("extension 接收到 snn 仿真界面ready 消息.");
@@ -1373,17 +1402,17 @@ function activate(context) {
         // ITEM_ICON_MAP.set("SNN模型","imgs/file.png");
         // addDarwinFold("SNN模型");
         DARWIN_LANG_FILE_PATHS.splice(0);
-        inMemTreeViewStruct[0].children[0].children[1].children.splice(1);
-        inMemTreeViewStruct[0].children[0].children[1].children[0].children.splice(0);
+        inMemTreeViewStruct[0].children[0].children[2].children.splice(1);
+        inMemTreeViewStruct[0].children[0].children[2].children[0].children.splice(0);
         fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out"), (err, files) => {
             files.forEach(file => {
                 DARWIN_LANG_FILE_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out", file));
                 TreeViewProvider_1.addDarwinFiles(file);
                 if (file.indexOf("json") !== -1) {
-                    inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(file));
+                    inMemTreeViewStruct[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode(file));
                 }
                 else {
-                    inMemTreeViewStruct[0].children[0].children[1].children[0].children.push(new TreeViewProvider_1.TreeItemNode(file));
+                    inMemTreeViewStruct[0].children[0].children[2].children[0].children.push(new TreeViewProvider_1.TreeItemNode(file));
                 }
             });
             treeview.data = inMemTreeViewStruct;
@@ -1429,8 +1458,8 @@ function activate(context) {
             else {
                 fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(path.dirname(PROJ_SAVE_PATH), "config.b"));
                 DARWIN_LANG_BIN_PATHS.splice(0);
-                inMemTreeViewStruct[0].children[2].children[0].children[0].children.splice(0);
-                inMemTreeViewStruct[0].children[2].children[0].children[1].children.splice(0);
+                inMemTreeViewStruct[0].children[1].children[0].children[0].children.splice(0);
+                inMemTreeViewStruct[0].children[1].children[0].children[1].children.splice(0);
                 fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out"), (err, files) => {
                     files.forEach(file => {
                         if (file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1) {
@@ -1439,11 +1468,11 @@ function activate(context) {
                                 file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {
                                 if (file.search("config.b") !== -1) {
                                     TreeViewProvider_1.addDarwinFiles("config.b");
-                                    inMemTreeViewStruct[0].children[2].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
+                                    inMemTreeViewStruct[0].children[1].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
                                 }
                                 else if (file.search("connfiles") !== -1) {
                                     TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
-                                    inMemTreeViewStruct[0].children[2].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                                    inMemTreeViewStruct[0].children[1].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
                                 }
                             }
                         }
@@ -5369,7 +5398,7 @@ const vscode = __webpack_require__(1);
 // 其实就是一个Map集合，用 ts 的写法
 exports.ITEM_ICON_MAP = new Map([
     ['项目', 'imgs/proj_icon_new.png'],
-    ['数据', 'imgs/data_icon_new.png'],
+    ['数据集', 'imgs/data_icon_new.png'],
     ['ANN模型', 'imgs/ann_model.png'],
     ['训练数据', "imgs/train_data_new.png"],
     ['测试数据', "imgs/train_data_new.png"],
@@ -5377,7 +5406,7 @@ exports.ITEM_ICON_MAP = new Map([
     ['SNN模型', "imgs/ann_model.png"],
     ['连接文件', "imgs/conn_files_icon.png"],
     ['模拟器', "imgs/simulate_icon.png"],
-    ['编译映射', "imgs/compile_icon.png"],
+    ['模型编译', "imgs/compile_icon.png"],
     ['Darwin二进制文件', "imgs/darwin_model_icon_new.png"],
     ["模型转换", "imgs/convert_icon.png",],
     ["模型文件", "imgs/ann_model.png"],
@@ -5440,6 +5469,15 @@ class TreeItemNode extends vscode_1.TreeItem {
         }
         else {
             this.label = label;
+        }
+        if (contextVal === "root" || label === "模型转换") {
+            this.collapsibleState = 2; // expand
+        }
+        else if (contextVal === 'rmable' || label.search("json") >= 0 || label.search(".b") >= 0 || label.search(".dat") >= 0 || label.search(".pickle") >= 0) {
+            this.collapsibleState = 0;
+        }
+        else {
+            this.collapsibleState = 1; // collapse
         }
         this.iconPath = TreeItemNode.getIconUriForLabel(this.label);
         this.tooltip = TreeItemNode.getToolTip(this.label);

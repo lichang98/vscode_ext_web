@@ -438,7 +438,7 @@ export function activate(context: vscode.ExtensionContext) {
 		exec(commandStr, function(err, stdout, stderr){
 			console.log("img server started");
 		});
-		sleep(3000);
+		sleep(5000);
 		// The code you place here will be executed every time your command is executed
 		const columnToShowIn = vscode.window.activeTextEditor? vscode.window.activeTextEditor.viewColumn:undefined;
 		treeviewHome.reveal(treeview.data[0]);

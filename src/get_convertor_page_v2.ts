@@ -1011,12 +1011,13 @@ export function getConvertorPageV2(){
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
               &times;
             </button>
-            <h4 id="myModalLabel" style="font-family: SourceHanSansCN-Normal;
+            <span id="myModalLabel" style="font-family: SourceHanSansCN-Normal;
             font-size: 24px;
             color: #333333;
-            letter-spacing: 1.07px;margin-left: 20px;">
+            font-weight: bold;
+            letter-spacing: 1.26px;margin-left: 20px;">
               项目创建向导
-            </h4>
+            </span>
           </div>
           <div>
             <div id="alert_sheet" class="alert alert-danger" style="display: none;">
@@ -1061,55 +1062,24 @@ export function getConvertorPageV2(){
                                 <option>疲劳检测</option>
                             </select>
                         </div>
-                        <div class="form-group" style="margin-top: 20px;">
-                            <label for="python_type" style="font-family: SourceHanSansCN-Normal;
-                            font-size: 22px;
-                            color: #333333;
-                            letter-spacing: 1.26px;text-align: right;padding-right: 5px;width: 285px;">选择python版本: </label>
-                            <select id="python_type" style="background: #EEEEEE;
-                            border: 1px solid #D9D9D9;
-                            border-radius: 6px;
-                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
-    font-size: 22px;
-    color: #999999;
-    letter-spacing: 0;
-    line-height: 14px;">
-                                <option>python3.6x</option>
-                                <option>python3.7x</option>
-                                <option>python3.8x</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="margin-top: 20px;">
-                          <label for="ann_lib_type" style="font-family: SourceHanSansCN-Normal;
+                        <div style="margin-top: 20px;">
+                          <label for="proj_save_path_input"  style="font-family: SourceHanSansCN-Normal;
                           font-size: 22px;
                           color: #333333;
-                          letter-spacing: 1.26px;text-align: right;padding-right: 5px;width: 285px;">模型使用的神经网络库: </label>
-                          <select id="ann_lib_type" style="background: #EEEEEE;
+                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 285px;">项目路径: </label>
+                          <input type="text" id="proj_save_path_input" style="background: #EEEEEE;
                           border: 1px solid #D9D9D9;
                           border-radius: 6px;
-                          border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+                          border-radius: 6px;width: 300px;font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #999999;
     letter-spacing: 0;
     line-height: 14px;">
-                            <option>Keras(Tensorflow backended)</option>
-                          </select>
-                        </div>
-                        <div class="input-group" style="background: #EEEEEE;
-                        border-radius: 6px;
-                        border-radius: 6px;">
-                          <span id="span_save_path" class="input-group-addon" style="cursor:pointer;background: #DFDFDF;font-family: SourceHanSansCN-Normal;
-                          font-size: 22px;
-                          color: #333333;
-                          letter-spacing: 1.26px;width: 295px;text-align: right;padding-right: 5px;">点击选择保存路径</span>
-                          <input id="proj_save_path_input" type="text" class="form-control" style="width: 478px;background: #EEEEEE;
-                          border-radius: 6px;
-                          border-radius: 6px;font-family: PingFangSC-Regular;
-    font-size: 22px;
-    color: #999999;
-    letter-spacing: 0;
-    line-height: 14px;">
-                        </div>
+                        <button id="span_save_path" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                        border-radius: 2px;
+                        border-radius: 2px;width: 80px;margin-left: 20px;"><span style="color: white;">浏览...</span></button>
+                      </div>
+    
                     </form>
           </div>
           <div style="margin-top: 40px;margin-bottom: 40px;">
@@ -1176,40 +1146,6 @@ export function getConvertorPageV2(){
                                 <option>目标检测</option>
                                 <option>疲劳检测</option>
                             </select>
-                        </div>
-                        <div class="form-group" style="margin-top: 20px;">
-                            <label for="python_type_projrefac" style="font-family: SourceHanSansCN-Normal;
-                            font-size: 22px;
-                            color: #333333;
-                            letter-spacing: 1.26px;text-align: right;padding-right: 5px;width: 260px;">选择python版本</label>
-                            <select id="python_type_projrefac" style="background: #EEEEEE;
-                            border: 1px solid #D9D9D9;
-                            border-radius: 6px;
-                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
-    font-size: 22px;
-    color: #999999;
-    letter-spacing: 0;
-    line-height: 14px;">
-                                <option>python3.6x</option>
-                                <option>python3.7x</option>
-                                <option>python3.8x</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="margin-top: 20px;">
-                          <label for="ann_lib_type_projrefac" style="font-family: SourceHanSansCN-Normal;
-                          font-size: 22px;
-                          color: #333333;
-                          letter-spacing: 1.26px;text-align: right;padding-right: 5px;width: 260px;">模型使用的神经网络库</label>
-                          <select id="ann_lib_type_projrefac" style="background: #EEEEEE;
-                          border: 1px solid #D9D9D9;
-                          border-radius: 6px;
-                          border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
-    font-size: 22px;
-    color: #999999;
-    letter-spacing: 0;
-    line-height: 14px;">
-                            <option>Keras(Tensorflow backended)</option>
-                          </select>
                         </div>
                     </form>
           </div>
@@ -1361,12 +1297,9 @@ export function getConvertorPageV2(){
     
                 var project_name = $("#project_name").val();
                 var project_type = $("#select_type").val();
-                var python_type = $("#python_type").val();
-                var ann_lib_type = $("#ann_lib_type").val();
                 // 发送到extension
                 vscode.postMessage(JSON.stringify({"project_info":{
-                  "project_name":project_name, "project_type":project_type,
-                                "python_type":python_type, "ann_lib_type":ann_lib_type
+                  "project_name":project_name, "project_type":project_type
                 }}));
                 $("#dismiss").click();
             });
@@ -1378,12 +1311,10 @@ export function getConvertorPageV2(){
               console.log("修改项目属性");
               var proj_name = $("#project_name_projrefac").val();
               var proj_type = $("#select_type_refac").val();
-              var python_type = $("#python_type_projrefac").val();
-              var ann_lib_type = $("#ann_lib_type_projrefac").val();
     
               // 发送到extension
               vscode.postMessage(JSON.stringify({"project_refac_info":{
-                "project_name":proj_name, "project_type":proj_type, "python_type":python_type,"ann_lib_type":ann_lib_type
+                "project_name":proj_name, "project_type":proj_type
               }}));
               $("#dismiss_projrefac").click();
             });
@@ -1406,8 +1337,6 @@ export function getConvertorPageV2(){
                       var project_info = message.project_desc;
                       $("#project_name_projrefac").val(project_info.project_name);
                       $("#select_type_refac").val(project_info.project_type);
-                      $("#python_type_projrefac").val(project_info.python_type);
-                      $("#ann_lib_type_projrefac").val(project_info.ann_lib_type);
                     }
                 }else{
                   let message = JSON.parse(event.data);

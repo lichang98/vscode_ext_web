@@ -390,7 +390,7 @@ function activate(context) {
                 });
             });
         }
-        else if (label === "数据") {
+        else if (label === "数据集") {
             // 数据可视化
             console.log("单击可视化,数据");
             // vscode.commands.executeCommand<TreeItemNode>("treeView-item.datavis", inMemTreeViewStruct[0].children![0]);
@@ -925,54 +925,66 @@ function activate(context) {
         console.log("当前可视化目标:" + itemNode.label);
         if (currentPanel) {
             // 切换webview
-            if (itemNode.label === "数据") {
-                if (!panelDataVis) {
-                    panelDataVis = vscode.window.createWebviewPanel("datavis", "数据集", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
-                    panelDataVis.onDidDispose(function () {
-                        panelDataVis = undefined;
-                    }, null, context.subscriptions);
-                    panelDataVis.webview.onDidReceiveMessage((e) => {
-                        if (e.fetch_audio) {
-                            console.log("接收到webview 请求audio! " + e.fetch_audio);
-                            axios.default.get(e.fetch_audio, { responseType: "arraybuffer" }).then(res => {
-                                decode(res.data).then((audioBuf) => {
-                                    panelDataVis.webview.postMessage({ "audioBuf": audioBuf });
+            if (itemNode.label === "数据集") {
+                if (X_NORM_DATA_PATH) {
+                    if (!panelDataVis) {
+                        panelDataVis = vscode.window.createWebviewPanel("datavis", "数据集", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+                        panelDataVis.onDidDispose(function () {
+                            panelDataVis = undefined;
+                        }, null, context.subscriptions);
+                        panelDataVis.webview.onDidReceiveMessage((e) => {
+                            if (e.fetch_audio) {
+                                console.log("接收到webview 请求audio! " + e.fetch_audio);
+                                axios.default.get(e.fetch_audio, { responseType: "arraybuffer" }).then(res => {
+                                    decode(res.data).then((audioBuf) => {
+                                        panelDataVis.webview.postMessage({ "audioBuf": audioBuf });
+                                    });
                                 });
-                            });
-                        }
-                    });
+                            }
+                        });
+                    }
+                    panelDataVis.reveal();
+                    // currentPanel.webview.html = getConvertorDataPageV2(
+                    if (PROJ_DESC_INFO.project_type === '图像分类') {
+                        panelDataVis.webview.html = get_convertor_page_v2_1.getConvertorDataPageV2(panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample0.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample1.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample2.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample3.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample4.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample5.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample6.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample7.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample8.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample9.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample0.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample1.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample2.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample3.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample4.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample5.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample6.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample7.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample8.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample9.png"))));
+                    }
+                    else if (PROJ_DESC_INFO.project_type === '语义分割') {
+                        panelDataVis.webview.html = get_seg_pages_1.getSegDataVisPage();
+                    }
+                    else if (PROJ_DESC_INFO.project_type === "语音识别") {
+                        panelDataVis.webview.html = get_speech_pages_1.getSpeechClsDataPage();
+                    }
+                    else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
+                        panelDataVis.webview.html = get_fatigue_pages_1.getFatigueDataVisPage();
+                    }
                 }
-                panelDataVis.reveal();
-                // currentPanel.webview.html = getConvertorDataPageV2(
-                if (PROJ_DESC_INFO.project_type === '图像分类') {
-                    panelDataVis.webview.html = get_convertor_page_v2_1.getConvertorDataPageV2(panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample0.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample1.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample2.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample3.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample4.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample5.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample6.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample7.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample8.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample9.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample0.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample1.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample2.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample3.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample4.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample5.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample6.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample7.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample8.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample9.png"))));
-                }
-                else if (PROJ_DESC_INFO.project_type === '语义分割') {
-                    panelDataVis.webview.html = get_seg_pages_1.getSegDataVisPage();
-                }
-                else if (PROJ_DESC_INFO.project_type === "语音识别") {
-                    panelDataVis.webview.html = get_speech_pages_1.getSpeechClsDataPage();
-                }
-                else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
-                    panelDataVis.webview.html = get_fatigue_pages_1.getFatigueDataVisPage();
+                else {
+                    // vscode.window.showErrorMessage("请先导入数据!!");
+                    currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先导入数据!" }));
                 }
             }
             else if (itemNode.label === "ANN模型") {
-                if (panelAnnModelVis) {
-                    panelAnnModelVis.dispose();
-                    panelAnnModelVis = undefined;
-                }
-                if (!panelAnnModelVis) {
-                    panelAnnModelVis = vscode.window.createWebviewPanel("datavis", "ANN模型", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
-                    panelAnnModelVis.onDidDispose(() => {
+                if (ANN_MODEL_FILE_PATH) {
+                    if (panelAnnModelVis) {
+                        panelAnnModelVis.dispose();
                         panelAnnModelVis = undefined;
-                    }, null, context.subscriptions);
+                    }
+                    if (!panelAnnModelVis) {
+                        panelAnnModelVis = vscode.window.createWebviewPanel("datavis", "ANN模型", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+                        panelAnnModelVis.onDidDispose(() => {
+                            panelAnnModelVis = undefined;
+                        }, null, context.subscriptions);
+                    }
+                    panelAnnModelVis.reveal();
+                    panelAnnModelVis.webview.html = get_convertor_page_v2_1.getConvertorModelPageV2();
                 }
-                panelAnnModelVis.reveal();
-                panelAnnModelVis.webview.html = get_convertor_page_v2_1.getConvertorModelPageV2();
+                else {
+                    // vscode.window.showErrorMessage("请先导入ANN模型文件！！！");
+                    currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先导入ANN模型文件！！！" }));
+                }
             }
         }
-        if (itemNode.label === "数据") {
+        if (itemNode.label === "数据集") {
             if (panelDataVis && X_NORM_DATA_PATH) {
                 panelDataVis.title = "数据集";
                 // 数据可视化展示
@@ -1013,7 +1025,7 @@ function activate(context) {
                 });
             }
             else if (!X_NORM_DATA_PATH) {
-                vscode.window.showErrorMessage("请先导入数据！！！");
+                // vscode.window.showErrorMessage("请先导入数据！！！");
             }
         }
         else if (itemNode.label === "ANN模型") {
@@ -1057,7 +1069,7 @@ function activate(context) {
                 });
             }
             else if (!ANN_MODEL_FILE_PATH) {
-                vscode.window.showErrorMessage("请先导入ANN模型文件！！！");
+                // vscode.window.showErrorMessage("请先导入ANN模型文件！！！");
             }
         }
     });
@@ -1270,6 +1282,11 @@ function activate(context) {
     });
     // 启动显示SNN模型的命令
     vscode.commands.registerCommand("snn_model_ac.show_snn_model", () => {
+        if (DARWIN_LANG_BIN_PATHS.length === 0) {
+            // vscode.window.showErrorMessage("请先完成转换步骤！！！");
+            currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先完成转换步骤！！！" }));
+            return;
+        }
         if (panelSNNVisWeb) {
             panelSNNVisWeb.dispose();
             panelSNNVisWeb = undefined;
@@ -1283,7 +1300,7 @@ function activate(context) {
         panelSNNVisWeb.reveal();
         console.log("执行darwinlang map生成脚本...");
         if (DARWIN_LANG_FILE_PATHS.length === 0) {
-            vscode.window.showErrorMessage("请先完成转换步骤！！！");
+            // vscode.window.showErrorMessage("请先完成转换步骤！！！");
             return;
         }
         // 执行 darwinlang map 生成脚本
@@ -1337,7 +1354,7 @@ function activate(context) {
             }, null, context.subscriptions);
             panelSNNModelVis.webview.onDidReceiveMessage((evt) => {
                 if (DARWIN_LANG_FILE_PATHS.length === 0) {
-                    vscode.window.showErrorMessage("请先完成转换步骤！！！");
+                    // vscode.window.showErrorMessage("请先完成转换步骤！！！");
                     return;
                 }
                 // let simuInfoFile = path.join(__dirname, "inner_scripts", "brian2_snn_info.json");
@@ -1441,7 +1458,7 @@ function activate(context) {
     // // 启动将darwinlang 文件转换为二进制文件的操作
     vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function () {
         if (DARWIN_LANG_FILE_PATHS.length === 0) {
-            vscode.window.showErrorMessage("请先完成转换步骤！！！");
+            // vscode.window.showErrorMessage("请先完成转换步骤！！！");
             return;
         }
         if (!TreeViewProvider_1.ITEM_ICON_MAP.has("SNN二进制模型")) {
@@ -5406,7 +5423,7 @@ exports.ITEM_ICON_MAP = new Map([
     ['SNN模型', "imgs/ann_model.png"],
     ['连接文件', "imgs/conn_files_icon.png"],
     ['模拟器', "imgs/simulate_icon.png"],
-    ['模型编译', "imgs/compile_icon.png"],
+    ['模型编译', "imgs/darwin_binary.png"],
     ['Darwin二进制文件', "imgs/darwin_model_icon_new.png"],
     ["模型转换", "imgs/convert_icon.png",],
     ["模型文件", "imgs/ann_model.png"],
@@ -6624,7 +6641,7 @@ function getConvertorPageV2() {
                             <label for="select_type" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
-                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 285px;">选择项目类别: </label>
+                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 285px;">项目类别: </label>
                             <select id="select_type" style="background: #EEEEEE;
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
@@ -6684,6 +6701,7 @@ function getConvertorPageV2() {
             </button>
             <h4 id="myModalLabelProjRefact" style="font-family: SourceHanSansCN-Normal;
             font-size: 24px;
+            font-weight: bold;
             color: #333333;
             letter-spacing: 1.07px;margin-left: 20px;">
               项目属性修改
@@ -6709,7 +6727,7 @@ function getConvertorPageV2() {
                             <label for="select_type_refac" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
-                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 260px;">选择项目类别</label>
+                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 260px;">项目类别: </label>
                             <select id="select_type_refac" style="background: #EEEEEE;
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
@@ -6750,6 +6768,43 @@ function getConvertorPageV2() {
       </div>
     
     </div>
+    
+    
+    
+    <div class="modal fade" id="myModal_show_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_show_error" aria-hidden="true" style="background-color: white;color: #333;">
+      <div class="modal-dialog" style="background-color: white;width: 800px;">
+        <div class="modal-content" style="background-color: white;">
+          <div>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+              &times;
+            </button>
+            <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Normal;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ee1414;
+            letter-spacing: 1.07px;margin-left: 20px;">
+              警告
+            </h4>
+          </div>
+          <div class="modal-body">
+            <div style="margin-top: 50px;">
+              <span id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
+              font-size: 22px;
+              color: #f87307;
+              letter-spacing: 1.26px;margin: auto;text-align: center;width: 100%;display: inline-block;">错误信息</span>
+            </div>
+          </div>
+          <div style="margin-top: 40px;margin-bottom: 40px;">
+            <button type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+            border-radius: 2px;
+            border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">关闭
+            </button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    
+    <button id="alert_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_show_error" style="display: none;"></button>
     
     </body>
     <style>
@@ -6825,6 +6880,13 @@ function getConvertorPageV2() {
     
         const vscode = acquireVsCodeApi();
         $(document).ready(function(){
+          window.addEventListener("message", (event)=>{
+            const data = JSON.parse(event.data);
+            if (data.show_error) {
+              $("#error_detail").text(data.show_error);
+              $("#alert_modal_btn").click();
+            }
+          });
            // 选择项目文件保存路径
            $("#span_save_path").on("click", function(){
              // 发送消息到extension，打开选择路径的dialog

@@ -270,6 +270,8 @@ export function activate(context: vscode.ExtensionContext) {
 	let DARWIN_LANG_FILE_PATHS:Array<String> = new Array();
 	let DARWIN_LANG_BIN_PATHS:Array<String> = new Array();
 
+	let CONVERT_SCRIPT_PARAMS:string|undefined = undefined;
+
 	let panelDataVis:vscode.WebviewPanel|undefined = undefined;
 	let panelAnnModelVis:vscode.WebviewPanel|undefined = undefined;
 	let panelSNNModelVis:vscode.WebviewPanel|undefined = undefined;
@@ -557,23 +559,112 @@ export function activate(context: vscode.ExtensionContext) {
 
 				console.log("Extension 接收到 webview的消息，启动脚本......");
 				sleep(1000);
-				let scriptPath = undefined;
+				// let scriptPath = undefined;
 				if(PROJ_DESC_INFO.project_type === '图像分类'){
-					scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
-									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""));
+					CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
+									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")) + " 0";
 				}else if(PROJ_DESC_INFO.project_type === "语义分割"){
-					scriptPath = path.join(__dirname, "darwin2sim", "seg_cls_scripts","convert_with_stb.py "+ webParamVthresh+" "+ 
-					wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""));
+					CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "seg_cls_scripts","convert_with_stb.py "+ webParamVthresh+" "+ 
+					wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")) + " 0";
 				}else if(PROJ_DESC_INFO.project_type === "语音识别"){
-					scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
+					CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
 									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""))+ " 2";
 				}else if(PROJ_DESC_INFO.project_type === "疲劳检测") {
-					scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
-									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""));
+					CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
+									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")) + " 0";
 				}else {
 					//TODO Other task type
 				}
-				let commandStr = PYTHON_INTERPRETER+scriptPath;
+				// 
+				fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py"),`# -*- coding:utf-8 -*-
+import keras
+import numpy as np
+
+
+def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
+	"""
+	NN weights normalization
+	
+	Spiking neural network is driving with sparsely firing, and the weights from ANN needed to be processed
+	to minimize the lossin the conversion process.
+	You should implement your own method to normalize synapses' weights, after finishing it, you can run it and
+	see the performance.
+	-----------------------
+	
+	Parameters:
+	---------
+	model: keras model, you can get layer weights by calling 'model.layers[i].get_weights()'. Note that some layers, such as pooling, do not have weights
+	np_data: N x M or N x M x K np array, it can be directly feed into this model. You can use it for necessary computation.
+	"""
+	layer_weights = []
+	for i in range(len(model.layers)):
+		if np.array(model.layers[i].get_weights()).shape[0] == 0:
+			continue
+		layer_weights.append(np.array(model.layers[i].get_weights()))
+	
+	# Implement your algorithm
+	
+
+	idx = 0
+	for i in range(len(model.layers)):
+		if np.array(model.layers[i].get_weights()).shape[0] == 0:
+			continue
+		model.layers[i].set_weights(layer_weights[idx])
+		idx += 1
+					
+`);
+
+				// 发送消息到界面，选择使用模型算法/自定义算法
+				currentPanel!.webview.postMessage(JSON.stringify({"select_default_or_self_alg": "need_check"}));
+			}else if(data.select_save_proj_path_req){
+				// 选择项目的保存路径
+				console.log("select path for saving project, proj name="+data.select_save_proj_path_req);
+				if(data.is_change_proj_name && PROJ_SAVE_PATH){
+					console.log("Just changing proj name, no need to open dialog.");
+					PROJ_SAVE_PATH = path.join(path.dirname(PROJ_SAVE_PATH), data.select_save_proj_path_req+".dar2");
+					if(currentPanel){
+						console.log("项目名称修改，发送到webview，路径="+PROJ_SAVE_PATH);
+						currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": PROJ_SAVE_PATH}));
+					}
+				}else{
+					const options:vscode.OpenDialogOptions = {
+						canSelectFiles:false,
+						canSelectFolders:true,
+						openLabel:"选择目录",
+						title:"选择项目保存位置"
+					};
+					vscode.window.showOpenDialog(options).then(fileUri => {
+						if(fileUri){
+							console.log("选择的项目保存路径为："+fileUri[0].fsPath);
+							PROJ_SAVE_PATH = path.join(fileUri[0].fsPath, data.select_save_proj_path_req+".dar2");
+							if(currentPanel){
+								console.log("发送保存路径到webview..., 路径="+PROJ_SAVE_PATH);
+								// fs.open(PROJ_SAVE_PATH, 'w', 0o777 , (err, fd)=>{
+								// 	if(err){
+								// 		console.log("创建项目文件错误："+err);
+								// 	}
+								// 	console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
+								// });
+								currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": PROJ_SAVE_PATH}));
+							}
+						}
+					});
+				}
+			} else if (data.convert_self_def) {
+				if (data.convert_self_def === "preprocess") {
+					// 打开编辑页面，实现自定义算法
+					vscode.workspace.openTextDocument(path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py")).then((doc:vscode.TextDocument)=>{
+						vscode.window.showTextDocument(doc, 1, false);
+					}, (err)=>{
+						console.log(err);
+					});
+				}
+			} else if (data.select_alg_res) {
+				console.log("extension 获得选择结果，选择默认算法or自定义算法: "+data.select_alg_res);
+				if (data.select_alg_res === "self") {
+					CONVERT_SCRIPT_PARAMS += " 1 "+path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py");
+				}
+				let commandStr = PYTHON_INTERPRETER+CONVERT_SCRIPT_PARAMS;
 				currentPanel?.webview.postMessage(JSON.stringify({"log_output":"模型转换程序启动中......"}));
 				let scriptProcess = exec(commandStr,{});
 				let logOutputPanel = vscode.window.createOutputChannel("Darwin Convertor");
@@ -625,40 +716,6 @@ export function activate(context: vscode.ExtensionContext) {
 						vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
 					}
 				});
-			}else if(data.select_save_proj_path_req){
-				// 选择项目的保存路径
-				console.log("select path for saving project, proj name="+data.select_save_proj_path_req);
-				if(data.is_change_proj_name && PROJ_SAVE_PATH){
-					console.log("Just changing proj name, no need to open dialog.");
-					PROJ_SAVE_PATH = path.join(path.dirname(PROJ_SAVE_PATH), data.select_save_proj_path_req+".dar2");
-					if(currentPanel){
-						console.log("项目名称修改，发送到webview，路径="+PROJ_SAVE_PATH);
-						currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": PROJ_SAVE_PATH}));
-					}
-				}else{
-					const options:vscode.OpenDialogOptions = {
-						canSelectFiles:false,
-						canSelectFolders:true,
-						openLabel:"选择目录",
-						title:"选择项目保存位置"
-					};
-					vscode.window.showOpenDialog(options).then(fileUri => {
-						if(fileUri){
-							console.log("选择的项目保存路径为："+fileUri[0].fsPath);
-							PROJ_SAVE_PATH = path.join(fileUri[0].fsPath, data.select_save_proj_path_req+".dar2");
-							if(currentPanel){
-								console.log("发送保存路径到webview..., 路径="+PROJ_SAVE_PATH);
-								// fs.open(PROJ_SAVE_PATH, 'w', 0o777 , (err, fd)=>{
-								// 	if(err){
-								// 		console.log("创建项目文件错误："+err);
-								// 	}
-								// 	console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
-								// });
-								currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": PROJ_SAVE_PATH}));
-							}
-						}
-					});
-				}
 			}
 		});
 	}
@@ -1585,12 +1642,6 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log("目标转换为darwin2二进制文件");
 		vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
 	});
-
-	vscode.commands.registerCommand("item_darwinLang_convertor.convert_to_darwin3", function(){
-		console.log("目标转换为darwin3二进制文件");
-		vscode.window.showWarningMessage("目前尚不支持darwin3!");
-	});
-
 
 	vscode.commands.executeCommand("darwin2.helloWorld");
 

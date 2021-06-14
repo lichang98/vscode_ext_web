@@ -269,6 +269,7 @@ function activate(context) {
     let ANN_MODEL_FILE_PATH = undefined;
     let DARWIN_LANG_FILE_PATHS = new Array();
     let DARWIN_LANG_BIN_PATHS = new Array();
+    let CONVERT_SCRIPT_PARAMS = undefined;
     let panelDataVis = undefined;
     let panelAnnModelVis = undefined;
     let panelSNNModelVis = undefined;
@@ -556,27 +557,119 @@ function activate(context) {
                 let webParamDura = data.model_convert_params.dura;
                 console.log("Extension 接收到 webview的消息，启动脚本......");
                 sleep(1000);
-                let scriptPath = undefined;
+                // let scriptPath = undefined;
                 if (PROJ_DESC_INFO.project_type === '图像分类') {
-                    scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
-                        wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""));
+                    CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
+                        wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")) + " 0";
                 }
                 else if (PROJ_DESC_INFO.project_type === "语义分割") {
-                    scriptPath = path.join(__dirname, "darwin2sim", "seg_cls_scripts", "convert_with_stb.py " + webParamVthresh + " " +
-                        wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""));
+                    CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "seg_cls_scripts", "convert_with_stb.py " + webParamVthresh + " " +
+                        wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")) + " 0";
                 }
                 else if (PROJ_DESC_INFO.project_type === "语音识别") {
-                    scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
+                    CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
                         wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")) + " 2";
                 }
                 else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
-                    scriptPath = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
-                        wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""));
+                    CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
+                        wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")) + " 0";
                 }
                 else {
                     //TODO Other task type
                 }
-                let commandStr = PYTHON_INTERPRETER + scriptPath;
+                // 
+                fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH), "self_preprocess.py"), `# -*- coding:utf-8 -*-
+import keras
+import numpy as np
+
+
+def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
+	"""
+	NN weights normalization
+	
+	Spiking neural network is driving with sparsely firing, and the weights from ANN needed to be processed
+	to minimize the lossin the conversion process.
+	You should implement your own method to normalize synapses' weights, after finishing it, you can run it and
+	see the performance.
+	-----------------------
+	
+	Parameters:
+	---------
+	model: keras model, you can get layer weights by calling 'model.layers[i].get_weights()'. Note that some layers, such as pooling, do not have weights
+	np_data: N x M or N x M x K np array, it can be directly feed into this model. You can use it for necessary computation.
+	"""
+	layer_weights = []
+	for i in range(len(model.layers)):
+		if np.array(model.layers[i].get_weights()).shape[0] == 0:
+			continue
+		layer_weights.append(np.array(model.layers[i].get_weights()))
+	
+	# Implement your algorithm
+	
+
+	idx = 0
+	for i in range(len(model.layers)):
+		if np.array(model.layers[i].get_weights()).shape[0] == 0:
+			continue
+		model.layers[i].set_weights(layer_weights[idx])
+		idx += 1
+					
+`);
+                // 发送消息到界面，选择使用模型算法/自定义算法
+                currentPanel.webview.postMessage(JSON.stringify({ "select_default_or_self_alg": "need_check" }));
+            }
+            else if (data.select_save_proj_path_req) {
+                // 选择项目的保存路径
+                console.log("select path for saving project, proj name=" + data.select_save_proj_path_req);
+                if (data.is_change_proj_name && PROJ_SAVE_PATH) {
+                    console.log("Just changing proj name, no need to open dialog.");
+                    PROJ_SAVE_PATH = path.join(path.dirname(PROJ_SAVE_PATH), data.select_save_proj_path_req + ".dar2");
+                    if (currentPanel) {
+                        console.log("项目名称修改，发送到webview，路径=" + PROJ_SAVE_PATH);
+                        currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": PROJ_SAVE_PATH }));
+                    }
+                }
+                else {
+                    const options = {
+                        canSelectFiles: false,
+                        canSelectFolders: true,
+                        openLabel: "选择目录",
+                        title: "选择项目保存位置"
+                    };
+                    vscode.window.showOpenDialog(options).then(fileUri => {
+                        if (fileUri) {
+                            console.log("选择的项目保存路径为：" + fileUri[0].fsPath);
+                            PROJ_SAVE_PATH = path.join(fileUri[0].fsPath, data.select_save_proj_path_req + ".dar2");
+                            if (currentPanel) {
+                                console.log("发送保存路径到webview..., 路径=" + PROJ_SAVE_PATH);
+                                // fs.open(PROJ_SAVE_PATH, 'w', 0o777 , (err, fd)=>{
+                                // 	if(err){
+                                // 		console.log("创建项目文件错误："+err);
+                                // 	}
+                                // 	console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
+                                // });
+                                currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": PROJ_SAVE_PATH }));
+                            }
+                        }
+                    });
+                }
+            }
+            else if (data.convert_self_def) {
+                if (data.convert_self_def === "preprocess") {
+                    // 打开编辑页面，实现自定义算法
+                    vscode.workspace.openTextDocument(path.join(path.dirname(PROJ_SAVE_PATH), "self_preprocess.py")).then((doc) => {
+                        vscode.window.showTextDocument(doc, 1, false);
+                    }, (err) => {
+                        console.log(err);
+                    });
+                }
+            }
+            else if (data.select_alg_res) {
+                console.log("extension 获得选择结果，选择默认算法or自定义算法: " + data.select_alg_res);
+                if (data.select_alg_res === "self") {
+                    CONVERT_SCRIPT_PARAMS += " 1 " + path.join(path.dirname(PROJ_SAVE_PATH), "self_preprocess.py");
+                }
+                let commandStr = PYTHON_INTERPRETER + CONVERT_SCRIPT_PARAMS;
                 currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.webview.postMessage(JSON.stringify({ "log_output": "模型转换程序启动中......" }));
                 let scriptProcess = child_process_1.exec(commandStr, {});
                 let logOutputPanel = vscode.window.createOutputChannel("Darwin Convertor");
@@ -629,42 +722,6 @@ function activate(context) {
                         vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
                     }
                 });
-            }
-            else if (data.select_save_proj_path_req) {
-                // 选择项目的保存路径
-                console.log("select path for saving project, proj name=" + data.select_save_proj_path_req);
-                if (data.is_change_proj_name && PROJ_SAVE_PATH) {
-                    console.log("Just changing proj name, no need to open dialog.");
-                    PROJ_SAVE_PATH = path.join(path.dirname(PROJ_SAVE_PATH), data.select_save_proj_path_req + ".dar2");
-                    if (currentPanel) {
-                        console.log("项目名称修改，发送到webview，路径=" + PROJ_SAVE_PATH);
-                        currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": PROJ_SAVE_PATH }));
-                    }
-                }
-                else {
-                    const options = {
-                        canSelectFiles: false,
-                        canSelectFolders: true,
-                        openLabel: "选择目录",
-                        title: "选择项目保存位置"
-                    };
-                    vscode.window.showOpenDialog(options).then(fileUri => {
-                        if (fileUri) {
-                            console.log("选择的项目保存路径为：" + fileUri[0].fsPath);
-                            PROJ_SAVE_PATH = path.join(fileUri[0].fsPath, data.select_save_proj_path_req + ".dar2");
-                            if (currentPanel) {
-                                console.log("发送保存路径到webview..., 路径=" + PROJ_SAVE_PATH);
-                                // fs.open(PROJ_SAVE_PATH, 'w', 0o777 , (err, fd)=>{
-                                // 	if(err){
-                                // 		console.log("创建项目文件错误："+err);
-                                // 	}
-                                // 	console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
-                                // });
-                                currentPanel.webview.postMessage(JSON.stringify({ "proj_select_path": PROJ_SAVE_PATH }));
-                            }
-                        }
-                    });
-                }
             }
         });
     }
@@ -1573,10 +1630,6 @@ function activate(context) {
     vscode.commands.registerCommand("item_darwinLang_convertor.convert_to_darwin2", function () {
         console.log("目标转换为darwin2二进制文件");
         vscode.commands.executeCommand("bin_darlang_convertor.start_convert");
-    });
-    vscode.commands.registerCommand("item_darwinLang_convertor.convert_to_darwin3", function () {
-        console.log("目标转换为darwin3二进制文件");
-        vscode.window.showWarningMessage("目前尚不支持darwin3!");
     });
     vscode.commands.executeCommand("darwin2.helloWorld");
     function autoSaveWithCheck() {
@@ -7027,7 +7080,7 @@ function getANNSNNConvertPage() {
               letter-spacing: 0.91px;">等待转换结束...</font></span>
       </div>
   
-      <div class="loading-div" id="loader_tb" style="position: absolute;top: 400px;left: 740px;background: rgba(238,238,238);width: 720px;height: 500px;z-index: 2;">
+      <div class="loading-div" id="loader_tb" style="position: absolute;top: 400px;left: 740px;background: rgba(238,238,238);width: 760px;height: 500px;z-index: 2;">
           <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="margin-top: 200px;color: #333;"></i>
           <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="margin-left: 300px;font-family: SourceHanSansCN-Normal;
               font-size: 16px;
@@ -7175,7 +7228,7 @@ function getANNSNNConvertPage() {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;">2</div>预处理</div>
+    border-radius: 20px;">2</div>预处理<span id="self_def_preprocess_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
                       <div class="progress" style="background: #E6E6E6;
                       border-radius: 15px;">
                           <div id="preprocess_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -7406,6 +7459,55 @@ function getANNSNNConvertPage() {
           </div>
       </div>
   
+  <div class="modal fade" id="myModal_select_alg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_select_alg" aria-hidden="true" style="background-color: white;color: #333;">
+      <div class="modal-dialog" style="background-color: white;width: 800px;">
+          <div class="modal-content" style="background-color: white;">
+              <div>
+                  <button id="select_alg_modal_close" type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+                      &times;
+                  </button>
+                  <h4 id="myModalLabel_select_alg" style="font-family: SourceHanSansCN-Normal;
+          font-size: 24px;
+          font-weight: bold;
+          color: #333;
+          letter-spacing: 1.07px;margin-left: 20px;">
+                      选择调用算法
+                  </h4>
+              </div>
+              <div class="modal-body">
+          <div style="margin-top: 50px;">
+              <div class="radio">
+                  <label>
+                      <input type="radio" name="alg_call_radios" id="default_alg" value="default_alg" checked> <span style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      font-weight: bold;
+                      color: #333;
+                      letter-spacing: 1.07px;margin-left: 20px;">默认算法</span>
+                  </label>
+              </div>
+              <div class="radio" style="margin-top: 30px;">
+                  <label>
+                      <input type="radio" name="alg_call_radios" id="self_alg" value="self_alg"> <span style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      font-weight: bold;
+                      color: #333;
+                      letter-spacing: 1.07px;margin-left: 20px;">自定义算法</span>
+                  </label>
+              </div>
+          </div>
+              </div>
+              <div style="margin-top: 40px;margin-bottom: 40px;">
+                  <button  id="check_alg_select_btn" type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+          border-radius: 2px;
+          border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">确认
+                  </button>
+              </div>
+          </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+  </div>
+  
+  <button id="select_alg_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_select_alg" style="display: none;"></button>
+  
   </body>
   <style>
   
@@ -7500,6 +7602,9 @@ function getANNSNNConvertPage() {
       let prev_clicked_img_li_id=undefined;
   
         $(document).ready(function(){
+            $("#self_def_preprocess_alg").on("click", function(){
+                vscode.postMessage(JSON.stringify({"convert_self_def": "preprocess"}));
+            });
             window.addEventListener("message", function(evt){
                 console.log("ANN 转SNN 模型接收到extension 消息："+evt.data);
                 const data = JSON.parse(evt.data);
@@ -7509,32 +7614,37 @@ function getANNSNNConvertPage() {
                   console.log("data split list len="+log_output_lists.length);
                   // $("#log_output_div").html(log_output_lists.join("<br/>"));
                   // document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
-                  if(log_output_lists.length <= 161){
-                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/161*100)+"%");
-                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/161*100)+"%";
+                  if(log_output_lists.length <= 152){
+                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/152*100)+"%");
+                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/152*100)+"%";
                   }
                   if(stage1_convert_finish){
-                      if(log_output_lists.length < 697 && stage2_preprocess_finish !== true){
+                      if(log_output_lists.length < 228 && stage2_preprocess_finish !== true){
                           console.log("increase sub progress bar 2");
-                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-161)/(697-161)*100)+"%";
+                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-152)/(228-152)*100)+"%";
                       }
                   }
                   if(stage2_preprocess_finish){
-                      if(log_output_lists.length < 799 && stage3_search_finish !== true){
+                      if(log_output_lists.length < 330 && stage3_search_finish !== true){
                           console.log("increase sub progress bar 3");
-                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-697)/(799-697)*100)+"%";
+                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-228)/(330-228)*100)+"%";
                       }
                   }
                   if(stage3_search_finish){
-                      if(log_output_lists.length < 866 && stage4_all_finish !== true){
+                      if(log_output_lists.length < 397 && stage4_all_finish !== true){
                           console.log("increase sub progress bar 4");
-                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-799)/(866-799)*100)+"%";
+                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-330)/(397-330)*100)+"%";
                       }
                   }
                   if(stage4_all_finish !== true){
                       console.log("increase sub progress bar total");
-                      document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/866*100)+"%";
+                      document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/397*100)+"%";
                   }
+                  document.getElementById("model_convert_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("model_convert_progress_div").style.width+"</span>";
+                  document.getElementById("preprocess_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("preprocess_progress_div").style.width+"</span>";
+                  document.getElementById("search_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("search_progress_div").style.width+"</span>";
+                  document.getElementById("darlang_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("darlang_progress_div").style.width+"</span>";
+                  document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("total_progress_div").style.width+"</span>";
                 }else if(data.exec_finish){
                     // 结束
                   //   document.getElementById("start_convert_btn").style.backgroundColor = "";
@@ -7544,6 +7654,11 @@ function getANNSNNConvertPage() {
                     document.getElementById("search_progress_div").style.width = "100%";
                     document.getElementById("darlang_progress_div").style.width = "100%";
                     document.getElementById("total_progress_div").style.width = "100%";
+                    document.getElementById("model_convert_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
+                  document.getElementById("preprocess_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
+                  document.getElementById("search_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
+                  document.getElementById("darlang_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
+                  document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
                     console.log("LINE COUNT all_finish="+log_output_lists.length);
                     $(".loading-div").hide();
                     stage4_all_finish = true;
@@ -7684,6 +7799,7 @@ function getANNSNNConvertPage() {
                   document.getElementById("search_progress_div").style.width = "0%";
                   document.getElementById("darlang_progress_div").style.width = "0%";
                   document.getElementById("total_progress_div").style.width = "0%";
+                  $(".loading-div").show();
                 }else if(data.scale_factors){
                   // scale_factors_table
                   // <tr style="margin-top: 15px;height: 35px;">
@@ -7691,6 +7807,7 @@ function getANNSNNConvertPage() {
                   //     <td>系数2</td>
                   // </tr> -->
                   scale_fac = JSON.parse(data.scale_factors);
+                  document.getElementById("scale_factors_table").innerHTML = "";
                   for(obj in scale_fac){
                       let table_line = document.createElement("tr");
                       table_line.style.height = "35px";
@@ -7721,6 +7838,28 @@ function getANNSNNConvertPage() {
                       table_line.appendChild(line_td2);
                       document.getElementById("scale_factors_table").appendChild(table_line);
                   }
+                } else if (data.select_default_or_self_alg) {
+                    // 弹出对话框，选择使用默认算法/自定义算法
+                    $("#select_alg_modal_btn").click();
+                    $("#check_alg_select_btn").on("click", ()=>{
+                        if (document.getElementById("default_alg").checked) {
+                            console.log("选择使用默认算法....");
+                            vscode.postMessage(JSON.stringify({"select_alg_res": "default"}));
+                        } else {
+                            console.log("选择使用自定义算法...");
+                            vscode.postMessage(JSON.stringify({"select_alg_res":"self"}));
+                        }
+                    });
+  
+                    $("#select_alg_modal_close").on("click",()=>{
+                      if (document.getElementById("default_alg").checked) {
+                            console.log("选择使用默认算法....");
+                            vscode.postMessage(JSON.stringify({"select_alg_res": "default"}));
+                        } else {
+                            console.log("选择使用自定义算法...");
+                            vscode.postMessage(JSON.stringify({"select_alg_res":"self"}));
+                        }
+                    });
                 }
             });
   

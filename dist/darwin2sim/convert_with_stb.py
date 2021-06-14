@@ -34,6 +34,14 @@ task_type = 0
 if len(sys.argv) > 7:
     task_type = sys.argv[7]
 
+# 1: using self defined parameter normalization method
+run_alg = 0 # using default algorithms
+if len(sys.argv) > 8:
+    run_alg = int(sys.argv[8])
+
+if len(sys.argv) > 9:
+    run_alg_file = sys.argv[9]
+
 model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "target", target_proj_name, "mnist_cnn")
 
 config_path = os.path.join(baseDirPath, "snntoolbox","config")
@@ -160,7 +168,7 @@ def fixpt_integer_vth(weights, conn_pairs,bit_width=8):
 model_lib = import_module("snntoolbox.parsing.model_libs.keras_input_lib")
 input_model = model_lib.load(os.path.dirname(model_path), os.path.basename(model_path))
 
-acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=testX[:50],y_test=testY[:50])
+# acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=testX[:50],y_test=testY[:50])
 
 # set path
 with open(os.path.join(os.path.dirname(__file__), "snntoolbox", "config"), "r") as f:
@@ -185,8 +193,14 @@ model_parser.parse()
 parsed_model = model_parser.build_parsed_model()
 print(flush=True)
 # Normalize
-norm_data = {'x_norm':testX}
-normalize_parameters(parsed_model, config,**norm_data)
+if run_alg == 0:
+    norm_data = {'x_norm':testX}
+    normalize_parameters(parsed_model, config,**norm_data)
+else:
+    # copy file self_preprcess.py
+    shutil.copy(run_alg_file, os.path.join(os.path.dirname(__file__)))
+    import self_preprocess
+    self_preprocess.normalize_parameters(parsed_model, testX)
 
 score_norm = model_parser.evaluate(batch_size=1,num_to_test=50,x_test=testX[:50],y_test=testY[:50])
 
@@ -202,11 +216,11 @@ spiking_model.save(dir_name, "spike_snn")
 print("CONVERT_FINISH...",flush=True)
 stage1_time_use = time.time()
 # simulate
-test_set = {"x_test":testX[:50],"y_test":testY[:50]}
-accu = spiking_model.run(**test_set)
+# test_set = {"x_test":testX[:50],"y_test":testY[:50]}
+# accu = spiking_model.run(**test_set)
 
-spiking_model.end_sim()
-print("accu={}".format(accu),flush=True)
+# spiking_model.end_sim()
+# print("accu={}".format(accu),flush=True)
 # print("layers count={}, layers={}".format(len(spiking_model.layers), spiking_model.layers))
 # print("connections len={}, conns={}".format(len(spiking_model.connections), spiking_model.connections))
 # print("spike monitor len={}, monitors={}".format(len(spiking_model.spikemonitors), spiking_model.spikemonitors))
@@ -614,6 +628,8 @@ shutil.move(os.path.join(baseDirPath, "brian2_snn_info.json"), os.path.join(base
 
 print("running darwinlang", flush=True)
 sys.path.append(os.path.join(baseDirPath, "..", "darlang"))
+end_time = time.time()
+total_use_time = "{:.3f} 秒".format(end_time-start_time)
 import darlang
 darlang.run_darlang(os.path.join(outputPath, "snn_digit_darlang.json"),os.path.join(outputPath,"..", "bin_darwin_out"))
 print("darwinlang conversion finished.", flush=True)
@@ -623,8 +639,6 @@ stage3_time_use = "{:.3f}".format(stage3_time_use - stage2_time_use)
 stage2_time_use = "{:.3f}".format(stage2_time_use - stage1_time_use)
 stage1_time_use = "{:.3f}".format(stage1_time_use - start_time)
 
-end_time = time.time()
-total_use_time = "{:.3f} 秒".format(end_time-start_time)
 wt_mean = np.mean(wt_statics)
 wt_std = np.std(wt_statics)
 spk_mean = np.mean(spike_statics)/50

@@ -16,7 +16,7 @@
             letter-spacing: 0.91px;">等待转换结束...</font></span>
     </div>
 
-    <div class="loading-div" id="loader_tb" style="position: absolute;top: 400px;left: 740px;background: rgba(238,238,238);width: 720px;height: 500px;z-index: 2;">
+    <div class="loading-div" id="loader_tb" style="position: absolute;top: 400px;left: 740px;background: rgba(238,238,238);width: 760px;height: 500px;z-index: 2;">
         <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="margin-top: 200px;color: #333;"></i>
         <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="margin-left: 300px;font-family: SourceHanSansCN-Normal;
             font-size: 16px;
@@ -164,7 +164,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  border-radius: 20px;">2</div>预处理</div>
+  border-radius: 20px;">2</div>预处理<span id="self_def_preprocess_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
                     <div class="progress" style="background: #E6E6E6;
                     border-radius: 15px;">
                         <div id="preprocess_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -395,6 +395,55 @@
         </div>
     </div>
 
+<div class="modal fade" id="myModal_select_alg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_select_alg" aria-hidden="true" style="background-color: white;color: #333;">
+    <div class="modal-dialog" style="background-color: white;width: 800px;">
+        <div class="modal-content" style="background-color: white;">
+            <div>
+                <button id="select_alg_modal_close" type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+                    &times;
+                </button>
+                <h4 id="myModalLabel_select_alg" style="font-family: SourceHanSansCN-Normal;
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        letter-spacing: 1.07px;margin-left: 20px;">
+                    选择调用算法
+                </h4>
+            </div>
+            <div class="modal-body">
+        <div style="margin-top: 50px;">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="alg_call_radios" id="default_alg" value="default_alg" checked> <span style="font-family: SourceHanSansCN-Normal;
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: #333;
+                    letter-spacing: 1.07px;margin-left: 20px;">默认算法</span>
+                </label>
+            </div>
+            <div class="radio" style="margin-top: 30px;">
+                <label>
+                    <input type="radio" name="alg_call_radios" id="self_alg" value="self_alg"> <span style="font-family: SourceHanSansCN-Normal;
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: #333;
+                    letter-spacing: 1.07px;margin-left: 20px;">自定义算法</span>
+                </label>
+            </div>
+        </div>
+            </div>
+            <div style="margin-top: 40px;margin-bottom: 40px;">
+                <button  id="check_alg_select_btn" type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+        border-radius: 2px;
+        border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">确认
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<button id="select_alg_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_select_alg" style="display: none;"></button>
+
 </body>
 <style>
 
@@ -489,6 +538,9 @@ let log_output_lists = new Array();
     let prev_clicked_img_li_id=undefined;
 
       $(document).ready(function(){
+          $("#self_def_preprocess_alg").on("click", function(){
+              vscode.postMessage(JSON.stringify({"convert_self_def": "preprocess"}));
+          });
           window.addEventListener("message", function(evt){
               console.log("ANN 转SNN 模型接收到extension 消息："+evt.data);
               const data = JSON.parse(evt.data);
@@ -498,32 +550,37 @@ let log_output_lists = new Array();
                 console.log("data split list len="+log_output_lists.length);
                 // $("#log_output_div").html(log_output_lists.join("<br/>"));
                 // document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
-                if(log_output_lists.length <= 161){
-                    console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/161*100)+"%");
-                        document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/161*100)+"%";
+                if(log_output_lists.length <= 152){
+                    console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/152*100)+"%");
+                        document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/152*100)+"%";
                 }
                 if(stage1_convert_finish){
-                    if(log_output_lists.length < 697 && stage2_preprocess_finish !== true){
+                    if(log_output_lists.length < 228 && stage2_preprocess_finish !== true){
                         console.log("increase sub progress bar 2");
-                            document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-161)/(697-161)*100)+"%";
+                            document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-152)/(228-152)*100)+"%";
                     }
                 }
                 if(stage2_preprocess_finish){
-                    if(log_output_lists.length < 799 && stage3_search_finish !== true){
+                    if(log_output_lists.length < 330 && stage3_search_finish !== true){
                         console.log("increase sub progress bar 3");
-                            document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-697)/(799-697)*100)+"%";
+                            document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-228)/(330-228)*100)+"%";
                     }
                 }
                 if(stage3_search_finish){
-                    if(log_output_lists.length < 866 && stage4_all_finish !== true){
+                    if(log_output_lists.length < 397 && stage4_all_finish !== true){
                         console.log("increase sub progress bar 4");
-                            document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-799)/(866-799)*100)+"%";
+                            document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-330)/(397-330)*100)+"%";
                     }
                 }
                 if(stage4_all_finish !== true){
                     console.log("increase sub progress bar total");
-                    document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/866*100)+"%";
+                    document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/397*100)+"%";
                 }
+                document.getElementById("model_convert_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("model_convert_progress_div").style.width+"</span>";
+                document.getElementById("preprocess_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("preprocess_progress_div").style.width+"</span>";
+                document.getElementById("search_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("search_progress_div").style.width+"</span>";
+                document.getElementById("darlang_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("darlang_progress_div").style.width+"</span>";
+                document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("total_progress_div").style.width+"</span>";
               }else if(data.exec_finish){
                   // 结束
                 //   document.getElementById("start_convert_btn").style.backgroundColor = "";
@@ -533,6 +590,11 @@ let log_output_lists = new Array();
                   document.getElementById("search_progress_div").style.width = "100%";
                   document.getElementById("darlang_progress_div").style.width = "100%";
                   document.getElementById("total_progress_div").style.width = "100%";
+                  document.getElementById("model_convert_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
+                document.getElementById("preprocess_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
+                document.getElementById("search_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
+                document.getElementById("darlang_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
+                document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
                   console.log("LINE COUNT all_finish="+log_output_lists.length);
                   $(".loading-div").hide();
                   stage4_all_finish = true;
@@ -673,6 +735,7 @@ let log_output_lists = new Array();
                 document.getElementById("search_progress_div").style.width = "0%";
                 document.getElementById("darlang_progress_div").style.width = "0%";
                 document.getElementById("total_progress_div").style.width = "0%";
+                $(".loading-div").show();
               }else if(data.scale_factors){
                 // scale_factors_table
                 // <tr style="margin-top: 15px;height: 35px;">
@@ -680,6 +743,7 @@ let log_output_lists = new Array();
                 //     <td>系数2</td>
                 // </tr> -->
                 scale_fac = JSON.parse(data.scale_factors);
+                document.getElementById("scale_factors_table").innerHTML = "";
                 for(obj in scale_fac){
                     let table_line = document.createElement("tr");
                     table_line.style.height = "35px";
@@ -710,6 +774,28 @@ let log_output_lists = new Array();
                     table_line.appendChild(line_td2);
                     document.getElementById("scale_factors_table").appendChild(table_line);
                 }
+              } else if (data.select_default_or_self_alg) {
+                  // 弹出对话框，选择使用默认算法/自定义算法
+                  $("#select_alg_modal_btn").click();
+                  $("#check_alg_select_btn").on("click", ()=>{
+                      if (document.getElementById("default_alg").checked) {
+                          console.log("选择使用默认算法....");
+                          vscode.postMessage(JSON.stringify({"select_alg_res": "default"}));
+                      } else {
+                          console.log("选择使用自定义算法...");
+                          vscode.postMessage(JSON.stringify({"select_alg_res":"self"}));
+                      }
+                  });
+
+                  $("#select_alg_modal_close").on("click",()=>{
+                    if (document.getElementById("default_alg").checked) {
+                          console.log("选择使用默认算法....");
+                          vscode.postMessage(JSON.stringify({"select_alg_res": "default"}));
+                      } else {
+                          console.log("选择使用自定义算法...");
+                          vscode.postMessage(JSON.stringify({"select_alg_res":"self"}));
+                      }
+                  });
               }
           });
 

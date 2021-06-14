@@ -206,7 +206,7 @@
 				{
 					"id": "simulator",
 					"title": "查看模拟结果",
-					"icon": "src/resources/simulate_run.png"
+					"icon": "src/resources/simulate_icon.png"
 				},
 				{
 					"id": "lang_convertor",

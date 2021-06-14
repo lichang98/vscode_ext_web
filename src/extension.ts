@@ -405,6 +405,9 @@ export function activate(context: vscode.ExtensionContext) {
 		}else if(label === "SNN模型"){
 			console.log("SNN模型可视化");
 			vscode.commands.executeCommand("snn_model_ac.show_snn_model");
+		} else if (label === "ANN模型") {
+			console.log("打开ANN模型转换界面.....");
+			vscode.commands.executeCommand("item_convertor.start_convert");
 		}
 	}));
 
@@ -1292,7 +1295,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// 启动显示SNN模型的命令
 	vscode.commands.registerCommand("snn_model_ac.show_snn_model", ()=>{
-		if (DARWIN_LANG_BIN_PATHS.length === 0) {
+		if (DARWIN_LANG_FILE_PATHS.length === 0) {
 			// vscode.window.showErrorMessage("请先完成转换步骤！！！");
 			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！！！"}));
 			return;
@@ -1358,6 +1361,10 @@ export function activate(context: vscode.ExtensionContext) {
 		if(panelSNNModelVis){
 			panelSNNModelVis.dispose();
 			panelSNNModelVis = undefined;
+		}
+		if (DARWIN_LANG_FILE_PATHS.length === 0) {
+			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！！！"}));
+			return;
 		}
 		if(!panelSNNModelVis){
 			panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN仿真",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});

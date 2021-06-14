@@ -1,6 +1,6 @@
 [paths]
-path_wd = e:/courses/ZJLab/IDE-related-docs/darwin2/dist/darwin2sim\target\speech_cls
-dataset_path = e:/courses/ZJLab/IDE-related-docs/darwin2/dist/darwin2sim\target\speech_cls
+path_wd = e:\courses\ZJLab\IDE-related-docs\darwin2\dist\darwin2sim\target\test
+dataset_path = e:\courses\ZJLab\IDE-related-docs\darwin2\dist\darwin2sim\target\test
 filename_ann = mnist_cnn
 
 [tools]

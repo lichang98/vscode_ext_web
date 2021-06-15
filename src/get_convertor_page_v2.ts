@@ -1986,11 +1986,11 @@ export function getANNSNNConvertPage(){
                       console.log("increase sub progress bar total");
                       document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/397*100)+"%";
                   }
-                  document.getElementById("model_convert_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("model_convert_progress_div").style.width+"</span>";
-                  document.getElementById("preprocess_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("preprocess_progress_div").style.width+"</span>";
-                  document.getElementById("search_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("search_progress_div").style.width+"</span>";
-                  document.getElementById("darlang_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("darlang_progress_div").style.width+"</span>";
-                  document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("total_progress_div").style.width+"</span>";
+                  document.getElementById("model_convert_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</span>";
+                  document.getElementById("preprocess_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</span>";
+                  document.getElementById("search_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</span>";
+                  document.getElementById("darlang_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("darlang_progress_div").style.width.replace("%", "")), 100)+"%</span>";
+                  document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("total_progress_div").style.width.replace("%", "")), 100)+"%</span>";
                 }else if(data.exec_finish){
                     // 结束
                   //   document.getElementById("start_convert_btn").style.backgroundColor = "";
@@ -2153,7 +2153,12 @@ export function getANNSNNConvertPage(){
                   //     <td>系数2</td>
                   // </tr> -->
                   scale_fac = JSON.parse(data.scale_factors);
-                  document.getElementById("scale_factors_table").innerHTML = "";
+                  // document.getElementById("scale_factors_table").innerHTML = "";
+                  // console.log("scale factor table children len="+$("#scale_factors_table").children.length);
+                  // while ($("#scale_factors_table").children.length > 1) {
+                  //     $("#scale_factors_table tr:last").remove();
+                  // }
+                  // console.log("scale factor table children len after remove ="+$("#scale_factors_table").children.length);
                   for(obj in scale_fac){
                       let table_line = document.createElement("tr");
                       table_line.style.height = "35px";

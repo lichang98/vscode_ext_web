@@ -578,43 +578,6 @@ function activate(context) {
                     //TODO Other task type
                 }
                 // 
-                fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH), "self_preprocess.py"), `# -*- coding:utf-8 -*-
-import keras
-import numpy as np
-
-
-def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
-	"""
-	NN weights normalization
-	
-	Spiking neural network is driving with sparsely firing, and the weights from ANN needed to be processed
-	to minimize the lossin the conversion process.
-	You should implement your own method to normalize synapses' weights, after finishing it, you can run it and
-	see the performance.
-	-----------------------
-	
-	Parameters:
-	---------
-	model: keras model, you can get layer weights by calling 'model.layers[i].get_weights()'. Note that some layers, such as pooling, do not have weights
-	np_data: N x M or N x M x K np array, it can be directly feed into this model. You can use it for necessary computation.
-	"""
-	layer_weights = []
-	for i in range(len(model.layers)):
-		if np.array(model.layers[i].get_weights()).shape[0] == 0:
-			continue
-		layer_weights.append(np.array(model.layers[i].get_weights()))
-	
-	# Implement your algorithm
-	
-
-	idx = 0
-	for i in range(len(model.layers)):
-		if np.array(model.layers[i].get_weights()).shape[0] == 0:
-			continue
-		model.layers[i].set_weights(layer_weights[idx])
-		idx += 1
-					
-`);
                 // 发送消息到界面，选择使用模型算法/自定义算法
                 currentPanel.webview.postMessage(JSON.stringify({ "select_default_or_self_alg": "need_check" }));
             }
@@ -1335,6 +1298,45 @@ def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
                 currentPanel.reveal();
                 currentPanel.title = "模型转换";
                 console.log("显示currentpane  模型转换   1");
+                if (!fs.existsSync(path.join(path.dirname(PROJ_SAVE_PATH), "self_preprocess.py"))) {
+                    fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH), "self_preprocess.py"), `# -*- coding:utf-8 -*-
+import keras
+import numpy as np
+
+
+def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
+	"""
+	NN weights normalization
+	
+	Spiking neural network is driving with sparsely firing, and the weights from ANN needed to be processed
+	to minimize the lossin the conversion process.
+	You should implement your own method to normalize synapses' weights, after finishing it, you can run it and
+	see the performance.
+	-----------------------
+	
+	Parameters:
+	---------
+	model: keras model, you can get layer weights by calling 'model.layers[i].get_weights()'. Note that some layers, such as pooling, do not have weights
+	np_data: N x M or N x M x K np array, it can be directly feed into this model. You can use it for necessary computation.
+	"""
+	layer_weights = []
+	for i in range(len(model.layers)):
+		if np.array(model.layers[i].get_weights()).shape[0] == 0:
+			continue
+		layer_weights.append(np.array(model.layers[i].get_weights()))
+	
+	# Implement your algorithm
+	
+
+	idx = 0
+	for i in range(len(model.layers)):
+		if np.array(model.layers[i].get_weights()).shape[0] == 0:
+			continue
+		model.layers[i].set_weights(layer_weights[idx])
+		idx += 1
+					
+`);
+                }
             }
             else if (currentPanel) {
                 currentPanel.reveal();
@@ -7640,11 +7642,11 @@ function getANNSNNConvertPage() {
                       console.log("increase sub progress bar total");
                       document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/397*100)+"%";
                   }
-                  document.getElementById("model_convert_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("model_convert_progress_div").style.width+"</span>";
-                  document.getElementById("preprocess_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("preprocess_progress_div").style.width+"</span>";
-                  document.getElementById("search_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("search_progress_div").style.width+"</span>";
-                  document.getElementById("darlang_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("darlang_progress_div").style.width+"</span>";
-                  document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>"+document.getElementById("total_progress_div").style.width+"</span>";
+                  document.getElementById("model_convert_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</span>";
+                  document.getElementById("preprocess_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</span>";
+                  document.getElementById("search_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</span>";
+                  document.getElementById("darlang_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("darlang_progress_div").style.width.replace("%", "")), 100)+"%</span>";
+                  document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("total_progress_div").style.width.replace("%", "")), 100)+"%</span>";
                 }else if(data.exec_finish){
                     // 结束
                   //   document.getElementById("start_convert_btn").style.backgroundColor = "";
@@ -7807,7 +7809,12 @@ function getANNSNNConvertPage() {
                   //     <td>系数2</td>
                   // </tr> -->
                   scale_fac = JSON.parse(data.scale_factors);
-                  document.getElementById("scale_factors_table").innerHTML = "";
+                  // document.getElementById("scale_factors_table").innerHTML = "";
+                  // console.log("scale factor table children len="+$("#scale_factors_table").children.length);
+                  // while ($("#scale_factors_table").children.length > 1) {
+                  //     $("#scale_factors_table tr:last").remove();
+                  // }
+                  // console.log("scale factor table children len after remove ="+$("#scale_factors_table").children.length);
                   for(obj in scale_fac){
                       let table_line = document.createElement("tr");
                       table_line.style.height = "35px";

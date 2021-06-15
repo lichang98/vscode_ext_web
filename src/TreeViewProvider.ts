@@ -17,10 +17,10 @@ export let ITEM_ICON_MAP = new Map<string, string>([
     ['连接文件',"imgs/conn_files_icon.png"],
     ['模拟器', "imgs/simulate_icon.png"],
     ['模型编译',"imgs/darwin_binary.png"],
-    ['Darwin二进制文件',"imgs/darwin_model_icon_new.png"],
+    ['Darwin二进制文件',"imgs/binary_compile_icon.png"],
     ["模型转换","imgs/convert_icon.png",],
-    ["模型文件","imgs/ann_model.png"],
-    ["编解码配置文件","imgs/data_icon_new.png"]
+    ["模型文件","imgs/binary_compile_icon.png"],
+    ["编解码配置文件","imgs/binary_compile_icon.png"]
     // ['转换与仿真',"imgs/simulate_run.png"],
     // ['测试添加',"imgs/simulate_run.png"]
 ]);

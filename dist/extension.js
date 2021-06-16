@@ -1314,12 +1314,12 @@ import numpy as np
 def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
 	"""
 	NN weights normalization
-	
+	-----------------------
+
 	Spiking neural network is driving with sparsely firing, and the weights from ANN needed to be processed
-	to minimize the lossin the conversion process.
+	to minimize the loss in the conversion process.
 	You should implement your own method to normalize synapses' weights, after finishing it, you can run it and
 	see the performance.
-	-----------------------
 	
 	Parameters:
 	---------
@@ -1332,8 +1332,7 @@ def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
 			continue
 		layer_weights.append(np.array(model.layers[i].get_weights()))
 	
-	# Implement your algorithm
-	
+	# Implement your algorithm here
 
 	idx = 0
 	for i in range(len(model.layers)):
@@ -1341,7 +1340,7 @@ def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
 			continue
 		model.layers[i].set_weights(layer_weights[idx])
 		idx += 1
-					
+							
 `);
                 }
             }

@@ -1548,18 +1548,18 @@ export function getANNSNNConvertPage(){
     align-items: center;
     border-radius: 20px;">1</div>ANN转SNN</div>
                       <div class="progress" style="background: #E6E6E6;
-                      border-radius: 15px;">
+                      border-radius: 30px;height: 40px;margin-top: 10px;">
                           <div id="model_convert_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
                                style="width: 0%; opacity: 0.7;
                                background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
-                               border-radius: 15px;
-                               border-radius: 15px;">
+                               border-radius: 30px;
+                               border-radius: 30px;">
                           </div>
                       </div>
                   </div>
               
-                  <div class="col-md-1" style="margin-top: -10px;">
+                  <div class="col-md-1" style="margin-top: 20px;">
                       <i class="material-icons" style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">remove</i>
                   </div>
               
@@ -1576,18 +1576,18 @@ export function getANNSNNConvertPage(){
     align-items: center;
     border-radius: 20px;">2</div>预处理<span id="self_def_preprocess_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
                       <div class="progress" style="background: #E6E6E6;
-                      border-radius: 15px;">
+                      border-radius: 30px;height: 40px;margin-top: 10px;">
                           <div id="preprocess_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
                                style="width: 0%; opacity: 0.7;
                                background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
-                               border-radius: 15px;
-                               border-radius: 15px;">
+                               border-radius: 30px;
+                               border-radius: 30px;">
                           </div>
                       </div>
                   </div>
   
-                  <div class="col-md-1" style="margin-top: -10px;">
+                  <div class="col-md-1" style="margin-top: 20px;">
                       <i class="material-icons" style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">remove</i>
                   </div>
   
@@ -1604,18 +1604,18 @@ export function getANNSNNConvertPage(){
     align-items: center;
     border-radius: 20px;">3</div>参数调优</div>
                       <div class="progress" style="background: #E6E6E6;
-                      border-radius: 15px;">
+                      border-radius: 30px;height: 40px;margin-top: 10px;">
                           <div id="search_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
                                style="width: 0%; opacity: 0.7;
                                background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
-                               border-radius: 15px;
-                               border-radius: 15px;">
+                               border-radius: 30px;
+                               border-radius: 30px;">
                           </div>
                       </div>
                   </div>
               
-                  <div class="col-md-1" style="margin-top: -10px;">
+                  <div class="col-md-1" style="margin-top: 20px;">
                       <i class="material-icons" style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">remove</i>
                   </div>
               
@@ -1630,24 +1630,24 @@ export function getANNSNNConvertPage(){
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;">4</div>DarwinLang文件生成</div>
+    border-radius: 20px;">4</div>DarwinMDL文件生成</div>
                       <div class="progress" style="background: #E6E6E6;
-                      border-radius: 15px;">
+                      border-radius: 30px;height: 40px;margin-top: 10px;">
                           <div id="darlang_progress_div" class="progress-bar progress-bar-info" role="progressbar"
                                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
                                style="width: 0%; opacity: 0.7;
                                background-image: -webkit-linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
-                               border-radius: 15px;
-                               border-radius: 15px;">
+                               border-radius: 30px;
+                               border-radius: 30px;">
                           </div>
                       </div>
                   </div>
               </div>
           
-              <div class="row">
+              <!-- <div class="row"> -->
                   <!-- <span>启动</span> -->
                   <!-- <i id="start_convert_btn" class="large material-icons" style="margin-left: 0px;cursor: pointer;">play_circle_outline</i> -->
-                  <div class="progress" style="width: 85%;display: inline-block;margin-bottom: 0;margin-left: 60px;background: #E6E6E6;
+                  <!-- <div class="progress" style="width: 85%;display: inline-block;margin-bottom: 0;margin-left: 60px;background: #E6E6E6;
                   border-radius: 15px;">
                       <div id="total_progress_div" class="progress-bar progress-bar-success" role="progressbar"
                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
@@ -1656,7 +1656,7 @@ export function getANNSNNConvertPage(){
                            border-radius: 15px;">
                       </div>
                   </div>
-              </div>
+              </div> -->
           </div>
       </div>
   
@@ -1991,15 +1991,15 @@ export function getANNSNNConvertPage(){
                               document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-330)/(397-330)*100)+"%";
                       }
                   }
-                  if(stage4_all_finish !== true){
-                      console.log("increase sub progress bar total");
-                      document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/397*100)+"%";
-                  }
-                  document.getElementById("model_convert_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</span>";
-                  document.getElementById("preprocess_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</span>";
-                  document.getElementById("search_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</span>";
-                  document.getElementById("darlang_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("darlang_progress_div").style.width.replace("%", "")), 100)+"%</span>";
-                  document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("total_progress_div").style.width.replace("%", "")), 100)+"%</span>";
+                  // if(stage4_all_finish !== true){
+                  //     console.log("increase sub progress bar total");
+                  //     document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/397*100)+"%";
+                  // }
+                  document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</div>";
+                  document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</div>";
+                  document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</div>";
+                  document.getElementById("darlang_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("darlang_progress_div").style.width.replace("%", "")), 100)+"%</div>";
+                  // document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("total_progress_div").style.width.replace("%", "")), 100)+"%</span>";
                 }else if(data.exec_finish){
                     // 结束
                   //   document.getElementById("start_convert_btn").style.backgroundColor = "";
@@ -2008,12 +2008,12 @@ export function getANNSNNConvertPage(){
                     document.getElementById("preprocess_progress_div").style.width = "100%";
                     document.getElementById("search_progress_div").style.width = "100%";
                     document.getElementById("darlang_progress_div").style.width = "100%";
-                    document.getElementById("total_progress_div").style.width = "100%";
-                    document.getElementById("model_convert_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
-                  document.getElementById("preprocess_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
-                  document.getElementById("search_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
-                  document.getElementById("darlang_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
-                  document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
+                  //   document.getElementById("total_progress_div").style.width = "100%";
+                    document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
+                  document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
+                  document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
+                  document.getElementById("darlang_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
+                  // document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
                     console.log("LINE COUNT all_finish="+log_output_lists.length);
                     $(".loading-div").hide();
                     stage4_all_finish = true;
@@ -2153,7 +2153,7 @@ export function getANNSNNConvertPage(){
                   document.getElementById("preprocess_progress_div").style.width = "0%";
                   document.getElementById("search_progress_div").style.width = "0%";
                   document.getElementById("darlang_progress_div").style.width = "0%";
-                  document.getElementById("total_progress_div").style.width = "0%";
+                  // document.getElementById("total_progress_div").style.width = "0%";
                   $(".loading-div").show();
                 }else if(data.scale_factors){
                   // scale_factors_table
@@ -2292,7 +2292,7 @@ export function getANNSNNConvertPage(){
                 document.getElementById("preprocess_progress_div").style.width = "0%";
                 document.getElementById("search_progress_div").style.width = "0%";
                 document.getElementById("darlang_progress_div").style.width = "0%";
-                document.getElementById("total_progress_div").style.width = "0%";
+              //   document.getElementById("total_progress_div").style.width = "0%";
         }
   
   

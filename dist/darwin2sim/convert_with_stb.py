@@ -42,6 +42,12 @@ if len(sys.argv) > 8:
 if len(sys.argv) > 9:
     run_alg_file = sys.argv[9]
 
+
+vthresh_after_quantization_method = 0 # default
+if len(sys.argv) > 11:
+    vthresh_after_quantization_method = int(sys.argv[10]) # using self defined
+    quantization_vthresh_calc_file = sys.argv[11]
+
 model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "target", target_proj_name, "mnist_cnn")
 
 config_path = os.path.join(baseDirPath, "snntoolbox","config")
@@ -316,7 +322,13 @@ stage2_time_use = time.time()
 # print("choose best vthreshold={}".format(best_vthresh))
 #########################
 
-best_vthresh = sys_param_vthresh
+if vthresh_after_quantization_method == 0:
+    best_vthresh = sys_param_vthresh
+else:
+    # copy file self_opt.py
+    shutil.copy(quantization_vthresh_calc_file, os.path.join(os.path.dirname(__file__)))
+    import self_opt
+    best_vthresh = int(self_opt.calc_vthreshold(copy.deepcopy(all_wts)))
 
 if task_type == 2:
     br2_model = {

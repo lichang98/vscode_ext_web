@@ -623,11 +623,25 @@ export function activate(context: vscode.ExtensionContext) {
 					}, (err)=>{
 						console.log(err);
 					});
+				} else if (data.convert_self_def === "opt") {
+					vscode.workspace.openTextDocument(path.join(path.dirname(PROJ_SAVE_PATH!), "self_opt.py")).then((doc:vscode.TextDocument)=>{
+						vscode.window.showTextDocument(doc, 1, false);
+					}, (err)=>{
+						console.log(err);
+					});
 				}
 			} else if (data.select_alg_res) {
 				console.log("extension 获得选择结果，选择默认算法or自定义算法: "+data.select_alg_res);
+				console.log("extension 获得选择结果，opt 默认算法 or 自定义算法: "+data.select_alg_res_opt);
 				if (data.select_alg_res === "self") {
 					CONVERT_SCRIPT_PARAMS += " 1 "+path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py");
+				}else {
+					CONVERT_SCRIPT_PARAMS += " 0 default";
+				}
+				if (data.select_alg_res_opt === "self") {
+					CONVERT_SCRIPT_PARAMS += " 1 " + path.join(path.dirname(PROJ_SAVE_PATH!), "self_opt.py");
+				} else {
+					CONVERT_SCRIPT_PARAMS += " 0 default";
 				}
 				let commandStr = PYTHON_INTERPRETER+CONVERT_SCRIPT_PARAMS;
 				currentPanel?.webview.postMessage(JSON.stringify({"log_output":"模型转换程序启动中......"}));
@@ -1327,6 +1341,7 @@ def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
 
 	Spiking neural network is driving with sparsely firing, and the weights from ANN needed to be processed
 	to minimize the loss in the conversion process.
+
 	You should implement your own method to normalize synapses' weights, after finishing it, you can run it and
 	see the performance.
 	
@@ -1352,6 +1367,35 @@ def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
 							
 `);
 				}
+			// 自定义算法计算权重量化后阈值
+			if (!fs.existsSync(path.join(path.dirname(PROJ_SAVE_PATH!), "self_opt.py"))) {
+				fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH!), "self_opt.py"), `# -*- coding:utf-8 -*-
+from typing import List
+import numpy as np
+
+
+def calc_vthreshold(layer_weights:List[np.ndarray])->int:
+	"""
+	Calculating neuron voltage threshold giving each layer's weights
+	-----------------------------------------------------------------
+	The method for converting an ANN model trained with a modern deep-learning library, such as Tensorflow, 
+	into an SNN has been proposed. However, the model achieved by this method has float-point weights with a global voltage threshold equals 1,
+	which can not be run on low-energy-cost devices. 
+
+	Here, you should implement your own method to calculating a new global voltage threshold for the quantized weights. The input parameter layer_weights
+	is a list contains weights of each layer, and the weights are in [-128, 127].
+	Parameters
+	----------
+	layer_weights: Quantized weights of each layer
+	
+	Returns
+	-------
+	New global vthreshold
+	"""
+	return 1
+	
+`);
+			}
 			}else if(currentPanel){
 				currentPanel.reveal();
 			}

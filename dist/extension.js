@@ -627,11 +627,28 @@ function activate(context) {
                         console.log(err);
                     });
                 }
+                else if (data.convert_self_def === "opt") {
+                    vscode.workspace.openTextDocument(path.join(path.dirname(PROJ_SAVE_PATH), "self_opt.py")).then((doc) => {
+                        vscode.window.showTextDocument(doc, 1, false);
+                    }, (err) => {
+                        console.log(err);
+                    });
+                }
             }
             else if (data.select_alg_res) {
                 console.log("extension 获得选择结果，选择默认算法or自定义算法: " + data.select_alg_res);
+                console.log("extension 获得选择结果，opt 默认算法 or 自定义算法: " + data.select_alg_res_opt);
                 if (data.select_alg_res === "self") {
                     CONVERT_SCRIPT_PARAMS += " 1 " + path.join(path.dirname(PROJ_SAVE_PATH), "self_preprocess.py");
+                }
+                else {
+                    CONVERT_SCRIPT_PARAMS += " 0 default";
+                }
+                if (data.select_alg_res_opt === "self") {
+                    CONVERT_SCRIPT_PARAMS += " 1 " + path.join(path.dirname(PROJ_SAVE_PATH), "self_opt.py");
+                }
+                else {
+                    CONVERT_SCRIPT_PARAMS += " 0 default";
                 }
                 let commandStr = PYTHON_INTERPRETER + CONVERT_SCRIPT_PARAMS;
                 currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.webview.postMessage(JSON.stringify({ "log_output": "模型转换程序启动中......" }));
@@ -1318,6 +1335,7 @@ def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
 
 	Spiking neural network is driving with sparsely firing, and the weights from ANN needed to be processed
 	to minimize the loss in the conversion process.
+
 	You should implement your own method to normalize synapses' weights, after finishing it, you can run it and
 	see the performance.
 	
@@ -1341,6 +1359,35 @@ def normalize_parameters(model:keras.models.Model, np_data:np.ndarray):
 		model.layers[i].set_weights(layer_weights[idx])
 		idx += 1
 							
+`);
+                }
+                // 自定义算法计算权重量化后阈值
+                if (!fs.existsSync(path.join(path.dirname(PROJ_SAVE_PATH), "self_opt.py"))) {
+                    fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH), "self_opt.py"), `# -*- coding:utf-8 -*-
+from typing import List
+import numpy as np
+
+
+def calc_vthreshold(layer_weights:List[np.ndarray])->int:
+	"""
+	Calculating neuron voltage threshold giving each layer's weights
+	-----------------------------------------------------------------
+	The method for converting an ANN model trained with a modern deep-learning library, such as Tensorflow, 
+	into an SNN has been proposed. However, the model achieved by this method has float-point weights with a global voltage threshold equals 1,
+	which can not be run on low-energy-cost devices. 
+
+	Here, you should implement your own method to calculating a new global voltage threshold for the quantized weights. The input parameter layer_weights
+	is a list contains weights of each layer, and the weights are in [-128, 127].
+	Parameters
+	----------
+	layer_weights: Quantized weights of each layer
+	
+	Returns
+	-------
+	New global vthreshold
+	"""
+	return 1
+	
 `);
                 }
             }
@@ -7264,7 +7311,7 @@ function getANNSNNConvertPage() {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;">3</div>参数调优</div>
+    border-radius: 20px;">3</div>参数调优<span id="self_def_opt_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
                       <div class="progress" style="background: #E6E6E6;
                       border-radius: 30px;height: 40px;margin-top: 10px;">
                           <div id="search_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -7483,8 +7530,13 @@ function getANNSNNConvertPage() {
                   </h4>
               </div>
               <div class="modal-body">
-          <div style="margin-top: 50px;">
-              <div class="radio">
+          <div style="margin-top: 30px;display: inline-block; width: 50%;">
+              <div style="font-family: SourceHanSansCN-Normal;
+              font-size: 16px;
+              font-weight: bold;
+              color: #333;
+              letter-spacing: 1.07px;">预处理步骤：</div>
+              <div class="radio" style="margin-top: 30px;">
                   <label>
                       <input type="radio" name="alg_call_radios" id="default_alg" value="default_alg" checked> <span style="font-family: SourceHanSansCN-Normal;
                       font-size: 16px;
@@ -7496,6 +7548,31 @@ function getANNSNNConvertPage() {
               <div class="radio" style="margin-top: 30px;">
                   <label>
                       <input type="radio" name="alg_call_radios" id="self_alg" value="self_alg"> <span style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      font-weight: bold;
+                      color: #333;
+                      letter-spacing: 1.07px;margin-left: 20px;">自定义算法</span>
+                  </label>
+              </div>
+          </div>
+          <div style="margin-top: 30px;display: inline-block;width: 50%;">
+              <div style="font-family: SourceHanSansCN-Normal;
+              font-size: 16px;
+              font-weight: bold;
+              color: #333;
+              letter-spacing: 1.07px;">参数调优步骤：</div>
+              <div class="radio" style="margin-top: 30px;">
+                  <label>
+                      <input type="radio" name="opt_alg_call_radios" id="default_opt_alg" value="default_opt_alg" checked> <span style="font-family: SourceHanSansCN-Normal;
+                      font-size: 16px;
+                      font-weight: bold;
+                      color: #333;
+                      letter-spacing: 1.07px;margin-left: 20px;">默认算法</span>
+                  </label>
+              </div>
+              <div class="radio" style="margin-top: 30px;">
+                  <label>
+                      <input type="radio" name="opt_alg_call_radios" id="self_opt_alg" value="self_opt_alg"> <span style="font-family: SourceHanSansCN-Normal;
                       font-size: 16px;
                       font-weight: bold;
                       color: #333;
@@ -7613,14 +7690,24 @@ function getANNSNNConvertPage() {
             $("#self_def_preprocess_alg").on("click", function(){
                 vscode.postMessage(JSON.stringify({"convert_self_def": "preprocess"}));
             });
+            $("#self_def_opt_alg").on("click", function(){
+                vscode.postMessage(JSON.stringify({"convert_self_def": "opt"}));
+            });
             $("#check_alg_select_btn").on("click", ()=>{
-                  if (document.getElementById("default_alg").checked) {
-                      console.log("选择使用默认算法....");
-                      vscode.postMessage(JSON.stringify({"select_alg_res": "default"}));
-                  } else {
-                      console.log("选择使用自定义算法...");
-                      vscode.postMessage(JSON.stringify({"select_alg_res":"self"}));
-                  }
+                msg = {}
+                if (document.getElementById("default_alg").checked) {
+                    msg["select_alg_res"] = "default";
+                } else {
+                    msg["select_alg_res"] = "self";
+                }
+  
+                if (document.getElementById("default_opt_alg").checked) {
+                    msg["select_alg_res_opt"] = "default";
+                } else {
+                    msg["select_alg_res_opt"] = "self";
+                }
+                console.log("向 extension 发送选择调用的算法 ： " + JSON.stringify(msg));
+                vscode.postMessage(JSON.stringify(msg));
               });
             window.addEventListener("message", function(evt){
                 console.log("ANN 转SNN 模型接收到extension 消息："+evt.data);

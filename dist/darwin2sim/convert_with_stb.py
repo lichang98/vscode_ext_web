@@ -630,8 +630,8 @@ print("running darwinlang", flush=True)
 sys.path.append(os.path.join(baseDirPath, "..", "darlang"))
 end_time = time.time()
 total_use_time = "{:.3f} 秒".format(end_time-start_time)
-import darlang
-darlang.run_darlang(os.path.join(outputPath, "snn_digit_darlang.json"),os.path.join(outputPath,"..", "bin_darwin_out"))
+# import darlang
+# darlang.run_darlang(os.path.join(outputPath, "snn_digit_darlang.json"),os.path.join(outputPath,"..", "bin_darwin_out"))
 print("darwinlang conversion finished.", flush=True)
 
 stage4_time_use = "{:.3f}".format(stage4_time_use - stage3_time_use)
@@ -659,30 +659,30 @@ convert_info = {
 with open(os.path.join(baseDirPath, "..", "inner_scripts", "convert_statistic_info.json"), "w+") as f:
     f.write(json.dumps(convert_info))
 
-# Add timestamp to config txt file
-with open(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.txt"), "r") as f:
-    content = f.read()
+# # Add timestamp to config txt file
+# with open(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.txt"), "r") as f:
+#     content = f.read()
 
-content = time.strftime("%Y/%m/%d/%H:%M:%S")+"\n"+content
-with open(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.txt"), "w+") as f:
-    f.write(content)
+# content = time.strftime("%Y/%m/%d/%H:%M:%S")+"\n"+content
+# with open(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.txt"), "w+") as f:
+#     f.write(content)
 
 
-def convert(file_name,save_name):
-    with open(file_name, 'r') as file:
-        line = file.readline()
-        config_list = file.readlines()
-    length = len(config_list)
+# def convert(file_name,save_name):
+#     with open(file_name, 'r') as file:
+#         line = file.readline()
+#         config_list = file.readlines()
+#     length = len(config_list)
     
-    send_bytes = bytearray()
-    for i in range(length):
-        send_bytes += struct.pack('Q', int(config_list[i].strip(), 16))
-    with open(save_name,"wb") as file:
-        # python2
-        # file.write(b"{}".format(line))
-        # # python3
-        file.write(bytes("{}".format(line),'ascii'))
-        file.write(send_bytes)
+#     send_bytes = bytearray()
+#     for i in range(length):
+#         send_bytes += struct.pack('Q', int(config_list[i].strip(), 16))
+#     with open(save_name,"wb") as file:
+#         # python2
+#         # file.write(b"{}".format(line))
+#         # # python3
+#         file.write(bytes("{}".format(line),'ascii'))
+#         file.write(send_bytes)
 
 
-convert(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.txt"), os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.b"))
+# convert(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.txt"), os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.b"))

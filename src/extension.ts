@@ -272,6 +272,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let CONVERT_SCRIPT_PARAMS:string|undefined = undefined;
 
+	let LOG_OUTPUT_CHANNEL:vscode.OutputChannel | undefined = undefined;
+
 	let panelDataVis:vscode.WebviewPanel|undefined = undefined;
 	let panelAnnModelVis:vscode.WebviewPanel|undefined = undefined;
 	let panelSNNModelVis:vscode.WebviewPanel|undefined = undefined;
@@ -630,11 +632,16 @@ export function activate(context: vscode.ExtensionContext) {
 				let commandStr = PYTHON_INTERPRETER+CONVERT_SCRIPT_PARAMS;
 				currentPanel?.webview.postMessage(JSON.stringify({"log_output":"模型转换程序启动中......"}));
 				let scriptProcess = exec(commandStr,{});
-				let logOutputPanel = vscode.window.createOutputChannel("Darwin Convertor");
-				logOutputPanel.show();
+				// let logOutputPanel = vscode.window.createOutputChannel("Darwin Convertor");
+				if (LOG_OUTPUT_CHANNEL === undefined) {
+					LOG_OUTPUT_CHANNEL = vscode.window.createOutputChannel("Darwin Convertor");
+					LOG_OUTPUT_CHANNEL.show();
+				} else{
+					LOG_OUTPUT_CHANNEL.clear();
+				}
 				
 				scriptProcess.stdout?.on("data", function(data){
-					logOutputPanel.append(data);
+					LOG_OUTPUT_CHANNEL!.append(data);
 					// console.log(data);
 					if(data.indexOf("CONVERT_FINISH") !== -1){
 						if(currentPanel){

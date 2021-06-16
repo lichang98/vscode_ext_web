@@ -270,6 +270,7 @@ function activate(context) {
     let DARWIN_LANG_FILE_PATHS = new Array();
     let DARWIN_LANG_BIN_PATHS = new Array();
     let CONVERT_SCRIPT_PARAMS = undefined;
+    let LOG_OUTPUT_CHANNEL = undefined;
     let panelDataVis = undefined;
     let panelAnnModelVis = undefined;
     let panelSNNModelVis = undefined;
@@ -635,10 +636,16 @@ function activate(context) {
                 let commandStr = PYTHON_INTERPRETER + CONVERT_SCRIPT_PARAMS;
                 currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.webview.postMessage(JSON.stringify({ "log_output": "模型转换程序启动中......" }));
                 let scriptProcess = child_process_1.exec(commandStr, {});
-                let logOutputPanel = vscode.window.createOutputChannel("Darwin Convertor");
-                logOutputPanel.show();
+                // let logOutputPanel = vscode.window.createOutputChannel("Darwin Convertor");
+                if (LOG_OUTPUT_CHANNEL === undefined) {
+                    LOG_OUTPUT_CHANNEL = vscode.window.createOutputChannel("Darwin Convertor");
+                    LOG_OUTPUT_CHANNEL.show();
+                }
+                else {
+                    LOG_OUTPUT_CHANNEL.clear();
+                }
                 (_a = scriptProcess.stdout) === null || _a === void 0 ? void 0 : _a.on("data", function (data) {
-                    logOutputPanel.append(data);
+                    LOG_OUTPUT_CHANNEL.append(data);
                     // console.log(data);
                     if (data.indexOf("CONVERT_FINISH") !== -1) {
                         if (currentPanel) {
@@ -7607,6 +7614,15 @@ function getANNSNNConvertPage() {
             $("#self_def_preprocess_alg").on("click", function(){
                 vscode.postMessage(JSON.stringify({"convert_self_def": "preprocess"}));
             });
+            $("#check_alg_select_btn").on("click", ()=>{
+                  if (document.getElementById("default_alg").checked) {
+                      console.log("选择使用默认算法....");
+                      vscode.postMessage(JSON.stringify({"select_alg_res": "default"}));
+                  } else {
+                      console.log("选择使用自定义算法...");
+                      vscode.postMessage(JSON.stringify({"select_alg_res":"self"}));
+                  }
+              });
             window.addEventListener("message", function(evt){
                 console.log("ANN 转SNN 模型接收到extension 消息："+evt.data);
                 const data = JSON.parse(evt.data);
@@ -7815,6 +7831,14 @@ function getANNSNNConvertPage() {
                   //     $("#scale_factors_table tr:last").remove();
                   // }
                   // console.log("scale factor table children len after remove ="+$("#scale_factors_table").children.length);
+                  document.getElementById("scale_factors_table").innerHTML = "<tr style='border: solid 2px #D6D6D6;'>\
+  <td style='border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;\
+  font-size: 16px;\
+  color: #666666;'>神经层</td>\
+  <td style='border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;\
+  font-size: 16px;\
+  color: #666666;'>参数缩放系数</td>\
+  </tr>";
                   for(obj in scale_fac){
                       let table_line = document.createElement("tr");
                       table_line.style.height = "35px";
@@ -7848,25 +7872,15 @@ function getANNSNNConvertPage() {
                 } else if (data.select_default_or_self_alg) {
                     // 弹出对话框，选择使用默认算法/自定义算法
                     $("#select_alg_modal_btn").click();
-                    $("#check_alg_select_btn").on("click", ()=>{
-                        if (document.getElementById("default_alg").checked) {
-                            console.log("选择使用默认算法....");
-                            vscode.postMessage(JSON.stringify({"select_alg_res": "default"}));
-                        } else {
-                            console.log("选择使用自定义算法...");
-                            vscode.postMessage(JSON.stringify({"select_alg_res":"self"}));
-                        }
-                    });
-  
-                    $("#select_alg_modal_close").on("click",()=>{
-                      if (document.getElementById("default_alg").checked) {
-                            console.log("选择使用默认算法....");
-                            vscode.postMessage(JSON.stringify({"select_alg_res": "default"}));
-                        } else {
-                            console.log("选择使用自定义算法...");
-                            vscode.postMessage(JSON.stringify({"select_alg_res":"self"}));
-                        }
-                    });
+                  //   $("#select_alg_modal_close").on("click",()=>{
+                  //     if (document.getElementById("default_alg").checked) {
+                  //           console.log("选择使用默认算法....");
+                  //           vscode.postMessage(JSON.stringify({"select_alg_res": "default"}));
+                  //       } else {
+                  //           console.log("选择使用自定义算法...");
+                  //           vscode.postMessage(JSON.stringify({"select_alg_res":"self"}));
+                  //       }
+                  //   });
                 }
             });
   

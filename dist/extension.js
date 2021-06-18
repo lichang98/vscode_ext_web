@@ -162,16 +162,15 @@ function activate(context) {
     let treeviewConvertor = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_convertor");
     let treeViewSimulator = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_simulator");
     let treeViewConvertDarLang = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
-    let treeViewSNNModelView = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_snn_model_view");
+    // let treeViewSNNModelView = TreeViewProvider.initTreeViewItem("item_snn_model_view");
     let treeviewHome = vscode.window.createTreeView("treeView-item", { treeDataProvider: treeview });
     let treeViewCvtor = vscode.window.createTreeView("item_convertor", { treeDataProvider: treeviewConvertor });
     let treeViewSim = vscode.window.createTreeView("item_simulator", { treeDataProvider: treeViewSimulator });
     let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", { treeDataProvider: treeViewConvertDarLang });
-    let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", { treeDataProvider: treeViewSNNModelView });
+    // let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
     let currPanelDisposed = false;
     function isAllOtherTreeViewInvisible() {
-        return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible
-            && !treeViewSNNMD.visible;
+        return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible;
     }
     if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target"))) {
         fs.mkdirSync(path.join(__dirname, "darwin2sim", "target"));
@@ -223,25 +222,23 @@ function activate(context) {
             }, 100);
         }
     });
-    treeViewSNNMD.onDidChangeVisibility((evt) => {
-        if (evt.visible) {
-            console.log("SNN模型页面可用！");
-            treeviewHome.reveal(treeview.data[0]);
-            vscode.commands.executeCommand("snn_model_ac.show_snn_model");
-        }
-        else {
-            setTimeout(() => {
-                if (isAllOtherTreeViewInvisible()) {
-                    // treeViewSNNMD.reveal(treeViewSNNModelView.data[0]);
-                    treeviewHome.reveal(treeview.data[0]);
-                    vscode.commands.executeCommand("snn_model_ac.show_snn_model");
-                }
-                else {
-                    return;
-                }
-            }, 100);
-        }
-    });
+    // treeViewSNNMD.onDidChangeVisibility((evt)=>{
+    // 	if(evt.visible){
+    // 		console.log("SNN模型页面可用！");
+    // 		treeviewHome.reveal(treeview.data[0]);
+    // 		vscode.commands.executeCommand("snn_model_ac.show_snn_model");
+    // 	}else{
+    // 		setTimeout(()=>{
+    // 			if(isAllOtherTreeViewInvisible()){
+    // 				// treeViewSNNMD.reveal(treeViewSNNModelView.data[0]);
+    // 				treeviewHome.reveal(treeview.data[0]);
+    // 				vscode.commands.executeCommand("snn_model_ac.show_snn_model");
+    // 			}else{
+    // 				return;
+    // 			}
+    // 		},100);
+    // 	}
+    // });
     treeViewCvtDarLang.onDidChangeVisibility((evt) => {
         if (evt.visible) {
             console.log("转换darwinlang页面可用!");
@@ -861,7 +858,7 @@ function activate(context) {
                 // if(projData.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]){
                 // 	inMemTreeViewStruct[0].children[1].children?.push(new TreeItemNode("model_file_"+path.basename(projData.model_path)));
                 // }
-                inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(projData.model_path)));
+                inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(projData.model_path), undefined, false, "rmable"));
                 // add darwinlang and bin files
                 // ITEM_ICON_MAP.set("SNN模型","imgs/darwin_icon_model_new.png");
                 // addDarwinFold("SNN模型");

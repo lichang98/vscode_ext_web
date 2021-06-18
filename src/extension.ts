@@ -156,19 +156,18 @@ export function activate(context: vscode.ExtensionContext) {
 	let treeviewConvertor = TreeViewProvider.initTreeViewItem("item_convertor");
 	let treeViewSimulator = TreeViewProvider.initTreeViewItem("item_simulator");
 	let treeViewConvertDarLang = TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
-	let treeViewSNNModelView = TreeViewProvider.initTreeViewItem("item_snn_model_view");
+	// let treeViewSNNModelView = TreeViewProvider.initTreeViewItem("item_snn_model_view");
 
 	let treeviewHome = vscode.window.createTreeView("treeView-item", {treeDataProvider: treeview});
 	let treeViewCvtor = vscode.window.createTreeView("item_convertor", {treeDataProvider: treeviewConvertor});
 	let treeViewSim = vscode.window.createTreeView("item_simulator", {treeDataProvider:treeViewSimulator});
 	let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", {treeDataProvider:treeViewConvertDarLang});
-	let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
+	// let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
 
 	let currPanelDisposed:boolean = false;
 
 	function isAllOtherTreeViewInvisible(){
 		return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible
-					&& !treeViewSNNMD.visible;
 	}
 
 
@@ -223,23 +222,23 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	treeViewSNNMD.onDidChangeVisibility((evt)=>{
-		if(evt.visible){
-			console.log("SNN模型页面可用！");
-			treeviewHome.reveal(treeview.data[0]);
-			vscode.commands.executeCommand("snn_model_ac.show_snn_model");
-		}else{
-			setTimeout(()=>{
-				if(isAllOtherTreeViewInvisible()){
-					// treeViewSNNMD.reveal(treeViewSNNModelView.data[0]);
-					treeviewHome.reveal(treeview.data[0]);
-					vscode.commands.executeCommand("snn_model_ac.show_snn_model");
-				}else{
-					return;
-				}
-			},100);
-		}
-	});
+	// treeViewSNNMD.onDidChangeVisibility((evt)=>{
+	// 	if(evt.visible){
+	// 		console.log("SNN模型页面可用！");
+	// 		treeviewHome.reveal(treeview.data[0]);
+	// 		vscode.commands.executeCommand("snn_model_ac.show_snn_model");
+	// 	}else{
+	// 		setTimeout(()=>{
+	// 			if(isAllOtherTreeViewInvisible()){
+	// 				// treeViewSNNMD.reveal(treeViewSNNModelView.data[0]);
+	// 				treeviewHome.reveal(treeview.data[0]);
+	// 				vscode.commands.executeCommand("snn_model_ac.show_snn_model");
+	// 			}else{
+	// 				return;
+	// 			}
+	// 		},100);
+	// 	}
+	// });
 
 	treeViewCvtDarLang.onDidChangeVisibility((evt)=>{
 		if(evt.visible){
@@ -858,7 +857,7 @@ export function activate(context: vscode.ExtensionContext) {
 				// if(projData.x_norm_path && inMemTreeViewStruct[0].children && inMemTreeViewStruct[0].children[1]){
 				// 	inMemTreeViewStruct[0].children[1].children?.push(new TreeItemNode("model_file_"+path.basename(projData.model_path)));
 				// }
-				inMemTreeViewStruct[0].children![0].children![1].children!.push(new TreeItemNode("model_file_"+path.basename(projData.model_path)));
+				inMemTreeViewStruct[0].children![0].children![1].children!.push(new TreeItemNode("model_file_"+path.basename(projData.model_path), undefined, false, "rmable"));
 				// add darwinlang and bin files
 				// ITEM_ICON_MAP.set("SNN模型","imgs/darwin_icon_model_new.png");
 				// addDarwinFold("SNN模型");

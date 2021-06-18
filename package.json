@@ -186,22 +186,17 @@
 				},
 				{
 					"id": "convertor",
-					"title": "ANN转SNN",
+					"title": "转换",
 					"icon": "src/resources/convert.png"
 				},
 				{
-					"id": "snn_model_ac",
-					"title": "查看SNN模型",
-					"icon": "src/resources/snn_model_icon.png"
-				},
-				{
 					"id": "simulator",
-					"title": "查看模拟结果",
+					"title": "模拟",
 					"icon": "src/resources/simulate_icon.png"
 				},
 				{
 					"id": "lang_convertor",
-					"title": "编译生成二进制模型",
+					"title": "编译",
 					"icon": "src/resources/imgs/darwin_binary.png"
 				}
 			]
@@ -217,13 +212,6 @@
 			"convertor": [
 				{
 					"id": "item_convertor",
-					"name": "",
-					"when": ""
-				}
-			],
-			"snn_model_ac": [
-				{
-					"id": "item_snn_model_view",
 					"name": "",
 					"when": ""
 				}

@@ -504,6 +504,33 @@
 
 <button id="exec_error_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_exec_error" style="display: none;"></button>
 
+<!-- 总进度提示 -->
+<div id="total_progress_ball" class="box" style="display: none;">
+    <svg class="wave" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 200 210">
+      <defs>
+        <path id="wave-shape" stroke="rgba(255,255,255,.8)" stroke-width=".5" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 58-18 88-18 58 18 88 18 v185h-528z"></path>
+      </defs>
+      <g class="parallax">
+        <use xlink:href="#wave-shape" x="50" y="0" fill="url(#linear)"></use>
+        <use xlink:href="#wave-shape" x="50" y="3" fill="url(#linear)"></use>
+        <use xlink:href="#wave-shape" x="50" y="6" fill="url(#linear)"></use>
+      </g>
+      <defs>
+        <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="0%" gradientTransform="rotate(90)">
+          <stop offset="30%"   stop-color="#05CC40" stop-opacity="0.2" />
+        </linearGradient>
+      </defs>
+      <text id="total_progress_text" x="90" y="30"
+        font-family="SimHei"
+        font-size="20px"
+        margin-top="30px"
+        margin-left="100px"
+        stroke="#05CC40">
+        0%
+    </text>
+    </svg>
+</div>
+
 </body>
 <style>
 
@@ -526,6 +553,70 @@ progress::-webkit-progress-value {
     border-radius: 15px;
 } */
 
+*{
+      margin:0;
+    }
+    .box{
+      width: 200px;
+      height: 200px;
+      left: 35%;
+      top: 50%;
+      /* margin: 50px auto; */
+      background-image: linear-gradient(-180deg, rgba(255,255,255,0.00) 0%, rgba(149, 255, 184, 0.96) 68%);
+      border-radius: 100%;
+      overflow: hidden;
+      position: absolute;
+      z-index: 3;
+    }
+    .box:before{
+      content: '';
+      width: 180px;
+      height: 180px;
+      background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(149, 255, 184, 0.96) 68%);
+      border-radius: 100%;
+      position: absolute;
+      left: 10px;
+      top: 10px;
+    }
+    .box:after{
+      content: '';
+      width: 160px;
+      height: 160px;
+      background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(149, 255, 184,1) 50%);
+      border-radius: 100%;
+      position: absolute;
+      left: 20px;
+      top: 20px;
+    }
+    .wave{
+      margin-top: 0px;
+      width: 100%;
+      height: 560px; /*560px progress 0, 200 progress 100*/
+      position: relative;
+      overflow: hidden;
+      z-index: 4;
+    }
+    .parallax>use {
+      animation: wave-move 1s linear infinite;
+      animation-duration: .9s;
+    }
+    .parallax>use:nth-child(1) {
+      animation-delay: -.1s;
+    }
+    .parallax>use:nth-child(2) {
+      animation-delay: -.5s;
+    }
+    .parallax>use:nth-child(3) {
+      animation-delay: -.8s;
+    }
+    @keyframes wave-move {
+      0% {
+        transform: translate(90px,0);
+      }
+      100% {
+        transform: translate(-85px,0);
+      }
+    }
 
 .titlebar {
   -webkit-user-select: none;
@@ -599,7 +690,7 @@ let log_output_lists = new Array();
 
     let prev_clicked_img_li_id=undefined;
 
-      $(document).ready(function(){
+      $(document).ready(function(){        
           $("#self_def_preprocess_alg").on("click", function(){
               vscode.postMessage(JSON.stringify({"convert_self_def": "preprocess"}));
           });
@@ -657,6 +748,9 @@ let log_output_lists = new Array();
                 //     console.log("increase sub progress bar total");
                 //     document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/397*100)+"%";
                 // }
+                // $(".wave").attr("height", ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
+                $(".wave").css("height",  ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
+                $("#total_progress_text").text(""+Math.min(Math.floor((log_output_lists.length / 397) * 100), 100)+"%");
                 document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                 document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                 document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</div>";
@@ -671,6 +765,7 @@ let log_output_lists = new Array();
                     document.getElementById("preprocess_progress_div").style.width = "100%";
                     document.getElementById("search_progress_div").style.width = "100%";
                     document.getElementById("darlang_progress_div").style.width = "100%";
+                    $("#total_progress_text").text("100%");
                     //   document.getElementById("total_progress_div").style.width = "100%";
                     document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
                     document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
@@ -679,6 +774,7 @@ let log_output_lists = new Array();
                     // document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
                     console.log("LINE COUNT all_finish="+log_output_lists.length);
                     $(".loading-div").hide();
+                    document.getElementById("total_progress_ball").style.display = "none";
                     stage4_all_finish = true;
                   }
               }else if(data.progress){
@@ -796,6 +892,8 @@ let log_output_lists = new Array();
               }else if(data.ann_model_start_convert){
                   // 接收到启动转换的命令，初始化
                 error_occurred = false;
+                document.getElementById("total_progress_ball").style.display = "block";
+                $(".wave").attr("height", "560px");
                 let v_thresh = $("#select_vthresh").val().replace("ms","");
                 let neuron_dt = $("#select_dt").val().replace("ms","");
                 let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
@@ -818,8 +916,10 @@ let log_output_lists = new Array();
                 document.getElementById("preprocess_progress_div").style.width = "0%";
                 document.getElementById("search_progress_div").style.width = "0%";
                 document.getElementById("darlang_progress_div").style.width = "0%";
+                $("#total_progress_text").text("0%");
                 // document.getElementById("total_progress_div").style.width = "0%";
                 $(".loading-div").show();
+                $("#total_progress_text").text("0%");
               }else if(data.scale_factors){
                 // scale_factors_table
                 // <tr style="margin-top: 15px;height: 35px;">
@@ -898,7 +998,7 @@ color: #666666;'>参数缩放系数</td>\
                 document.getElementById("preprocess_progress_div").style.width = "0%";
                 document.getElementById("search_progress_div").style.width = "0%";
                 document.getElementById("darlang_progress_div").style.width = "0%";
-                
+
                 document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                 document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                 document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</div>";
@@ -913,6 +1013,7 @@ color: #666666;'>参数缩放系数</td>\
 
                 $("#error_msg_div").text(data.exec_error);
                 $("#exec_error_modal_btn").click();
+                document.getElementById("total_progress_ball").style.display = "none";
               }
           });
 

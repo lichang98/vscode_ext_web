@@ -1310,6 +1310,11 @@ export function activate(context: vscode.ExtensionContext) {
 		if(currentPanel){
 			// 发送消息到web view ，开始模型的转换
 			console.log("模型转换页面打开");
+			if (!ANN_MODEL_FILE_PATH) {
+				currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请先导入ANN模型文件！！！"}));
+				return;
+			}
+
 			// currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
 			console.log("title="+currentPanel.title);
 			if(currentPanel && currentPanel.title !== "模型转换"){

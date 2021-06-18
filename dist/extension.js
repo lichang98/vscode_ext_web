@@ -1299,6 +1299,10 @@ function activate(context) {
         if (currentPanel) {
             // 发送消息到web view ，开始模型的转换
             console.log("模型转换页面打开");
+            if (!ANN_MODEL_FILE_PATH) {
+                currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先导入ANN模型文件！！！" }));
+                return;
+            }
             // currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
             console.log("title=" + currentPanel.title);
             if (currentPanel && currentPanel.title !== "模型转换") {
@@ -5743,7 +5747,19 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
           </div>
         </div>
         <div class="loading-div">
-          <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i>
+          <div class="container"  style="padding-left: 40vw;">
+            <div class="ispinner ispinner-large">
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+            </div>
+          </div>
+          <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
           <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
         </div>
   
@@ -5951,6 +5967,31 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
     display: inline-block;
     vertical-align: middle;
   } 
+  
+  .container {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    margin: 15px;
+    box-sizing: border-box;
+  }
+  .container:last-child {
+    padding: 31.5px;
+  }
+  .container::after {
+    position: absolute;
+    width: 100px;
+    height: 60px;
+    left: 0;
+    bottom: -30px;
+    line-height: 30px;
+    text-align: center;
+  }
+  .container:last-child::after {
+    content: 'large';
+  }
+  
   </style>
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -5963,6 +6004,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
   <link rel="stylesheet" href="http://localhost:6003/css/materialize.min.css">
   <link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css" >
   <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
+  <link rel="stylesheet" media="all" href="http://localhost:6003/css/ispinner.prefixed.css" />
   
   <script src="http://localhost:6003/js/jquery.min.js"></script>
   <script src="http://localhost:6003/js/materialize.min.js"></script>
@@ -6225,7 +6267,19 @@ function getConvertorModelPageV2() {
           </div>
         </div>
         <div class="loading-div">
-          <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i>
+          <div class="container"  style="padding-left: 40vw;">
+            <div class="ispinner ispinner-large">
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+              <div class="ispinner-blade"></div>
+            </div>
+          </div>
+          <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
           <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">模型信息加载中...</font></span>
         </div>
   
@@ -6426,6 +6480,32 @@ function getConvertorModelPageV2() {
     display: inline-block;
     vertical-align: middle;
   } 
+  
+  
+  .container {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    margin: 15px;
+    box-sizing: border-box;
+  }
+  .container:last-child {
+    padding: 31.5px;
+  }
+  .container::after {
+    position: absolute;
+    width: 100px;
+    height: 60px;
+    left: 0;
+    bottom: -30px;
+    line-height: 30px;
+    text-align: center;
+  }
+  .container:last-child::after {
+    content: 'large';
+  }
+  
   </style>
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -6438,6 +6518,7 @@ function getConvertorModelPageV2() {
   <link rel="stylesheet" href="http://localhost:6003/css/materialize.min.css">
   <link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css">
   <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
+  <link rel="stylesheet" media="all" href="http://localhost:6003/css/ispinner.prefixed.css" />
   
   <script src="http://localhost:6003/js/jquery.min.js"></script>
   <script src="http://localhost:6003/js/materialize.min.js"></script>
@@ -9244,7 +9325,19 @@ function getSNNModelPage() {
   <body class="dark-mode" style="height: 100%;width: 100%;white-space: nowrap;overflow: auto;">
   
     <div class="loading-div">
-      <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i>
+      <div class="container"  style="padding-left: 40vw;">
+        <div class="ispinner ispinner-large">
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+        </div>
+      </div>
+      <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
       <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
     </div>
   
@@ -9398,10 +9491,35 @@ function getSNNModelPage() {
         display: inline-block;
         vertical-align: middle;
     } 
+  
+  .container {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    margin: 15px;
+    box-sizing: border-box;
+  }
+  .container:last-child {
+    padding: 31.5px;
+  }
+  .container::after {
+    position: absolute;
+    width: 100px;
+    height: 60px;
+    left: 0;
+    bottom: -30px;
+    line-height: 30px;
+    text-align: center;
+  }
+  .container:last-child::after {
+    content: 'large';
+  }
   </style>
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
+  <link rel="stylesheet" media="all" href="http://localhost:6003/css/ispinner.prefixed.css" />
   
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>

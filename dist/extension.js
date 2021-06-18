@@ -8480,8 +8480,110 @@ function getSNNSimuPage() {
               </ul>
           </div>
       </div>
+  
+  
+    <!-- 总进度提示 -->
+    <div id="total_progress_ball" class="box" style="display: block;">
+      <svg class="wave" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 200 210">
+        <defs>
+          <path id="wave-shape" stroke="rgba(255,255,255,.8)" stroke-width=".5" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 58-18 88-18 58 18 88 18 v185h-528z"></path>
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#wave-shape" x="50" y="0" fill="url(#linear)"></use>
+          <use xlink:href="#wave-shape" x="50" y="3" fill="url(#linear)"></use>
+          <use xlink:href="#wave-shape" x="50" y="6" fill="url(#linear)"></use>
+        </g>
+        <defs>
+          <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="0%" gradientTransform="rotate(90)">
+            <stop offset="30%"   stop-color="#05CC40" stop-opacity="0.2" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
   </body>
   <style>
+  
+  *{
+        margin:0;
+      }
+      .box{
+        width: 200px;
+        height: 200px;
+        left: 48%;
+        top: 38%;
+        /* margin: 50px auto; */
+        background-image: linear-gradient(-180deg, rgba(255,255,255,0.00) 0%, rgba(149, 255, 184, 0.96) 68%);
+        border-radius: 100%;
+        overflow: hidden;
+        position: absolute;
+        z-index: 3;
+      }
+      .box:before{
+        content: '';
+        width: 180px;
+        height: 180px;
+        background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(149, 255, 184, 0.96) 68%);
+        border-radius: 100%;
+        position: absolute;
+        left: 10px;
+        top: 10px;
+      }
+      .box:after{
+        content: '';
+        width: 160px;
+        height: 160px;
+        background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(149, 255, 184,1) 50%);
+        border-radius: 100%;
+        position: absolute;
+        left: 20px;
+        top: 20px;
+      }
+      .wave{
+        margin-top: 0px;
+        width: 100%;
+        height: 560px; /*560px progress 0, 200 progress 100*/
+        position: relative;
+        overflow: hidden;
+        z-index: 4;
+        animation-duration: 5s;
+        animation-name: wave_increase;
+      }
+      @keyframes wave_increase {
+        from {
+          height: 560px;
+        }
+  
+        to {
+          height: 200px;
+        }
+      }
+      #total_progress_ball {
+        animation-duration: 5s;
+        animation-name: progress_ball_elapse;
+      }
+      @keyframes progress_ball_elapse{
+      }
+      .parallax>use {
+        animation: wave-move 1s linear infinite;
+        animation-duration: .9s;
+      }
+      .parallax>use:nth-child(1) {
+        animation-delay: -.1s;
+      }
+      .parallax>use:nth-child(2) {
+        animation-delay: -.5s;
+      }
+      .parallax>use:nth-child(3) {
+        animation-delay: -.8s;
+      }
+      @keyframes wave-move {
+        0% {
+          transform: translate(90px,0);
+        }
+        100% {
+          transform: translate(-85px,0);
+        }
+      }
   
   .titlebar {
     -webkit-user-select: none;
@@ -8555,6 +8657,11 @@ function getSNNSimuPage() {
     let need_red_img_li = new Array();
   
         $(document).ready(function(){
+          $('#total_progress_ball').one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
+            document.getElementById("total_progress_ball").style.display = "none";
+            document.getElementsByClassName("loading-div")[0].style.display = "none";
+            console.log("隐藏loading...");
+          });
           vscode.postMessage(JSON.stringify({"snn_simulate_ready":true}));
           console.log("SNN仿真Webview 界面ready.");
             window.addEventListener("message", function(evt){
@@ -8891,7 +8998,6 @@ function getSNNSimuPage() {
                     document.getElementById("img_0").click();
                     document.getElementById("inputimg_0").click();
                     
-                    $(".loading-div").hide(); // 隐藏加载提示
                 }
             });
         });

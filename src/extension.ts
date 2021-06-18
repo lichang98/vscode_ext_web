@@ -676,7 +676,10 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				});
 				scriptProcess.stderr?.on("data", function(data){
+					console.log("extension 执行脚本错误：");
 					console.log(data);
+					// 将错误信息发送到前端界面，弹窗显示
+					currentPanel.webview.postMessage(JSON.stringify({"exec_error": data}));
 				});
 				scriptProcess.on("exit",function(){
 					// 进程结束，发送结束消息

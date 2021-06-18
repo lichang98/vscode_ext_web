@@ -474,6 +474,36 @@
 
 <button id="select_alg_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_select_alg" style="display: none;"></button>
 
+<!-- 错误信息弹窗 -->
+<div class="modal fade" id="myModal_exec_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_exec_error" aria-hidden="true" style="background-color: white;color: #333;">
+    <div class="modal-dialog" style="background-color: white;width: 800px;">
+        <div class="modal-content" style="background-color: white;">
+            <div>
+                <button id="exec_error_modal_close" type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+                    &times;
+                </button>
+                <h4 id="myModalLabel_exec_error" style="font-family: SourceHanSansCN-Normal;
+        font-size: 24px;
+        font-weight: bold;
+        color: rgb(252, 101, 101);
+        letter-spacing: 1.07px;margin-left: 20px;">
+                    转换代码执行错误
+                </h4>
+            </div>
+            <div id="error_msg_div" class="modal-body" style="overflow:scroll;white-space: pre-line;height: 400px;">
+            </div>
+            <div style="margin-top: 40px;margin-bottom: 40px;">
+                <button  id="exec_error_btn" type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+        border-radius: 2px;
+        border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">确认
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<button id="exec_error_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_exec_error" style="display: none;"></button>
+
 </body>
 <style>
 
@@ -563,6 +593,8 @@ let stage2_preprocess_finish=false;
 let stage3_search_finish=false;
 let stage4_all_finish=false;
 
+let error_occurred = false;
+
 let log_output_lists = new Array();
 
     let prev_clicked_img_li_id=undefined;
@@ -631,22 +663,24 @@ let log_output_lists = new Array();
                 document.getElementById("darlang_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("darlang_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                 // document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>"+Math.min(parseInt(document.getElementById("total_progress_div").style.width.replace("%", "")), 100)+"%</span>";
               }else if(data.exec_finish){
-                  // 结束
-                //   document.getElementById("start_convert_btn").style.backgroundColor = "";
-                  console.log("total finished, log_output_list length="+log_output_lists.length);
-                  document.getElementById("model_convert_progress_div").style.width = "100%";
-                  document.getElementById("preprocess_progress_div").style.width = "100%";
-                  document.getElementById("search_progress_div").style.width = "100%";
-                  document.getElementById("darlang_progress_div").style.width = "100%";
-                //   document.getElementById("total_progress_div").style.width = "100%";
-                  document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
-                document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
-                document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
-                document.getElementById("darlang_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
-                // document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
-                  console.log("LINE COUNT all_finish="+log_output_lists.length);
-                  $(".loading-div").hide();
-                  stage4_all_finish = true;
+                  if (!error_occurred) {
+                    // 结束
+                    //   document.getElementById("start_convert_btn").style.backgroundColor = "";
+                    console.log("total finished, log_output_list length="+log_output_lists.length);
+                    document.getElementById("model_convert_progress_div").style.width = "100%";
+                    document.getElementById("preprocess_progress_div").style.width = "100%";
+                    document.getElementById("search_progress_div").style.width = "100%";
+                    document.getElementById("darlang_progress_div").style.width = "100%";
+                    //   document.getElementById("total_progress_div").style.width = "100%";
+                    document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
+                    document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
+                    document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
+                    document.getElementById("darlang_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>100%</div>";
+                    // document.getElementById("total_progress_div").innerHTML = "<span style='color: #333;'>100%</span>";
+                    console.log("LINE COUNT all_finish="+log_output_lists.length);
+                    $(".loading-div").hide();
+                    stage4_all_finish = true;
+                  }
               }else if(data.progress){
                   // 处理进度信息
                   if(data.progress === "convert_finish"){
@@ -761,6 +795,7 @@ let log_output_lists = new Array();
                   display_bar_chart(bar_chart_label_names, bar_chart_label_counts, "","秒","use_time_bar_chart");
               }else if(data.ann_model_start_convert){
                   // 接收到启动转换的命令，初始化
+                error_occurred = false;
                 let v_thresh = $("#select_vthresh").val().replace("ms","");
                 let neuron_dt = $("#select_dt").val().replace("ms","");
                 let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
@@ -848,6 +883,36 @@ color: #666666;'>参数缩放系数</td>\
                 //           vscode.postMessage(JSON.stringify({"select_alg_res":"self"}));
                 //       }
                 //   });
+              } else if (data.exec_error) {
+                  error_occurred = true;
+                // 重置界面状态
+                document.getElementById("scale_factors_table").innerHTML = "<tr style='border: solid 2px #D6D6D6;'>\
+<td style='border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;\
+font-size: 16px;\
+color: #666666;'>神经层</td>\
+<td style='border: solid 2px #D6D6D6;background: #EEEEEE;text-align: center;padding-top: 15px;padding-bottom: 15px;font-family: SourceHanSansCN-Medium;\
+font-size: 16px;\
+color: #666666;'>参数缩放系数</td>\
+</tr>";
+                document.getElementById("model_convert_progress_div").style.width = "0%";
+                document.getElementById("preprocess_progress_div").style.width = "0%";
+                document.getElementById("search_progress_div").style.width = "0%";
+                document.getElementById("darlang_progress_div").style.width = "0%";
+                
+                document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</div>";
+                document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</div>";
+                document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</div>";
+                document.getElementById("darlang_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("darlang_progress_div").style.width.replace("%", "")), 100)+"%</div>";
+
+                log_output_lists.splice(0);
+                stage1_convert_finish = false;
+                stage2_preprocess_finish = false;
+                stage3_search_finish = false;
+                stage4_all_finish = false;
+                $(".loading-div").show();
+
+                $("#error_msg_div").text(data.exec_error);
+                $("#exec_error_modal_btn").click();
               }
           });
 

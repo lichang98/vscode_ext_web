@@ -1831,7 +1831,7 @@ export function getANNSNNConvertPage(){
                       <tr>
                           <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
-                          color: #666666;">DarwinLang文件生成耗时(秒)</td>
+                          color: #666666;">DarwinMDL文件生成耗时(秒)</td>
                           <td id="stage4_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
                           color: #666666;">xxx</td>
@@ -2003,7 +2003,7 @@ export function getANNSNNConvertPage(){
         </g>
         <defs>
           <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="0%" gradientTransform="rotate(90)">
-            <stop offset="30%"   stop-color="#05CC40" stop-opacity="0.2" />
+            <stop offset="30%"   stop-color="#304CA6" stop-opacity="0.2" />
           </linearGradient>
         </defs>
         <text id="total_progress_text" x="90" y="30"
@@ -2011,7 +2011,7 @@ export function getANNSNNConvertPage(){
           font-size="20px"
           margin-top="30px"
           margin-left="100px"
-          stroke="#05CC40">
+          stroke="#304CA6">
           0%
       </text>
       </svg>
@@ -2048,7 +2048,7 @@ export function getANNSNNConvertPage(){
         left: 35%;
         top: 50%;
         /* margin: 50px auto; */
-        background-image: linear-gradient(-180deg, rgba(255,255,255,0.00) 0%, rgba(149, 255, 184, 0.96) 68%);
+        background-image: linear-gradient(-180deg, rgba(255,255,255,0.00) 0%, rgba(87, 178, 231, 0.96) 68%);
         border-radius: 100%;
         overflow: hidden;
         position: absolute;
@@ -2058,7 +2058,7 @@ export function getANNSNNConvertPage(){
         content: '';
         width: 180px;
         height: 180px;
-        background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(149, 255, 184, 0.96) 68%);
+        background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(87, 178, 231, 0.96) 68%);
         border-radius: 100%;
         position: absolute;
         left: 10px;
@@ -2068,7 +2068,7 @@ export function getANNSNNConvertPage(){
         content: '';
         width: 160px;
         height: 160px;
-        background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(149, 255, 184,1) 50%);
+        background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(87, 178, 231, 1) 50%);
         border-radius: 100%;
         position: absolute;
         left: 20px;
@@ -2371,7 +2371,7 @@ export function getANNSNNConvertPage(){
                     $("#stage3_time_use").text(convert_infos.stage3_time_use);
                     $("#stage4_time_use").text(convert_infos.stage4_time_use);
   
-                    let bar_chart_label_names = ["ANN转SNN", "预处理", "参数调优", "DarwinLang文件生成"];
+                    let bar_chart_label_names = ["ANN转SNN", "预处理", "参数调优", "DarwinMDL文件生成"];
                     let bar_chart_label_counts = [parseFloat(convert_infos.stage1_time_use), parseFloat(convert_infos.stage2_time_use),
                                   parseFloat(convert_infos.stage3_time_use), parseFloat(convert_infos.stage4_time_use)];
                     display_bar_chart(bar_chart_label_names, bar_chart_label_counts, "","秒","use_time_bar_chart");
@@ -2703,7 +2703,19 @@ export function getSNNSimuPage(){
   <body class="dark-mode" style="height: 100%;width: 100%;white-space: nowrap;overflow: auto;">
   
     <div class="loading-div">
-      <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i>
+      <div class="container"  style="padding-left: 40vw;">
+        <div class="ispinner ispinner-large">
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+        </div>
+      </div>
+      <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
       <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">仿真数据加载中...</font></span>
     </div>
   
@@ -2847,108 +2859,8 @@ export function getSNNSimuPage(){
       </div>
   
   
-    <!-- 总进度提示 -->
-    <div id="total_progress_ball" class="box" style="display: block;">
-      <svg class="wave" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 200 210">
-        <defs>
-          <path id="wave-shape" stroke="rgba(255,255,255,.8)" stroke-width=".5" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 58-18 88-18 58 18 88 18 v185h-528z"></path>
-        </defs>
-        <g class="parallax">
-          <use xlink:href="#wave-shape" x="50" y="0" fill="url(#linear)"></use>
-          <use xlink:href="#wave-shape" x="50" y="3" fill="url(#linear)"></use>
-          <use xlink:href="#wave-shape" x="50" y="6" fill="url(#linear)"></use>
-        </g>
-        <defs>
-          <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="0%" gradientTransform="rotate(90)">
-            <stop offset="30%"   stop-color="#05CC40" stop-opacity="0.2" />
-          </linearGradient>
-        </defs>
-      </svg>
-    </div>
   </body>
   <style>
-  
-  *{
-        margin:0;
-      }
-      .box{
-        width: 200px;
-        height: 200px;
-        left: 48%;
-        top: 38%;
-        /* margin: 50px auto; */
-        background-image: linear-gradient(-180deg, rgba(255,255,255,0.00) 0%, rgba(149, 255, 184, 0.96) 68%);
-        border-radius: 100%;
-        overflow: hidden;
-        position: absolute;
-        z-index: 3;
-      }
-      .box:before{
-        content: '';
-        width: 180px;
-        height: 180px;
-        background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(149, 255, 184, 0.96) 68%);
-        border-radius: 100%;
-        position: absolute;
-        left: 10px;
-        top: 10px;
-      }
-      .box:after{
-        content: '';
-        width: 160px;
-        height: 160px;
-        background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(149, 255, 184,1) 50%);
-        border-radius: 100%;
-        position: absolute;
-        left: 20px;
-        top: 20px;
-      }
-      .wave{
-        margin-top: 0px;
-        width: 100%;
-        height: 560px; /*560px progress 0, 200 progress 100*/
-        position: relative;
-        overflow: hidden;
-        z-index: 4;
-        animation-duration: 5s;
-        animation-name: wave_increase;
-      }
-      @keyframes wave_increase {
-        from {
-          height: 560px;
-        }
-  
-        to {
-          height: 200px;
-        }
-      }
-      #total_progress_ball {
-        animation-duration: 5s;
-        animation-name: progress_ball_elapse;
-      }
-      @keyframes progress_ball_elapse{
-      }
-      .parallax>use {
-        animation: wave-move 1s linear infinite;
-        animation-duration: .9s;
-      }
-      .parallax>use:nth-child(1) {
-        animation-delay: -.1s;
-      }
-      .parallax>use:nth-child(2) {
-        animation-delay: -.5s;
-      }
-      .parallax>use:nth-child(3) {
-        animation-delay: -.8s;
-      }
-      @keyframes wave-move {
-        0% {
-          transform: translate(90px,0);
-        }
-        100% {
-          transform: translate(-85px,0);
-        }
-      }
   
   .titlebar {
     -webkit-user-select: none;
@@ -3004,10 +2916,35 @@ export function getSNNSimuPage(){
     vertical-align: middle;
   } 
   
+  .container {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    margin: 15px;
+    box-sizing: border-box;
+  }
+  .container:last-child {
+    padding: 31.5px;
+  }
+  .container::after {
+    position: absolute;
+    width: 100px;
+    height: 60px;
+    left: 0;
+    bottom: -30px;
+    line-height: 30px;
+    text-align: center;
+  }
+  .container:last-child::after {
+    content: 'large';
+  }
+  
   </style>
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
+  <link rel="stylesheet" media="all" href="http://localhost:6003/css/ispinner.prefixed.css" />
   
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -3022,11 +2959,6 @@ export function getSNNSimuPage(){
     let need_red_img_li = new Array();
   
         $(document).ready(function(){
-          $('#total_progress_ball').one("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd", function(){
-            document.getElementById("total_progress_ball").style.display = "none";
-            document.getElementsByClassName("loading-div")[0].style.display = "none";
-            console.log("隐藏loading...");
-          });
           vscode.postMessage(JSON.stringify({"snn_simulate_ready":true}));
           console.log("SNN仿真Webview 界面ready.");
             window.addEventListener("message", function(evt){
@@ -3383,7 +3315,8 @@ export function getSNNSimuPage(){
                     console.log("Auto click first image.......");
                     document.getElementById("img_0").click();
                     document.getElementById("inputimg_0").click();
-                    
+  
+                    $(".loading-div").hide(); // 隐藏加载提示
                 }
             });
         });

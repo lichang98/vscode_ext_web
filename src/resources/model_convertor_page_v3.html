@@ -345,7 +345,7 @@
                     <tr>
                         <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
-                        color: #666666;">DarwinLang文件生成耗时(秒)</td>
+                        color: #666666;">DarwinMDL文件生成耗时(秒)</td>
                         <td id="stage4_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
                         color: #666666;">xxx</td>
@@ -517,7 +517,7 @@
       </g>
       <defs>
         <linearGradient id="linear" x1="0%" y1="0%" x2="100%" y2="0%" gradientTransform="rotate(90)">
-          <stop offset="30%"   stop-color="#05CC40" stop-opacity="0.2" />
+          <stop offset="30%"   stop-color="#304CA6" stop-opacity="0.2" />
         </linearGradient>
       </defs>
       <text id="total_progress_text" x="90" y="30"
@@ -525,7 +525,7 @@
         font-size="20px"
         margin-top="30px"
         margin-left="100px"
-        stroke="#05CC40">
+        stroke="#304CA6">
         0%
     </text>
     </svg>
@@ -562,7 +562,7 @@ progress::-webkit-progress-value {
       left: 35%;
       top: 50%;
       /* margin: 50px auto; */
-      background-image: linear-gradient(-180deg, rgba(255,255,255,0.00) 0%, rgba(149, 255, 184, 0.96) 68%);
+      background-image: linear-gradient(-180deg, rgba(255,255,255,0.00) 0%, rgba(87, 178, 231, 0.96) 68%);
       border-radius: 100%;
       overflow: hidden;
       position: absolute;
@@ -572,7 +572,7 @@ progress::-webkit-progress-value {
       content: '';
       width: 180px;
       height: 180px;
-      background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(149, 255, 184, 0.96) 68%);
+      background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(87, 178, 231, 0.96) 68%);
       border-radius: 100%;
       position: absolute;
       left: 10px;
@@ -582,7 +582,7 @@ progress::-webkit-progress-value {
       content: '';
       width: 160px;
       height: 160px;
-      background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(149, 255, 184,1) 50%);
+      background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(87, 178, 231, 1) 50%);
       border-radius: 100%;
       position: absolute;
       left: 20px;
@@ -885,7 +885,7 @@ let log_output_lists = new Array();
                   $("#stage3_time_use").text(convert_infos.stage3_time_use);
                   $("#stage4_time_use").text(convert_infos.stage4_time_use);
 
-                  let bar_chart_label_names = ["ANN转SNN", "预处理", "参数调优", "DarwinLang文件生成"];
+                  let bar_chart_label_names = ["ANN转SNN", "预处理", "参数调优", "DarwinMDL文件生成"];
                   let bar_chart_label_counts = [parseFloat(convert_infos.stage1_time_use), parseFloat(convert_infos.stage2_time_use),
                                 parseFloat(convert_infos.stage3_time_use), parseFloat(convert_infos.stage4_time_use)];
                   display_bar_chart(bar_chart_label_names, bar_chart_label_counts, "","秒","use_time_bar_chart");

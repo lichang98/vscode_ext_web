@@ -638,13 +638,13 @@ stage4_time_use = time.time()
 # move to ../inner_scripts directory
 shutil.move(os.path.join(baseDirPath, "brian2_snn_info.json"), os.path.join(baseDirPath, "..", "inner_scripts","brian2_snn_info.json"))
 
-print("running darwinlang", flush=True)
+print("Running DarwinMDL", flush=True)
 sys.path.append(os.path.join(baseDirPath, "..", "darlang"))
 end_time = time.time()
 total_use_time = "{:.3f} 秒".format(end_time-start_time)
 # import darlang
 # darlang.run_darlang(os.path.join(outputPath, "snn_digit_darlang.json"),os.path.join(outputPath,"..", "bin_darwin_out"))
-print("darwinlang conversion finished.", flush=True)
+print("DarwinMDL conversion finished.", flush=True)
 
 stage4_time_use = "{:.3f}".format(stage4_time_use - stage3_time_use)
 stage3_time_use = "{:.3f}".format(stage3_time_use - stage2_time_use)

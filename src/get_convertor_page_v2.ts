@@ -3071,7 +3071,18 @@ export function getSNNSimuPage(){
                         }
                         prev_clicked_img = "img_"+i;
                         document.getElementById(prev_clicked_img).style.border = "10px outset orange";
-                        display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
+  
+                        let output_chart_cls_names = []; // x-axis, time stamps
+                        let simu_dura = parseInt(infos.extra_simu_info.simulate_dura);
+                        for (let i = 0; i < simu_dura; ++i) {
+                          output_chart_cls_names.push(""+i);
+                        }
+                        let output_chart_spike_tuples = []
+                        for (let j = 0; j < test_img_spikes[i].spike_tuples.length; ++j) {
+                          output_chart_spike_tuples.push([test_img_spikes[i].spike_tuples[j][1], test_img_spikes[i].spike_tuples[j][0]]);
+                        }
+                        display_spike_scatter_chart(output_chart_cls_names, output_chart_spike_tuples);
+                        // display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
   
                         // display counts in table
                         console.log("start display counts in table....");
@@ -3194,6 +3205,11 @@ export function getSNNSimuPage(){
                     }
   
                     console.log("创建输入层脉冲激发图......");
+                    let input_chart_cls_names = []; // x-axis, time stamps
+                    let simu_dura = parseInt(infos.extra_simu_info.simulate_dura);
+                    for (let i = 0; i < simu_dura; ++i) {
+                      input_chart_cls_names.push(""+i);
+                    }
                     // 创建输入层脉冲激发图
                     for(let i=0;i<infos.spikes.snn_input_spikes.length;++i){
                       var input_img_li = document.createElement("li");
@@ -3223,7 +3239,12 @@ export function getSNNSimuPage(){
                         document.getElementById(prev_clicked_input_img).style.border = '10px outset orange';
                         console.log("Current cls_names="+infos.spikes.snn_input_spikes[i].cls_names);
                         console.log("Current spike data="+infos.spikes.snn_input_spikes[i].spike_tuples);
-                        display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
+                        let input_chart_spike_tuples = [];
+                        for (let j = 0; j < infos.spikes.snn_input_spikes[i].spike_tuples.length; ++j) {
+                          input_chart_spike_tuples.push([infos.spikes.snn_input_spikes[i].spike_tuples[j][1], infos.spikes.snn_input_spikes[i].spike_tuples[j][0]]);
+                        }
+                        display_input_spikes_scatter_chart(input_chart_cls_names, input_chart_spike_tuples);
+                        // display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
                       };
                       input_img_li.appendChild(input_img_tag);
                       document.getElementById("input_spike_sample_imgs_ul").appendChild(input_img_li);
@@ -3446,7 +3467,7 @@ export function getSNNSimuPage(){
                   xAxis: {
                       type:'category',
                       data: labels,
-                      name: "类别",
+                      name: "时间(ms)",
                       nameTextStyle:{
                         color:"#999999"
                       },
@@ -3458,8 +3479,7 @@ export function getSNNSimuPage(){
                   },
                   yAxis: {
                       type: 'value',
-                      scale:true,
-                      name:"时间(brian2 ms)",
+                      name:"类别",
                       nameTextStyle:{
                         color:"#999999"
                       },
@@ -3468,7 +3488,10 @@ export function getSNNSimuPage(){
                           textStyle:{
                             color:"#999999"
                           }
-                      }
+                      },
+                      min: 0,
+                      max: 10,
+                      splitNumber:11
                   },
                   series: [{
                       symbolSize: 5,
@@ -3496,7 +3519,7 @@ export function getSNNSimuPage(){
                   xAxis: {
                       type:'category',
                       data: labels,
-                      name: "ID",
+                      name: "时间(ms)",
                       nameTextStyle:{
                         color:"#999999"
                       },
@@ -3508,8 +3531,7 @@ export function getSNNSimuPage(){
                   },
                   yAxis: {
                       type: 'value',
-                      scale:true,
-                      name:"时间(brian2 ms)",
+                      name:"神经元ID",
                       nameTextStyle:{
                         color:"#999999"
                       },
@@ -3518,7 +3540,10 @@ export function getSNNSimuPage(){
                           textStyle:{
                             color:"#999999"
                           }
-                      }
+                      },
+                      min: 0,
+                      max: 800,
+                      splitNumber: 9
                   },
                   series: [{
                       symbolSize: 5,

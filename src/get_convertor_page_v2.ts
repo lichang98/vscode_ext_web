@@ -2017,6 +2017,42 @@ export function getANNSNNConvertPage(){
       </svg>
   </div>
   
+  
+  <div class="modal fade" id="myModal_show_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_show_error" aria-hidden="true" style="background-color: white;color: #333;">
+    <div class="modal-dialog" style="background-color: white;width: 800px;">
+      <div class="modal-content" style="background-color: white;">
+        <div>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+            &times;
+          </button>
+          <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Normal;
+          font-size: 24px;
+          font-weight: bold;
+          color: #ee1414;
+          letter-spacing: 1.07px;margin-left: 20px;">
+            警告
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div style="margin-top: 50px;">
+            <span id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
+            font-size: 22px;
+            color: #f87307;
+            letter-spacing: 1.26px;margin: auto;text-align: center;width: 100%;display: inline-block;">错误信息</span>
+          </div>
+        </div>
+        <div style="margin-top: 40px;margin-bottom: 40px;">
+          <button type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+          border-radius: 2px;
+          border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">关闭
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+  </div>
+  
+  <button id="alert_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_show_error" style="display: none;"></button>
+  
   </body>
   <style>
   
@@ -2500,6 +2536,9 @@ export function getANNSNNConvertPage(){
                   $("#error_msg_div").text(data.exec_error);
                   $("#exec_error_modal_btn").click();
                   document.getElementById("total_progress_ball").style.display = "none";
+                } else if (data.show_error)  {
+                  $("#error_detail").text(data.show_error);
+                  $("#alert_modal_btn").click();
                 }
             });
   

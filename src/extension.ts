@@ -1028,7 +1028,7 @@ export function activate(context: vscode.ExtensionContext) {
 						}
 				} else {
 					// vscode.window.showErrorMessage("请先导入数据!!");
-					currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请先导入数据!"}));
+					currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请先导入数据！"}));
 				}
 			}else if(itemNode.label === path.basename(ANN_MODEL_FILE_PATH!)){
 				if (ANN_MODEL_FILE_PATH) {
@@ -1046,7 +1046,7 @@ export function activate(context: vscode.ExtensionContext) {
 					panelAnnModelVis.webview.html = getConvertorModelPageV2();
 				} else {
 					// vscode.window.showErrorMessage("请先导入ANN模型文件！！！");
-					currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请先导入ANN模型文件！！！"}));
+					currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请先导入ANN模型文件！"}));
 				}
 			}
 		}
@@ -1311,7 +1311,7 @@ export function activate(context: vscode.ExtensionContext) {
 			// 发送消息到web view ，开始模型的转换
 			console.log("模型转换页面打开");
 			if (!ANN_MODEL_FILE_PATH) {
-				currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请先导入ANN模型文件！！！"}));
+				currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请先导入ANN模型文件！"}));
 				return;
 			}
 
@@ -1413,7 +1413,7 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
 	vscode.commands.registerCommand("snn_model_ac.show_snn_model", ()=>{
 		if (DARWIN_LANG_FILE_PATHS.length === 0) {
 			// vscode.window.showErrorMessage("请先完成转换步骤！！！");
-			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！！！"}));
+			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！"}));
 			return;
 		}
 		if(panelSNNVisWeb){
@@ -1479,7 +1479,7 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
 			panelSNNModelVis = undefined;
 		}
 		if (DARWIN_LANG_FILE_PATHS.length === 0) {
-			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！！！"}));
+			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！"}));
 			return;
 		}
 		if(!panelSNNModelVis){

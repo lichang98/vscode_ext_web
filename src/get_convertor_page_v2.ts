@@ -2081,7 +2081,7 @@ export function getANNSNNConvertPage(){
       .box{
         width: 200px;
         height: 200px;
-        left: 35%;
+        left: 40%;
         top: 50%;
         /* margin: 50px auto; */
         background-image: linear-gradient(-180deg, rgba(255,255,255,0.00) 0%, rgba(87, 178, 231, 0.96) 68%);

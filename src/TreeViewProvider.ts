@@ -49,7 +49,8 @@ export class TreeItemNode extends TreeItem {
         public label: string,
         public children?:TreeItemNode[],
         public readonly isRoot?:boolean,
-        public contextVal?: string
+        public contextVal?: string,
+        public expandState?:number
     ){
         super(label, children === undefined ? vscode.TreeItemCollapsibleState.None :
             vscode.TreeItemCollapsibleState.Expanded);
@@ -71,12 +72,17 @@ export class TreeItemNode extends TreeItem {
         }else{
             this.label = label;
         }
-        if (contextVal === "root" || label === "模型转换" || label === "训练数据" || label === "测试数据" || label === "测试数据标签" || label === "ANN模型") {
-            this.collapsibleState = 2; // expand
-        } else if(contextVal === 'rmable' || label.search("json") >=0 || label.search(".b") >=0 || label.search(".dat") >=0 || label.search(".pickle") >=0){
-            this.collapsibleState = 0;
+        console.log("设置collapsibleState, label="+label+", expandState="+expandState);
+        if (expandState) {
+            this.collapsibleState = expandState;
         } else {
-            this.collapsibleState = 1; // collapse
+            if (contextVal === "root" || label === "模型转换" || label === "训练数据" || label === "测试数据" || label === "测试数据标签" || label === "ANN模型" || label === "数据集") {
+                this.collapsibleState = 2; // expand
+            } else if(contextVal === 'rmable' || label.search("json") >=0 || label.search(".b") >=0 || label.search(".dat") >=0 || label.search(".pickle") >=0){
+                this.collapsibleState = 0;
+            } else {
+                this.collapsibleState = 1; // collapse
+            }
         }
         this.iconPath = TreeItemNode.getIconUriForLabel(this.label);
         this.tooltip = TreeItemNode.getToolTip(this.label);

@@ -1544,6 +1544,7 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
 		}
 	});
 
+
 	// 启动转换为DarwinLang的操作
 	vscode.commands.registerCommand("item_darwinLang_convertor.start_convert", ()=>{
 		// inMemTreeViewDarLang = [];
@@ -1551,6 +1552,13 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
 			// ITEM_ICON_MAP.set("SNN模型","imgs/file.png");
 			// addDarwinFold("SNN模型");
 			DARWIN_LANG_FILE_PATHS.splice(0);
+			// Remove 'SNN模型' node, refresh and then add to make it expand
+			inMemTreeViewStruct[0].children![0].children!.splice(2,1);
+			treeview.data = inMemTreeViewStruct;
+			treeview.refresh();
+			inMemTreeViewStruct[0].children![0].children!.push(new TreeItemNode("SNN模型",[
+				new TreeItemNode("连接文件", [])
+			], false, "SNN模型", 2));
 			inMemTreeViewStruct[0].children![0].children![2].children!.splice(1);
 			inMemTreeViewStruct[0].children![0].children![2].children![0].children!.splice(0);
 			fs.readdir(path.join(__dirname, "darwin2sim","model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "darlang_out"), (err, files) => {
@@ -1598,6 +1606,27 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
 			addSlfFile("SNN二进制模型");
 		}
 
+
+	// inMemTreeViewStruct.push(new TreeItemNode(PROJ_DESC_INFO.project_name,[
+	// 	new TreeItemNode("模型转换",[
+	// 		new TreeItemNode("数据集",[
+	// 			new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), new TreeItemNode("测试数据标签",[])
+	// 		]), 
+	// 		new TreeItemNode("ANN模型",[]), 
+	// 		new TreeItemNode("SNN模型",[
+	// 			new TreeItemNode("连接文件", [])
+	// 		]),
+	// 	]),
+	// 	new TreeItemNode("模型编译", [
+	// 		new TreeItemNode("Darwin二进制文件", [
+	// 			new TreeItemNode("模型文件", []),
+	// 			new TreeItemNode("编解码配置文件", [])
+	// 		])
+	// 	])
+	// ], true, "root"));
+
+
+
 		let genScript = path.join(__dirname, "darwin2sim", "gen_darwin2_bin_files.py");
 		let cmdStr = PYTHON_INTERPRETER+" "+genScript+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2", "")+" "+path.join(path.dirname(PROJ_SAVE_PATH!), "packed_bin_files.dat");
 		vscode.window.showInformationMessage("二进制文件生成中，请稍等......");
@@ -1609,6 +1638,17 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
 				fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),"bin_darwin_out", "config.b"),
 								path.join(path.dirname(PROJ_SAVE_PATH!), "config.b"));
 				DARWIN_LANG_BIN_PATHS.splice(0);
+
+				inMemTreeViewStruct[0].children!.splice(1,1);
+				treeview.data = inMemTreeViewStruct;
+				treeview.refresh();
+				inMemTreeViewStruct[0].children!.push(new TreeItemNode("模型编译", [
+					new TreeItemNode("Darwin二进制文件", [
+						new TreeItemNode("模型文件", [], false, "模型文件", 2),
+						new TreeItemNode("编解码配置文件", [], false, "模型文件", 2)
+					], false, "Darwin二进制文件", 2)
+				], false, "模型编译", 2));
+
 				inMemTreeViewStruct[0].children![1].children![0].children![0].children!.splice(0);
 				inMemTreeViewStruct[0].children![1].children![0].children![1].children!.splice(0);
 				fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out"), (err, files)=>{
@@ -1632,6 +1672,7 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
 					autoSaveWithCheck();
 					vscode.window.showInformationMessage("二进制文件生成结束!");
 				});
+				treeview.refresh();
 			}
 		});
 		// if(!ITEM_ICON_MAP.has("SNN二进制模型")){

@@ -23,6 +23,7 @@
 		"onCommand:simulator.opt",
 		"onCommand:simulator.viewFunc",
 		"onView:treeView-item",
+		"onView:act_import_files-item",
 		"onView:item_convertor",
 		"onView:item_simulator",
 		"onView:item_darwinLang_convertor",
@@ -185,6 +186,11 @@
 					"icon": "src/resources/dep.png"
 				},
 				{
+					"id": "act_import_files",
+					"title": "导入",
+					"icon": "src/resources/files_import_icon.png"
+				},
+				{
 					"id": "convertor",
 					"title": "转换",
 					"icon": "src/resources/convert.png"
@@ -205,6 +211,13 @@
 			"treeView": [
 				{
 					"id": "treeView-item",
+					"name": "",
+					"when": ""
+				}
+			],
+			"act_import_files": [
+				{
+					"id": "act_import_files-item",
 					"name": "",
 					"when": ""
 				}

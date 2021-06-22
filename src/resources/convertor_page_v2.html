@@ -18,6 +18,8 @@
   修改项目属性
 </button>
 
+<button id="modal_dialog_import_files" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModalImportFiles" style="display: none;">
+  导入文件
 </button>
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: white;color: #333;">
@@ -180,6 +182,112 @@ line-height: 14px;">
 	</div><!-- /.modal -->
 </div>
 
+
+
+
+<!--导入数据与模型文件-->
+<div class="modal fade" id="myModalImportFiles" tabindex="-1" role="dialog" aria-labelledby="myModalLabelImportFiles" aria-hidden="true" style="background-color: white;color: #333;">
+	<div class="modal-dialog" style="background-color: white;width: 800px;">
+		<div class="modal-content" style="background-color: white;">
+			<div>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+					&times;
+				</button>
+				<h4 id="myModalLabelImportFiles" style="font-family: SourceHanSansCN-Normal;
+        font-size: 24px;
+        font-weight: bold;
+        color: #333333;
+        letter-spacing: 1.07px;margin-left: 20px;">
+					导入文件
+				</h4>
+			</div>
+			<div class="modal-body">
+                <form role="form" id="project_info_form_import_files">
+                  <div style="margin-top: 20px;">
+                    <label for="import_files_xnorm"  style="font-family: SourceHanSansCN-Normal;
+                    font-size: 22px;
+                    color: #333333;
+                    letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">训练数据: </label>
+                    <input type="text" id="import_files_xnorm" style="background: #EEEEEE;
+                    border: 1px solid #D9D9D9;
+                    border-radius: 6px;
+                    border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
+                    font-size: 22px;
+                    color: #999999;
+                    letter-spacing: 0;
+                    line-height: 14px;">
+                    <button id="span_import_xnorm" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                    border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                  </div>
+
+                  <div style="margin-top: 20px;">
+                    <label for="import_files_xtest"  style="font-family: SourceHanSansCN-Normal;
+                    font-size: 22px;
+                    color: #333333;
+                    letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">测试数据: </label>
+                    <input type="text" id="import_files_xtest" style="background: #EEEEEE;
+                    border: 1px solid #D9D9D9;
+                    border-radius: 6px;
+                    border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
+                    font-size: 22px;
+                    color: #999999;
+                    letter-spacing: 0;
+                    line-height: 14px;">
+                    <button id="span_import_xtest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                    border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                  </div>
+
+                  <div style="margin-top: 20px;">
+                    <label for="import_files_ytest"  style="font-family: SourceHanSansCN-Normal;
+                    font-size: 22px;
+                    color: #333333;
+                    letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">测试数据标签: </label>
+                    <input type="text" id="import_files_ytest" style="background: #EEEEEE;
+                    border: 1px solid #D9D9D9;
+                    border-radius: 6px;
+                    border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
+                    font-size: 22px;
+                    color: #999999;
+                    letter-spacing: 0;
+                    line-height: 14px;">
+                    <button id="span_import_ytest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                    border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                  </div>
+
+                  <div style="margin-top: 20px;">
+                    <label for="import_files_ann"  style="font-family: SourceHanSansCN-Normal;
+                    font-size: 22px;
+                    color: #333333;
+                    letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">ANN模型: </label>
+                    <input type="text" id="import_files_ann" style="background: #EEEEEE;
+                    border: 1px solid #D9D9D9;
+                    border-radius: 6px;
+                    border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
+                    font-size: 22px;
+                    color: #999999;
+                    letter-spacing: 0;
+                    line-height: 14px;">
+                    <button id="span_import_ann" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                    border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                  </div>
+                </form>
+			</div>
+			<div style="margin-top: 40px;margin-bottom: 40px;">
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_importFiles" style="background: #F3F3F3;
+        border: 1px solid #D7D7D7;
+        border-radius: 2px;
+        border-radius: 2px;width: 140px;margin-left: 200px;">取消
+				</button>
+				<button type="button" class="btn btn-primary" id="create_importFiles" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+        border-radius: 2px;
+        border-radius: 2px;width: 140px;margin-left: 60px;">确认
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+
+
 <!-- 背景主界面 -->
 <div id="login" class="login_body_bg">
   <div style="line-height: normal;margin: auto;">
@@ -306,7 +414,44 @@ body {
         if (data.show_error) {
           $("#error_detail").text(data.show_error);
           $("#alert_modal_btn").click();
+        } else if (data.import_files) {
+          // 导入数据与模型文件
+          $("#modal_dialog_import_files").click();
+        } else if (data.ftarget === "xnorm")  {
+          $("#import_files_xnorm").val(data.path);
+        } else if (data.ftarget === "xtest") {
+          $("#import_files_xtest").val(data.path);
+        } else if (data.ftarget === "ytest") {
+          $("#import_files_ytest").val(data.path);
+        } else if (data.ftarget === "ann") {
+          $("#import_files_ann").val(data.path);
         }
+      });
+      $("#span_import_xnorm").on("click", ()=>{
+        vscode.postMessage(JSON.stringify({"import_choose_path":"yes", "import_ftarget":"xnorm"}));
+      });
+      $("#span_import_xtest").on("click", ()=>{
+        vscode.postMessage(JSON.stringify({"import_choose_path":"yes", "import_ftarget":"xtest"}));
+      });
+
+      $("#span_import_ytest").on("click", ()=>{
+        vscode.postMessage(JSON.stringify({"import_choose_path":"yes", "import_ftarget":"ytest"}));
+      });
+
+      $("#span_import_ann").on("click", ()=>{
+        vscode.postMessage(JSON.stringify({"import_choose_path":"yes", "import_ftarget":"ann"}));
+      });
+
+      $("#create_importFiles").on("click", ()=>{
+        vscode.postMessage(JSON.stringify({
+          "choose_import_file_paths": {
+            "xnorm": $("#import_files_xnorm").val(),
+            "xtest": $("#import_files_xtest").val(),
+            "ytest": $("#import_files_ytest").val(),
+            "ann": $("#import_files_ann").val()
+          }
+        }));
+        $("#dismiss_importFiles").click();
       });
        // 选择项目文件保存路径
        $("#span_save_path").on("click", function(){

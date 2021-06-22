@@ -162,11 +162,13 @@ function activate(context) {
     let treeviewConvertor = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_convertor");
     let treeViewSimulator = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_simulator");
     let treeViewConvertDarLang = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
+    let treeViewItemsImportFiles = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("act_import_files-item");
     // let treeViewSNNModelView = TreeViewProvider.initTreeViewItem("item_snn_model_view");
     let treeviewHome = vscode.window.createTreeView("treeView-item", { treeDataProvider: treeview });
     let treeViewCvtor = vscode.window.createTreeView("item_convertor", { treeDataProvider: treeviewConvertor });
     let treeViewSim = vscode.window.createTreeView("item_simulator", { treeDataProvider: treeViewSimulator });
     let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", { treeDataProvider: treeViewConvertDarLang });
+    let treeViewImportFiles = vscode.window.createTreeView("act_import_files-item", { treeDataProvider: treeViewItemsImportFiles });
     // let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
     let currPanelDisposed = false;
     function isAllOtherTreeViewInvisible() {
@@ -196,6 +198,21 @@ function activate(context) {
                         currentPanel.webview.postMessage(JSON.stringify({ "ann_model_start_convert": "yes" }));
                         treeviewHome.reveal(treeview.data[0]);
                     }
+                }
+                treeviewHome.reveal(treeview.data[0]);
+            }, 100);
+        }
+    });
+    treeViewImportFiles.onDidChangeVisibility((evt) => {
+        if (evt.visible) {
+            console.log("treeviewImportFiles activity icon 点击, visibility 可见....");
+            currentPanel.webview.postMessage(JSON.stringify({ "import_files": "yes" }));
+            treeviewHome.reveal(treeview.data[0]);
+        }
+        else {
+            setTimeout(() => {
+                if (isAllOtherTreeViewInvisible()) {
+                    currentPanel.webview.postMessage(JSON.stringify({ "import_files": "yes" }));
                 }
                 treeviewHome.reveal(treeview.data[0]);
             }, 100);
@@ -710,7 +727,163 @@ function activate(context) {
                     }
                 });
             }
+            else if (data.import_choose_path) {
+                const options = {
+                    canSelectFiles: false,
+                    canSelectFolders: false,
+                    openLabel: "选择文件",
+                    title: "选择文件",
+                    filters: { "files": ["npz", "h5"] }
+                };
+                vscode.window.showOpenDialog(options).then(fileUri => {
+                    if (fileUri) {
+                        console.log("选择文件的路径为：" + fileUri[0].fsPath + ", ftarget=" + data.import_ftarget);
+                        const ftarget = data.import_ftarget;
+                        currentPanel.webview.postMessage(JSON.stringify({ "path": fileUri[0].fsPath, "ftarget": ftarget }));
+                        // console.log("选择的项目保存路径为："+fileUri[0].fsPath);
+                        // PROJ_SAVE_PATH = path.join(fileUri[0].fsPath, data.select_save_proj_path_req+".dar2");
+                        // if(currentPanel){
+                        // 	console.log("发送保存路径到webview..., 路径="+PROJ_SAVE_PATH);
+                        // 	// fs.open(PROJ_SAVE_PATH, 'w', 0o777 , (err, fd)=>{
+                        // 	// 	if(err){
+                        // 	// 		console.log("创建项目文件错误："+err);
+                        // 	// 	}
+                        // 	// 	console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
+                        // 	// });
+                        // 	currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": PROJ_SAVE_PATH}));
+                        // }
+                    }
+                });
+            }
+            else if (data.choose_import_file_paths) {
+                console.log("选择的文件路径为：" + JSON.stringify(data.choose_import_file_paths));
+                importXNorm(data.choose_import_file_paths.xnorm);
+                importXTest(data.choose_import_file_paths.xtest);
+                importYTest(data.choose_import_file_paths.ytest);
+                importANNFile(data.choose_import_file_paths.ann);
+            }
         });
+    }
+    function importXNorm(file_path) {
+        X_NORM_DATA_PATH = file_path;
+        X_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "colorX.npz");
+        X_ORIGIN_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "originColorX.npz");
+        // 添加到treeview下
+        // ITEM_ICON_MAP.set("x_norm","imgs/file.png");
+        // addSlfFile("x_norm");
+        let xNormFileOriginName = path.basename(X_NORM_DATA_PATH);
+        TreeViewProvider_1.addSlfFile(xNormFileOriginName);
+        if (inMemTreeViewStruct[0].children[0].children[0].children[0].children.length > 0) {
+            inMemTreeViewStruct[0].children[0].children[0].children[0].children.splice(0, 1);
+        }
+        inMemTreeViewStruct[0].children[0].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(xNormFileOriginName, undefined, false, 'rmable'));
+        // if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children){
+        // 	console.log("添加新的文件");
+        // 	treeview.data[0].children[0].children[0].children.push(new TreeItemNode(xNormFileOriginName, [], false, 'rmable'));
+        // 	treeview.refresh();
+        // }
+        treeview.data = inMemTreeViewStruct;
+        treeview.refresh();
+        // 拷贝文件到项目并重命名
+        if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
+            fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
+        }
+        if (X_NORM_DATA_PATH) {
+            fs.copyFile(path.join(X_NORM_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "x_norm.npz"), function (err) {
+                console.log("copy file x_norm.npz error: " + err);
+            });
+        }
+        if (X_COLOR_DATA_PATH) {
+            fs.copyFile(path.join(X_COLOR_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "colorX.npz"), function (err) {
+                console.log("copy file colorX.npz error: " + err);
+            });
+        }
+        if (X_ORIGIN_COLOR_DATA_PATH) {
+            fs.copyFile(X_ORIGIN_COLOR_DATA_PATH, path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "originColorX.npz"), function (err) {
+                console.log("copy file originColorX.npz error: " + err);
+            });
+        }
+        autoSaveWithCheck();
+    }
+    function importXTest(file_path) {
+        X_TEST_DATA_PATH = file_path;
+        // 添加到treeview下
+        // ITEM_ICON_MAP.set("x_test","imgs/file.png");
+        // addSlfFile("x_test");
+        let xTestFileOriginName = path.basename(X_TEST_DATA_PATH);
+        TreeViewProvider_1.addSlfFile(xTestFileOriginName);
+        if (inMemTreeViewStruct[0].children[0].children[0].children[1].children.length > 0) {
+            inMemTreeViewStruct[0].children[0].children[0].children[1].children.splice(0, 1);
+        }
+        inMemTreeViewStruct[0].children[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(xTestFileOriginName, undefined, false, 'rmable'));
+        treeview.data = inMemTreeViewStruct;
+        treeview.refresh();
+        // if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[1].children){
+        // 	console.log("添加新的文件");
+        // 	treeview.data[0].children[0].children[1].children.push(new TreeItemNode(xTestFileOriginName, [], false, 'rmable'));
+        // 	treeview.refresh();
+        // }
+        // 拷贝文件到项目并重命名
+        if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
+            fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
+        }
+        if (X_TEST_DATA_PATH) {
+            fs.copyFile(path.join(X_TEST_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "x_test.npz"), function (err) {
+            });
+        }
+    }
+    function importYTest(file_path) {
+        Y_TEST_DATA_PATH = file_path;
+        // 添加到treeview下
+        // FIXME
+        // ITEM_ICON_MAP.set("y_test","imgs/file.png");
+        // addSlfFile("y_test");
+        let yTestFileOriginName = path.basename(Y_TEST_DATA_PATH);
+        TreeViewProvider_1.addSlfFile(yTestFileOriginName);
+        if (inMemTreeViewStruct[0].children[0].children[0].children[2].children.length > 0) {
+            inMemTreeViewStruct[0].children[0].children[0].children[2].children.splice(0, 1);
+        }
+        inMemTreeViewStruct[0].children[0].children[0].children[2].children.push(new TreeViewProvider_1.TreeItemNode(yTestFileOriginName, undefined, false, 'rmable'));
+        treeview.data = inMemTreeViewStruct;
+        treeview.refresh();
+        // if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[2].children){
+        // 	console.log("添加新的文件");
+        // 	treeview.data[0].children[0].children[2].children.push(new TreeItemNode(yTestFileOriginName, [], false, 'rmable'));
+        // 	treeview.refresh();
+        // }
+        // 拷贝文件到项目并重命名
+        if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
+            fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
+        }
+        if (Y_TEST_DATA_PATH) {
+            fs.copyFile(path.join(Y_TEST_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "y_test.npz"), function (err) {
+            });
+        }
+    }
+    function importANNFile(file_path) {
+        ANN_MODEL_FILE_PATH = file_path;
+        // 添加到treeview下
+        // ITEM_ICON_MAP.set("model_file","imgs/file.png");
+        // ITEM_ICON_MAP.set(path.basename(model_file_path), "imgs/file.png");
+        TreeViewProvider_1.addSlfFile(path.basename(ANN_MODEL_FILE_PATH));
+        // if(treeview.data[0].children && treeview.data[0].children[1].children){
+        // 	treeview.data[0].children[1].children.push(new TreeItemNode("model_file_"+path.basename(ANN_MODEL_FILE_PATH)));
+        // 	treeview.refresh();
+        // }
+        if (inMemTreeViewStruct[0].children[0].children[1].children.length > 0) {
+            inMemTreeViewStruct[0].children[0].children[1].children.splice(0, 1);
+        }
+        inMemTreeViewStruct[0].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("model_file_" + path.basename(ANN_MODEL_FILE_PATH), undefined, false, 'rmable'));
+        treeview.data = inMemTreeViewStruct;
+        treeview.refresh();
+        // 拷贝文件到项目并重命名
+        if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
+            fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
+        }
+        if (ANN_MODEL_FILE_PATH) {
+            fs.copyFile(path.join(ANN_MODEL_FILE_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "mnist_cnn.h5"), function (err) {
+            });
+        }
     }
     context.subscriptions.push(disposable);
     let disposable2 = vscode.commands.registerCommand("treeView-item.newproj", () => {
@@ -6834,6 +7007,8 @@ function getConvertorPageV2() {
       修改项目属性
     </button>
     
+    <button id="modal_dialog_import_files" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModalImportFiles" style="display: none;">
+      导入文件
     </button>
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: white;color: #333;">
@@ -6996,6 +7171,112 @@ function getConvertorPageV2() {
       </div><!-- /.modal -->
     </div>
     
+    
+    
+    
+    <!--导入数据与模型文件-->
+    <div class="modal fade" id="myModalImportFiles" tabindex="-1" role="dialog" aria-labelledby="myModalLabelImportFiles" aria-hidden="true" style="background-color: white;color: #333;">
+      <div class="modal-dialog" style="background-color: white;width: 800px;">
+        <div class="modal-content" style="background-color: white;">
+          <div>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+              &times;
+            </button>
+            <h4 id="myModalLabelImportFiles" style="font-family: SourceHanSansCN-Normal;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333333;
+            letter-spacing: 1.07px;margin-left: 20px;">
+              导入文件
+            </h4>
+          </div>
+          <div class="modal-body">
+                    <form role="form" id="project_info_form_import_files">
+                      <div style="margin-top: 20px;">
+                        <label for="import_files_xnorm"  style="font-family: SourceHanSansCN-Normal;
+                        font-size: 22px;
+                        color: #333333;
+                        letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">训练数据: </label>
+                        <input type="text" id="import_files_xnorm" style="background: #EEEEEE;
+                        border: 1px solid #D9D9D9;
+                        border-radius: 6px;
+                        border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
+                        font-size: 22px;
+                        color: #999999;
+                        letter-spacing: 0;
+                        line-height: 14px;">
+                        <button id="span_import_xnorm" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                        border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                      </div>
+    
+                      <div style="margin-top: 20px;">
+                        <label for="import_files_xtest"  style="font-family: SourceHanSansCN-Normal;
+                        font-size: 22px;
+                        color: #333333;
+                        letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">测试数据: </label>
+                        <input type="text" id="import_files_xtest" style="background: #EEEEEE;
+                        border: 1px solid #D9D9D9;
+                        border-radius: 6px;
+                        border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
+                        font-size: 22px;
+                        color: #999999;
+                        letter-spacing: 0;
+                        line-height: 14px;">
+                        <button id="span_import_xtest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                        border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                      </div>
+    
+                      <div style="margin-top: 20px;">
+                        <label for="import_files_ytest"  style="font-family: SourceHanSansCN-Normal;
+                        font-size: 22px;
+                        color: #333333;
+                        letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">测试数据标签: </label>
+                        <input type="text" id="import_files_ytest" style="background: #EEEEEE;
+                        border: 1px solid #D9D9D9;
+                        border-radius: 6px;
+                        border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
+                        font-size: 22px;
+                        color: #999999;
+                        letter-spacing: 0;
+                        line-height: 14px;">
+                        <button id="span_import_ytest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                        border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                      </div>
+    
+                      <div style="margin-top: 20px;">
+                        <label for="import_files_ann"  style="font-family: SourceHanSansCN-Normal;
+                        font-size: 22px;
+                        color: #333333;
+                        letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">ANN模型: </label>
+                        <input type="text" id="import_files_ann" style="background: #EEEEEE;
+                        border: 1px solid #D9D9D9;
+                        border-radius: 6px;
+                        border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
+                        font-size: 22px;
+                        color: #999999;
+                        letter-spacing: 0;
+                        line-height: 14px;">
+                        <button id="span_import_ann" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                        border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                      </div>
+                    </form>
+          </div>
+          <div style="margin-top: 40px;margin-bottom: 40px;">
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_importFiles" style="background: #F3F3F3;
+            border: 1px solid #D7D7D7;
+            border-radius: 2px;
+            border-radius: 2px;width: 140px;margin-left: 200px;">取消
+            </button>
+            <button type="button" class="btn btn-primary" id="create_importFiles" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+            border-radius: 2px;
+            border-radius: 2px;width: 140px;margin-left: 60px;">确认
+            </button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+    
+    
     <!-- 背景主界面 -->
     <div id="login" class="login_body_bg">
       <div style="line-height: normal;margin: auto;">
@@ -7122,7 +7403,44 @@ function getConvertorPageV2() {
             if (data.show_error) {
               $("#error_detail").text(data.show_error);
               $("#alert_modal_btn").click();
+            } else if (data.import_files) {
+              // 导入数据与模型文件
+              $("#modal_dialog_import_files").click();
+            } else if (data.ftarget === "xnorm")  {
+              $("#import_files_xnorm").val(data.path);
+            } else if (data.ftarget === "xtest") {
+              $("#import_files_xtest").val(data.path);
+            } else if (data.ftarget === "ytest") {
+              $("#import_files_ytest").val(data.path);
+            } else if (data.ftarget === "ann") {
+              $("#import_files_ann").val(data.path);
             }
+          });
+          $("#span_import_xnorm").on("click", ()=>{
+            vscode.postMessage(JSON.stringify({"import_choose_path":"yes", "import_ftarget":"xnorm"}));
+          });
+          $("#span_import_xtest").on("click", ()=>{
+            vscode.postMessage(JSON.stringify({"import_choose_path":"yes", "import_ftarget":"xtest"}));
+          });
+    
+          $("#span_import_ytest").on("click", ()=>{
+            vscode.postMessage(JSON.stringify({"import_choose_path":"yes", "import_ftarget":"ytest"}));
+          });
+    
+          $("#span_import_ann").on("click", ()=>{
+            vscode.postMessage(JSON.stringify({"import_choose_path":"yes", "import_ftarget":"ann"}));
+          });
+    
+          $("#create_importFiles").on("click", ()=>{
+            vscode.postMessage(JSON.stringify({
+              "choose_import_file_paths": {
+                "xnorm": $("#import_files_xnorm").val(),
+                "xtest": $("#import_files_xtest").val(),
+                "ytest": $("#import_files_ytest").val(),
+                "ann": $("#import_files_ann").val()
+              }
+            }));
+            $("#dismiss_importFiles").click();
           });
            // 选择项目文件保存路径
            $("#span_save_path").on("click", function(){

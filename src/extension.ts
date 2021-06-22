@@ -156,12 +156,14 @@ export function activate(context: vscode.ExtensionContext) {
 	let treeviewConvertor = TreeViewProvider.initTreeViewItem("item_convertor");
 	let treeViewSimulator = TreeViewProvider.initTreeViewItem("item_simulator");
 	let treeViewConvertDarLang = TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
+	let treeViewItemsImportFiles = TreeViewProvider.initTreeViewItem("act_import_files-item");
 	// let treeViewSNNModelView = TreeViewProvider.initTreeViewItem("item_snn_model_view");
 
 	let treeviewHome = vscode.window.createTreeView("treeView-item", {treeDataProvider: treeview});
 	let treeViewCvtor = vscode.window.createTreeView("item_convertor", {treeDataProvider: treeviewConvertor});
 	let treeViewSim = vscode.window.createTreeView("item_simulator", {treeDataProvider:treeViewSimulator});
 	let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", {treeDataProvider:treeViewConvertDarLang});
+	let treeViewImportFiles = vscode.window.createTreeView("act_import_files-item", {treeDataProvider: treeViewItemsImportFiles});
 	// let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
 
 	let currPanelDisposed:boolean = false;
@@ -196,6 +198,21 @@ export function activate(context: vscode.ExtensionContext) {
 						currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
 						treeviewHome.reveal(treeview.data[0]);
 					}
+				}
+				treeviewHome.reveal(treeview.data[0]);
+			}, 100);
+		}
+	});
+
+	treeViewImportFiles.onDidChangeVisibility((evt)=>{
+		if (evt.visible) {
+			console.log("treeviewImportFiles activity icon 点击, visibility 可见....");
+			currentPanel!.webview.postMessage(JSON.stringify({"import_files": "yes"}));
+			treeviewHome.reveal(treeview.data[0]);
+		} else {
+			setTimeout(() => {
+				if (isAllOtherTreeViewInvisible()) {
+					currentPanel!.webview.postMessage(JSON.stringify({"import_files": "yes"}));
 				}
 				treeviewHome.reveal(treeview.data[0]);
 			}, 100);
@@ -702,10 +719,170 @@ export function activate(context: vscode.ExtensionContext) {
 						vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
 					}
 				});
+			} else if (data.import_choose_path) {
+				const options:vscode.OpenDialogOptions = {
+					canSelectFiles:false,
+					canSelectFolders:false,
+					openLabel:"选择文件",
+					title:"选择文件",
+					filters: {"files": ["npz", "h5"]}
+				};
+				vscode.window.showOpenDialog(options).then(fileUri => {
+					if(fileUri){
+						console.log("选择文件的路径为："+fileUri[0].fsPath+", ftarget="+data.import_ftarget);
+						const ftarget:string = data.import_ftarget;
+						currentPanel!.webview.postMessage(JSON.stringify({"path":fileUri[0].fsPath , "ftarget": ftarget}));
+						// console.log("选择的项目保存路径为："+fileUri[0].fsPath);
+						// PROJ_SAVE_PATH = path.join(fileUri[0].fsPath, data.select_save_proj_path_req+".dar2");
+						// if(currentPanel){
+						// 	console.log("发送保存路径到webview..., 路径="+PROJ_SAVE_PATH);
+						// 	// fs.open(PROJ_SAVE_PATH, 'w', 0o777 , (err, fd)=>{
+						// 	// 	if(err){
+						// 	// 		console.log("创建项目文件错误："+err);
+						// 	// 	}
+						// 	// 	console.log("创建新项目文件，路径："+PROJ_SAVE_PATH);
+						// 	// });
+						// 	currentPanel.webview.postMessage(JSON.stringify({"proj_select_path": PROJ_SAVE_PATH}));
+						// }
+					}
+				});
+			} else if (data.choose_import_file_paths) {
+				console.log("选择的文件路径为："+JSON.stringify(data.choose_import_file_paths));
+				importXNorm(data.choose_import_file_paths.xnorm);
+				importXTest(data.choose_import_file_paths.xtest);
+				importYTest(data.choose_import_file_paths.ytest);
+				importANNFile(data.choose_import_file_paths.ann);
 			}
 		});
 	}
 	
+	function importXNorm(file_path:string) {
+		X_NORM_DATA_PATH = file_path;
+		X_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "colorX.npz");
+		X_ORIGIN_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "originColorX.npz");
+		// 添加到treeview下
+		// ITEM_ICON_MAP.set("x_norm","imgs/file.png");
+		// addSlfFile("x_norm");
+		let xNormFileOriginName = path.basename(X_NORM_DATA_PATH);
+		addSlfFile(xNormFileOriginName);
+		if(inMemTreeViewStruct[0].children![0].children![0].children![0].children!.length > 0){
+			inMemTreeViewStruct[0].children![0].children![0].children![0].children!.splice(0,1);
+		}
+		inMemTreeViewStruct[0].children![0].children![0].children![0].children!.push(new TreeItemNode(xNormFileOriginName, undefined, false, 'rmable'));
+		// if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[0].children){
+		// 	console.log("添加新的文件");
+		// 	treeview.data[0].children[0].children[0].children.push(new TreeItemNode(xNormFileOriginName, [], false, 'rmable'));
+		// 	treeview.refresh();
+		// }
+		treeview.data = inMemTreeViewStruct;
+		treeview.refresh();
+		// 拷贝文件到项目并重命名
+		if(!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")))){
+			fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")));
+		}
+		if(X_NORM_DATA_PATH){
+			fs.copyFile(path.join(X_NORM_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "x_norm.npz"),function(err){
+				console.log("copy file x_norm.npz error: "+ err);
+			});
+		}
+		if(X_COLOR_DATA_PATH){
+			fs.copyFile(path.join(X_COLOR_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "colorX.npz"), function(err){
+				console.log("copy file colorX.npz error: "+err)
+			});
+		}
+		if(X_ORIGIN_COLOR_DATA_PATH){
+			fs.copyFile(X_ORIGIN_COLOR_DATA_PATH, path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "originColorX.npz"), function(err){
+				console.log("copy file originColorX.npz error: "+err);
+			});
+		}
+		autoSaveWithCheck();
+	}
+
+	function importXTest(file_path:string){
+		X_TEST_DATA_PATH = file_path;
+		
+		// 添加到treeview下
+		// ITEM_ICON_MAP.set("x_test","imgs/file.png");
+		// addSlfFile("x_test");
+		let xTestFileOriginName = path.basename(X_TEST_DATA_PATH);
+		addSlfFile(xTestFileOriginName);
+		if(inMemTreeViewStruct[0].children![0].children![0].children![1].children!.length > 0){
+			inMemTreeViewStruct[0].children![0].children![0].children![1].children!.splice(0,1);
+		}
+		inMemTreeViewStruct[0].children![0].children![0].children![1].children!.push(new TreeItemNode(xTestFileOriginName, undefined, false, 'rmable'));
+		treeview.data = inMemTreeViewStruct;
+		treeview.refresh();
+		// if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[1].children){
+		// 	console.log("添加新的文件");
+		// 	treeview.data[0].children[0].children[1].children.push(new TreeItemNode(xTestFileOriginName, [], false, 'rmable'));
+		// 	treeview.refresh();
+		// }
+		// 拷贝文件到项目并重命名
+		if(!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")))){
+			fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")));
+		}
+		if(X_TEST_DATA_PATH){
+			fs.copyFile(path.join(X_TEST_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "x_test.npz"),function(err){
+			});
+		}
+	}
+
+	function importYTest(file_path:string) {
+		Y_TEST_DATA_PATH = file_path;
+		// 添加到treeview下
+		// FIXME
+		// ITEM_ICON_MAP.set("y_test","imgs/file.png");
+		// addSlfFile("y_test");
+		let yTestFileOriginName = path.basename(Y_TEST_DATA_PATH);
+		addSlfFile(yTestFileOriginName);
+		if(inMemTreeViewStruct[0].children![0].children![0].children![2].children!.length > 0){
+			inMemTreeViewStruct[0].children![0].children![0].children![2].children!.splice(0,1);
+		}
+		inMemTreeViewStruct[0].children![0].children![0].children![2].children!.push(new TreeItemNode(yTestFileOriginName, undefined, false, 'rmable'));
+		treeview.data = inMemTreeViewStruct;
+		treeview.refresh();
+		// if(treeview.data[0].children && treeview.data[0].children[0].children && treeview.data[0].children[0].children[2].children){
+		// 	console.log("添加新的文件");
+		// 	treeview.data[0].children[0].children[2].children.push(new TreeItemNode(yTestFileOriginName, [], false, 'rmable'));
+		// 	treeview.refresh();
+		// }
+		// 拷贝文件到项目并重命名
+		if(!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")))){
+			fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")));
+		}
+		if(Y_TEST_DATA_PATH){
+			fs.copyFile(path.join(Y_TEST_DATA_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "y_test.npz"),function(err){
+			});
+		}
+	}
+
+	function importANNFile(file_path: string) {
+		ANN_MODEL_FILE_PATH = file_path;
+		// 添加到treeview下
+		// ITEM_ICON_MAP.set("model_file","imgs/file.png");
+		// ITEM_ICON_MAP.set(path.basename(model_file_path), "imgs/file.png");
+		addSlfFile(path.basename(ANN_MODEL_FILE_PATH));
+		// if(treeview.data[0].children && treeview.data[0].children[1].children){
+		// 	treeview.data[0].children[1].children.push(new TreeItemNode("model_file_"+path.basename(ANN_MODEL_FILE_PATH)));
+		// 	treeview.refresh();
+		// }
+		if(inMemTreeViewStruct[0].children![0].children![1].children!.length > 0){
+			inMemTreeViewStruct[0].children![0].children![1].children!.splice(0,1);
+		}
+		inMemTreeViewStruct[0].children![0].children![1].children!.push(new TreeItemNode("model_file_"+path.basename(ANN_MODEL_FILE_PATH), undefined, false, 'rmable'));
+		treeview.data = inMemTreeViewStruct;
+		treeview.refresh();
+		// 拷贝文件到项目并重命名
+		if(!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")))){
+			fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")));
+		}
+		if(ANN_MODEL_FILE_PATH){
+			fs.copyFile(path.join(ANN_MODEL_FILE_PATH), path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "mnist_cnn.h5"),function(err){
+			});
+		}
+	}
+
+
 	context.subscriptions.push(disposable);
 	let disposable2 = vscode.commands.registerCommand("treeView-item.newproj", () => {
 		console.log("创建新项目xxx");							

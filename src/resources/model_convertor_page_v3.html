@@ -505,7 +505,7 @@
 <button id="exec_error_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_exec_error" style="display: none;"></button>
 
 <!-- 总进度提示 -->
-<div id="total_progress_ball" class="box" style="display: none;">
+<div id="total_progress_ball" class="box" style="display: none;position: fixed;left: calc(50vw - 100px);">
     <svg class="wave" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 200 210">
       <defs>
         <path id="wave-shape" stroke="rgba(255,255,255,.8)" stroke-width=".5" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 58-18 88-18 58 18 88 18 v185h-528z"></path>
@@ -984,8 +984,8 @@ color: #666666;'>参数缩放系数</td>\
                     table_line.style.color = "#333";
                     let line_td1 = document.createElement("td");
                     line_td1.style.border = "solid 2px #D6D6D6";
-                    line_td1.style.paddingTop = '15px';
-                    line_td1.style.paddingBottom = '15px';
+                    line_td1.style.paddingTop = '10px';
+                    line_td1.style.paddingBottom = '10px';
                     line_td1.style.paddingLeft = '10px';
                     line_td1.style.paddingRight = '80px';
                     line_td1.style.fontFamily = 'SourceHanSansCN-Medium';
@@ -995,8 +995,8 @@ color: #666666;'>参数缩放系数</td>\
                     table_line.appendChild(line_td1);
                     let line_td2 = document.createElement("td");
                     line_td2.style.border = "solid 2px #D6D6D6";
-                    line_td2.style.paddingTop = '15px';
-                    line_td2.style.paddingBottom = '15px';
+                    line_td2.style.paddingTop = '10px';
+                    line_td2.style.paddingBottom = '10px';
                     line_td2.style.paddingRight = '10px';
                     line_td2.style.paddingLeft = '80px';
                     line_td2.style.textAlign = 'right';

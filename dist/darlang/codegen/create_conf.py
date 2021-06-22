@@ -71,7 +71,7 @@ def create_config(path: str, snn: SNN, output_path):
     childboard_num = 3  # 单块板子的子板个数
     # chip_num = [1, 1, 1] #单块子板一条边的芯片个数，单块子板有chip_num*chip_num块芯片
     node_num = 24  # 单块芯片一条边的节点个数，单块芯片有node_num* node_num个节点
-    neuron_num = 60  # 每个节点神经元数目
+    neuron_num = 40  # 每个节点神经元数目
 
     tmp = []
 

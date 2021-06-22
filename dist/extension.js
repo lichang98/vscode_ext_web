@@ -1787,11 +1787,21 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
         // ], true, "root"));
         let genScript = path.join(__dirname, "darwin2sim", "gen_darwin2_bin_files.py");
         let cmdStr = PYTHON_INTERPRETER + " " + genScript + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + " " + path.join(path.dirname(PROJ_SAVE_PATH), "packed_bin_files.dat");
-        vscode.window.showInformationMessage("二进制文件生成中，请稍等......");
+        // vscode.window.showInformationMessage("二进制文件生成中，请稍等......");
+        if (!LOG_OUTPUT_CHANNEL) {
+            LOG_OUTPUT_CHANNEL = vscode.window.createOutputChannel("Darwin Convertor");
+        }
+        LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.show();
+        LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("二进制文件编译中...");
+        let binaryCompilingInterval = setInterval(() => {
+            LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("...");
+        }, 500);
         child_process_1.exec(cmdStr, (err, stdout, stderr) => {
+            clearInterval(binaryCompilingInterval);
             if (err) {
                 console.log("执行darwin2二进制部署文件错误...");
                 vscode.window.showErrorMessage("二进制文件生成错误!!!");
+                LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译错误!\n");
             }
             else {
                 fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(path.dirname(PROJ_SAVE_PATH), "config.b"));
@@ -1815,10 +1825,12 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
                                 file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {
                                 if (file.search("config.b") !== -1) {
                                     TreeViewProvider_1.addDarwinFiles("config.b");
+                                    inMemTreeViewStruct[0].children[1].children[0].children[0].children.splice(0);
                                     inMemTreeViewStruct[0].children[1].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
                                 }
                                 else if (file.search("connfiles") !== -1) {
                                     TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
+                                    inMemTreeViewStruct[0].children[1].children[0].children[1].children.splice(0);
                                     inMemTreeViewStruct[0].children[1].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
                                 }
                             }
@@ -1827,7 +1839,8 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
                         treeview.refresh();
                     });
                     autoSaveWithCheck();
-                    vscode.window.showInformationMessage("二进制文件生成结束!");
+                    // vscode.window.showInformationMessage("二进制文件生成结束!");
+                    LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译成功!\n");
                 });
                 treeview.refresh();
             }
@@ -5961,7 +5974,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
           </div>
         </div>
         <div class="loading-div">
-          <div class="container"  style="padding-left: 40vw;">
+          <div class="container"  style="margin-left: calc(50vw - 5px);">
             <div class="ispinner ispinner-large">
               <div class="ispinner-blade"></div>
               <div class="ispinner-blade"></div>
@@ -5974,7 +5987,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
             </div>
           </div>
           <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
-          <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
+          <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);margin-top: -70px;display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
         </div>
   
         <!--展示的主面板-->
@@ -6481,7 +6494,7 @@ function getConvertorModelPageV2() {
           </div>
         </div>
         <div class="loading-div">
-          <div class="container"  style="padding-left: 40vw;">
+          <div class="container"  style="margin-left: calc(50vw - 5px);">
             <div class="ispinner ispinner-large">
               <div class="ispinner-blade"></div>
               <div class="ispinner-blade"></div>
@@ -6494,7 +6507,7 @@ function getConvertorModelPageV2() {
             </div>
           </div>
           <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
-          <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">模型信息加载中...</font></span>
+          <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);margin-top: -70px;display: block;"><font style="color: #333;font-weight: bolder;">模型信息加载中...</font></span>
         </div>
   
           <div id="main_panel" style="width: 100%;height: 100%;overflow: auto;white-space: nowrap;">
@@ -8063,7 +8076,7 @@ function getANNSNNConvertPage() {
   <button id="exec_error_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_exec_error" style="display: none;"></button>
   
   <!-- 总进度提示 -->
-  <div id="total_progress_ball" class="box" style="display: none;">
+  <div id="total_progress_ball" class="box" style="display: none;position: fixed;left: calc(50vw - 100px);">
       <svg class="wave" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 200 210">
         <defs>
           <path id="wave-shape" stroke="rgba(255,255,255,.8)" stroke-width=".5" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 58-18 88-18 58 18 88 18 v185h-528z"></path>
@@ -8542,8 +8555,8 @@ function getANNSNNConvertPage() {
                       table_line.style.color = "#333";
                       let line_td1 = document.createElement("td");
                       line_td1.style.border = "solid 2px #D6D6D6";
-                      line_td1.style.paddingTop = '15px';
-                      line_td1.style.paddingBottom = '15px';
+                      line_td1.style.paddingTop = '10px';
+                      line_td1.style.paddingBottom = '10px';
                       line_td1.style.paddingLeft = '10px';
                       line_td1.style.paddingRight = '80px';
                       line_td1.style.fontFamily = 'SourceHanSansCN-Medium';
@@ -8553,8 +8566,8 @@ function getANNSNNConvertPage() {
                       table_line.appendChild(line_td1);
                       let line_td2 = document.createElement("td");
                       line_td2.style.border = "solid 2px #D6D6D6";
-                      line_td2.style.paddingTop = '15px';
-                      line_td2.style.paddingBottom = '15px';
+                      line_td2.style.paddingTop = '10px';
+                      line_td2.style.paddingBottom = '10px';
                       line_td2.style.paddingRight = '10px';
                       line_td2.style.paddingLeft = '80px';
                       line_td2.style.textAlign = 'right';
@@ -8813,7 +8826,7 @@ function getSNNSimuPage() {
   <body class="dark-mode" style="height: 100%;width: 100%;white-space: nowrap;overflow: auto;">
   
     <div class="loading-div">
-      <div class="container"  style="padding-left: 40vw;">
+      <div class="container"  style="margin-left: calc(50vw - 5px);">
         <div class="ispinner ispinner-large">
           <div class="ispinner-blade"></div>
           <div class="ispinner-blade"></div>
@@ -8826,7 +8839,7 @@ function getSNNSimuPage() {
         </div>
       </div>
       <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
-      <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">仿真数据加载中...</font></span>
+      <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);margin-top: -70px;display: block;"><font style="color: #333;font-weight: bolder;">仿真数据加载中...</font></span>
     </div>
   
       <div style="margin-top: 5px;display: block;">

@@ -1806,11 +1806,21 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
 
 		let genScript = path.join(__dirname, "darwin2sim", "gen_darwin2_bin_files.py");
 		let cmdStr = PYTHON_INTERPRETER+" "+genScript+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2", "")+" "+path.join(path.dirname(PROJ_SAVE_PATH!), "packed_bin_files.dat");
-		vscode.window.showInformationMessage("二进制文件生成中，请稍等......");
+		// vscode.window.showInformationMessage("二进制文件生成中，请稍等......");
+		if (!LOG_OUTPUT_CHANNEL) {
+			LOG_OUTPUT_CHANNEL = vscode.window.createOutputChannel("Darwin Convertor");
+		}
+		LOG_OUTPUT_CHANNEL?.show();
+		LOG_OUTPUT_CHANNEL?.append("二进制文件编译中...");
+		let binaryCompilingInterval = setInterval(()=>{
+			LOG_OUTPUT_CHANNEL?.append("...");
+		}, 500);
 		exec(cmdStr, (err, stdout, stderr)=>{
+			clearInterval(binaryCompilingInterval);
 			if(err){
 				console.log("执行darwin2二进制部署文件错误...");
 				vscode.window.showErrorMessage("二进制文件生成错误!!!");
+				LOG_OUTPUT_CHANNEL?.append("\n二进制文件编译错误!\n");
 			}else{
 				fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),"bin_darwin_out", "config.b"),
 								path.join(path.dirname(PROJ_SAVE_PATH!), "config.b"));
@@ -1836,9 +1846,11 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
 										file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1){
 								if(file.search("config.b") !== -1){
 									addDarwinFiles("config.b");
+									inMemTreeViewStruct[0].children![1].children![0].children![0].children!.splice(0);
 									inMemTreeViewStruct[0].children![1].children![0].children![0].children!.push(new TreeItemNode("config.b"));
 								}else if(file.search("connfiles") !==-1){
 									addDarwinFiles("packed_bin_files.dat");
+									inMemTreeViewStruct[0].children![1].children![0].children![1].children!.splice(0);
 									inMemTreeViewStruct[0].children![1].children![0].children![1].children!.push(new TreeItemNode("packed_bin_files.dat"));
 								}
 							}
@@ -1847,7 +1859,8 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
 						treeview.refresh();
 					});
 					autoSaveWithCheck();
-					vscode.window.showInformationMessage("二进制文件生成结束!");
+					// vscode.window.showInformationMessage("二进制文件生成结束!");
+					LOG_OUTPUT_CHANNEL?.append("\n二进制文件编译成功!\n");
 				});
 				treeview.refresh();
 			}

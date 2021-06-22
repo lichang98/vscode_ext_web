@@ -32,7 +32,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
           </div>
         </div>
         <div class="loading-div">
-          <div class="container"  style="padding-left: 40vw;">
+          <div class="container"  style="margin-left: calc(50vw - 5px);">
             <div class="ispinner ispinner-large">
               <div class="ispinner-blade"></div>
               <div class="ispinner-blade"></div>
@@ -45,7 +45,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
             </div>
           </div>
           <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
-          <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
+          <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);margin-top: -70px;display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
         </div>
   
         <!--展示的主面板-->
@@ -553,7 +553,7 @@ export function getConvertorModelPageV2(){
           </div>
         </div>
         <div class="loading-div">
-          <div class="container"  style="padding-left: 40vw;">
+          <div class="container"  style="margin-left: calc(50vw - 5px);">
             <div class="ispinner ispinner-large">
               <div class="ispinner-blade"></div>
               <div class="ispinner-blade"></div>
@@ -566,7 +566,7 @@ export function getConvertorModelPageV2(){
             </div>
           </div>
           <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
-          <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">模型信息加载中...</font></span>
+          <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);margin-top: -70px;display: block;"><font style="color: #333;font-weight: bolder;">模型信息加载中...</font></span>
         </div>
   
           <div id="main_panel" style="width: 100%;height: 100%;overflow: auto;white-space: nowrap;">
@@ -2136,7 +2136,7 @@ export function getANNSNNConvertPage(){
   <button id="exec_error_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_exec_error" style="display: none;"></button>
   
   <!-- 总进度提示 -->
-  <div id="total_progress_ball" class="box" style="display: none;">
+  <div id="total_progress_ball" class="box" style="display: none;position: fixed;left: calc(50vw - 100px);">
       <svg class="wave" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 200 210">
         <defs>
           <path id="wave-shape" stroke="rgba(255,255,255,.8)" stroke-width=".5" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 58-18 88-18 58 18 88 18 v185h-528z"></path>
@@ -2615,8 +2615,8 @@ export function getANNSNNConvertPage(){
                       table_line.style.color = "#333";
                       let line_td1 = document.createElement("td");
                       line_td1.style.border = "solid 2px #D6D6D6";
-                      line_td1.style.paddingTop = '15px';
-                      line_td1.style.paddingBottom = '15px';
+                      line_td1.style.paddingTop = '10px';
+                      line_td1.style.paddingBottom = '10px';
                       line_td1.style.paddingLeft = '10px';
                       line_td1.style.paddingRight = '80px';
                       line_td1.style.fontFamily = 'SourceHanSansCN-Medium';
@@ -2626,8 +2626,8 @@ export function getANNSNNConvertPage(){
                       table_line.appendChild(line_td1);
                       let line_td2 = document.createElement("td");
                       line_td2.style.border = "solid 2px #D6D6D6";
-                      line_td2.style.paddingTop = '15px';
-                      line_td2.style.paddingBottom = '15px';
+                      line_td2.style.paddingTop = '10px';
+                      line_td2.style.paddingBottom = '10px';
                       line_td2.style.paddingRight = '10px';
                       line_td2.style.paddingLeft = '80px';
                       line_td2.style.textAlign = 'right';
@@ -2887,7 +2887,7 @@ export function getSNNSimuPage(){
   <body class="dark-mode" style="height: 100%;width: 100%;white-space: nowrap;overflow: auto;">
   
     <div class="loading-div">
-      <div class="container"  style="padding-left: 40vw;">
+      <div class="container"  style="margin-left: calc(50vw - 5px);">
         <div class="ispinner ispinner-large">
           <div class="ispinner-blade"></div>
           <div class="ispinner-blade"></div>
@@ -2900,7 +2900,7 @@ export function getSNNSimuPage(){
         </div>
       </div>
       <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
-      <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">仿真数据加载中...</font></span>
+      <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);margin-top: -70px;display: block;"><font style="color: #333;font-weight: bolder;">仿真数据加载中...</font></span>
     </div>
   
       <div style="margin-top: 5px;display: block;">

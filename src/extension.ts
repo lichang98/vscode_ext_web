@@ -1619,32 +1619,37 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 			console.log("panelSNNVisWeb 接收到webview 消息："+data);
 			// Process and send data to webview after if already ready
 			if(data.ready) {
-				exec(commandStr, function (err, stdout, stderr) {
-					if(err){
-						console.log("执行 load_graph.py 错误：" + err);
-					}else{
-						// 读取map 文件
-						console.log("向SNN模型界面发送 snn_map 数据....");
-						let mapFileDisk = vscode.Uri.file(path.join(__dirname, "map.json"));
-						let fileSrc = panelSNNVisWeb!.webview.asWebviewUri(mapFileDisk).toString();
-						panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_map": fileSrc})).then((fullfill)=>{
-							console.log("snn_map 数据postmsg fullfill: "+fullfill);
-							fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), (err, data)=>{
-								console.log("加载完毕snn 模型数据......, err="+err);
-								panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_info": data.toString()}));
-							});
-							// let snnModelInfoData = fs.readFileSync(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"));
-							// console.log("加载完毕snn 模型数据.....");
-							// panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_info": snnModelInfoData.toString()})).then((fullfill)=>{
-							// 	console.log("snn_info 数据postmsg fullfill: "+fullfill);
-							// }, (reject)=>{
-							// 	console.log("snn_info 数据postmsg reject :"+reject);
-							// });
-						}, (reject)=>{
-							console.log("snn_map 数据postmsg reject :"+reject);
-						});
-					}
+				fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), (err, data)=>{
+					console.log("加载完毕snn 模型数据......, err="+err);
+					panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_info": data.toString()}));
 				});
+				
+				// exec(commandStr, function (err, stdout, stderr) {
+				// 	if(err){
+				// 		console.log("执行 load_graph.py 错误：" + err);
+				// 	}else{
+				// 		// 读取map 文件
+				// 		console.log("向SNN模型界面发送 snn_map 数据....");
+				// 		let mapFileDisk = vscode.Uri.file(path.join(__dirname, "map.json"));
+				// 		let fileSrc = panelSNNVisWeb!.webview.asWebviewUri(mapFileDisk).toString();
+				// 		panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_map": fileSrc})).then((fullfill)=>{
+				// 			console.log("snn_map 数据postmsg fullfill: "+fullfill);
+				// 			fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), (err, data)=>{
+				// 				console.log("加载完毕snn 模型数据......, err="+err);
+				// 				panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_info": data.toString()}));
+				// 			});
+				// 			// let snnModelInfoData = fs.readFileSync(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"));
+				// 			// console.log("加载完毕snn 模型数据.....");
+				// 			// panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_info": snnModelInfoData.toString()})).then((fullfill)=>{
+				// 			// 	console.log("snn_info 数据postmsg fullfill: "+fullfill);
+				// 			// }, (reject)=>{
+				// 			// 	console.log("snn_info 数据postmsg reject :"+reject);
+				// 			// });
+				// 		}, (reject)=>{
+				// 			console.log("snn_map 数据postmsg reject :"+reject);
+				// 		});
+				// 	}
+				// });
 			}
 		});
 	});

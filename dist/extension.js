@@ -1604,33 +1604,36 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
             console.log("panelSNNVisWeb 接收到webview 消息：" + data);
             // Process and send data to webview after if already ready
             if (data.ready) {
-                child_process_1.exec(commandStr, function (err, stdout, stderr) {
-                    if (err) {
-                        console.log("执行 load_graph.py 错误：" + err);
-                    }
-                    else {
-                        // 读取map 文件
-                        console.log("向SNN模型界面发送 snn_map 数据....");
-                        let mapFileDisk = vscode.Uri.file(path.join(__dirname, "map.json"));
-                        let fileSrc = panelSNNVisWeb.webview.asWebviewUri(mapFileDisk).toString();
-                        panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_map": fileSrc })).then((fullfill) => {
-                            console.log("snn_map 数据postmsg fullfill: " + fullfill);
-                            fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), (err, data) => {
-                                console.log("加载完毕snn 模型数据......, err=" + err);
-                                panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_info": data.toString() }));
-                            });
-                            // let snnModelInfoData = fs.readFileSync(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"));
-                            // console.log("加载完毕snn 模型数据.....");
-                            // panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_info": snnModelInfoData.toString()})).then((fullfill)=>{
-                            // 	console.log("snn_info 数据postmsg fullfill: "+fullfill);
-                            // }, (reject)=>{
-                            // 	console.log("snn_info 数据postmsg reject :"+reject);
-                            // });
-                        }, (reject) => {
-                            console.log("snn_map 数据postmsg reject :" + reject);
-                        });
-                    }
+                fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), (err, data) => {
+                    console.log("加载完毕snn 模型数据......, err=" + err);
+                    panelSNNVisWeb.webview.postMessage(JSON.stringify({ "snn_info": data.toString() }));
                 });
+                // exec(commandStr, function (err, stdout, stderr) {
+                // 	if(err){
+                // 		console.log("执行 load_graph.py 错误：" + err);
+                // 	}else{
+                // 		// 读取map 文件
+                // 		console.log("向SNN模型界面发送 snn_map 数据....");
+                // 		let mapFileDisk = vscode.Uri.file(path.join(__dirname, "map.json"));
+                // 		let fileSrc = panelSNNVisWeb!.webview.asWebviewUri(mapFileDisk).toString();
+                // 		panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_map": fileSrc})).then((fullfill)=>{
+                // 			console.log("snn_map 数据postmsg fullfill: "+fullfill);
+                // 			fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), (err, data)=>{
+                // 				console.log("加载完毕snn 模型数据......, err="+err);
+                // 				panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_info": data.toString()}));
+                // 			});
+                // 			// let snnModelInfoData = fs.readFileSync(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"));
+                // 			// console.log("加载完毕snn 模型数据.....");
+                // 			// panelSNNVisWeb!.webview.postMessage(JSON.stringify({"snn_info": snnModelInfoData.toString()})).then((fullfill)=>{
+                // 			// 	console.log("snn_info 数据postmsg fullfill: "+fullfill);
+                // 			// }, (reject)=>{
+                // 			// 	console.log("snn_info 数据postmsg reject :"+reject);
+                // 			// });
+                // 		}, (reject)=>{
+                // 			console.log("snn_map 数据postmsg reject :"+reject);
+                // 		});
+                // 	}
+                // });
             }
         });
     });
@@ -9899,10 +9902,14 @@ function getSNNModelPage() {
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
   <link rel="stylesheet" media="all" href="http://localhost:6003/css/ispinner.prefixed.css" />
+  <link href="https://cdn.bootcdn.net/ajax/libs/jointjs/3.3.1/joint.css" rel="stylesheet">
   
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/echarts/4.8.0/echarts-en.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.21/lodash.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/backbone.js/1.4.0/backbone.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jointjs/3.3.1/joint.js"></script>
   
   <script>
   const vscode = acquireVsCodeApi();
@@ -9978,9 +9985,12 @@ function getSNNModelPage() {
                     for(var i=0;i<infos.layers_weights.wt_count.length;++i){
                         infos.layers_weights.wt_count[i] = Math.log10(infos.layers_weights.wt_count[i]);
                     }
+                    for (var i = 0; i < infos.layer_flt_weights.wt_count.length;++i) {
+                      infos.layer_flt_weights.wt_count[i] = Math.log10(infos.layer_flt_weights.wt_count[i]);
+                    }
                     console.log("权重数据："+infos.layers_weights.wt_label);
                     console.log("数值:"+infos.layers_weights.wt_count)
-                    display_weight_chart(infos.layers_weights.wt_label, infos.layers_weights.wt_count);
+                    display_weight_chart(infos.layer_flt_weights.wt_label, infos.layer_flt_weights.wt_count,infos.layers_weights.wt_label, infos.layers_weights.wt_count);
   
                     // 仿真配置与结果表格
                     $("#simulate_vthresh").text(infos.extra_simu_info.simulate_vthresh);
@@ -10049,6 +10059,74 @@ function getSNNModelPage() {
   
                     }
   
+                    // 显示模型框图
+                    let origin_layer_names = infos.origin_layer_names;
+                    console.log("origin_layer_names="+origin_layer_names);
+                    var graph = new joint.dia.Graph;
+                    var paper = new joint.dia.Paper({
+                        el: document.getElementById('sangky_chart'),
+                        model: graph,
+                        width: 600,
+                        height: 400,
+                        gridSize: 10,
+                        drawGrid: true,
+                        background: {
+                            color: 'rgba(255, 255, 255, 1)'
+                        }
+                    });
+  
+                    var rect_tip = new joint.shapes.standard.Rectangle();
+                    rect_tip.position(20, 20);
+                    rect_tip.resize(120, 200);
+                    rect_tip.attr({
+                      body:{
+                        fill:"rgb(255,248,220)"
+                      },
+                      label: {
+                        text: joint.util.breakText("说明：标记为红色的为被替换或融合到前一层的神经层", {width: 80}),
+                        fill: "black"
+                      }
+                    });
+                    rect_tip.addTo(graph);
+  
+                    let prev_rect = undefined;
+                    let idx4layer = 0;
+                    for (let k = 0; k < origin_layer_names.length; ++k) {
+                      var layer_idx = "layer_"+idx4layer;
+                      if (k === 0) {
+                        layer_idx = "input";
+                      } else if (k === origin_layer_names.length - 1) {
+                        layer_idx = "out";
+                      }
+                      var rect = new joint.shapes.standard.Rectangle();
+                      rect.position(200, 40 * k + 20);
+                      rect.resize(300, 20);
+                      rect.attr({
+                          body: {
+                              fill: 'gray'
+                          },
+                          label: {
+                              text: layer_idx + "--->"+origin_layer_names[k],
+                              fill: 'white'
+                          }
+                      });
+                      if (origin_layer_names[k] == "BatchNormalization" || origin_layer_names[k] == "Activation" ||
+                          origin_layer_names[k] == "Dropout" || origin_layer_names[k] == "AveragePooling2D" || origin_layer_names[k] == "MaxPooling2D") {
+                          rect.attr("body/fill", "red");
+                          rect.attr("label/text", origin_layer_names[k]);
+                      } else {
+                        idx4layer += 1;
+                      }
+                      rect.addTo(graph);
+                      if (prev_rect !== undefined) {
+                        var link = new joint.shapes.standard.Link();
+                        link.source(prev_rect);
+                        link.target(rect);
+                        link.addTo(graph);
+                      }
+                      prev_rect = rect;
+                    }
+  
                     $(".loading-div").hide(); // 隐藏加载提示
   
               //       <table id="snn_layer_wt_table" style="width: 320px;">
@@ -10079,13 +10157,14 @@ function getSNNModelPage() {
                     // console.log("Display sanky links, ="+sanky_links['0']['value']);
                     // display_snn_model_sanky(sanky_data, sanky_links);
                 }else if(data.snn_map){
-                  console.log("显示SNN 结构图.....");
-                  net_structure_show("sangky_chart", data.snn_map);
+                  // console.log("显示SNN 结构图.....");
+                  // net_structure_show("sangky_chart", data.snn_map);
+  
                 }
             });
         });
   
-        function display_weight_chart(label_names, label_counts){
+        function display_weight_chart(flt_label_names, flt_label_counts,label_names, label_counts){
             var opt = {
                   tooltip: {
                       trigger: 'axis',
@@ -10105,7 +10184,7 @@ function getSNNModelPage() {
                   xAxis: [
                     {
                         type: 'category',
-                        data: label_names,
+                        data: flt_label_names,
                         name:"浮点权重",
                         nameTextStyle:{
                           color:"#999999",
@@ -10181,7 +10260,7 @@ function getSNNModelPage() {
                     },
                   ],
                   series: [{
-                      data: label_counts,
+                      data: flt_label_counts,
                       type: 'bar',
                       name: "浮点数权重",
                       xAxisIndex:0,

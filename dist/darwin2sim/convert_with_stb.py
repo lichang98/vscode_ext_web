@@ -18,6 +18,7 @@ import shutil
 from PIL import Image
 import time
 import copy
+import keras
 
 baseDirPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(baseDirPath, "snntoolbox"))
@@ -173,6 +174,10 @@ def fixpt_integer_vth(weights, conn_pairs,bit_width=8):
 
 model_lib = import_module("snntoolbox.parsing.model_libs.keras_input_lib")
 input_model = model_lib.load(os.path.dirname(model_path), os.path.basename(model_path))
+tmp_model = keras.models.load_model(os.path.join(os.path.dirname(model_path), "mnist_cnn.h5"))
+origin_layer_names = []
+for i in range(len(tmp_model.layers)):
+    origin_layer_names.append(tmp_model.layers[i].__class__.__name__)
 
 acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=testX[:50],y_test=testY[:50])
 ann_origin_acc = "{:.2%}".format(acc)
@@ -266,8 +271,7 @@ for i in range(len(spiking_model.connections)):
     print("----max weight={}, min weight={}".format(np.max(np.array(spiking_model.connections[i].w)),\
         np.min(np.array(spiking_model.connections[i].w))), flush=True)
 
-if vthresh_after_quantization_method != 0:
-    flt_all_wts = copy.deepcopy(all_wts)
+flt_all_wts = copy.deepcopy(all_wts)
 
 if task_type == 2:
     all_wts, vths = fixpt_integer_vth(all_wts, layer_connections_pairs)
@@ -581,6 +585,21 @@ for i in range(len(br2_synapses)):
 wt_labels = [str(x) for x in wt_labels]
 layer_weights = {"wt_label": wt_labels, "wt_count": wt_counts}
 
+wt_flt_labels = set()
+for i in range(len(flt_all_wts)):
+    flt_wts = np.array(flt_all_wts[i]).flatten().tolist()
+    flt_wts = ["{:.2f}".format(x) for x in flt_wts]
+    wt_flt_labels |= set(flt_wts)
+
+wt_flt_counts=[0]*len(wt_flt_labels)
+wt_flt_labels = list(sorted(wt_flt_labels, key=lambda x: float(x)))
+for i in range(len(flt_all_wts)):
+    flt_wts = np.array(flt_all_wts[i]).flatten().tolist()
+    for w in flt_wts:
+        wt_flt_counts[wt_flt_labels.index("{:.2f}".format(w))] +=1
+
+flt_layer_weights = {"wt_label": wt_flt_labels, "wt_count": wt_flt_counts}
+
 
 # Last layer spike counts info
 # print("spike_monitor vals={}".format([list(e/brian2.ms) for e in br2_monitor.spike_trains().values()]))
@@ -606,6 +625,8 @@ for i in range(len(br2_synapses)):
 brian2_snn_info = {
     "neurons_info":neurons_info,
     "layers_weights":layer_weights,
+    "layer_flt_weights": flt_layer_weights,
+    "origin_layer_names": origin_layer_names,
     # "spikes":output_spike_info,
     "spikes":{
         "snn_test_imgs": snn_test_img_uris,

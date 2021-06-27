@@ -1558,7 +1558,7 @@ from typing import List
 import numpy as np
 
 
-def calc_vthreshold(layer_weights:List[np.ndarray])->int:
+def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List[np.ndarray])->int:
 	"""
 	Calculating neuron voltage threshold giving each layer's weights
 	-----------------------------------------------------------------
@@ -1570,14 +1570,14 @@ def calc_vthreshold(layer_weights:List[np.ndarray])->int:
 	is a list contains weights of each layer, and the weights are in [-128, 127].
 	Parameters
 	----------
-	layer_weights: Quantized weights of each layer
+	layer_weights_int: Quantized weights of each layer
+	layer_weights_float: Origin float-point weights of each layer
 	
 	Returns
 	-------
 	New global vthreshold
 	"""
-	return 1
-	
+	return 1			
 `);
 			}
 			}else if(currentPanel){

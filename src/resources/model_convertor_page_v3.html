@@ -86,8 +86,8 @@
                         color: #333333;
                         letter-spacing: 0.91px;">突触dt</font></label>
                     <select class="form-control" id="select_synapse_dt">
-                        <option>0.1ms</option>
                         <option>1ms</option>
+                        <option>0.1ms</option>
                     </select>
                 </div>
     
@@ -136,7 +136,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  border-radius: 20px;">1</div>ANN转SNN</div>
+  border-radius: 20px;">1</div>调整网络结构</div>
                     <div class="progress" style="background: #E6E6E6;
                     border-radius: 30px;height: 40px;margin-top: 10px;">
                         <div id="model_convert_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -164,7 +164,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  border-radius: 20px;">2</div>预处理<span id="self_def_preprocess_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
+  border-radius: 20px;">2</div>权重归一化<span id="self_def_preprocess_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
                     <div class="progress" style="background: #E6E6E6;
                     border-radius: 30px;height: 40px;margin-top: 10px;">
                         <div id="preprocess_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -192,7 +192,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  border-radius: 20px;">3</div>参数调优<span id="self_def_opt_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
+  border-radius: 20px;">3</div>权重量化<span id="self_def_opt_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
                     <div class="progress" style="background: #E6E6E6;
                     border-radius: 30px;height: 40px;margin-top: 10px;">
                         <div id="search_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -220,7 +220,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  border-radius: 20px;">4</div>DarwinMDL文件生成</div>
+  border-radius: 20px;">4</div>SNN验证</div>
                     <div class="progress" style="background: #E6E6E6;
                     border-radius: 30px;height: 40px;margin-top: 10px;">
                         <div id="darlang_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -261,7 +261,7 @@
                 <div style="text-align: center;margin-left: -40px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 20px;
                     color: #333333;
-                    letter-spacing: 1.14px;">转换性能分析</font></div>
+                    letter-spacing: 1.14px;">转换各阶段用时</font></div>
                 <div id="use_time_bar_chart" style="width: 560px;height: 440px;margin-top: 15px;margin-left: 40px;"></div>
             </div>
             <div style="height:560px;margin-left: 10px;width: 820px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">

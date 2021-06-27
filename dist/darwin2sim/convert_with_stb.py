@@ -174,7 +174,8 @@ def fixpt_integer_vth(weights, conn_pairs,bit_width=8):
 model_lib = import_module("snntoolbox.parsing.model_libs.keras_input_lib")
 input_model = model_lib.load(os.path.dirname(model_path), os.path.basename(model_path))
 
-# acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=testX[:50],y_test=testY[:50])
+acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=testX[:50],y_test=testY[:50])
+ann_origin_acc = "{:.2%}".format(acc)
 
 # set path
 with open(os.path.join(os.path.dirname(__file__), "snntoolbox", "config"), "r") as f:
@@ -265,6 +266,9 @@ for i in range(len(spiking_model.connections)):
     print("----max weight={}, min weight={}".format(np.max(np.array(spiking_model.connections[i].w)),\
         np.min(np.array(spiking_model.connections[i].w))), flush=True)
 
+if vthresh_after_quantization_method != 0:
+    flt_all_wts = copy.deepcopy(all_wts)
+
 if task_type == 2:
     all_wts, vths = fixpt_integer_vth(all_wts, layer_connections_pairs)
     vths = [int(e) for e in vths]
@@ -328,7 +332,7 @@ else:
     # copy file self_opt.py
     shutil.copy(quantization_vthresh_calc_file, os.path.join(os.path.dirname(__file__)))
     import self_opt
-    best_vthresh = int(self_opt.calc_vthreshold(copy.deepcopy(all_wts)))
+    best_vthresh = int(self_opt.calc_vthreshold(copy.deepcopy(all_wts), flt_all_wts))
 
 if task_type == 2:
     br2_model = {
@@ -615,7 +619,7 @@ brian2_snn_info = {
         "simulate_synapse_dt": sys_param_synapsedt,
         "simulate_delay": sys_param_delay,
         "simulate_dura": sys_param_total_dura,
-        "simulate_acc": "{:.2%}".format(acc/50)
+        "simulate_acc": "{}--->{:.2%}".format(ann_origin_acc,acc/50)
     },
     "record_layer_v":{
         "tms": record_layer_v_tms,

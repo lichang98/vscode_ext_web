@@ -1717,8 +1717,8 @@ export function getANNSNNConvertPage(){
                           color: #333333;
                           letter-spacing: 0.91px;">突触dt</font></label>
                       <select class="form-control" id="select_synapse_dt">
-                          <option>0.1ms</option>
                           <option>1ms</option>
+                          <option>0.1ms</option>
                       </select>
                   </div>
       
@@ -1767,7 +1767,7 @@ export function getANNSNNConvertPage(){
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;">1</div>ANN转SNN</div>
+    border-radius: 20px;">1</div>调整网络结构</div>
                       <div class="progress" style="background: #E6E6E6;
                       border-radius: 30px;height: 40px;margin-top: 10px;">
                           <div id="model_convert_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -1795,7 +1795,7 @@ export function getANNSNNConvertPage(){
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;">2</div>预处理<span id="self_def_preprocess_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
+    border-radius: 20px;">2</div>权重归一化<span id="self_def_preprocess_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
                       <div class="progress" style="background: #E6E6E6;
                       border-radius: 30px;height: 40px;margin-top: 10px;">
                           <div id="preprocess_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -1823,7 +1823,7 @@ export function getANNSNNConvertPage(){
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;">3</div>参数调优<span id="self_def_opt_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
+    border-radius: 20px;">3</div>权重量化<span id="self_def_opt_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
                       <div class="progress" style="background: #E6E6E6;
                       border-radius: 30px;height: 40px;margin-top: 10px;">
                           <div id="search_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -1851,7 +1851,7 @@ export function getANNSNNConvertPage(){
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;">4</div>DarwinMDL文件生成</div>
+    border-radius: 20px;">4</div>SNN验证</div>
                       <div class="progress" style="background: #E6E6E6;
                       border-radius: 30px;height: 40px;margin-top: 10px;">
                           <div id="darlang_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -1892,7 +1892,7 @@ export function getANNSNNConvertPage(){
                   <div style="text-align: center;margin-left: -40px;"><font style="font-family: SourceHanSansCN-Normal;
                       font-size: 20px;
                       color: #333333;
-                      letter-spacing: 1.14px;">转换性能分析</font></div>
+                      letter-spacing: 1.14px;">转换各阶段用时</font></div>
                   <div id="use_time_bar_chart" style="width: 560px;height: 440px;margin-top: 15px;margin-left: 40px;"></div>
               </div>
               <div style="height:560px;margin-left: 10px;width: 820px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
@@ -2905,15 +2905,15 @@ export function getSNNSimuPage(){
   
       <div style="margin-top: 5px;display: block;">
   
-          <div style="background: rgba(238,238,238,0.4);width: 400px;height: 380px;display: inline-block;">
+          <div style="background: rgba(238,238,238,0.4);width: 600px;height: 380px;display: inline-block;vertical-align: bottom;">
             <div>
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
                 letter-spacing: 1.14px;">仿真配置结果评估</font></div>
-              <table id="layer_conf_val" style="width: 320px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
+              <table id="layer_conf_val" style="width: 500px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                  <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
+                  <tr style="height: 95px; border: solid 2px #D6D6D6;color: #333;">
                     <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                     font-size: 16px;
                     color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">统计指标</td>
@@ -2921,34 +2921,34 @@ export function getSNNSimuPage(){
                     font-size: 16px;
                     color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">指标值</td>
                   </tr>
-                  <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
+                  <!-- <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
                     <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                     font-size: 14px;
                     color: #666666;padding-top: 12px;padding-bottom: 12px;">膜电位阈值</td>
                     <td id="simulate_vthresh" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
-                  </tr>
+                  </tr> -->
                   <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
                     <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                     font-size: 14px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">神经元时间步长</td>
+                    color: #666666;padding-top: 12px;padding-bottom: 12px;">神经元时间步长(ms)</td>
                     <td id="simulate_neuron_dt" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
                   </tr>
                   <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
                     <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                     font-size: 14px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">突触时间步长</td>
+                    color: #666666;padding-top: 12px;padding-bottom: 12px;">突触时间步长(ms)</td>
                     <td id="simulate_synapse_dt" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
                   </tr>
                   <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
                     <td  style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                     font-size: 14px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">延迟</td>
+                    color: #666666;padding-top: 12px;padding-bottom: 12px;">脉冲传输延迟(ms)</td>
                     <td id="simulate_delay" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
                   </tr>
                   <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
                     <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                     font-size: 14px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">仿真时长</td>
+                    color: #666666;padding-top: 12px;padding-bottom: 12px;">仿真时长(ms)</td>
                     <td id="simulate_dura" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
                   </tr>
                   <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
@@ -2961,28 +2961,41 @@ export function getSNNSimuPage(){
             </div>
           </div>
   
-          <div style="background: rgba(238,238,238,0.4);width: 500px;height: 380px;display: inline-block;">
-            <div style="text-align: center;margin-left: 40px;"><font style="font-family: SourceHanSansCN-Normal;
+          <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;">
+            <div style="text-align: center;margin: auto;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
               letter-spacing: 1.14px;">放电次数均值方差统计</font></div>
-            <table id="snn_layers_spike_table" style="width: 420px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
-              <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-              <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
-                <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                font-size: 16px;
-                color: #666666;padding-top: 12px;padding-bottom: 12px;">层编号</td>
-                <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                font-size: 16px;
-                color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数均值</td>
-                <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                font-size: 16px;
-                color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数方差</td>
-              </tr>
-            </table>
+              <div style="width: 640px;height: 340px;overflow-y: scroll;margin-left: 80px;">
+                <table id="snn_layers_spike_table" style="width: 600px;height: 380px;margin-left:10px;margin-top: 5px;margin-right: 280px;border: solid 3px #D6D6D6;">
+                  <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
+                  <tr id="snn_layers_spike_table_thead_tr" style="height: 25px; border: solid 2px #D6D6D6;color: #333;padding: 10px;">
+                    <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                    font-size: 16px;
+                    color: #666666;padding-top: 12px;padding-bottom: 12px;">层编号</td>
+                    <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                    font-size: 16px;
+                    color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数均值</td>
+                    <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                    font-size: 16px;
+                    color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数方差</td>
+                  </tr>
+                </table>
+              </div>
           </div>
   
-          <div style="background: rgba(238,238,238,0.4);width: 600px;height: 380px;display: inline-block;">
+      </div>
+      <div style="margin-top: 5px;display: block;">
+          <!-- <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
+            <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
+            <div id="input_spike_charts" style="width:660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
+            <ul id="input_spike_sample_imgs_ul" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
+            </ul>
+          </div> -->
+          <div style="background: rgba(238,238,238,0.4);width: 600px;height: 460px;display: inline-block;">
             <div>
               <div id="neurons_v_out_div" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
@@ -2997,8 +3010,8 @@ export function getSNNSimuPage(){
                       text-align: left;">选择神经元层</font></label>
                     <div class="col-md-4">
                       <select class="form-control" id="select_which_layer">
-                        <option>输入层</option>
-                        <option>输出层</option>
+                        <option>layer_1</option>
+                        <option>out</option>
                     </select>
                     </div>
                   </div>
@@ -3007,17 +3020,7 @@ export function getSNNSimuPage(){
               <div id="neurons_v_chart" style="width: 540px;height: 320px;margin-left: 40px;margin-top: 20px;"></div>
             </div>
           </div>
-      </div>
-      <div style="margin-top: 5px;display: block;">
-          <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
-            <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
-              font-size: 20px;
-              color: #333333;
-              letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
-            <div id="input_spike_charts" style="width:660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
-            <ul id="input_spike_sample_imgs_ul" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
-            </ul>
-          </div>
+  
           <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
@@ -3320,60 +3323,60 @@ export function getSNNSimuPage(){
                       img_li.appendChild(label_span);
                     }
   
-                    console.log("创建输入层脉冲激发图......");
-                    let input_chart_cls_names = []; // x-axis, time stamps
-                    let simu_dura = parseInt(infos.extra_simu_info.simulate_dura);
-                    for (let i = 0; i < simu_dura; ++i) {
-                      input_chart_cls_names.push(""+i);
-                    }
+                    // console.log("创建输入层脉冲激发图......");
+                    // let input_chart_cls_names = []; // x-axis, time stamps
+                    // let simu_dura = parseInt(infos.extra_simu_info.simulate_dura);
+                    // for (let i = 0; i < simu_dura; ++i) {
+                    //   input_chart_cls_names.push(""+i);
+                    // }
                     // 创建输入层脉冲激发图
-                    for(let i=0;i<infos.spikes.snn_input_spikes.length;++i){
-                      var input_img_li = document.createElement("li");
-                      input_img_li.style.listStyle = "none";
-                      input_img_li.id = "inputimg_li_"+i;
-                      input_img_li.style.width = "53px";
-                      input_img_li.style.height = "50";
-                      input_img_li.style.display = "inline-block";
-                      input_img_li.style.marginRight = "10px";
-                      var input_img_tag = document.createElement("img");
-                      input_img_tag.src = test_img_uris[i];
-                      input_img_tag.id = "inputimg_"+i;
-                      input_img_tag.style.width = "50px";
-                      input_img_tag.style.height = "50px";
-                      input_img_tag.style.opacity = "0.5";
-                      input_img_tag.onclick = ()=>{
-                        console.log("input spike display img idx "+i);
-                        // if(prev_clicked_input_li !== undefined){
-                        //   document.getElementById(prev_clicked_input_li).style.backgroundColor ="";
-                        // }
-                        // document.getElementById("input_img_li_"+i).style.backgroundColor = "chocolate";
-                        prev_clicked_input_li = "inputimg_li_"+i;
-                        if(prev_clicked_input_img !== undefined){
-                          document.getElementById(prev_clicked_input_img).style.border = '';
-                        }
-                        prev_clicked_input_img = 'inputimg_'+i;
-                        document.getElementById(prev_clicked_input_img).style.border = '10px outset orange';
-                        console.log("Current cls_names="+infos.spikes.snn_input_spikes[i].cls_names);
-                        console.log("Current spike data="+infos.spikes.snn_input_spikes[i].spike_tuples);
-                        let input_chart_spike_tuples = [];
-                        for (let j = 0; j < infos.spikes.snn_input_spikes[i].spike_tuples.length; ++j) {
-                          input_chart_spike_tuples.push([infos.spikes.snn_input_spikes[i].spike_tuples[j][1], infos.spikes.snn_input_spikes[i].spike_tuples[j][0]]);
-                        }
-                        display_input_spikes_scatter_chart(input_chart_cls_names, input_chart_spike_tuples);
-                        // display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
-                      };
-                      input_img_li.appendChild(input_img_tag);
-                      document.getElementById("input_spike_sample_imgs_ul").appendChild(input_img_li);
-                      // var layer_li = document.createElement("li");
-                      // layer_li.style.listStyle="circle";
-                      // layer_li.id = "input_layer_li_"+i;
-                      // document.getElementById("layer_indexs").appendChild(layer_li);
-                      // layer_li.onclick = ()=>{
-                      //   console.log("Input layer "+i+" is clicked");
-                      //   // display input spike
-                      //   display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
-                      // };
-                    }
+                    // for(let i=0;i<infos.spikes.snn_input_spikes.length;++i){
+                    //   var input_img_li = document.createElement("li");
+                    //   input_img_li.style.listStyle = "none";
+                    //   input_img_li.id = "inputimg_li_"+i;
+                    //   input_img_li.style.width = "53px";
+                    //   input_img_li.style.height = "50";
+                    //   input_img_li.style.display = "inline-block";
+                    //   input_img_li.style.marginRight = "10px";
+                    //   var input_img_tag = document.createElement("img");
+                    //   input_img_tag.src = test_img_uris[i];
+                    //   input_img_tag.id = "inputimg_"+i;
+                    //   input_img_tag.style.width = "50px";
+                    //   input_img_tag.style.height = "50px";
+                    //   input_img_tag.style.opacity = "0.5";
+                    //   input_img_tag.onclick = ()=>{
+                    //     console.log("input spike display img idx "+i);
+                    //     // if(prev_clicked_input_li !== undefined){
+                    //     //   document.getElementById(prev_clicked_input_li).style.backgroundColor ="";
+                    //     // }
+                    //     // document.getElementById("input_img_li_"+i).style.backgroundColor = "chocolate";
+                    //     prev_clicked_input_li = "inputimg_li_"+i;
+                    //     if(prev_clicked_input_img !== undefined){
+                    //       document.getElementById(prev_clicked_input_img).style.border = '';
+                    //     }
+                    //     prev_clicked_input_img = 'inputimg_'+i;
+                    //     document.getElementById(prev_clicked_input_img).style.border = '10px outset orange';
+                    //     console.log("Current cls_names="+infos.spikes.snn_input_spikes[i].cls_names);
+                    //     console.log("Current spike data="+infos.spikes.snn_input_spikes[i].spike_tuples);
+                    //     let input_chart_spike_tuples = [];
+                    //     for (let j = 0; j < infos.spikes.snn_input_spikes[i].spike_tuples.length; ++j) {
+                    //       input_chart_spike_tuples.push([infos.spikes.snn_input_spikes[i].spike_tuples[j][1], infos.spikes.snn_input_spikes[i].spike_tuples[j][0]]);
+                    //     }
+                    //     display_input_spikes_scatter_chart(input_chart_cls_names, input_chart_spike_tuples);
+                    //     // display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
+                    //   };
+                    //   input_img_li.appendChild(input_img_tag);
+                    //   // document.getElementById("input_spike_sample_imgs_ul").appendChild(input_img_li);
+                    //   // var layer_li = document.createElement("li");
+                    //   // layer_li.style.listStyle="circle";
+                    //   // layer_li.id = "input_layer_li_"+i;
+                    //   // document.getElementById("layer_indexs").appendChild(layer_li);
+                    //   // layer_li.onclick = ()=>{
+                    //   //   console.log("Input layer "+i+" is clicked");
+                    //   //   // display input spike
+                    //   //   display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
+                    //   // };
+                    // }
   
                     console.log("标记错误样例数据.....");
                     // mark reds
@@ -3428,7 +3431,7 @@ export function getSNNSimuPage(){
   
                     $("#select_which_layer").change(()=>{
                       let select_layer_val = $("#select_which_layer").val();
-                      if(select_layer_val === "输入层"){
+                      if(select_layer_val === "layer_1"){
                         display_neuron_v_linechart(tms[0], data_series_input);
                         console.log("显示输入层：tms[0]="+tms[0]);
                         console.log("显示输入层：data_series="+data_series_input);
@@ -3441,7 +3444,7 @@ export function getSNNSimuPage(){
   
                     // fill tables
                     console.log("填充表格数据.....");
-                    $("#simulate_vthresh").text(infos.extra_simu_info.simulate_vthresh);
+                    // $("#simulate_vthresh").text(infos.extra_simu_info.simulate_vthresh);
                     $("#simulate_neuron_dt").text(infos.extra_simu_info.simulate_neuron_dt);
                     $("#simulate_synapse_dt").text(infos.extra_simu_info.simulate_synapse_dt);
                     $("#simulate_delay").text(infos.extra_simu_info.simulate_delay);
@@ -3467,7 +3470,14 @@ export function getSNNSimuPage(){
                       td_id.style.border = "solid 2px #D6D6D6";
                       td_id.style.paddingTop = '12px';
                       td_id.style.paddingBottom = '12px';
-                      td_id.innerText = ""+j;
+                      // td_id.innerText = ""+j;
+                      if (j == 0) {
+                        td_id.innerText = "input";
+                      } else if (j == infos.record_spike_out_info.spike_count_avgs.length - 1) {
+                        td_id.innerText = "out";
+                      } else {
+                        td_id.innerText = "later_"+j;
+                      }
                       table_line.appendChild(td_id);
   
                       let td_spike_avg = document.createElement("td");
@@ -3498,7 +3508,8 @@ export function getSNNSimuPage(){
                     }
                     console.log("Auto click first image.......");
                     document.getElementById("img_0").click();
-                    document.getElementById("inputimg_0").click();
+                    document.getElementById("snn_layers_spike_table_thead_tr").style.padding = "5px";
+                    // document.getElementById("inputimg_0").click();
   
                     $(".loading-div").hide(); // 隐藏加载提示
                 }
@@ -3755,7 +3766,7 @@ export function getSNNModelPage():string{
   <body class="dark-mode" style="height: 100%;width: 100%;white-space: nowrap;overflow: auto;">
   
     <div class="loading-div">
-      <div class="container"  style="padding-left: 40vw;">
+      <div class="container"  style="margin-left: calc(50vw - 5px);">
         <div class="ispinner ispinner-large">
           <div class="ispinner-blade"></div>
           <div class="ispinner-blade"></div>
@@ -3768,29 +3779,29 @@ export function getSNNModelPage():string{
         </div>
       </div>
       <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
-      <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
+      <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);margin-top: -70px;display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
     </div>
   
       <div style="height: 400px;">
           <!-- SNN神经元信息 -->
-          <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 500px;">
+          <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 750px;">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
                 letter-spacing: 1.14px;">脉冲神经网络神经元组信息</font></div>
-              <table id="snn_neurons_table" style="margin-left:10px;margin-left: 20px;border: solid 3px #D6D6D6;width: 440px;">
+              <table id="snn_neurons_table" style="margin-left:10px;margin-left: 20px;border: solid 3px #D6D6D6;width: 600px;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                   <thead>
                     <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 16px;
-                      color: #666666;padding-top: 12px; padding-bottom: 12px;">layer编号</td>
-                      <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">layer</td>
+                      <!-- <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">神经元个数</td>
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 16px;
-                      color: #666666;padding-top: 12px; padding-bottom: 12px;">求解方法</td>
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">求解方法</td> -->
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">电压阈值</td>
@@ -3800,18 +3811,18 @@ export function getSNNModelPage():string{
               </table>
           </div>
   
-          <div style="display: inline-block;background: rgba(238,238,238,0.4);height: 400px;width: 500px;">
+          <div style="display: inline-block;background: rgba(238,238,238,0.4);height: 400px;width: 750px;">
             <div style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
               letter-spacing: 1.14px;">层连接权重统计</font></div>
-            <table id="snn_layer_wt_table" style="border: solid 3px #D6D6D6;width: 380px;margin-left: 60px;">
+            <table id="snn_layer_wt_table" style="border: solid 3px #D6D6D6;width: 600px;margin-left: 60px;">
               <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
               <thead>
                 <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                   font-size: 16px;
-                  color: #666666;padding-top: 12px; padding-bottom: 12px;">突触连接编号</td>
+                  color: #666666;padding-top: 12px; padding-bottom: 12px;">突触连接</td>
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                   font-size: 16px;
                   color: #666666;padding-top: 12px; padding-bottom: 12px;">权重均值</td>
@@ -3823,7 +3834,7 @@ export function getSNNModelPage():string{
             </table>
           </div>
   
-          <div style="height: 400px;margin-top: 20px;display: inline-block;background: rgba(238,238,238,0.4);width: 500px;">
+          <!-- <div style="height: 400px;margin-top: 20px;display: inline-block;background: rgba(238,238,238,0.4);width: 500px;">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -3845,7 +3856,7 @@ export function getSNNModelPage():string{
                     <!-- 动态加载 -->
                   </thead>
               </table>
-          </div>
+          </div> -->
       </div>
       <div style="height: 460px;margin-top: 30px;">
           <!--权重分布图-->
@@ -3973,50 +3984,57 @@ export function getSNNModelPage():string{
                         line.style = "margin-top: 15px;border: solid 3px #D6D6D6;color: #333;"
                         var col_1 = document.createElement("td");
                         col_1.style = "text-align:center; padding-right:15px; font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
-                        col_1.innerText = neurons_info[i].idx;
+                        if (i == 0) {
+                          col_1.innerText = "input";
+                        } else if (i == neurons_info.length - 1) {
+                          col_1.innerText = "out";
+                        } else {
+                          col_1.innerText = "layer_"+neurons_info[i].idx;
+                        }
+                        // col_1.innerText = neurons_info[i].idx;
   
-                        var col_2 = document.createElement("td");
-                        col_2.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
-                        col_2.innerText = neurons_info[i].neuron_count;
+                        // var col_2 = document.createElement("td");
+                        // col_2.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
+                        // col_2.innerText = neurons_info[i].neuron_count;
   
-                        var col_3 = document.createElement("td");
-                        col_3.style = "border: solid 3px #D6D6D6;padding-left:10px;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
-                        col_3.innerText = neurons_info[i].method;
+                        // var col_3 = document.createElement("td");
+                        // col_3.style = "border: solid 3px #D6D6D6;padding-left:10px;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
+                        // col_3.innerText = neurons_info[i].method;
   
                         var col_4 = document.createElement("td");
-                        col_4.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
+                        col_4.style = "border: solid 3px #D6D6D6;text-align:center; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                         col_4.innerText = neurons_info[i].vthresh;
   
                         line.appendChild(col_1);
-                        line.appendChild(col_2);
-                        line.appendChild(col_3);
+                        // line.appendChild(col_2);
+                        // line.appendChild(col_3);
                         line.appendChild(col_4);
   
                         neurons_table.appendChild(line);
                     }
                     // 构建突触表格
-                    var synaps_info = infos.layer_conns;
-                    var synaps_table = document.getElementById("layer_conns_table");
-                    for(var i=0;i<synaps_info.length;++i){
-                        var line = document.createElement("tr");
-                        line.style = "margin-top: 15px; border: solid 3px #D6D6D6; color:#333;";
-                        var col_1 = document.createElement("td");
-                        col_1.style = "text-align:center; padding-right:15px;border: solid 3px #D6D6D6;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
-                        col_1.innerText = synaps_info[i].idx + "-"+(synaps_info[i].idx+1);
+                    // var synaps_info = infos.layer_conns;
+                    // var synaps_table = document.getElementById("layer_conns_table");
+                    // for(var i=0;i<synaps_info.length;++i){
+                    //     var line = document.createElement("tr");
+                    //     line.style = "margin-top: 15px; border: solid 3px #D6D6D6; color:#333;";
+                    //     var col_1 = document.createElement("td");
+                    //     col_1.style = "text-align:center; padding-right:15px;border: solid 3px #D6D6D6;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
+                    //     col_1.innerText = synaps_info[i].idx + "-"+(synaps_info[i].idx+1);
   
-                        var col_2 = document.createElement("td");
-                        col_2.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
-                        col_2.innerText = synaps_info[i].ratio;
+                    //     var col_2 = document.createElement("td");
+                    //     col_2.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
+                    //     col_2.innerText = synaps_info[i].ratio;
   
-                        var col_3 = document.createElement("td");
-                        col_3.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
-                        col_3.innerText = synaps_info[i].avg_conn;
+                    //     var col_3 = document.createElement("td");
+                    //     col_3.style = "border: solid 3px #D6D6D6;text-align:right; padding-right:15px;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
+                    //     col_3.innerText = synaps_info[i].avg_conn;
   
-                        line.appendChild(col_1);
-                        line.appendChild(col_2);
-                        line.appendChild(col_3);
-                        synaps_table.appendChild(line);
-                    }
+                    //     line.appendChild(col_1);
+                    //     line.appendChild(col_2);
+                    //     line.appendChild(col_3);
+                    //     synaps_table.appendChild(line);
+                    // }
   
                     // 绘制权重分布图
                     for(var i=0;i<infos.layers_weights.wt_count.length;++i){
@@ -4053,7 +4071,14 @@ export function getSNNModelPage():string{
                       td_id.style.paddingRight = "15px";
                       td_id.style.paddingTop = "12px";
                       td_id.style.paddingBottom = "12px";
-                      td_id.innerText = ""+i+"-"+(i+1);
+                      // td_id.innerText = ""+i+"-"+(i+1);
+                      if (i == 0) {
+                        td_id.innerText = "input ---> "+"layer_"+(i+1);
+                      } else if (i == infos.record_layers_wt_info.record_wts_avg.length - 1) {
+                        td_id.innerText = "layer_"+i+" ---> "+"out";
+                      } else {
+                        td_id.innerText = "layer_"+(i)+" ---> layer_"+(i+1);
+                      }
                       table_line.appendChild(td_id);
   
                       let td_avg = document.createElement("td");
@@ -4133,26 +4158,54 @@ export function getSNNModelPage():string{
                           }
                       }
                   },
-                  xAxis: {
-                      type: 'category',
-                      data: label_names,
-                      name:"权重",
-                      nameTextStyle:{
-                        color:"#999999",
-                        fontFamily: 'SourceHanSansCN-Normal',
-                        fontSize: '14px',
-                      },
-                      axisLabel:{
-                        textStyle:{
-                          color:"#999999"
-                        },
-                        fontFamily: 'SourceHanSansCN-Normal',
-                        fontSize: '14px',
-                     }
+                  legend: {
+                    data: ['浮点数权重', "定点数权重"],
+                    textStyle: {
+                      color: '#999'
+                    }
                   },
-                  yAxis: {
+                  xAxis: [
+                    {
+                        type: 'category',
+                        data: label_names,
+                        name:"浮点权重",
+                        nameTextStyle:{
+                          color:"#999999",
+                          fontFamily: 'SourceHanSansCN-Normal',
+                          fontSize: '14px',
+                        },
+                        axisLabel:{
+                          textStyle:{
+                            color:"#999999"
+                          },
+                          fontFamily: 'SourceHanSansCN-Normal',
+                          fontSize: '14px',
+                      },
+                      position: "top"
+                    },
+                    {
+                        type: 'category',
+                        data: label_names,
+                        name:"定点权重",
+                        nameTextStyle:{
+                          color:"#999999",
+                          fontFamily: 'SourceHanSansCN-Normal',
+                          fontSize: '14px',
+                        },
+                        axisLabel:{
+                          textStyle:{
+                            color:"#999999"
+                          },
+                          fontFamily: 'SourceHanSansCN-Normal',
+                          fontSize: '14px',
+                      },
+                      position: 'bottom'
+                    }
+                  ],
+                  yAxis: [
+                   {
                       type: 'value',
-                      name:"连接个数(log_10)",
+                      name:"浮点个数(10^n)",
                       nameTextStyle:{
                         color:"#999999",
                         fontFamily: 'SourceHanSansCN-Normal',
@@ -4166,12 +4219,44 @@ export function getSNNModelPage():string{
                           },
                           fontFamily: 'SourceHanSansCN-Normal',
                           fontSize: '14px',
-                      }
-                  },
+                      },
+                      inverse:true
+                    },
+                    {
+                      type: 'value',
+                      name:"定点个数(10^n)",
+                      nameTextStyle:{
+                        color:"#999999",
+                        fontFamily: 'SourceHanSansCN-Normal',
+                        fontSize: '14px',
+                      },
+                      scale:true,
+                      axisLabel: {
+                          formatter: '{value}',
+                          textStyle:{
+                            color:"#999999"
+                          },
+                          fontFamily: 'SourceHanSansCN-Normal',
+                          fontSize: '14px',
+                      },
+                      inverse:false
+                    },
+                  ],
                   series: [{
                       data: label_counts,
-                      type: 'bar'
-                  }]
+                      type: 'bar',
+                      name: "浮点数权重",
+                      xAxisIndex:0,
+                      YAxisIndex:0
+                  },
+                  {
+                    data: label_counts,
+                    type: 'bar',
+                    name: "定点数权重",
+                    xAxisIndex:1,
+                    yAxisIndex:1
+                  }
+                ]
               };
               var weights_chart = echarts.init(document.getElementById("weight_dist_chart"));
               weights_chart.setOption(opt);

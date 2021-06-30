@@ -422,7 +422,8 @@ for i in range(50):
     
     snn_test_output_spikes.append({
         "cls_names":[str(x) for x in range(len(last_layer_spikes))],
-        "spike_tuples": spike_tuples
+        "spike_tuples": spike_tuples,
+        "label_counts": len(testY[0])
     })
 
     snn_test_input_spikes.append({

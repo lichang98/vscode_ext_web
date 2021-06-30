@@ -27,13 +27,13 @@
 
     <div style="margin-top: 5px;display: block;">
 
-        <div style="background: rgba(238,238,238,0.4);width: 600px;height: 380px;display: inline-block;vertical-align: bottom;">
+        <div style="background: rgba(238,238,238,0.4);width: 700px;height: 380px;display: inline-block;vertical-align: bottom;">
           <div>
             <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
               letter-spacing: 1.14px;">仿真配置结果评估</font></div>
-            <table id="layer_conf_val" style="width: 500px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
+            <table id="layer_conf_val" style="width: 600px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
                 <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                 <tr style="height: 95px; border: solid 2px #D6D6D6;color: #333;">
                   <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
@@ -117,7 +117,7 @@
           <ul id="input_spike_sample_imgs_ul" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
           </ul>
         </div> -->
-        <div style="background: rgba(238,238,238,0.4);width: 600px;height: 460px;display: inline-block;">
+        <div style="background: rgba(238,238,238,0.4);width: 700px;height: 460px;display: inline-block;">
           <div>
             <div id="neurons_v_out_div" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
@@ -139,7 +139,7 @@
                 </div>
               </form>
             </div>
-            <div id="neurons_v_chart" style="width: 540px;height: 320px;margin-left: 40px;margin-top: 20px;"></div>
+            <div id="neurons_v_chart" style="width: 640px;height: 320px;margin-left: 40px;margin-top: 20px;"></div>
           </div>
         </div>
 
@@ -322,7 +322,8 @@ body {
                       for (let j = 0; j < test_img_spikes[i].spike_tuples.length; ++j) {
                         output_chart_spike_tuples.push([test_img_spikes[i].spike_tuples[j][1], test_img_spikes[i].spike_tuples[j][0]]);
                       }
-                      display_spike_scatter_chart(output_chart_cls_names, output_chart_spike_tuples);
+                      console.log("Uniqe class counts="+parseInt(test_img_spikes[i].label_counts));
+                      display_spike_scatter_chart(output_chart_cls_names, output_chart_spike_tuples, parseInt(test_img_spikes[i].label_counts));
                       // display_spike_scatter_chart(test_img_spikes[i].cls_names, test_img_spikes[i].spike_tuples);
 
                       // display counts in table
@@ -703,7 +704,7 @@ body {
         }
       }
 
-      function display_spike_scatter_chart(labels, datas){
+      function display_spike_scatter_chart(labels, datas, cls_counts){
           var opt={
                 tooltip: {
                     trigger: 'axis',
@@ -740,8 +741,8 @@ body {
                         }
                     },
                     min: 0,
-                    max: 10,
-                    splitNumber:11
+                    max: cls_counts,
+                    splitNumber:(cls_counts + 1)
                 },
                 series: [{
                     symbolSize: 5,

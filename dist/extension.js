@@ -759,50 +759,53 @@ function activate(context) {
             }
             else if (data.choose_import_file_paths) {
                 console.log("选择的文件路径为：" + JSON.stringify(data.choose_import_file_paths));
-                let checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.xnorm + " 0";
-                try {
-                    child_process_1.execSync(checkCmd, { encoding: "buffer" });
-                }
-                catch (err) {
-                    currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.xnorm) +
-                            " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
-                    return;
-                }
-                ;
-                importXNorm(data.choose_import_file_paths.xnorm);
-                checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.xtest + " 0";
-                try {
-                    child_process_1.execSync(checkCmd, { encoding: "buffer" });
-                }
-                catch (err) {
-                    currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.xtest) + " 校验错误：" +
-                            iconv.decode(err.stderr, 'cp936') }));
-                    return;
-                }
-                ;
-                importXTest(data.choose_import_file_paths.xtest);
-                checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.ytest + " 1";
-                try {
-                    child_process_1.execSync(checkCmd, { encoding: "buffer" });
-                }
-                catch (err) {
-                    currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.ytest) +
-                            " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
-                    return;
-                }
-                ;
-                importYTest(data.choose_import_file_paths.ytest);
-                checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "ann_model_checker.py") + " " + data.choose_import_file_paths.ann;
-                try {
-                    child_process_1.execSync(checkCmd, { encoding: "buffer" });
-                }
-                catch (err) {
-                    currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.ann) +
-                            " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
-                    return;
-                }
-                ;
-                importANNFile(data.choose_import_file_paths.ann);
+                currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件校验中，请稍等......", "display_loading": "yes" })).then(() => {
+                    let checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.xnorm + " 0";
+                    try {
+                        child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                    }
+                    catch (err) {
+                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.xnorm) +
+                                " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
+                        return;
+                    }
+                    ;
+                    importXNorm(data.choose_import_file_paths.xnorm);
+                    checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.xtest + " 0";
+                    try {
+                        child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                    }
+                    catch (err) {
+                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.xtest) + " 校验错误：" +
+                                iconv.decode(err.stderr, 'cp936') }));
+                        return;
+                    }
+                    ;
+                    importXTest(data.choose_import_file_paths.xtest);
+                    checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.ytest + " 1";
+                    try {
+                        child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                    }
+                    catch (err) {
+                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.ytest) +
+                                " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
+                        return;
+                    }
+                    ;
+                    importYTest(data.choose_import_file_paths.ytest);
+                    checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "ann_model_checker.py") + " " + data.choose_import_file_paths.ann;
+                    try {
+                        child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                    }
+                    catch (err) {
+                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.ann) +
+                                " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
+                        return;
+                    }
+                    ;
+                    importANNFile(data.choose_import_file_paths.ann);
+                    currentPanel.webview.postMessage(JSON.stringify({ "show_error": "ok", "hide": "yes" }));
+                });
             }
         });
     }
@@ -7399,15 +7402,27 @@ function getConvertorPageV2() {
             </h4>
           </div>
           <div class="modal-body">
+            <div id="loading_anim" style="display: none;" class="container">
+              <div class="ispinner ispinner-large" style="margin-left: 300px;margin-top: 100px;">
+                <div class="ispinner-blade"></div>
+                <div class="ispinner-blade"></div>
+                <div class="ispinner-blade"></div>
+                <div class="ispinner-blade"></div>
+                <div class="ispinner-blade"></div>
+                <div class="ispinner-blade"></div>
+                <div class="ispinner-blade"></div>
+                <div class="ispinner-blade"></div>
+              </div>
+            </div>
             <div style="margin-top: 50px;">
               <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
               font-size: 22px;
               color: #f87307;
-              letter-spacing: 1.26px;margin: auto;text-align: center;width: 100%;display: inline-block;height: 500px;width: 700px;overflow-y: auto;">错误信息</div>
+              letter-spacing: 1.26px;margin: auto;text-align: center;width: 100%;display: inline-block;height: 300px;width: 700px;overflow-y: auto;">错误信息</div>
             </div>
           </div>
           <div style="margin-top: 40px;margin-bottom: 40px;">
-            <button type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+            <button id="close_modal_btn" type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
             border-radius: 2px;
             border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">关闭
             </button>
@@ -7482,11 +7497,37 @@ function getConvertorPageV2() {
        width: max-content !important;
        height:auto !important;
     }
+    
+    .container {
+      position: relative;
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      margin: 15px;
+      box-sizing: border-box;
+    }
+    .container:last-child {
+      padding: 31.5px;
+    }
+    .container::after {
+      position: absolute;
+      width: 100px;
+      height: 60px;
+      left: 0;
+      bottom: -30px;
+      line-height: 30px;
+      text-align: center;
+    }
+    .container:last-child::after {
+      content: 'large';
+    }
+    
     </style>
     
     <!-- <link rel="stylesheet" href="http://localhost:6003/css/bootstrap.min.css">
     <script src="http://localhost:6003/js/jquery.min.js"></script>
     <script src="http://localhost:6003/js/bootstrap.min.js"></script> -->
+    <link rel="stylesheet" media="all" href="http://localhost:6003/css/ispinner.prefixed.css" />
     
     <script>
     
@@ -7496,7 +7537,17 @@ function getConvertorPageV2() {
             const data = JSON.parse(event.data);
             if (data.show_error) {
               $("#error_detail").text(data.show_error);
-              $("#alert_modal_btn").click();
+              if (data.display_loading) {
+                $("#loading_anim").css("display", "block");
+                $("#error_detail").css("color", "#000000");
+                $("#myModalLabel_show_error").css("color", "#000000");
+                $("#myModalLabel_show_error").text("提示");
+                $("#alert_modal_btn").click();
+              } else if(data.hide) {
+                $("#close_modal_btn").click();
+              } else {
+                $("#alert_modal_btn").click();
+              }
             } else if (data.import_files) {
               // 导入数据与模型文件
               $("#modal_dialog_import_files").click();

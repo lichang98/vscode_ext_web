@@ -750,42 +750,45 @@ export function activate(context: vscode.ExtensionContext) {
 				});
 			} else if (data.choose_import_file_paths) {
 				console.log("选择的文件路径为："+JSON.stringify(data.choose_import_file_paths));
-				let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.xnorm+ " 0";
-				try {
-					execSync(checkCmd, {encoding: "buffer"});
-				} catch (err) {
-					currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.xnorm)+
-												" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
-					return;
-				};
-				importXNorm(data.choose_import_file_paths.xnorm);
-				checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.xtest+ " 0";
-				try {
-					execSync(checkCmd, {encoding: "buffer"});
-				} catch (err) {
-					currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.xtest)+" 校验错误："+
-													iconv.decode(err.stderr, 'cp936')}));
-					return;
-				};
-				importXTest(data.choose_import_file_paths.xtest);
-				checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.ytest+ " 1";
-				try {
-					execSync(checkCmd, {encoding: "buffer"});
-				} catch (err) {
-					currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.ytest)+
+				currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件校验中，请稍等......", "display_loading":"yes"})).then(()=>{
+					let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.xnorm+ " 0";
+					try {
+						execSync(checkCmd, {encoding: "buffer"});
+					} catch (err) {
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.xnorm)+
 													" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
-					return;
-				};
-				importYTest(data.choose_import_file_paths.ytest);
-				checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "ann_model_checker.py")+ " "+data.choose_import_file_paths.ann;
-				try {
-					execSync(checkCmd, {encoding: "buffer"});
-				} catch (err) {
-					currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.ann)+
+						return;
+					};
+					importXNorm(data.choose_import_file_paths.xnorm);
+					checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.xtest+ " 0";
+					try {
+						execSync(checkCmd, {encoding: "buffer"});
+					} catch (err) {
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.xtest)+" 校验错误："+
+														iconv.decode(err.stderr, 'cp936')}));
+						return;
+					};
+					importXTest(data.choose_import_file_paths.xtest);
+					checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.ytest+ " 1";
+					try {
+						execSync(checkCmd, {encoding: "buffer"});
+					} catch (err) {
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.ytest)+
 														" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
-					return;
-				};
-				importANNFile(data.choose_import_file_paths.ann);
+						return;
+					};
+					importYTest(data.choose_import_file_paths.ytest);
+					checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "ann_model_checker.py")+ " "+data.choose_import_file_paths.ann;
+					try {
+						execSync(checkCmd, {encoding: "buffer"});
+					} catch (err) {
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.ann)+
+															" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
+						return;
+					};
+					importANNFile(data.choose_import_file_paths.ann);
+					currentPanel!.webview.postMessage(JSON.stringify({"show_error":"ok", "hide": "yes"}));
+				});
 			}
 		});
 	}

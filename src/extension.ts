@@ -10,8 +10,10 @@ import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getAN
 import {getSegDataVisPage, getSegSimulatePage, getANNSNNConvertSegPage} from "./get_seg_pages";
 import {getSpeechClsDataPage, getANNSNNConvertSpeechPage, getSNNSimuSpeechPage} from "./get_speech_pages";
 import {getFatigueDataVisPage, getANNSNNConvertFatiguePage, getSNNSimuFatiguePage} from "./get_fatigue_pages";
-import {exec} from "child_process";
+import {exec, execSync} from "child_process";
 const decode = require('audio-decode');
+var encoding = require('encoding');
+const iconv = require('iconv-lite');
 
 let PYTHON_INTERPRETER = 'python ';
 let NEWLINE = '\r\n';
@@ -748,9 +750,41 @@ export function activate(context: vscode.ExtensionContext) {
 				});
 			} else if (data.choose_import_file_paths) {
 				console.log("选择的文件路径为："+JSON.stringify(data.choose_import_file_paths));
+				let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.xnorm+ " 0";
+				try {
+					execSync(checkCmd, {encoding: "buffer"});
+				} catch (err) {
+					currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.xnorm)+
+												" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
+					return;
+				};
 				importXNorm(data.choose_import_file_paths.xnorm);
+				checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.xtest+ " 0";
+				try {
+					execSync(checkCmd, {encoding: "buffer"});
+				} catch (err) {
+					currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.xtest)+" 校验错误："+
+													iconv.decode(err.stderr, 'cp936')}));
+					return;
+				};
 				importXTest(data.choose_import_file_paths.xtest);
+				checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.ytest+ " 1";
+				try {
+					execSync(checkCmd, {encoding: "buffer"});
+				} catch (err) {
+					currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.ytest)+
+													" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
+					return;
+				};
 				importYTest(data.choose_import_file_paths.ytest);
+				checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "ann_model_checker.py")+ " "+data.choose_import_file_paths.ann;
+				try {
+					execSync(checkCmd, {encoding: "buffer"});
+				} catch (err) {
+					currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.ann)+
+														" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
+					return;
+				};
 				importANNFile(data.choose_import_file_paths.ann);
 			}
 		});
@@ -1323,6 +1357,13 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showOpenDialog(options).then(fileUri => {
 				if(fileUri && fileUri[0]){
 					console.log("selected path: "+fileUri[0].fsPath);
+					let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+fileUri[0].fsPath+ " 0";
+					try {
+						execSync(checkCmd, {encoding: "buffer"});
+					} catch (err) {
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": iconv.decode(err.stderr, 'cp936')}));
+						return;
+					};
 					X_NORM_DATA_PATH = fileUri[0].fsPath;
 					X_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "colorX.npz");
 					X_ORIGIN_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "originColorX.npz");
@@ -1374,6 +1415,13 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showOpenDialog(options).then(fileUri => {
 				if(fileUri && fileUri[0]){
 					console.log("selected path: "+fileUri[0].fsPath);
+					let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+fileUri[0].fsPath+ " 0";
+					try {
+						execSync(checkCmd, {encoding: "buffer"});
+					} catch (err) {
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": iconv.decode(err.stderr, 'cp936')}));
+						return;
+					};
 					X_TEST_DATA_PATH = fileUri[0].fsPath;
 					
 					// 添加到treeview下
@@ -1413,6 +1461,13 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showOpenDialog(options).then(fileUri => {
 				if(fileUri && fileUri[0]){
 					console.log("selected path: "+fileUri[0].fsPath);
+					let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+fileUri[0].fsPath+ " 1";
+					try {
+						execSync(checkCmd, {encoding: "buffer"});
+					} catch (err) {
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": iconv.decode(err.stderr, 'cp936')}));
+						return;
+					};
 					Y_TEST_DATA_PATH = fileUri[0].fsPath;
 					// 添加到treeview下
 					// FIXME
@@ -1452,6 +1507,13 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showOpenDialog(options).then(fileUri => {
 				if(fileUri && fileUri[0]){
 					console.log("selected path: "+fileUri[0].fsPath);
+					let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "ann_model_checker.py")+ " "+fileUri[0].fsPath;
+					try {
+						execSync(checkCmd, {encoding: "buffer"});
+					} catch (err) {
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": iconv.decode(err.stderr, 'cp936')}));
+						return;
+					};
 					ANN_MODEL_FILE_PATH = fileUri[0].fsPath;
 					// 添加到treeview下
 					// ITEM_ICON_MAP.set("model_file","imgs/file.png");

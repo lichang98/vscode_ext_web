@@ -1378,10 +1378,10 @@ export function getConvertorPageV2(){
           </div>
           <div class="modal-body">
             <div style="margin-top: 50px;">
-              <span id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
+              <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
               font-size: 22px;
               color: #f87307;
-              letter-spacing: 1.26px;margin: auto;text-align: center;width: 100%;display: inline-block;">错误信息</span>
+              letter-spacing: 1.26px;margin: auto;text-align: center;width: 100%;display: inline-block;height: 500px;width: 700px;overflow-y: auto;">错误信息</div>
             </div>
           </div>
           <div style="margin-top: 40px;margin-bottom: 40px;">

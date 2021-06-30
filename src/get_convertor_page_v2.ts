@@ -2184,7 +2184,7 @@ export function getANNSNNConvertPage(){
   <button id="exec_error_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_exec_error" style="display: none;"></button>
   
   <!-- 总进度提示 -->
-  <div id="total_progress_ball" class="box" style="display: none;position: fixed;left: calc(50vw - 100px);">
+  <!-- <div id="total_progress_ball" class="box" style="display: none;position: fixed;left: calc(50vw - 100px);">
       <svg class="wave" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 200 210">
         <defs>
           <path id="wave-shape" stroke="rgba(255,255,255,.8)" stroke-width=".5" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 58-18 88-18 58 18 88 18 v185h-528z"></path>
@@ -2208,6 +2208,8 @@ export function getANNSNNConvertPage(){
           0%
       </text>
       </svg>
+  </div> -->
+  <div id="total_progress_ball" class="pie" style="display: none;">
   </div>
   
   
@@ -2382,6 +2384,17 @@ export function getANNSNNConvertPage(){
     display: inline-block;
     vertical-align: middle;
   } 
+  
+  .pie {
+      display: flex;
+      width: 15vw;
+      height: 15vw;
+      position: absolute;
+      opacity: 60%;
+      margin-left: 540px;
+      margin-top: -600px;
+      z-index: 9;
+  }
   </style>
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
@@ -2403,9 +2416,90 @@ export function getANNSNNConvertPage(){
   
   let log_output_lists = new Array();
   
-      let prev_clicked_img_li_id=undefined;
+  let prev_clicked_img_li_id=undefined;
+  var process_pie_option = {
+      // backgroundColor: '#2F4056',//背景颜色
+      title: {
+          text: '',//圆环中间显示的数值单位
+          subtext: '',//圆环数值单位下面的描述文字
+          x: 'center',
+          y: 'center',
+          itemGap: 15,//描述文字与上面数值单位的垂直距离
+          textStyle: {
+              color: '#666666',
+              fontSize: 16,
+          },
+          subtextStyle: {
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: 16,
+          }
+      },
+      tooltip: {//提示框浮层属性
+          show: true,
+          transitionDuration: 0.8,
+          formatter: "{a} - {c}%"//提示框浮层内容格式器，支持字符串模板和回调函数两种形式
+      },
+      series: [{
+          name: '',
+          type: 'pie',//饼图类型
+          radius: ['72%', '100%'],//饼图的内、外半径
+          hoverAnimation: false,
+          label: {
+              normal: {
+                  show: false,
+              }
+          },
+          itemStyle: {
+              normal: {
+                  color: '#666666',
+              }
+          },
+          data: [{//系列中的数据内容数组
+              value: 0,
+              itemStyle: {
+                  normal: {
+                      color: '#FF994B'
+                  }
+              }
+          }, {
+              value: 100,
+          }
+          ],
+          animationEasingUpdate: 'cubicInOut',
+          animationDurationUpdate: 10
+      }]
+  };
+  function process_pie_init(option) {
+      let processByPie = echarts.init(document.getElementById("total_progress_ball"));
+      option.title.text = "0%";
+      processByPie.setOption(option);
+      return processByPie;
+  }
   
-        $(document).ready(function(){        
+  function process_pie_update(process_pie, option, percent) {
+      option.series[0].data[0].value = percent;
+      option.series[0].data[1].value = 100 - percent;
+      option.title.text = ""+percent+"%";
+      process_pie.setOption(option, true);
+  }
+  
+  function process_pie_end(process_pie, option) {
+      option.series[0].data[0].value = 100;
+      option.series[0].data[1].value = 0;
+      option.title.text = "100%";
+      process_pie.setOption(option, true);
+  }
+  
+  function process_pie_reset(process_pie, option) {
+      option.series[0].data[0].value = 0;
+      option.series[0].data[1].value = 100;
+      option.title.text = "0%";
+      process_pie.setOption(option, true);
+  }
+  
+  let processPie = undefined;
+  
+        $(document).ready(function(){
             $("#self_def_preprocess_alg").on("click", function(){
                 vscode.postMessage(JSON.stringify({"convert_self_def": "preprocess"}));
             });
@@ -2464,8 +2558,9 @@ export function getANNSNNConvertPage(){
                   //     document.getElementById("total_progress_div").style.width = ""+parseInt(log_output_lists.length/397*100)+"%";
                   // }
                   // $(".wave").attr("height", ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
-                  $(".wave").css("height",  ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
-                  $("#total_progress_text").text(""+Math.min(Math.floor((log_output_lists.length / 397) * 100), 100)+"%");
+                  // $(".wave").css("height",  ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
+                  // $("#total_progress_text").text(""+Math.min(Math.floor((log_output_lists.length / 397) * 100), 100)+"%");
+                  process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / 397) * 100), 100));
                   document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                   document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                   document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</div>";
@@ -2607,8 +2702,9 @@ export function getANNSNNConvertPage(){
                 }else if(data.ann_model_start_convert){
                     // 接收到启动转换的命令，初始化
                   error_occurred = false;
-                  document.getElementById("total_progress_ball").style.display = "block";
-                  $(".wave").attr("height", "560px");
+                  document.getElementById("total_progress_ball").style.display = "flex";
+                  // $(".wave").attr("height", "560px");
+                  processPie = process_pie_init(process_pie_option);
                   let v_thresh = $("#select_vthresh").val().replace("ms","");
                   let neuron_dt = $("#select_dt").val().replace("ms","");
                   let synapse_dt = $("#select_synapse_dt").val().replace("ms","");

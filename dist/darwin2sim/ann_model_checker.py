@@ -18,6 +18,13 @@ def get_name(layer):
 
 assert len(model.layers) > 1 and get_name(model.layers[0]) == "InputLayer", "Assert contain input layer!"
 assert model.layers[0].output_shape[0][0] == 1, "Assert batch_size == 1!"
+
+valid_layers = ['InputLayer', 'Conv2D', 'MaxPooling2D', 'AveragePooling2D', 'Activation','BatchNormalization', 'Dense', 'Flatten', 'Dropout']
+for i in range(len(model.layers)):
+    if get_name(model.layers[i]) not in valid_layers:
+        raise Exception("导入的ANN模型包含不支持的layer【"+model.layers[i].__class__.__name__+"】,转换工具支持的layer 类型包括："+str(valid_layers))
+
+
 for i in range(len(model.layers)):
     layer = model.layers[i]
     if get_name(layer) == "InputLayer":

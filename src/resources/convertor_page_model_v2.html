@@ -321,9 +321,9 @@ body {
             }
             // 绘制各layer 参数分布柱状图
             console.log("layer params list: "+layer_params_list);
-            for(var i=0;i<layer_params_list.length;++i){
-              layer_params_list[i] = Math.log10(layer_params_list[i]);
-            }
+            // for(var i=0;i<layer_params_list.length;++i){
+            //   layer_params_list[i] = Math.log10(layer_params_list[i]);
+            // }
             display_layer_params_bar_chart(layer_uniq_names, layer_params_list);
           }else if(data.model_layer_vis){
             var layer_output_info = JSON.parse(data.model_layer_vis);
@@ -402,9 +402,11 @@ body {
               },
             yAxis:[
               {
-                type: 'value',
+                type: 'log',
+                min:1,
+                logBase:10,
                   scale:true,
-                  name:"参数数量(10^n)",
+                  name:"参数数量",
                   nameTextStyle:{
                     color:"#999999",
                     fontFamily: 'PingFangSC-Regular',
@@ -419,7 +421,9 @@ body {
                   }
               },
               {
-                type: 'value',
+                type: 'log',
+                min: 1,
+                logBase: 10,
                   scale:true,
                   name:"",
                   show:false,

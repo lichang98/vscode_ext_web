@@ -31,14 +31,14 @@
             <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
-              letter-spacing: 1.14px;">脉冲神经网络神经元组信息</font></div>
-            <table id="snn_neurons_table" style="margin-left:10px;margin-left: 20px;border: solid 3px #D6D6D6;width: 600px;">
+              letter-spacing: 1.14px;">各神经元组详细信息</font></div>
+            <table id="snn_neurons_table" style="margin-left:80px;border: solid 3px #D6D6D6;width: 600px;">
                 <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                 <thead>
                   <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                     <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                     font-size: 16px;
-                    color: #666666;padding-top: 12px; padding-bottom: 12px;">layer</td>
+                    color: #666666;padding-top: 12px; padding-bottom: 12px;">神经元组</td>
                     <!-- <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                     font-size: 16px;
                     color: #666666;padding-top: 12px; padding-bottom: 12px;">神经元个数</td>
@@ -48,6 +48,9 @@
                     <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                     font-size: 16px;
                     color: #666666;padding-top: 12px; padding-bottom: 12px;">电压阈值</td>
+                    <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                    font-size: 16px;
+                    color: #666666;padding-top: 12px; padding-bottom: 12px;">神经元类型</td>
                   </tr>
                   <!-- 动态加载 -->
                 </thead>
@@ -65,13 +68,13 @@
               <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                 <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                 font-size: 16px;
-                color: #666666;padding-top: 12px; padding-bottom: 12px;">突触连接</td>
+                color: #666666;padding-top: 12px; padding-bottom: 12px;">连接</td>
                 <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                 font-size: 16px;
-                color: #666666;padding-top: 12px; padding-bottom: 12px;">权重均值</td>
+                color: #666666;padding-top: 12px; padding-bottom: 12px;">均值</td>
                 <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                 font-size: 16px;
-                color: #666666;padding-top: 12px; padding-bottom: 12px;">权重方差</td>
+                color: #666666;padding-top: 12px; padding-bottom: 12px;">方差</td>
               </tr>
             </thead>
           </table>
@@ -252,10 +255,16 @@ const vscode = acquireVsCodeApi();
                       col_4.style = "border: solid 3px #D6D6D6;text-align:center; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                       col_4.innerText = neurons_info[i].vthresh;
 
+                      var col5 = document.createElement("td");
+                      col5.style = "border: solid 3px #D6D6D6;text-align:center; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
+                      col5.innerText = "IF";
+
+
                       line.appendChild(col_1);
                       // line.appendChild(col_2);
                       // line.appendChild(col_3);
                       line.appendChild(col_4);
+                      line.appendChild(col5);
 
                       neurons_table.appendChild(line);
                   }
@@ -288,20 +297,20 @@ const vscode = acquireVsCodeApi();
                   console.log("数值:"+infos.layers_weights.wt_count);
                   console.log("浮点权重数据："+infos.layer_flt_weights.wt_label);
                   console.log("数值："+infos.layer_flt_weights.wt_count);
-                  for(var i=0;i<infos.layers_weights.wt_count.length;++i){
-                    if (infos.layers_weights.wt_count[i] > 0) {
-                      infos.layers_weights.wt_count[i] = Math.log10(infos.layers_weights.wt_count[i]);
-                    } else {
-                      infos.layers_weights.wt_count[i] = 0;
-                    }
-                  }
-                  for (var i = 0; i < infos.layer_flt_weights.wt_count.length;++i) {
-                    if (infos.layer_flt_weights.wt_count[i] > 0) {
-                      infos.layer_flt_weights.wt_count[i] = Math.log10(infos.layer_flt_weights.wt_count[i]);
-                    } else {
-                      infos.layer_flt_weights.wt_count[i] = 0;
-                    }
-                  }
+                  // for(var i=0;i<infos.layers_weights.wt_count.length;++i){
+                  //   if (infos.layers_weights.wt_count[i] > 0) {
+                  //     infos.layers_weights.wt_count[i] = Math.log10(infos.layers_weights.wt_count[i]);
+                  //   } else {
+                  //     infos.layers_weights.wt_count[i] = 0;
+                  //   }
+                  // }
+                  // for (var i = 0; i < infos.layer_flt_weights.wt_count.length;++i) {
+                  //   if (infos.layer_flt_weights.wt_count[i] > 0) {
+                  //     infos.layer_flt_weights.wt_count[i] = Math.log10(infos.layer_flt_weights.wt_count[i]);
+                  //   } else {
+                  //     infos.layer_flt_weights.wt_count[i] = 0;
+                  //   }
+                  // }
                   display_weight_chart(infos.layer_flt_weights.wt_label, infos.layer_flt_weights.wt_count,infos.layers_weights.wt_label, infos.layers_weights.wt_count);
 
                   // 仿真配置与结果表格
@@ -395,7 +404,7 @@ const vscode = acquireVsCodeApi();
                       fill:"rgb(255,248,220)"
                     },
                     label: {
-                      text: joint.util.breakText("说明：标记为红色的为被替换或融合到前一层的神经层", {width: 80}),
+                      text: joint.util.breakText("说明：标记为红色的为被删除掉的层、橙色的为向前融合的层", {width: 80}),
                       fill: "black"
                     }
                   });
@@ -422,11 +431,15 @@ const vscode = acquireVsCodeApi();
                             fill: 'white'
                         }
                     });
-                    if (origin_layer_names[k] == "BatchNormalization" || origin_layer_names[k] == "Activation" ||
+                    if (origin_layer_names[k] == "Activation" ||
                         origin_layer_names[k] == "Dropout" || origin_layer_names[k] == "AveragePooling2D" || origin_layer_names[k] == "MaxPooling2D") {
                         rect.attr("body/fill", "red");
                         rect.attr("label/text", origin_layer_names[k]);
-                    } else {
+                    } else if (origin_layer_names[k] == "BatchNormalization") {
+                      rect.attr("body/fill", "#FF9800");
+                      rect.attr("label/text", origin_layer_names[k]);
+                    }
+                    else {
                       idx4layer += 1;
                     }
                     rect.addTo(graph);
@@ -533,8 +546,10 @@ const vscode = acquireVsCodeApi();
                 ],
                 yAxis: [
                  {
-                    type: 'value',
-                    name:"浮点权重数量(10^n)",
+                    type: 'log',
+                    min: 1,
+                    logBase: 2,
+                    name:"浮点权重数量",
                     nameTextStyle:{
                       color:"#999999",
                       fontFamily: 'SourceHanSansCN-Normal',
@@ -552,8 +567,10 @@ const vscode = acquireVsCodeApi();
                     inverse:false
                   },
                   {
-                    type: 'value',
-                    name:"定点权重数量(10^n)",
+                    type: 'log',
+                    min: 1,
+                    logBase: 10,
+                    name:"定点权重数量",
                     nameTextStyle:{
                       color:"#999999",
                       fontFamily: 'SourceHanSansCN-Normal',

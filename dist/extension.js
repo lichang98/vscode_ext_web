@@ -6368,21 +6368,21 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
           class_labels.push(""+i);
         }
         // 对数处理histgram
-        for(var i=0;i<data_info.test_sample_imgs.length;++i){
-          for(var j=0;j<data_info.test_sample_imgs[i].hist_gram_bins.length;++j){
-            if(data_info.test_sample_imgs[i].hist_gram_bins[j] > 0){
-              data_info.test_sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.test_sample_imgs[i].hist_gram_bins[j]);
-            }
-          }
-        }
+        // for(var i=0;i<data_info.test_sample_imgs.length;++i){
+        //   for(var j=0;j<data_info.test_sample_imgs[i].hist_gram_bins.length;++j){
+        //     if(data_info.test_sample_imgs[i].hist_gram_bins[j] > 0){
+        //       data_info.test_sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.test_sample_imgs[i].hist_gram_bins[j]);
+        //     }
+        //   }
+        // }
   
-        for(var i=0;i<data_info.sample_imgs.length;++i){
-          for(var j=0;j<data_info.sample_imgs[i].hist_gram_bins.length;++j){
-            if(data_info.sample_imgs[i].hist_gram_bins[j] > 0){
-              data_info.sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.sample_imgs[i].hist_gram_bins[j]);
-            }
-          }
-        }
+        // for(var i=0;i<data_info.sample_imgs.length;++i){
+        //   for(var j=0;j<data_info.sample_imgs[i].hist_gram_bins.length;++j){
+        //     if(data_info.sample_imgs[i].hist_gram_bins[j] > 0){
+        //       data_info.sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.sample_imgs[i].hist_gram_bins[j]);
+        //     }
+        //   }
+        // }
   
         $(".loading-div").hide(); // 隐藏加载提示
         console.log("display test data distribution...");
@@ -6436,9 +6436,9 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
     console.log("current click img id="+sampleId);
     var sampleIdx = parseInt(sampleId.substring(sampleId.length-1));
     if(sampleId.substring(0,4) === "test"){
-      display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量(10^n)", "test_bar_chart_histgram");
+      display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量", "test_bar_chart_histgram");
     }else{
-      display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量(10^n)", "bar_chart_histgram");
+      display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量", "bar_chart_histgram");
     }
   }
   
@@ -6876,9 +6876,9 @@ function getConvertorModelPageV2() {
               }
               // 绘制各layer 参数分布柱状图
               console.log("layer params list: "+layer_params_list);
-              for(var i=0;i<layer_params_list.length;++i){
-                layer_params_list[i] = Math.log10(layer_params_list[i]);
-              }
+              // for(var i=0;i<layer_params_list.length;++i){
+              //   layer_params_list[i] = Math.log10(layer_params_list[i]);
+              // }
               display_layer_params_bar_chart(layer_uniq_names, layer_params_list);
             }else if(data.model_layer_vis){
               var layer_output_info = JSON.parse(data.model_layer_vis);
@@ -6957,9 +6957,11 @@ function getConvertorModelPageV2() {
                 },
               yAxis:[
                 {
-                  type: 'value',
+                  type: 'log',
+                  min:1,
+                  logBase:10,
                     scale:true,
-                    name:"参数数量(10^n)",
+                    name:"参数数量",
                     nameTextStyle:{
                       color:"#999999",
                       fontFamily: 'PingFangSC-Regular',
@@ -6974,7 +6976,9 @@ function getConvertorModelPageV2() {
                     }
                 },
                 {
-                  type: 'value',
+                  type: 'log',
+                  min: 1,
+                  logBase: 10,
                     scale:true,
                     name:"",
                     show:false,
@@ -9646,7 +9650,7 @@ function getSNNSimuPage() {
                       } else if (j == infos.record_spike_out_info.spike_count_avgs.length - 1) {
                         td_id.innerText = "out";
                       } else {
-                        td_id.innerText = "later_"+j;
+                        td_id.innerText = "layer_"+j;
                       }
                       table_line.appendChild(td_id);
   
@@ -9956,14 +9960,14 @@ function getSNNModelPage() {
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
-                letter-spacing: 1.14px;">脉冲神经网络神经元组信息</font></div>
-              <table id="snn_neurons_table" style="margin-left:10px;margin-left: 20px;border: solid 3px #D6D6D6;width: 600px;">
+                letter-spacing: 1.14px;">各神经元组详细信息</font></div>
+              <table id="snn_neurons_table" style="margin-left:80px;border: solid 3px #D6D6D6;width: 600px;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                   <thead>
                     <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 16px;
-                      color: #666666;padding-top: 12px; padding-bottom: 12px;">layer</td>
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">神经元组</td>
                       <!-- <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">神经元个数</td>
@@ -9973,6 +9977,9 @@ function getSNNModelPage() {
                       <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                       font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">电压阈值</td>
+                      <td style="width: 100px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                      font-size: 16px;
+                      color: #666666;padding-top: 12px; padding-bottom: 12px;">神经元类型</td>
                     </tr>
                     <!-- 动态加载 -->
                   </thead>
@@ -9990,13 +9997,13 @@ function getSNNModelPage() {
                 <tr style="margin-top: 15px;border: solid 2px #D6D6D6;color: #333;">
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                   font-size: 16px;
-                  color: #666666;padding-top: 12px; padding-bottom: 12px;">突触连接</td>
+                  color: #666666;padding-top: 12px; padding-bottom: 12px;">连接</td>
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                   font-size: 16px;
-                  color: #666666;padding-top: 12px; padding-bottom: 12px;">权重均值</td>
+                  color: #666666;padding-top: 12px; padding-bottom: 12px;">均值</td>
                   <td style="width: 80px;text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                   font-size: 16px;
-                  color: #666666;padding-top: 12px; padding-bottom: 12px;">权重方差</td>
+                  color: #666666;padding-top: 12px; padding-bottom: 12px;">方差</td>
                 </tr>
               </thead>
             </table>
@@ -10177,10 +10184,16 @@ function getSNNModelPage() {
                         col_4.style = "border: solid 3px #D6D6D6;text-align:center; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
                         col_4.innerText = neurons_info[i].vthresh;
   
+                        var col5 = document.createElement("td");
+                        col5.style = "border: solid 3px #D6D6D6;text-align:center; padding-right:15px;;font-family: ArialMT;font-size: 14px;color: #333333;padding-top: 12px; padding-bottom: 12px;";
+                        col5.innerText = "IF";
+  
+  
                         line.appendChild(col_1);
                         // line.appendChild(col_2);
                         // line.appendChild(col_3);
                         line.appendChild(col_4);
+                        line.appendChild(col5);
   
                         neurons_table.appendChild(line);
                     }
@@ -10213,20 +10226,20 @@ function getSNNModelPage() {
                     console.log("数值:"+infos.layers_weights.wt_count);
                     console.log("浮点权重数据："+infos.layer_flt_weights.wt_label);
                     console.log("数值："+infos.layer_flt_weights.wt_count);
-                    for(var i=0;i<infos.layers_weights.wt_count.length;++i){
-                      if (infos.layers_weights.wt_count[i] > 0) {
-                        infos.layers_weights.wt_count[i] = Math.log10(infos.layers_weights.wt_count[i]);
-                      } else {
-                        infos.layers_weights.wt_count[i] = 0;
-                      }
-                    }
-                    for (var i = 0; i < infos.layer_flt_weights.wt_count.length;++i) {
-                      if (infos.layer_flt_weights.wt_count[i] > 0) {
-                        infos.layer_flt_weights.wt_count[i] = Math.log10(infos.layer_flt_weights.wt_count[i]);
-                      } else {
-                        infos.layer_flt_weights.wt_count[i] = 0;
-                      }
-                    }
+                    // for(var i=0;i<infos.layers_weights.wt_count.length;++i){
+                    //   if (infos.layers_weights.wt_count[i] > 0) {
+                    //     infos.layers_weights.wt_count[i] = Math.log10(infos.layers_weights.wt_count[i]);
+                    //   } else {
+                    //     infos.layers_weights.wt_count[i] = 0;
+                    //   }
+                    // }
+                    // for (var i = 0; i < infos.layer_flt_weights.wt_count.length;++i) {
+                    //   if (infos.layer_flt_weights.wt_count[i] > 0) {
+                    //     infos.layer_flt_weights.wt_count[i] = Math.log10(infos.layer_flt_weights.wt_count[i]);
+                    //   } else {
+                    //     infos.layer_flt_weights.wt_count[i] = 0;
+                    //   }
+                    // }
                     display_weight_chart(infos.layer_flt_weights.wt_label, infos.layer_flt_weights.wt_count,infos.layers_weights.wt_label, infos.layers_weights.wt_count);
   
                     // 仿真配置与结果表格
@@ -10320,7 +10333,7 @@ function getSNNModelPage() {
                         fill:"rgb(255,248,220)"
                       },
                       label: {
-                        text: joint.util.breakText("说明：标记为红色的为被替换或融合到前一层的神经层", {width: 80}),
+                        text: joint.util.breakText("说明：标记为红色的为被删除掉的层、橙色的为向前融合的层", {width: 80}),
                         fill: "black"
                       }
                     });
@@ -10347,11 +10360,15 @@ function getSNNModelPage() {
                               fill: 'white'
                           }
                       });
-                      if (origin_layer_names[k] == "BatchNormalization" || origin_layer_names[k] == "Activation" ||
+                      if (origin_layer_names[k] == "Activation" ||
                           origin_layer_names[k] == "Dropout" || origin_layer_names[k] == "AveragePooling2D" || origin_layer_names[k] == "MaxPooling2D") {
                           rect.attr("body/fill", "red");
                           rect.attr("label/text", origin_layer_names[k]);
-                      } else {
+                      } else if (origin_layer_names[k] == "BatchNormalization") {
+                        rect.attr("body/fill", "#FF9800");
+                        rect.attr("label/text", origin_layer_names[k]);
+                      }
+                      else {
                         idx4layer += 1;
                       }
                       rect.addTo(graph);
@@ -10458,8 +10475,10 @@ function getSNNModelPage() {
                   ],
                   yAxis: [
                    {
-                      type: 'value',
-                      name:"浮点权重数量(10^n)",
+                      type: 'log',
+                      min: 1,
+                      logBase: 2,
+                      name:"浮点权重数量",
                       nameTextStyle:{
                         color:"#999999",
                         fontFamily: 'SourceHanSansCN-Normal',
@@ -10477,8 +10496,10 @@ function getSNNModelPage() {
                       inverse:false
                     },
                     {
-                      type: 'value',
-                      name:"定点权重数量(10^n)",
+                      type: 'log',
+                      min: 1,
+                      logBase: 10,
+                      name:"定点权重数量",
                       nameTextStyle:{
                         color:"#999999",
                         fontFamily: 'SourceHanSansCN-Normal',

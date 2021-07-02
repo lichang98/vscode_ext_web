@@ -331,21 +331,21 @@ $(document).ready(function(){
         class_labels.push(""+i);
       }
       // 对数处理histgram
-      for(var i=0;i<data_info.test_sample_imgs.length;++i){
-        for(var j=0;j<data_info.test_sample_imgs[i].hist_gram_bins.length;++j){
-          if(data_info.test_sample_imgs[i].hist_gram_bins[j] > 0){
-            data_info.test_sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.test_sample_imgs[i].hist_gram_bins[j]);
-          }
-        }
-      }
+      // for(var i=0;i<data_info.test_sample_imgs.length;++i){
+      //   for(var j=0;j<data_info.test_sample_imgs[i].hist_gram_bins.length;++j){
+      //     if(data_info.test_sample_imgs[i].hist_gram_bins[j] > 0){
+      //       data_info.test_sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.test_sample_imgs[i].hist_gram_bins[j]);
+      //     }
+      //   }
+      // }
 
-      for(var i=0;i<data_info.sample_imgs.length;++i){
-        for(var j=0;j<data_info.sample_imgs[i].hist_gram_bins.length;++j){
-          if(data_info.sample_imgs[i].hist_gram_bins[j] > 0){
-            data_info.sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.sample_imgs[i].hist_gram_bins[j]);
-          }
-        }
-      }
+      // for(var i=0;i<data_info.sample_imgs.length;++i){
+      //   for(var j=0;j<data_info.sample_imgs[i].hist_gram_bins.length;++j){
+      //     if(data_info.sample_imgs[i].hist_gram_bins[j] > 0){
+      //       data_info.sample_imgs[i].hist_gram_bins[j] = Math.log10(data_info.sample_imgs[i].hist_gram_bins[j]);
+      //     }
+      //   }
+      // }
 
       $(".loading-div").hide(); // 隐藏加载提示
       console.log("display test data distribution...");
@@ -399,9 +399,9 @@ function sample_img_click(e){
   console.log("current click img id="+sampleId);
   var sampleIdx = parseInt(sampleId.substring(sampleId.length-1));
   if(sampleId.substring(0,4) === "test"){
-    display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量(10^n)", "test_bar_chart_histgram");
+    display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量", "test_bar_chart_histgram");
   }else{
-    display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量(10^n)", "bar_chart_histgram");
+    display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量", "bar_chart_histgram");
   }
 }
 

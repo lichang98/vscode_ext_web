@@ -573,33 +573,42 @@ for i in range(len(br2_neurons)):
 wt_labels = set()
 for i in range(len(br2_synapses)):
     wts = np.array(br2_synapses[i].w).flatten().tolist()
-    wts = [int(x) for x in wts]
+    wts = [str(x) for x in wts]
     wt_labels |= set(wts)
 
-wt_counts=[0]*len(wt_labels)
-wt_labels = list(sorted(wt_labels))
-for i in range(len(br2_synapses)):
-    wts = np.array(br2_synapses[i].w).flatten().tolist()
-    for w in wts:
-        wt_counts[wt_labels.index(w)] +=1
-
-wt_labels = [str(x) for x in wt_labels]
-layer_weights = {"wt_label": wt_labels, "wt_count": wt_counts}
+# wt_counts=[0]*len(wt_labels)
+wt_labels = list(sorted(wt_labels, key=lambda x: float(x)))
 
 wt_flt_labels = set()
 for i in range(len(flt_all_wts)):
     flt_wts = np.array(flt_all_wts[i]).flatten().tolist()
-    flt_wts = ["{:.2f}".format(x) for x in flt_wts]
+    flt_wts = ["{:.1f}".format(x) for x in flt_wts]
     wt_flt_labels |= set(flt_wts)
 
-wt_flt_counts=[0]*len(wt_flt_labels)
+# wt_flt_counts=[0]*len(wt_flt_labels)
 wt_flt_labels = list(sorted(wt_flt_labels, key=lambda x: float(x)))
+
+wt_union_labels = wt_flt_labels + wt_labels
+wt_union_labels = list(sorted(wt_union_labels, key = lambda x : float(x)))
+
+wt_union_counts = [0] * len(wt_union_labels)
+flt_union_counts = [0] * len(wt_union_labels)
+for i in range(len(br2_synapses)):
+    wts = np.array(br2_synapses[i].w).flatten().tolist()
+    for w in wts:
+        # wt_counts[wt_labels.index(w)] +=1
+        wt_union_counts[wt_union_labels.index(str(w))] += 1
+
+wt_labels = [str(x) for x in wt_labels]
+layer_weights = {"wt_label": wt_union_labels, "wt_count": wt_union_counts}
+
 for i in range(len(flt_all_wts)):
     flt_wts = np.array(flt_all_wts[i]).flatten().tolist()
     for w in flt_wts:
-        wt_flt_counts[wt_flt_labels.index("{:.2f}".format(w))] +=1
+        # wt_flt_counts[wt_flt_labels.index("{:.1f}".format(w))] +=1
+        flt_union_counts[wt_union_labels.index("{:.1f}".format(w))] += 1
 
-flt_layer_weights = {"wt_label": wt_flt_labels, "wt_count": wt_flt_counts}
+flt_layer_weights = {"wt_label": wt_union_labels, "wt_count": flt_union_counts}
 
 
 # Last layer spike counts info

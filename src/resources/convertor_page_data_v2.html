@@ -399,9 +399,9 @@ function sample_img_click(e){
   console.log("current click img id="+sampleId);
   var sampleIdx = parseInt(sampleId.substring(sampleId.length-1));
   if(sampleId.substring(0,4) === "test"){
-    display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","区间","数量(log_10)", "test_bar_chart_histgram");
+    display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量(10^n)", "test_bar_chart_histgram");
   }else{
-    display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","区间","数量(log_10)", "bar_chart_histgram");
+    display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量(10^n)", "bar_chart_histgram");
   }
 }
 

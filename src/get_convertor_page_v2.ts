@@ -410,9 +410,9 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
     console.log("current click img id="+sampleId);
     var sampleIdx = parseInt(sampleId.substring(sampleId.length-1));
     if(sampleId.substring(0,4) === "test"){
-      display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","区间","数量(log_10)", "test_bar_chart_histgram");
+      display_data_bar_chart(data_info.hist_bin_names, data_info.test_sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量(10^n)", "test_bar_chart_histgram");
     }else{
-      display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","区间","数量(log_10)", "bar_chart_histgram");
+      display_data_bar_chart(data_info.hist_bin_names, data_info.sample_imgs[sampleIdx].hist_gram_bins, "像素分布", "像素灰度值分布","像素值","数量(10^n)", "bar_chart_histgram");
     }
   }
   
@@ -592,7 +592,7 @@ export function getConvertorModelPageV2(){
                     <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
                     font-size: 14px;
                     color: #333333;
-                    text-align: left;padding-top: 8px; padding-bottom: 8px;">总层数</td>
+                    text-align: left;padding-top: 8px; padding-bottom: 8px;">层数</td>
                     <td id="model_total_layers" style="padding-left: 10px;font-family: SourceHanSansCN-Heavy;
                     font-size: 14px;
                     color: #4D4D4D;text-align: right;padding-right: 15px;padding-top: 8px; padding-bottom: 8px;"></td>
@@ -601,7 +601,7 @@ export function getConvertorModelPageV2(){
                     <td style="padding-left: 15px; border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
                     font-size: 14px;
                     color: #333333;
-                    text-align: left;padding-top: 8px; padding-bottom: 8px;">总参数量</td>
+                    text-align: left;padding-top: 8px; padding-bottom: 8px;">参数数量</td>
                     <td id="model_total_param" style="padding-left: 10px;font-family: SourceHanSansCN-Heavy;
                     font-size: 14px;
                     color: #4D4D4D;text-align: right;padding-right: 15px;padding-top: 8px; padding-bottom: 8px;"></td>
@@ -610,7 +610,7 @@ export function getConvertorModelPageV2(){
                     <td style="padding-left: 15px; border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Normal;
                     font-size: 14px;
                     color: #333333;
-                    text-align: left;padding-top: 8px; padding-bottom: 8px;">unit数量</td>
+                    text-align: left;padding-top: 8px; padding-bottom: 8px;">神经元数量</td>
                     <td id="model_total_units" style="padding-left: 10px;font-family: SourceHanSansCN-Heavy;
                     font-size: 14px;
                     color: #4D4D4D;text-align: right;padding-right: 15px;padding-top: 8px; padding-bottom: 8px;"></td>
@@ -630,27 +630,8 @@ export function getConvertorModelPageV2(){
                 color: #333333;
                 letter-spacing: 1.14px;">各层详细信息</div>
                 <div class="row" style="width: 100%;">
-                  <div class="col-md-6">
+                  <div class="col-md-12" style="height: 400px;overflow-y: auto;">
                     <table id="model_detail_table" style="color: #333;">
-                      <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                      <thead>
-                        <tr style="border: solid 3px;height: 35px;border-color: #D6D6D6;">
-                          <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
-                          font-size: 16px;
-                          color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">名称</td>
-                          <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 180px;font-family: SourceHanSansCN-Regular;
-                          font-size: 16px;
-                          color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">输出形状</td>
-                          <td style="background: rgb(238,238,238);border: solid 2px;border-color: #D6D6D6;width: 200px;font-family: SourceHanSansCN-Regular;
-                          font-size: 16px;
-                          color: #666666;padding-top: 15px; padding-bottom: 15px;text-align: center;">参数量</td>
-                        </tr>
-                      </thead>
-                      <!--通过加载模型的信息动态创建-->
-                    </table>
-                  </div>
-                  <div class="col-md-6">
-                    <table id="model_detail_table_secondary" style="color: #333;">
                       <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                       <thead>
                         <tr style="border: solid 3px;height: 35px;border-color: #D6D6D6;">
@@ -679,18 +660,18 @@ export function getConvertorModelPageV2(){
                 <div id="model_layers_vis_tab_caption" style="text-align: center;font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
-                letter-spacing: 1.14px;">卷积与激活层输出可视化</div>
+                letter-spacing: 1.14px;">卷积输出可视化</div>
                 <!--动态创建-->
                 <div id="layers_vis_div" class="row" style="width: 620px;margin-left: 40px;margin-top: 40px;margin-bottom: 0px; margin-right: 40px;padding: 0px;background: rgb(238,238,238);color: #333;border: 2px solid #333;height: 58px;border-color: #D6D6D6;">
                   <div class="col-md-3" style="border-right: 2px solid #333;height: 56px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
                   font-size: 16px;
                   color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">layer 名称</div>
-                  <div class="col-md-3" style="border-right: 2px solid #333;height: 56px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
+                  <!-- <div class="col-md-3" style="border-right: 2px solid #333;height: 56px;border-color: #D6D6D6;font-family: SourceHanSansCN-Regular;
                   font-size: 16px;
-                  color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">layer 编号</div>
-                  <div class="col-md-6" style="height: 56px;font-family: SourceHanSansCN-Regular;
+                  color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">layer 编号</div> -->
+                  <div class="col-md-9" style="height: 56px;font-family: SourceHanSansCN-Regular;
                   font-size: 16px;
-                  color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">输出可视化</div>
+                  color: #666666;text-align: center;vertical-align: middle;padding-top: 20px;">特征图</div>
                 </div>
                 <div id="tmp_peer"></div>
               </div>
@@ -767,7 +748,6 @@ export function getConvertorModelPageV2(){
     vertical-align: middle;
   } 
   
-  
   .container {
     position: relative;
     display: inline-block;
@@ -823,7 +803,6 @@ export function getConvertorModelPageV2(){
               console.log("units count:"+JSON.parse(data.model_general_info).total_params);
               // 模型总体信息
               var model_general_info = JSON.parse(data.model_general_info);
-              $("#model_total_layers").text(model_general_info.total_num_layers);
               $("#model_total_param").text(model_general_info.total_params);;
               $("#model_total_units").text(model_general_info.total_units);
             }else if(data.model_detail_info){
@@ -834,46 +813,25 @@ export function getConvertorModelPageV2(){
               var layer_params_list = new Array();
               var total_params=0;
   
-              for(var i=0;i<detail_info.length/2;++i){
+              let total_layer_count = 0;
+              for (var i=0;i < detail_info.length;++i) {
+                if(detail_info[i].name === 'BatchNormalization' || detail_info[i].name === 'Activation' || detail_info[i].name === 'Dropout' || detail_info[i].name === 'InputLayer') {
+                  continue;
+                }
+                ++total_layer_count;
+              }
+              $("#model_total_layers").text(total_layer_count);
+  
+              for(var i=0;i<detail_info.length;++i){
                   var line = document.createElement("tr");
                   line.style.border = "solid 3px";
                   line.style.height = "45px";
                   line.style.borderColor ="#D6D6D6";
                   var col_name = document.createElement("td");
                   col_name.style = "padding-left: 15px;border: solid 2px;border-color: #D6D6D6;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 15px; padding-bottom: 15px;";
-                  col_name.innerText = detail_info[i].name;
+                  col_name.innerText = detail_info[i].name+"_"+(i+1);
                   var col_shape = document.createElement("td");
                   col_shape.style = "border: solid 2px;border-color: #D6D6D6;text-align: right; padding-right:15px;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 15px; padding-bottom: 15px;";
-                  col_shape.innerText = '('+detail_info[i].shape+')';
-                  var col_params = document.createElement("td");
-                  col_params.style = "border: solid 2px;border-color: #D6D6D6;text-align: right; padding-right:15px;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 15px; padding-bottom: 15px;";
-                  col_params.innerText = detail_info[i].params;
-                  
-                  if( parseInt(detail_info[i].params, 10) > 0){
-                    layer_uniq_names.push(detail_info[i].name+"_"+(i+1));
-                    layer_params_info.push({"name": detail_info[i].name+"_"+(i+1), "value": parseInt(detail_info[i].params, 10)});
-                    layer_params_list.push(parseInt(detail_info[i].params, 10));
-                    total_params += parseInt(detail_info[i].params, 10);
-                  }
-  
-                  line.appendChild(col_name);
-                  line.appendChild(col_shape);
-                  line.appendChild(col_params);
-                  table.appendChild(line);
-              }
-              // 另外一半数据使用副表
-              table = document.getElementById("model_detail_table_secondary");
-  
-              for(var i=detail_info.length/2;i<detail_info.length;++i){
-                  var line = document.createElement("tr");
-                  line.style.border = "solid 3px";
-                  line.style.height = "45px";
-                  line.style.borderColor = "#D6D6D6";
-                  var col_name = document.createElement("td");
-                  col_name.style = "padding-left: 15px;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 15px; padding-bottom: 15px;";
-                  col_name.innerText = detail_info[i].name;
-                  var col_shape = document.createElement("td");
-                  col_shape.style = "border: solid 2px;border-color: #D6D6D6;text-align:right; padding-right: 15px;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 15px; padding-bottom: 15px;";
                   col_shape.innerText = '('+detail_info[i].shape+')';
                   var col_params = document.createElement("td");
                   col_params.style = "border: solid 2px;border-color: #D6D6D6;text-align: right; padding-right:15px;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 15px; padding-bottom: 15px;";
@@ -911,15 +869,15 @@ export function getConvertorModelPageV2(){
                   var layer_name_div = document.createElement("div");
                   layer_name_div.setAttribute("class", "col-md-3");
                   layer_name_div.style = "border-right: 2px solid #333;height: 58px;border-color: #D6D6D6;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 20px;";
-                  layer_name_div.innerText = layer_name;
+                  layer_name_div.innerText = layer_name+"_"+layer_idx;
                   img_div.appendChild(layer_name_div);
   
-                  var layer_index_div = document.createElement("div");
-                  layer_index_div.style = "border-right: 2px solid #333;height: 58px;border-color: #D6D6D6;text-align: right; padding-right: 15px;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 20px;";
-                  layer_index_div.setAttribute("class", "col-md-3");
+                  // var layer_index_div = document.createElement("div");
+                  // layer_index_div.style = "border-right: 2px solid #333;height: 58px;border-color: #D6D6D6;text-align: right; padding-right: 15px;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 20px;";
+                  // layer_index_div.setAttribute("class", "col-md-3");
   
-                  layer_index_div.innerText = layer_idx;
-                  img_div.append(layer_index_div);
+                  // layer_index_div.innerText = layer_idx;
+                  // img_div.append(layer_index_div);
   
                   var layer_vis_div = document.createElement("div");
                   layer_vis_div.setAttribute("class", "col-md-6");
@@ -932,7 +890,7 @@ export function getConvertorModelPageV2(){
                     layer_img_tag.style.width = "50px";
                     layer_img_tag.style.height = "50px";
                     if(j === 0){
-                      layer_img_tag.style.marginLeft = "20px";
+                      layer_img_tag.style.marginLeft = "15%";
                     }
                     layer_vis_div.appendChild(layer_img_tag);
                     img_div.append(layer_img_tag);
@@ -957,7 +915,7 @@ export function getConvertorModelPageV2(){
                     type: 'category',
                     data: layer_names,
                     scale:true,
-                    name:"神经层",
+                    name:"层",
                     nameTextStyle:{
                       color:"#999999",
                       fontFamily: 'PingFangSC-Regular',
@@ -976,7 +934,7 @@ export function getConvertorModelPageV2(){
                 {
                   type: 'value',
                     scale:true,
-                    name:"参数量(log_10)",
+                    name:"参数数量(10^n)",
                     nameTextStyle:{
                       color:"#999999",
                       fontFamily: 'PingFangSC-Regular',
@@ -1011,7 +969,7 @@ export function getConvertorModelPageV2(){
               ],
               series: [
                   {
-                      name: '参数量(log_10)',
+                      name: '参数量(10^n)',
                       type: 'bar',
                       data: layer_param_counts,
                       itemStyle: {
@@ -1785,7 +1743,7 @@ export function getANNSNNConvertPage(){
                       <label for="select_dura"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                           font-size: 16px;
                           color: #333333;
-                          letter-spacing: 0.91px;">总时间</font></label>
+                          letter-spacing: 0.91px;">模拟时长</font></label>
                       <select class="form-control" id="select_dura">
                           <option>100ms</option>
                           <option>200ms</option>
@@ -2000,7 +1958,7 @@ export function getANNSNNConvertPage(){
                       <tr>
                           <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
-                          color: #666666;">ANN转SNN耗时(秒)</td>
+                          color: #666666;">调整网络结构耗时(秒)</td>
                           <td id="stage1_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
                           color: #666666;">xxx</td>
@@ -2008,7 +1966,7 @@ export function getANNSNNConvertPage(){
                       <tr>
                           <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
-                          color: #666666;">预处理耗时(秒)</td>
+                          color: #666666;">权重归一化耗时(秒)</td>
                           <td id="stage2_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
                           color: #666666;">xxx</td>
@@ -2016,7 +1974,7 @@ export function getANNSNNConvertPage(){
                       <tr>
                           <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
-                          color: #666666;">参数调优耗时(秒)</td>
+                          color: #666666;">权重量化耗时(秒)</td>
                           <td id="stage3_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
                           color: #666666;">xxx</td>
@@ -2024,7 +1982,7 @@ export function getANNSNNConvertPage(){
                       <tr>
                           <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
-                          color: #666666;">DarwinMDL文件生成耗时(秒)</td>
+                          color: #666666;">SNN验证耗时(秒)</td>
                           <td id="stage4_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
                           color: #666666;">xxx</td>
@@ -2695,7 +2653,7 @@ export function getANNSNNConvertPage(){
                     $("#stage3_time_use").text(convert_infos.stage3_time_use);
                     $("#stage4_time_use").text(convert_infos.stage4_time_use);
   
-                    let bar_chart_label_names = ["ANN转SNN", "预处理", "参数调优", "DarwinMDL文件生成"];
+                    let bar_chart_label_names = ["调整网络结构", "权重归一化", "权重量化", "SNN验证"];
                     let bar_chart_label_counts = [parseFloat(convert_infos.stage1_time_use), parseFloat(convert_infos.stage2_time_use),
                                   parseFloat(convert_infos.stage3_time_use), parseFloat(convert_infos.stage4_time_use)];
                     display_bar_chart(bar_chart_label_names, bar_chart_label_counts, "","秒","use_time_bar_chart");
@@ -3057,7 +3015,7 @@ export function getSNNSimuPage(){
                 letter-spacing: 1.14px;">仿真配置结果评估</font></div>
               <table id="layer_conf_val" style="width: 600px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
                   <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                  <tr style="height: 95px; border: solid 2px #D6D6D6;color: #333;">
+                  <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
                     <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                     font-size: 16px;
                     color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">统计指标</td>
@@ -3112,18 +3070,7 @@ export function getSNNSimuPage(){
               letter-spacing: 1.14px;">放电次数均值方差统计</font></div>
               <div style="width: 640px;height: 340px;overflow-y: scroll;margin-left: 80px;">
                 <table id="snn_layers_spike_table" style="width: 600px;height: 380px;margin-left:10px;margin-top: 5px;margin-right: 280px;border: solid 3px #D6D6D6;">
-                  <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                  <tr id="snn_layers_spike_table_thead_tr" style="height: 25px; border: solid 2px #D6D6D6;color: #333;padding: 10px;">
-                    <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                    font-size: 16px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">层编号</td>
-                    <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                    font-size: 16px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数均值</td>
-                    <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                    font-size: 16px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数方差</td>
-                  </tr>
+                  <!-- <caption class="white-text" style="caption-side: top;text-align: center;"></caption> -->
                 </table>
               </div>
           </div>
@@ -3599,6 +3546,61 @@ export function getSNNSimuPage(){
   
                     // fill layers spike info table
                     // $("#snn_layers_spike_table")
+  //                   document.getElementById("snn_layers_spike_table").innerHTML = '<tr id="snn_layers_spike_table_thead_tr" style="height: 25px; border: solid 2px #D6D6D6;color: #333;">\
+  // <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;\
+  // font-size: 16px;\
+  // color: #666666;padding-top: 12px;padding-bottom: 12px;">层编号</td>\
+  // <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;\
+  // font-size: 16px;\
+  // color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数均值</td>\
+  // <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;\
+  // font-size: 16px;\
+  // color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数方差</td>\
+  // </tr>';
+                      let table_line = document.createElement("tr");
+                      table_line.style.height = "25px";
+                      table_line.style.border = "solid 2px #D6D6D6";
+                      table_line.style.color = "#333";
+  
+                      let td_id = document.createElement("td");
+                      td_id.style.fontFamily = 'SourceHanSansCN-Medium';
+                      td_id.style.backgroundColor = '#EEEEEE';
+                      td_id.style.fontSize = '16px';
+                      td_id.style.color = '#666666';
+                      td_id.style.textAlign = 'center';
+                      td_id.style.border = "solid 2px #D6D6D6";
+                      td_id.style.paddingTop = '12px';
+                      td_id.style.paddingBottom = '12px';
+                      td_id.innerText = "层编号";
+                      table_line.appendChild(td_id);
+  
+                      let td_id2 = document.createElement("td");
+                      td_id2.style.fontFamily = 'SourceHanSansCN-Medium';
+                      td_id2.style.fontSize = '16px';
+                      td_id2.style.color = '#666666';
+                      td_id2.style.textAlign = 'center';
+                      td_id2.style.backgroundColor = '#EEEEEE';
+                      td_id2.style.border = "solid 2px #D6D6D6";
+                      td_id2.style.paddingTop = '12px';
+                      td_id2.style.paddingBottom = '12px';
+                      td_id2.innerText = "放电次数均值";
+                      table_line.appendChild(td_id2);
+  
+                      let td_id3 = document.createElement("td");
+                      td_id3.style.fontFamily = 'SourceHanSansCN-Medium';
+                      td_id3.style.fontSize = '16px';
+                      td_id3.style.color = '#666666';
+                      td_id3.style.textAlign = 'center';
+                      td_id3.style.backgroundColor = '#EEEEEE';
+                      td_id3.style.border = "solid 2px #D6D6D6";
+                      td_id3.style.paddingTop = '12px';
+                      td_id3.style.paddingBottom = '12px';
+                      td_id3.innerText = "放电次数方差";
+                      table_line.appendChild(td_id3);
+  
+                      document.getElementById("snn_layers_spike_table").appendChild(table_line);
+  
+  
                     for(let j=0;j<infos.record_spike_out_info.spike_count_avgs.length;++j){
                       let table_line = document.createElement("tr");
                       table_line.style.height = "25px";
@@ -3653,7 +3655,6 @@ export function getSNNSimuPage(){
                     }
                     console.log("Auto click first image.......");
                     document.getElementById("img_0").click();
-                    document.getElementById("snn_layers_spike_table_thead_tr").style.padding = "5px";
                     // document.getElementById("inputimg_0").click();
   
                     $(".loading-div").hide(); // 隐藏加载提示
@@ -3929,7 +3930,7 @@ export function getSNNModelPage():string{
   
       <div style="height: 400px;">
           <!-- SNN神经元信息 -->
-          <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 750px;">
+          <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 770px;">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -4003,7 +4004,7 @@ export function getSNNModelPage():string{
               </table>
           </div> -->
       </div>
-      <div style="height: 460px;margin-top: 30px;">
+      <div style="height: 500px;margin-top: -5px;">
           <!--权重分布图-->
           <div style="height: 460px;width: 770px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
@@ -4186,14 +4187,24 @@ export function getSNNModelPage():string{
                     // }
   
                     // 绘制权重分布图
+                    console.log("权重数据："+infos.layers_weights.wt_label);
+                    console.log("数值:"+infos.layers_weights.wt_count);
+                    console.log("浮点权重数据："+infos.layer_flt_weights.wt_label);
+                    console.log("数值："+infos.layer_flt_weights.wt_count);
                     for(var i=0;i<infos.layers_weights.wt_count.length;++i){
+                      if (infos.layers_weights.wt_count[i] > 0) {
                         infos.layers_weights.wt_count[i] = Math.log10(infos.layers_weights.wt_count[i]);
+                      } else {
+                        infos.layers_weights.wt_count[i] = 0;
+                      }
                     }
                     for (var i = 0; i < infos.layer_flt_weights.wt_count.length;++i) {
-                      infos.layer_flt_weights.wt_count[i] = Math.log10(infos.layer_flt_weights.wt_count[i]);
+                      if (infos.layer_flt_weights.wt_count[i] > 0) {
+                        infos.layer_flt_weights.wt_count[i] = Math.log10(infos.layer_flt_weights.wt_count[i]);
+                      } else {
+                        infos.layer_flt_weights.wt_count[i] = 0;
+                      }
                     }
-                    console.log("权重数据："+infos.layers_weights.wt_label);
-                    console.log("数值:"+infos.layers_weights.wt_count)
                     display_weight_chart(infos.layer_flt_weights.wt_label, infos.layer_flt_weights.wt_count,infos.layers_weights.wt_label, infos.layers_weights.wt_count);
   
                     // 仿真配置与结果表格
@@ -4402,12 +4413,12 @@ export function getSNNModelPage():string{
                           fontFamily: 'SourceHanSansCN-Normal',
                           fontSize: '14px',
                       },
-                      position: "top"
+                      show:false
                     },
                     {
                         type: 'category',
                         data: label_names,
-                        name:"定点权重",
+                        name:"权重",
                         nameTextStyle:{
                           color:"#999999",
                           fontFamily: 'SourceHanSansCN-Normal',
@@ -4426,7 +4437,7 @@ export function getSNNModelPage():string{
                   yAxis: [
                    {
                       type: 'value',
-                      name:"浮点个数(10^n)",
+                      name:"浮点权重数量(10^n)",
                       nameTextStyle:{
                         color:"#999999",
                         fontFamily: 'SourceHanSansCN-Normal',
@@ -4441,11 +4452,11 @@ export function getSNNModelPage():string{
                           fontFamily: 'SourceHanSansCN-Normal',
                           fontSize: '14px',
                       },
-                      inverse:true
+                      inverse:false
                     },
                     {
                       type: 'value',
-                      name:"定点个数(10^n)",
+                      name:"定点权重数量(10^n)",
                       nameTextStyle:{
                         color:"#999999",
                         fontFamily: 'SourceHanSansCN-Normal',

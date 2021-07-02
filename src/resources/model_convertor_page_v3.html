@@ -106,7 +106,7 @@
                     <label for="select_dura"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                         font-size: 16px;
                         color: #333333;
-                        letter-spacing: 0.91px;">总时间</font></label>
+                        letter-spacing: 0.91px;">模拟时长</font></label>
                     <select class="form-control" id="select_dura">
                         <option>100ms</option>
                         <option>200ms</option>
@@ -321,7 +321,7 @@
                     <tr>
                         <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
-                        color: #666666;">ANN转SNN耗时(秒)</td>
+                        color: #666666;">调整网络结构耗时(秒)</td>
                         <td id="stage1_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
                         color: #666666;">xxx</td>
@@ -329,7 +329,7 @@
                     <tr>
                         <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
-                        color: #666666;">预处理耗时(秒)</td>
+                        color: #666666;">权重归一化耗时(秒)</td>
                         <td id="stage2_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
                         color: #666666;">xxx</td>
@@ -337,7 +337,7 @@
                     <tr>
                         <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
-                        color: #666666;">参数调优耗时(秒)</td>
+                        color: #666666;">权重量化耗时(秒)</td>
                         <td id="stage3_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
                         color: #666666;">xxx</td>
@@ -345,7 +345,7 @@
                     <tr>
                         <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
-                        color: #666666;">DarwinMDL文件生成耗时(秒)</td>
+                        color: #666666;">SNN验证耗时(秒)</td>
                         <td id="stage4_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
                         color: #666666;">xxx</td>
@@ -1016,7 +1016,7 @@ let processPie = undefined;
                   $("#stage3_time_use").text(convert_infos.stage3_time_use);
                   $("#stage4_time_use").text(convert_infos.stage4_time_use);
 
-                  let bar_chart_label_names = ["ANN转SNN", "预处理", "参数调优", "DarwinMDL文件生成"];
+                  let bar_chart_label_names = ["调整网络结构", "权重归一化", "权重量化", "SNN验证"];
                   let bar_chart_label_counts = [parseFloat(convert_infos.stage1_time_use), parseFloat(convert_infos.stage2_time_use),
                                 parseFloat(convert_infos.stage3_time_use), parseFloat(convert_infos.stage4_time_use)];
                   display_bar_chart(bar_chart_label_names, bar_chart_label_counts, "","秒","use_time_bar_chart");

@@ -189,14 +189,14 @@ export function activate(context: vscode.ExtensionContext) {
 	treeViewCvtor.onDidChangeVisibility((evt)=>{
 		if(evt.visible){
 			console.log("activity bar 转换图标被点击, treeview convertor 可见...");
-			if(currentPanel && currentPanel.title === "模型转换"){
+			if(currentPanel && currentPanel.title === "ANN-SNN转化"){
 				currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
 				treeviewHome.reveal(treeview.data[0]);
 			}
 		}else{
 			setTimeout(()=>{
 				if(isAllOtherTreeViewInvisible()){
-					if(currentPanel && currentPanel.title === "模型转换"){
+					if(currentPanel && currentPanel.title === "ANN-SNN转化"){
 						currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
 						treeviewHome.reveal(treeview.data[0]);
 					}
@@ -521,7 +521,7 @@ export function activate(context: vscode.ExtensionContext) {
 				PROJ_DESC_INFO.project_type = data.project_info.project_type;
 				addSlfProj(data.project_info.project_name);
 				inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name,[
-					new TreeItemNode("模型转换",[
+					new TreeItemNode("ANN-SNN转化",[
 						new TreeItemNode("数据集",[
 							new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), new TreeItemNode("测试数据标签",[])
 						]), 
@@ -530,7 +530,7 @@ export function activate(context: vscode.ExtensionContext) {
 							new TreeItemNode("连接文件", [])
 						]),
 					]),
-					new TreeItemNode("模型编译", [
+					new TreeItemNode("编译", [
 						new TreeItemNode("Darwin二进制文件", [
 							new TreeItemNode("模型文件", []),
 							new TreeItemNode("编解码配置文件", [])
@@ -930,7 +930,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable2);
 
 	context.subscriptions.push(vscode.commands.registerCommand("treeView.proj_rename",()=>{
-		if(!currentPanel || currentPanel.title.trim() === "模型转换"){
+		if(!currentPanel || currentPanel.title.trim() === "ANN-SNN转化"){
 			vscode.window.showErrorMessage("当前项目属性不可修改!!!");
 			return;
 		}
@@ -1017,7 +1017,7 @@ export function activate(context: vscode.ExtensionContext) {
 				// 显示treeview
 				addSlfProj(PROJ_DESC_INFO.project_name);
 				inMemTreeViewStruct.push(new TreeItemNode(PROJ_DESC_INFO.project_name,[
-					new TreeItemNode("模型转换",[
+					new TreeItemNode("ANN-SNN转化",[
 						new TreeItemNode("数据集",[
 							new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), new TreeItemNode("测试数据标签",[])
 						]), 
@@ -1026,7 +1026,7 @@ export function activate(context: vscode.ExtensionContext) {
 							new TreeItemNode("连接文件", [])
 						]),
 					]),
-					new TreeItemNode("模型编译", [
+					new TreeItemNode("编译", [
 						new TreeItemNode("Darwin二进制文件", [
 							new TreeItemNode("模型文件", []),
 							new TreeItemNode("编解码配置文件", [])
@@ -1559,7 +1559,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			// currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
 			console.log("title="+currentPanel.title);
-			if(currentPanel && currentPanel.title !== "模型转换"){
+			if(currentPanel && currentPanel.title !== "ANN-SNN转化"){
 				console.log("PROJ_DESC_INFO="+PROJ_DESC_INFO);
 				if(PROJ_DESC_INFO.project_type === '图像分类'){
 					console.log("currentpanel="+currentPanel);
@@ -1575,7 +1575,7 @@ export function activate(context: vscode.ExtensionContext) {
 					currentPanel.webview.html = getANNSNNConvertFatiguePage();
 				}
 				currentPanel.reveal();
-				currentPanel.title = "模型转换";
+				currentPanel.title = "ANN-SNN转化";
 				console.log("显示currentpane  模型转换   1");
 				if (!fs.existsSync(path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py"))) {
 					fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py"),`# -*- coding:utf-8 -*-
@@ -1899,12 +1899,12 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 				inMemTreeViewStruct[0].children!.splice(1,1);
 				treeview.data = inMemTreeViewStruct;
 				treeview.refresh();
-				inMemTreeViewStruct[0].children!.push(new TreeItemNode("模型编译", [
+				inMemTreeViewStruct[0].children!.push(new TreeItemNode("编译", [
 					new TreeItemNode("Darwin二进制文件", [
 						new TreeItemNode("模型文件", [], false, "模型文件", 2),
 						new TreeItemNode("编解码配置文件", [], false, "模型文件", 2)
 					], false, "Darwin二进制文件", 2)
-				], false, "模型编译", 2));
+				], false, "编译", 2));
 
 				inMemTreeViewStruct[0].children![1].children![0].children![0].children!.splice(0);
 				inMemTreeViewStruct[0].children![1].children![0].children![1].children!.splice(0);

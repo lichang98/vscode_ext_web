@@ -35,7 +35,7 @@
               letter-spacing: 1.14px;">仿真配置结果评估</font></div>
             <table id="layer_conf_val" style="width: 600px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
                 <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                <tr style="height: 95px; border: solid 2px #D6D6D6;color: #333;">
+                <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
                   <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                   font-size: 16px;
                   color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">统计指标</td>
@@ -90,18 +90,7 @@
             letter-spacing: 1.14px;">放电次数均值方差统计</font></div>
             <div style="width: 640px;height: 340px;overflow-y: scroll;margin-left: 80px;">
               <table id="snn_layers_spike_table" style="width: 600px;height: 380px;margin-left:10px;margin-top: 5px;margin-right: 280px;border: solid 3px #D6D6D6;">
-                <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                <tr id="snn_layers_spike_table_thead_tr" style="height: 25px; border: solid 2px #D6D6D6;color: #333;padding: 10px;">
-                  <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                  font-size: 16px;
-                  color: #666666;padding-top: 12px;padding-bottom: 12px;">层编号</td>
-                  <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                  font-size: 16px;
-                  color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数均值</td>
-                  <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                  font-size: 16px;
-                  color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数方差</td>
-                </tr>
+                <!-- <caption class="white-text" style="caption-side: top;text-align: center;"></caption> -->
               </table>
             </div>
         </div>
@@ -577,6 +566,61 @@ body {
 
                   // fill layers spike info table
                   // $("#snn_layers_spike_table")
+//                   document.getElementById("snn_layers_spike_table").innerHTML = '<tr id="snn_layers_spike_table_thead_tr" style="height: 25px; border: solid 2px #D6D6D6;color: #333;">\
+// <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;\
+// font-size: 16px;\
+// color: #666666;padding-top: 12px;padding-bottom: 12px;">层编号</td>\
+// <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;\
+// font-size: 16px;\
+// color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数均值</td>\
+// <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;\
+// font-size: 16px;\
+// color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数方差</td>\
+// </tr>';
+                    let table_line = document.createElement("tr");
+                    table_line.style.height = "25px";
+                    table_line.style.border = "solid 2px #D6D6D6";
+                    table_line.style.color = "#333";
+
+                    let td_id = document.createElement("td");
+                    td_id.style.fontFamily = 'SourceHanSansCN-Medium';
+                    td_id.style.backgroundColor = '#EEEEEE';
+                    td_id.style.fontSize = '16px';
+                    td_id.style.color = '#666666';
+                    td_id.style.textAlign = 'center';
+                    td_id.style.border = "solid 2px #D6D6D6";
+                    td_id.style.paddingTop = '12px';
+                    td_id.style.paddingBottom = '12px';
+                    td_id.innerText = "层编号";
+                    table_line.appendChild(td_id);
+
+                    let td_id2 = document.createElement("td");
+                    td_id2.style.fontFamily = 'SourceHanSansCN-Medium';
+                    td_id2.style.fontSize = '16px';
+                    td_id2.style.color = '#666666';
+                    td_id2.style.textAlign = 'center';
+                    td_id2.style.backgroundColor = '#EEEEEE';
+                    td_id2.style.border = "solid 2px #D6D6D6";
+                    td_id2.style.paddingTop = '12px';
+                    td_id2.style.paddingBottom = '12px';
+                    td_id2.innerText = "放电次数均值";
+                    table_line.appendChild(td_id2);
+
+                    let td_id3 = document.createElement("td");
+                    td_id3.style.fontFamily = 'SourceHanSansCN-Medium';
+                    td_id3.style.fontSize = '16px';
+                    td_id3.style.color = '#666666';
+                    td_id3.style.textAlign = 'center';
+                    td_id3.style.backgroundColor = '#EEEEEE';
+                    td_id3.style.border = "solid 2px #D6D6D6";
+                    td_id3.style.paddingTop = '12px';
+                    td_id3.style.paddingBottom = '12px';
+                    td_id3.innerText = "放电次数方差";
+                    table_line.appendChild(td_id3);
+
+                    document.getElementById("snn_layers_spike_table").appendChild(table_line);
+
+
                   for(let j=0;j<infos.record_spike_out_info.spike_count_avgs.length;++j){
                     let table_line = document.createElement("tr");
                     table_line.style.height = "25px";
@@ -631,7 +675,6 @@ body {
                   }
                   console.log("Auto click first image.......");
                   document.getElementById("img_0").click();
-                  document.getElementById("snn_layers_spike_table_thead_tr").style.padding = "5px";
                   // document.getElementById("inputimg_0").click();
 
                   $(".loading-div").hide(); // 隐藏加载提示

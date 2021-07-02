@@ -27,7 +27,7 @@
 
     <div style="height: 400px;">
         <!-- SNN神经元信息 -->
-        <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 750px;">
+        <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 770px;">
             <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
@@ -101,7 +101,7 @@
             </table>
         </div> -->
     </div>
-    <div style="height: 460px;margin-top: 30px;">
+    <div style="height: 500px;margin-top: -5px;">
         <!--权重分布图-->
         <div style="height: 460px;width: 770px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
             <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
@@ -284,14 +284,24 @@ const vscode = acquireVsCodeApi();
                   // }
 
                   // 绘制权重分布图
+                  console.log("权重数据："+infos.layers_weights.wt_label);
+                  console.log("数值:"+infos.layers_weights.wt_count);
+                  console.log("浮点权重数据："+infos.layer_flt_weights.wt_label);
+                  console.log("数值："+infos.layer_flt_weights.wt_count);
                   for(var i=0;i<infos.layers_weights.wt_count.length;++i){
+                    if (infos.layers_weights.wt_count[i] > 0) {
                       infos.layers_weights.wt_count[i] = Math.log10(infos.layers_weights.wt_count[i]);
+                    } else {
+                      infos.layers_weights.wt_count[i] = 0;
+                    }
                   }
                   for (var i = 0; i < infos.layer_flt_weights.wt_count.length;++i) {
-                    infos.layer_flt_weights.wt_count[i] = Math.log10(infos.layer_flt_weights.wt_count[i]);
+                    if (infos.layer_flt_weights.wt_count[i] > 0) {
+                      infos.layer_flt_weights.wt_count[i] = Math.log10(infos.layer_flt_weights.wt_count[i]);
+                    } else {
+                      infos.layer_flt_weights.wt_count[i] = 0;
+                    }
                   }
-                  console.log("权重数据："+infos.layers_weights.wt_label);
-                  console.log("数值:"+infos.layers_weights.wt_count)
                   display_weight_chart(infos.layer_flt_weights.wt_label, infos.layer_flt_weights.wt_count,infos.layers_weights.wt_label, infos.layers_weights.wt_count);
 
                   // 仿真配置与结果表格
@@ -500,12 +510,12 @@ const vscode = acquireVsCodeApi();
                         fontFamily: 'SourceHanSansCN-Normal',
                         fontSize: '14px',
                     },
-                    position: "top"
+                    show:false
                   },
                   {
                       type: 'category',
                       data: label_names,
-                      name:"定点权重",
+                      name:"权重",
                       nameTextStyle:{
                         color:"#999999",
                         fontFamily: 'SourceHanSansCN-Normal',
@@ -524,7 +534,7 @@ const vscode = acquireVsCodeApi();
                 yAxis: [
                  {
                     type: 'value',
-                    name:"浮点个数(10^n)",
+                    name:"浮点权重数量(10^n)",
                     nameTextStyle:{
                       color:"#999999",
                       fontFamily: 'SourceHanSansCN-Normal',
@@ -539,11 +549,11 @@ const vscode = acquireVsCodeApi();
                         fontFamily: 'SourceHanSansCN-Normal',
                         fontSize: '14px',
                     },
-                    inverse:true
+                    inverse:false
                   },
                   {
                     type: 'value',
-                    name:"定点个数(10^n)",
+                    name:"定点权重数量(10^n)",
                     nameTextStyle:{
                       color:"#999999",
                       fontFamily: 'SourceHanSansCN-Normal',

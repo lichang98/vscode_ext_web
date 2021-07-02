@@ -16,9 +16,9 @@ export let ITEM_ICON_MAP = new Map<string, string>([
     ['SNN模型',"imgs/ann_model.png"],
     ['连接文件',"imgs/conn_files_icon.png"],
     ['模拟器', "imgs/simulate_icon.png"],
-    ['模型编译',"imgs/darwin_binary.png"],
+    ['编译',"imgs/darwin_binary.png"],
     ['Darwin二进制文件',"imgs/binary_compile_icon.png"],
-    ["模型转换","imgs/convert_icon.png",],
+    ["ANN-SNN转化","imgs/convert_icon.png",],
     ["模型文件","imgs/binary_compile_icon.png"],
     ["编解码配置文件","imgs/binary_compile_icon.png"]
     // ['转换与仿真',"imgs/simulate_run.png"],
@@ -76,7 +76,7 @@ export class TreeItemNode extends TreeItem {
         if (expandState) {
             this.collapsibleState = expandState;
         } else {
-            if (contextVal === "root" || label === "模型转换" || label === "训练数据" || label === "测试数据" || label === "测试数据标签" || label === "ANN模型" || label === "数据集") {
+            if (contextVal === "root" || label === "ANN-SNN转化" || label === "训练数据" || label === "测试数据" || label === "测试数据标签" || label === "ANN模型" || label === "数据集") {
                 this.collapsibleState = 2; // expand
             } else if(contextVal === 'rmable' || label.search("json") >=0 || label.search(".b") >=0 || label.search(".dat") >=0 || label.search(".pickle") >=0){
                 this.collapsibleState = 0;

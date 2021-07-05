@@ -292,14 +292,20 @@ body {
             }
             $("#model_total_layers").text(total_layer_count);
 
+            var layer_idx = 0;
             for(var i=0;i<detail_info.length;++i){
+              if (detail_info[i].name !== "Conv2D" && detail_info[i].name !== "InputLayer" && detail_info[i].name !== "AveragePooling2D" &&
+                  detail_info[i].name !== "MaxPooling2D" && detail_info[i].name !== "Dropout" && detail_info[i].name !== "Dense") {
+                    continue;
+                }
+                layer_idx += 1
                 var line = document.createElement("tr");
                 line.style.border = "solid 3px";
                 line.style.height = "45px";
                 line.style.borderColor ="#D6D6D6";
                 var col_name = document.createElement("td");
                 col_name.style = "padding-left: 15px;border: solid 2px;border-color: #D6D6D6;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 15px; padding-bottom: 15px;";
-                col_name.innerText = detail_info[i].name+"_"+(i+1);
+                col_name.innerText = detail_info[i].name+"_"+layer_idx
                 var col_shape = document.createElement("td");
                 col_shape.style = "border: solid 2px;border-color: #D6D6D6;text-align: right; padding-right:15px;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 15px; padding-bottom: 15px;";
                 col_shape.innerText = '('+detail_info[i].shape+')';
@@ -308,8 +314,8 @@ body {
                 col_params.innerText = detail_info[i].params;
                 
                 if( parseInt(detail_info[i].params, 10) > 0){
-                  layer_uniq_names.push(detail_info[i].name+"_"+(i+1));
-                  layer_params_info.push({"name": detail_info[i].name+"_"+(i+1), "value": parseInt(detail_info[i].params, 10)});
+                  layer_uniq_names.push(detail_info[i].name+"_"+layer_idx);
+                  layer_params_info.push({"name": detail_info[i].name+"_"+layer_idx, "value": parseInt(detail_info[i].params, 10)});
                   layer_params_list.push(parseInt(detail_info[i].params, 10));
                   total_params += parseInt(detail_info[i].params, 10);
                 }

@@ -68,8 +68,10 @@ max_vis_each_layer=5
 selected_idxs = list(np.random.randint(20, size=max_vis_each_layer))
 
 for layer in model.layers:
-    idx +=1
-    if layer.__class__.__name__ == "Conv2D" or layer.__class__.__name__ == "Activation" or (task_type == 3 and layer.__class__.__name__ == "Dense"):
+    if layer.__class__.__name__ == "Conv2D" or layer.__class__.__name__ == "InputLayer" or layer.__class__.__name__ == "AveragePooling2D"\
+                    or layer.__class__.__name__ == "MaxPooling2D" or layer.__class__.__name__ == "Dropout" or layer.__class__.__name__ == "Dense":
+        idx +=1
+    if layer.__class__.__name__ == "Conv2D" or (task_type == 3 and layer.__class__.__name__ == "Dense"):
         if task_type == 0:
             layer_output = keras.models.Model(inputs=model.input, outputs=layer.output).predict(x_norm[0:1])
             layer_output = layer_output[0]

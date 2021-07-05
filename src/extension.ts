@@ -755,6 +755,7 @@ export function activate(context: vscode.ExtensionContext) {
 					try {
 						execSync(checkCmd, {encoding: "buffer"});
 					} catch (err) {
+						console.log("发送xnorm 文件校验错误消息......");
 						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.xnorm)+
 													" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
 						return;
@@ -764,6 +765,7 @@ export function activate(context: vscode.ExtensionContext) {
 					try {
 						execSync(checkCmd, {encoding: "buffer"});
 					} catch (err) {
+						console.log("发送xtest 文件校验错误消息......");
 						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.xtest)+" 校验错误："+
 														iconv.decode(err.stderr, 'cp936')}));
 						return;
@@ -773,6 +775,7 @@ export function activate(context: vscode.ExtensionContext) {
 					try {
 						execSync(checkCmd, {encoding: "buffer"});
 					} catch (err) {
+						console.log("发送ytest 文件校验错误消息......");
 						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.ytest)+
 														" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
 						return;
@@ -782,6 +785,7 @@ export function activate(context: vscode.ExtensionContext) {
 					try {
 						execSync(checkCmd, {encoding: "buffer"});
 					} catch (err) {
+						console.log("发送ann 模型文件校验错误消息......");
 						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.ann)+
 															" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
 						return;

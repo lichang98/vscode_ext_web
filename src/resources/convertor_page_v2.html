@@ -450,6 +450,7 @@ body {
       window.addEventListener("message", (event)=>{
         const data = JSON.parse(event.data);
         if (data.show_error) {
+          console.log("接收到show_error 消息："+data.show_error);
           $("#error_detail").text(data.show_error);
           if (data.display_loading) {
             $("#loading_anim").css("display", "block");
@@ -457,11 +458,17 @@ body {
             $("#myModalLabel_show_error").css("color", "#000000");
             $("#myModalLabel_show_error").text("提示");
             $("#alert_modal_btn").click();
+            console.log("alert_modal_btn click.");
           } else if(data.hide) {
             $("#close_modal_btn").click();
+            console.log("close modal btn click.");
           } else {
-            $("#alert_modal_btn").click();
+            $("#loading_anim").css("display", "none");
+            $("#error_detail").css("color", "#f87307");
+            $("#myModalLabel_show_error").css("color", "#ee1414");
+            $("#myModalLabel_show_error").text("错误");
           }
+          $("#alert_modal_btn").click();
         } else if (data.import_files) {
           // 导入数据与模型文件
           $("#modal_dialog_import_files").click();

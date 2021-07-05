@@ -765,6 +765,7 @@ function activate(context) {
                         child_process_1.execSync(checkCmd, { encoding: "buffer" });
                     }
                     catch (err) {
+                        console.log("发送xnorm 文件校验错误消息......");
                         currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.xnorm) +
                                 " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
                         return;
@@ -776,6 +777,7 @@ function activate(context) {
                         child_process_1.execSync(checkCmd, { encoding: "buffer" });
                     }
                     catch (err) {
+                        console.log("发送xtest 文件校验错误消息......");
                         currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.xtest) + " 校验错误：" +
                                 iconv.decode(err.stderr, 'cp936') }));
                         return;
@@ -787,6 +789,7 @@ function activate(context) {
                         child_process_1.execSync(checkCmd, { encoding: "buffer" });
                     }
                     catch (err) {
+                        console.log("发送ytest 文件校验错误消息......");
                         currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.ytest) +
                                 " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
                         return;
@@ -798,6 +801,7 @@ function activate(context) {
                         child_process_1.execSync(checkCmd, { encoding: "buffer" });
                     }
                     catch (err) {
+                        console.log("发送ann 模型文件校验错误消息......");
                         currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.ann) +
                                 " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
                         return;
@@ -6465,7 +6469,9 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
                       },
                       fontFamily: 'Helvetica',
                       fontSize: '12px',
-                    }
+                    },
+                    nameLocation: 'center',
+                    nameGap: 30
               },
               yAxis: [
                   {
@@ -6847,14 +6853,20 @@ function getConvertorModelPageV2() {
               }
               $("#model_total_layers").text(total_layer_count);
   
+              var layer_idx = 0;
               for(var i=0;i<detail_info.length;++i){
+                if (detail_info[i].name !== "Conv2D" && detail_info[i].name !== "InputLayer" && detail_info[i].name !== "AveragePooling2D" &&
+                    detail_info[i].name !== "MaxPooling2D" && detail_info[i].name !== "Dropout" && detail_info[i].name !== "Dense") {
+                      continue;
+                  }
+                  layer_idx += 1
                   var line = document.createElement("tr");
                   line.style.border = "solid 3px";
                   line.style.height = "45px";
                   line.style.borderColor ="#D6D6D6";
                   var col_name = document.createElement("td");
                   col_name.style = "padding-left: 15px;border: solid 2px;border-color: #D6D6D6;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 15px; padding-bottom: 15px;";
-                  col_name.innerText = detail_info[i].name+"_"+(i+1);
+                  col_name.innerText = detail_info[i].name+"_"+layer_idx
                   var col_shape = document.createElement("td");
                   col_shape.style = "border: solid 2px;border-color: #D6D6D6;text-align: right; padding-right:15px;font-family: ArialMT;font-size: 12px;color: #333333;padding-top: 15px; padding-bottom: 15px;";
                   col_shape.innerText = '('+detail_info[i].shape+')';
@@ -6863,8 +6875,8 @@ function getConvertorModelPageV2() {
                   col_params.innerText = detail_info[i].params;
                   
                   if( parseInt(detail_info[i].params, 10) > 0){
-                    layer_uniq_names.push(detail_info[i].name+"_"+(i+1));
-                    layer_params_info.push({"name": detail_info[i].name+"_"+(i+1), "value": parseInt(detail_info[i].params, 10)});
+                    layer_uniq_names.push(detail_info[i].name+"_"+layer_idx);
+                    layer_params_info.push({"name": detail_info[i].name+"_"+layer_idx, "value": parseInt(detail_info[i].params, 10)});
                     layer_params_list.push(parseInt(detail_info[i].params, 10));
                     total_params += parseInt(detail_info[i].params, 10);
                   }
@@ -7498,6 +7510,7 @@ function getConvertorPageV2() {
           window.addEventListener("message", (event)=>{
             const data = JSON.parse(event.data);
             if (data.show_error) {
+              console.log("接收到show_error 消息："+data.show_error);
               $("#error_detail").text(data.show_error);
               if (data.display_loading) {
                 $("#loading_anim").css("display", "block");
@@ -7505,11 +7518,17 @@ function getConvertorPageV2() {
                 $("#myModalLabel_show_error").css("color", "#000000");
                 $("#myModalLabel_show_error").text("提示");
                 $("#alert_modal_btn").click();
+                console.log("alert_modal_btn click.");
               } else if(data.hide) {
                 $("#close_modal_btn").click();
+                console.log("close modal btn click.");
               } else {
-                $("#alert_modal_btn").click();
+                $("#loading_anim").css("display", "none");
+                $("#error_detail").css("color", "#f87307");
+                $("#myModalLabel_show_error").css("color", "#ee1414");
+                $("#myModalLabel_show_error").text("错误");
               }
+              $("#alert_modal_btn").click();
             } else if (data.import_files) {
               // 导入数据与模型文件
               $("#modal_dialog_import_files").click();

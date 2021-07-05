@@ -404,11 +404,54 @@ const vscode = acquireVsCodeApi();
                       fill:"rgb(255,248,220)"
                     },
                     label: {
-                      text: joint.util.breakText("说明：标记为红色的为被删除掉的层、橙色的为向前融合的层", {width: 80}),
-                      fill: "black"
+                      text: joint.util.breakText("图例", {width: 80}),
+                      fill: "black",
+                      refY: "5%"
                     }
                   });
                   rect_tip.addTo(graph);
+
+                  var rect_legend1 = new joint.shapes.standard.Rectangle();
+                  rect_legend1.position(40,40);
+                  rect_legend1.resize(80,30);
+                  rect_legend1.attr({
+                    body:{
+                      fill: 'red'
+                    },
+                    label: {
+                      text: "删除",
+                      fill:"black"
+                    }
+                  });
+                  rect_legend1.addTo(graph);
+
+                  var rect_legend2 = new joint.shapes.standard.Rectangle();
+                  rect_legend2.position(40, 90);
+                  rect_legend2.resize(80, 30);
+                  rect_legend2.attr({
+                    body: {
+                      fill: '#FF9800'
+                    },
+                    label: {
+                      text: "前向融合",
+                      fill: "black"
+                    }
+                  });
+                  rect_legend2.addTo(graph);
+                  
+                  var rect_legend3 = new joint.shapes.standard.Rectangle();
+                  rect_legend3.position(40, 140);
+                  rect_legend3.resize(80, 30);
+                  rect_legend3.attr({
+                    body: {
+                      fill: 'gray'
+                    },
+                    label: {
+                      text: "转换",
+                      fill: 'black'
+                    }
+                  });
+                  rect_legend3.addTo(graph);
 
                   let prev_rect = undefined;
                   let idx4layer = 0;
@@ -427,7 +470,7 @@ const vscode = acquireVsCodeApi();
                             fill: 'gray'
                         },
                         label: {
-                            text: layer_idx + "--->"+origin_layer_names[k],
+                            text: origin_layer_names[k] + "--->" + layer_idx,
                             fill: 'white'
                         }
                     });

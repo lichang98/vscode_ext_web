@@ -31,45 +31,24 @@
                 color: #333333;
                 letter-spacing: 1.14px;">转换参数配置</font></div>
             <form role="form" class="row" style="margin-left: 80px;margin-top: 15px;" id="project_info_form">
-                <div class="col-md-2" style="text-align: center;">
-                    <label for="select_vthresh"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                <div class="col-md-2" style="text-align: center;margin-left: -60px;">
+                    <div><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                         font-size: 16px;
                         color: #333333;
-                        letter-spacing: 0.91px;">脉冲发放阈值</font></label>
-                    <select class="form-control" id="select_vthresh">
-                        <option>21</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                        <option>9</option>
-                        <option>10</option>
-                        <option>11</option>
-                        <option>12</option>
-                        <option>13</option>
-                        <option>14</option>
-                        <option>15</option>
-                        <option>16</option>
-                        <option>17</option>
-                        <option>18</option>
-                        <option>19</option>
-                        <option>20</option>
-                        <option>22</option>
-                        <option>23</option>
-                        <option>24</option>
-                        <option>25</option>
-                        <option>26</option>
-                        <option>27</option>
-                        <option>28</option>
-                        <option>29</option>
-                        <option>30</option>
-                    </select>
+                        letter-spacing: 0.91px;">脉冲发放阈值</font></div>
+                        <input type="text" id="select_vthresh" style="background: #ffffff;
+                        border: 1px solid #D9D9D9;
+                        border-radius: 6px;
+                        border-radius: 6px;width: 200px;font-family: PingFangSC-Regular;
+                        font-size: 12px;
+                        padding-top: 10px;
+                        padding-bottom: 10px;
+                        padding-left: 20px;
+                        color: #000000;
+                        letter-spacing: 0;
+                        line-height: 14px;margin-top: 5px;">
                 </div>
-                <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                <div class="col-md-2" style="margin-left: 130px;text-align: center;">
                     <label for="select_dt"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                         font-size: 16px;
                         color: #333333;
@@ -80,7 +59,7 @@
                     </select>
                 </div>
     
-                <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                <div class="col-md-2" style="margin-left: 130px;text-align: center;">
                     <label for="select_synapse_dt"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                         font-size: 16px;
                         color: #333333;
@@ -91,7 +70,7 @@
                     </select>
                 </div>
     
-                <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                <div style="margin-left: 28px;text-align: center;display: none;">
                     <label for="select_delay"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                         font-size: 16px;
                         color: #333333;
@@ -102,15 +81,13 @@
                     </select>
                 </div>
     
-                <div class="col-md-2" style="margin-left: 28px;text-align: center;">
+                <div class="col-md-2" style="margin-left: 130px;text-align: center;">
                     <label for="select_dura"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                         font-size: 16px;
                         color: #333333;
                         letter-spacing: 0.91px;">模拟时长</font></label>
                     <select class="form-control" id="select_dura">
                         <option>100ms</option>
-                        <option>200ms</option>
-                        <option>500ms</option>
                     </select>
                 </div>
             </form>
@@ -821,6 +798,7 @@ function process_pie_reset(process_pie, option) {
 let processPie = undefined;
 
       $(document).ready(function(){
+        $("#select_vthresh").val("21"); // default value
           $("#self_def_preprocess_alg").on("click", function(){
               vscode.postMessage(JSON.stringify({"convert_self_def": "preprocess"}));
           });
@@ -1023,35 +1001,43 @@ let processPie = undefined;
               }else if(data.ann_model_start_convert){
                   // 接收到启动转换的命令，初始化
                 error_occurred = false;
-                document.getElementById("total_progress_ball").style.display = "flex";
-                // $(".wave").attr("height", "560px");
-                processPie = process_pie_init(process_pie_option);
+
                 let v_thresh = $("#select_vthresh").val().replace("ms","");
                 let neuron_dt = $("#select_dt").val().replace("ms","");
                 let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
                 let delay = $("#select_delay").val().replace("ms", "");
                 let dura = $("#select_dura").val().replace("ms","");
-                console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay);
-                vscode.postMessage(JSON.stringify({"model_convert_params":{
-                    "vthresh": v_thresh,
-                    "neuron_dt": neuron_dt,
-                    "synapse_dt":synapse_dt,
-                    "delay":delay,
-                    "dura":dura
-                }}));
-                log_output_lists.splice(0);
-                stage1_convert_finish = false;
-                stage2_preprocess_finish = false;
-                stage3_search_finish = false;
-                stage4_all_finish = false;
-                document.getElementById("model_convert_progress_div").style.width = "0%";
-                document.getElementById("preprocess_progress_div").style.width = "0%";
-                document.getElementById("search_progress_div").style.width = "0%";
-                document.getElementById("darlang_progress_div").style.width = "0%";
-                $("#total_progress_text").text("0%");
-                // document.getElementById("total_progress_div").style.width = "0%";
-                $(".loading-div").show();
-                $("#total_progress_text").text("0%");
+
+                // 字段检查
+                if (v_thresh.indexOf(".") >= 0 || Number.isNaN(parseInt(v_thresh))) {
+                    $("#error_detail").text("'脉冲发放阈值'应该是整数！");
+                    $("#alert_modal_btn").click();
+                } else {
+                    document.getElementById("total_progress_ball").style.display = "flex";
+                    // $(".wave").attr("height", "560px");
+                    processPie = process_pie_init(process_pie_option);
+                    console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay);
+                    vscode.postMessage(JSON.stringify({"model_convert_params":{
+                        "vthresh": v_thresh,
+                        "neuron_dt": neuron_dt,
+                        "synapse_dt":synapse_dt,
+                        "delay":delay,
+                        "dura":dura
+                    }}));
+                    log_output_lists.splice(0);
+                    stage1_convert_finish = false;
+                    stage2_preprocess_finish = false;
+                    stage3_search_finish = false;
+                    stage4_all_finish = false;
+                    document.getElementById("model_convert_progress_div").style.width = "0%";
+                    document.getElementById("preprocess_progress_div").style.width = "0%";
+                    document.getElementById("search_progress_div").style.width = "0%";
+                    document.getElementById("darlang_progress_div").style.width = "0%";
+                    $("#total_progress_text").text("0%");
+                    // document.getElementById("total_progress_div").style.width = "0%";
+                    $(".loading-div").show();
+                    $("#total_progress_text").text("0%");
+                }
               }else if(data.scale_factors){
                 // scale_factors_table
                 // <tr style="margin-top: 15px;height: 35px;">

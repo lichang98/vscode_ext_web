@@ -162,7 +162,7 @@ def label(xy, text, xy_off=[0, 4]):
              family='sans-serif', size=8)
 
 
-def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,save_fig_path,task_type=0):
+def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,save_fig_path,task_type=0, draw_conv_names=[]):
 
     fc_unit_size = 2
     layer_width = 40
@@ -220,6 +220,8 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
     patch_size_list = kernel_size_list
     ind_bgn_list = range(len(patch_size_list))
     text_list = ['Convolution', 'Max-pooling', 'Convolution', 'Max-pooling','Convolution', 'Max-pooling']
+    if len(draw_conv_names) > 0:
+        text_list = draw_conv_names
     if task_type == 1:
         text_list = ['Convolution', 'Convolution', 'Convolution', 'Convolution', 'Convolution', 'Convolution', 'Convolution', 'Convolution']
 
@@ -229,7 +231,7 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
             patch_size_list[ind], ind,
             top_left_list, loc_diff_list, num_show_list, size_list)
         label(top_left_list[ind], text_list[ind] + '\n{}x{} kernel'.format(
-            patch_size_list[ind][0], patch_size_list[ind][1]), xy_off=[26, -65]
+            patch_size_list[ind][0], patch_size_list[ind][1]), xy_off=[60, -65]
         )
 
 
@@ -263,10 +265,10 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
         label(top_left_list[ind], text_list[ind] + '\n{}'.format(
             num_list[ind]))
 
-    text_list = ['Flatten\n', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected']
+    text_list = ['Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected']
 
     for ind in range(len(size_list)):
-        label(top_left_list[ind], text_list[ind], xy_off=[-10, -65])
+        label(top_left_list[ind], text_list[ind], xy_off=[30, -65])
 
     ############################
     for patch, color in zip(patches, colors):

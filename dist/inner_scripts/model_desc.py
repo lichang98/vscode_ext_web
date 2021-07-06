@@ -66,8 +66,14 @@ idx=0
 max_vis_each_layer=5
 
 selected_idxs = list(np.random.randint(20, size=max_vis_each_layer))
+draw_conv_names = [] # names for conv and pooling
 
 for layer in model.layers:
+    if layer.__class__.__name__ == "Conv2D" or layer.__class__.__name__ == "MaxPooling2D" or layer.__class__.__name__ == "AveragePooling2D":
+        if layer.__class__.__name__ == "Conv2D":
+            draw_conv_names.append(layer.__class__.__name__)
+        else:
+            draw_conv_names.append("Pooling")
     if layer.__class__.__name__ == "Conv2D" or layer.__class__.__name__ == "InputLayer" or layer.__class__.__name__ == "AveragePooling2D"\
                     or layer.__class__.__name__ == "MaxPooling2D" or layer.__class__.__name__ == "Dropout" or layer.__class__.__name__ == "Dense":
         idx +=1
@@ -162,7 +168,7 @@ draw_convnet.run_draw(conv_size_list=conv_sizes,
                     conv_num_list=conv_channels,
                     kernel_size_list=kernel_sizes,
                     dense_size_list=dense_sizes,
-                    save_fig_path=os.path.join(base_path, "ann_model_vis.png"),task_type=task_type)
+                    save_fig_path=os.path.join(base_path, "ann_model_vis.png"),task_type=task_type, draw_conv_names=draw_conv_names)
 
 shutil.move(os.path.join(base_path, "ann_model_vis.png"), os.path.join(base_path, "layer_vis_imgs","ann_model_vis.png"))
 model_vis_img_info = {"model_vis_img_path":os.path.join(base_path, "layer_vis_imgs","ann_model_vis.png")}

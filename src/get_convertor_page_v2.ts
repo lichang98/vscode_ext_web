@@ -1478,6 +1478,10 @@ export function getConvertorPageV2(){
     
         const vscode = acquireVsCodeApi();
         $(document).ready(function(){
+          $("#close_modal_btn").on("click", ()=>{
+            $("#error_detail").css("height", "300px");
+            $("#error_detail").css("width", "700px");
+          });
           window.addEventListener("message", (event)=>{
             const data = JSON.parse(event.data);
             if (data.show_error) {
@@ -1494,6 +1498,8 @@ export function getConvertorPageV2(){
                 $("#close_modal_btn").click();
                 console.log("close modal btn click.");
               } else {
+                $("#error_detail").css("height", "100px");
+                $("#error_detail").css("width", "750px");
                 $("#loading_anim").css("display", "none");
                 $("#error_detail").css("color", "#f87307");
                 $("#myModalLabel_show_error").css("color", "#ee1414");
@@ -1669,7 +1675,7 @@ export function getANNSNNConvertPage(){
           <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="margin-left: 240px;font-family: SourceHanSansCN-Normal;
               font-size: 16px;
               color: #333333;
-              letter-spacing: 0.91px;">等待转换结束...</font></span>
+              letter-spacing: 0.91px;">等待转换...</font></span>
       </div>
   
       <div class="loading-div" id="loader_tb" style="position: absolute;top: 400px;left: 740px;background: rgba(238,238,238);width: 760px;height: 500px;z-index: 2;">
@@ -1677,7 +1683,7 @@ export function getANNSNNConvertPage(){
           <span style="color: #333;height: 50px;width: 120px;display: block;"><font style="margin-left: 300px;font-family: SourceHanSansCN-Normal;
               font-size: 16px;
               color: #333333;
-              letter-spacing: 0.91px;">等待转换结束...</font></span>
+              letter-spacing: 0.91px;">等待转换...</font></span>
       </div>
   
       <div style="height: 140px;background: rgba(238,238,238,0.4);width: 1500px;">
@@ -1704,18 +1710,18 @@ export function getANNSNNConvertPage(){
                           letter-spacing: 0;
                           line-height: 14px;margin-top: 5px;">
                   </div>
-                  <div class="col-md-2" style="margin-left: 130px;text-align: center;">
+                  <div class="col-md-2" style="margin-left: 330px;text-align: center;">
                       <label for="select_dt"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                           font-size: 16px;
                           color: #333333;
-                          letter-spacing: 0.91px;">神经元dt</font></label>
+                          letter-spacing: 0.91px;">神经元与突触dt</font></label>
                       <select class="form-control" id="select_dt">
                           <option>1ms</option>
                           <option>0.1ms</option>
                       </select>
                   </div>
       
-                  <div class="col-md-2" style="margin-left: 130px;text-align: center;">
+                  <div class="col-md-2" style="margin-left: 130px;text-align: center;display: none;">
                       <label for="select_synapse_dt"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                           font-size: 16px;
                           color: #333333;
@@ -1737,14 +1743,25 @@ export function getANNSNNConvertPage(){
                       </select>
                   </div>
       
-                  <div class="col-md-2" style="margin-left: 130px;text-align: center;">
-                      <label for="select_dura"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                  <div class="col-md-2" style="margin-left: 300px;text-align: center;">
+                      <div for="select_dura"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                           font-size: 16px;
                           color: #333333;
-                          letter-spacing: 0.91px;">模拟时长</font></label>
-                      <select class="form-control" id="select_dura">
+                          letter-spacing: 0.91px;">模拟时长(ms)</font></div>
+                              <input type="text" id="select_dura" style="background: #ffffff;
+                              border: 1px solid #D9D9D9;
+                              border-radius: 6px;
+                              border-radius: 6px;width: 200px;font-family: PingFangSC-Regular;
+                              font-size: 12px;
+                              padding-top: 10px;
+                              padding-bottom: 10px;
+                              padding-left: 20px;
+                              color: #000000;
+                              letter-spacing: 0;
+                              line-height: 14px;margin-top: 5px;">
+                      <!-- <select class="form-control" id="select_dura">
                           <option>100ms</option>
-                      </select>
+                      </select> -->
                   </div>
               </form>
           </div>
@@ -2455,6 +2472,7 @@ export function getANNSNNConvertPage(){
   
         $(document).ready(function(){
           $("#select_vthresh").val("21"); // default value
+          $("#select_dura").val("100");
             $("#self_def_preprocess_alg").on("click", function(){
                 vscode.postMessage(JSON.stringify({"convert_self_def": "preprocess"}));
             });
@@ -2660,7 +2678,8 @@ export function getANNSNNConvertPage(){
   
                   let v_thresh = $("#select_vthresh").val().replace("ms","");
                   let neuron_dt = $("#select_dt").val().replace("ms","");
-                  let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
+                  // let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
+                  let synapse_dt = neuron_dt;
                   let delay = $("#select_delay").val().replace("ms", "");
                   let dura = $("#select_dura").val().replace("ms","");
   
@@ -2844,7 +2863,8 @@ export function getANNSNNConvertPage(){
         function reset_and_postmsg(){
               let v_thresh = $("#select_vthresh").val().replace("ms","");
               let neuron_dt = $("#select_dt").val().replace("ms","");
-              let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
+              // let synapse_dt = $("#select_synapse_dt").val().replace("ms","");
+              let synapse_dt = neuron_dt;
               let delay = $("#select_delay").val().replace("ms", "");
               let dura = $("#select_dura").val().replace("ms","");
               console.log("v_thresh="+v_thresh+", neuron_dt="+neuron_dt+", synapse_dt="+synapse_dt+", delay="+delay+", dura="+dura);

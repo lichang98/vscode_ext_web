@@ -155,8 +155,8 @@ for layer in model.layers:
 
         print("layer name={}, output shape={}, channel size={}, pool_size={}".format(layer.__class__.__name__,\
                 layer.output_shape[1:-1],layer.output_shape[-1],layer.pool_size))
-    elif layer.__class__.__name__ == "Flatten":
-        dense_sizes.append(layer.output_shape[-1])
+    # elif layer.__class__.__name__ == "Flatten":
+    #     dense_sizes.append(layer.output_shape[-1])
     elif layer.__class__.__name__ == "Dense":
         dense_sizes.append(layer.output_shape[-1])
 

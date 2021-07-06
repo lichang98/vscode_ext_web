@@ -39,7 +39,15 @@
             font-size: 20px;
             color: #333333;
             letter-spacing: 1.14px;">脉冲神经网络权重分布</font></div>
-          <div id="weight_dist_chart" style="width: 700px;height: 400px;margin-left: 40px;margin-top: 40px;"></div>
+              <div style="margin-left: 300px;text-align: center;width: 200px;">
+                <label for="select_wt_layer"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                    font-size: 16px;
+                    color: #333333;
+                    letter-spacing: 0.91px;">选择连接</font></label>
+                <select class="form-control" id="select_wt_layer">
+                </select>
+            </div>
+          <div id="weight_dist_chart" style="width: 700px;height: 360px;margin-left: 40px;margin-top: 10px;"></div>
       </div>
     </div>
 
@@ -315,7 +323,38 @@ const vscode = acquireVsCodeApi();
                   //     infos.layer_flt_weights.wt_count[i] = 0;
                   //   }
                   // }
-                  display_weight_chart(infos.layer_flt_weights.wt_label, infos.layer_flt_weights.wt_count,infos.layers_weights.wt_label, infos.layers_weights.wt_count);
+
+                  // 添加选项
+                  let innerhtml4option = "";
+                  for (let k = 0; k < infos.each_layer_wt_infos.wt_counts.length; ++k) {
+                    if (k == 0){
+                      innerhtml4option += "<option>input-->layer_1</option>";
+                    } else if (k == infos.each_layer_wt_infos.wt_counts.length - 1){
+                      innerhtml4option += "<option>layer_"+k+"-->out</option>"
+                    } else {
+                      innerhtml4option += "<option>layer_"+(k)+"-->layer_"+(k+1)+"</option>";
+                    }
+                  }
+                  document.getElementById("select_wt_layer").innerHTML = innerhtml4option;
+                  $("#select_wt_layer").change(()=>{
+                    let select_which = $("#select_wt_layer").val();
+                    if (select_which.indexOf("input") >=0){
+                      display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[0], infos.each_layer_wt_infos.flt_wt_counts[0], 
+                                infos.each_layer_wt_infos.wt_labels[0], infos.each_layer_wt_infos.wt_counts[0]);
+                    } else if(select_which.indexOf("out") >=0){
+                      var len_of_lay = infos.each_layer_wt_infos.flt_wt_labels.length - 1;
+                      display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[len_of_lay], infos.each_layer_wt_infos.flt_wt_counts[len_of_lay], 
+                                infos.each_layer_wt_infos.wt_labels[len_of_lay], infos.each_layer_wt_infos.wt_counts[len_of_lay]);
+                    } else {
+                      var idx = parseInt(select_which.substr(select_which.lastIndexOf("_") + 1)) - 1;
+                      display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[idx], infos.each_layer_wt_infos.flt_wt_counts[idx], 
+                                infos.each_layer_wt_infos.wt_labels[idx], infos.each_layer_wt_infos.wt_counts[idx]);
+                    }
+                  });
+
+                  display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[0], infos.each_layer_wt_infos.flt_wt_counts[0], 
+                                infos.each_layer_wt_infos.wt_labels[0], infos.each_layer_wt_infos.wt_counts[0]);
+                  // display_weight_chart(infos.layer_flt_weights.wt_label, infos.layer_flt_weights.wt_count,infos.layers_weights.wt_label, infos.layers_weights.wt_count);
 
                   // 仿真配置与结果表格
                   $("#simulate_vthresh").text(infos.extra_simu_info.simulate_vthresh);
@@ -396,7 +435,7 @@ const vscode = acquireVsCodeApi();
                       gridSize: 10,
                       drawGrid: true,
                       background: {
-                          color: 'rgba(255, 255, 255, 1)'
+                          color: '#D6D6D6'
                       }
                   });
 
@@ -481,7 +520,7 @@ const vscode = acquireVsCodeApi();
                         }
                     });
                     if (origin_layer_names[k] == "Activation" ||
-                        origin_layer_names[k] == "Dropout" || origin_layer_names[k] == "AveragePooling2D" || origin_layer_names[k] == "MaxPooling2D") {
+                        origin_layer_names[k] == "Dropout" || origin_layer_names[k] == "Flatten") {
                         rect.attr("body/fill", "red");
                         rect.attr("label/text", origin_layer_names[k]);
                     } else if (origin_layer_names[k] == "BatchNormalization") {
@@ -606,7 +645,7 @@ const vscode = acquireVsCodeApi();
                   {
                       type: 'category',
                       data: label_names,
-                      name:"权重",
+                      name:"定点权重",
                       nameLocation: 'center',
                       nameGap: 30,
                       nameTextStyle:{

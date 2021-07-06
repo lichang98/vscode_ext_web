@@ -1825,7 +1825,7 @@ export function getANNSNNConvertPage(){
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border-radius: 20px;">3</div>权重量化<span id="self_def_opt_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
+    border-radius: 20px;">3</div>量化<span id="self_def_opt_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
                       <div class="progress" style="background: #E6E6E6;
                       border-radius: 30px;height: 40px;margin-top: 10px;">
                           <div id="search_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -1970,7 +1970,7 @@ export function getANNSNNConvertPage(){
                       <tr>
                           <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
-                          color: #666666;">权重量化耗时(秒)</td>
+                          color: #666666;">量化耗时(秒)</td>
                           <td id="stage3_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                           font-size: 14px;
                           color: #666666;">xxx</td>
@@ -2650,7 +2650,7 @@ export function getANNSNNConvertPage(){
                     $("#stage3_time_use").text(convert_infos.stage3_time_use);
                     $("#stage4_time_use").text(convert_infos.stage4_time_use);
   
-                    let bar_chart_label_names = ["调整网络结构", "权重归一化", "权重量化", "SNN验证"];
+                    let bar_chart_label_names = ["调整网络结构", "权重归一化", "量化", "SNN验证"];
                     let bar_chart_label_counts = [parseFloat(convert_infos.stage1_time_use), parseFloat(convert_infos.stage2_time_use),
                                   parseFloat(convert_infos.stage3_time_use), parseFloat(convert_infos.stage4_time_use)];
                     display_bar_chart(bar_chart_label_names, bar_chart_label_counts, "","秒","use_time_bar_chart");
@@ -3947,7 +3947,15 @@ export function getSNNModelPage():string{
               font-size: 20px;
               color: #333333;
               letter-spacing: 1.14px;">脉冲神经网络权重分布</font></div>
-            <div id="weight_dist_chart" style="width: 700px;height: 400px;margin-left: 40px;margin-top: 40px;"></div>
+                <div style="margin-left: 300px;text-align: center;width: 200px;">
+                  <label for="select_wt_layer"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
+                      font-size: 16px;
+                      color: #333333;
+                      letter-spacing: 0.91px;">选择连接</font></label>
+                  <select class="form-control" id="select_wt_layer">
+                  </select>
+              </div>
+            <div id="weight_dist_chart" style="width: 700px;height: 360px;margin-left: 40px;margin-top: 10px;"></div>
         </div>
       </div>
   
@@ -4223,7 +4231,38 @@ export function getSNNModelPage():string{
                     //     infos.layer_flt_weights.wt_count[i] = 0;
                     //   }
                     // }
-                    display_weight_chart(infos.layer_flt_weights.wt_label, infos.layer_flt_weights.wt_count,infos.layers_weights.wt_label, infos.layers_weights.wt_count);
+  
+                    // 添加选项
+                    let innerhtml4option = "";
+                    for (let k = 0; k < infos.each_layer_wt_infos.wt_counts.length; ++k) {
+                      if (k == 0){
+                        innerhtml4option += "<option>input-->layer_1</option>";
+                      } else if (k == infos.each_layer_wt_infos.wt_counts.length - 1){
+                        innerhtml4option += "<option>layer_"+k+"-->out</option>"
+                      } else {
+                        innerhtml4option += "<option>layer_"+(k)+"-->layer_"+(k+1)+"</option>";
+                      }
+                    }
+                    document.getElementById("select_wt_layer").innerHTML = innerhtml4option;
+                    $("#select_wt_layer").change(()=>{
+                      let select_which = $("#select_wt_layer").val();
+                      if (select_which.indexOf("input") >=0){
+                        display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[0], infos.each_layer_wt_infos.flt_wt_counts[0], 
+                                  infos.each_layer_wt_infos.wt_labels[0], infos.each_layer_wt_infos.wt_counts[0]);
+                      } else if(select_which.indexOf("out") >=0){
+                        var len_of_lay = infos.each_layer_wt_infos.flt_wt_labels.length - 1;
+                        display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[len_of_lay], infos.each_layer_wt_infos.flt_wt_counts[len_of_lay], 
+                                  infos.each_layer_wt_infos.wt_labels[len_of_lay], infos.each_layer_wt_infos.wt_counts[len_of_lay]);
+                      } else {
+                        var idx = parseInt(select_which.substr(select_which.lastIndexOf("_") + 1)) - 1;
+                        display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[idx], infos.each_layer_wt_infos.flt_wt_counts[idx], 
+                                  infos.each_layer_wt_infos.wt_labels[idx], infos.each_layer_wt_infos.wt_counts[idx]);
+                      }
+                    });
+  
+                    display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[0], infos.each_layer_wt_infos.flt_wt_counts[0], 
+                                  infos.each_layer_wt_infos.wt_labels[0], infos.each_layer_wt_infos.wt_counts[0]);
+                    // display_weight_chart(infos.layer_flt_weights.wt_label, infos.layer_flt_weights.wt_count,infos.layers_weights.wt_label, infos.layers_weights.wt_count);
   
                     // 仿真配置与结果表格
                     $("#simulate_vthresh").text(infos.extra_simu_info.simulate_vthresh);
@@ -4304,7 +4343,7 @@ export function getSNNModelPage():string{
                         gridSize: 10,
                         drawGrid: true,
                         background: {
-                            color: 'rgba(255, 255, 255, 1)'
+                            color: '#D6D6D6'
                         }
                     });
   
@@ -4389,7 +4428,7 @@ export function getSNNModelPage():string{
                           }
                       });
                       if (origin_layer_names[k] == "Activation" ||
-                          origin_layer_names[k] == "Dropout" || origin_layer_names[k] == "AveragePooling2D" || origin_layer_names[k] == "MaxPooling2D") {
+                          origin_layer_names[k] == "Dropout" || origin_layer_names[k] == "Flatten") {
                           rect.attr("body/fill", "red");
                           rect.attr("label/text", origin_layer_names[k]);
                       } else if (origin_layer_names[k] == "BatchNormalization") {
@@ -4514,7 +4553,7 @@ export function getSNNModelPage():string{
                     {
                         type: 'category',
                         data: label_names,
-                        name:"权重",
+                        name:"定点权重",
                         nameLocation: 'center',
                         nameGap: 30,
                         nameTextStyle:{

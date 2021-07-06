@@ -169,7 +169,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  border-radius: 20px;">3</div>权重量化<span id="self_def_opt_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
+  border-radius: 20px;">3</div>量化<span id="self_def_opt_alg" style="text-decoration: underline;color: #77A4FF;cursor: pointer;">(自定义实现)</span></div>
                     <div class="progress" style="background: #E6E6E6;
                     border-radius: 30px;height: 40px;margin-top: 10px;">
                         <div id="search_progress_div" class="progress-bar progress-bar-info" role="progressbar"
@@ -314,7 +314,7 @@
                     <tr>
                         <td style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-left: 15px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
-                        color: #666666;">权重量化耗时(秒)</td>
+                        color: #666666;">量化耗时(秒)</td>
                         <td id="stage3_time_use" style="border: solid 2px #D6D6D6;padding-top: 10px;padding-bottom: 10px;padding-right: 10px;text-align: right;padding-left: 80px;font-family: SourceHanSansCN-Medium;
                         font-size: 14px;
                         color: #666666;">xxx</td>
@@ -994,7 +994,7 @@ let processPie = undefined;
                   $("#stage3_time_use").text(convert_infos.stage3_time_use);
                   $("#stage4_time_use").text(convert_infos.stage4_time_use);
 
-                  let bar_chart_label_names = ["调整网络结构", "权重归一化", "权重量化", "SNN验证"];
+                  let bar_chart_label_names = ["调整网络结构", "权重归一化", "量化", "SNN验证"];
                   let bar_chart_label_counts = [parseFloat(convert_infos.stage1_time_use), parseFloat(convert_infos.stage2_time_use),
                                 parseFloat(convert_infos.stage3_time_use), parseFloat(convert_infos.stage4_time_use)];
                   display_bar_chart(bar_chart_label_names, bar_chart_label_counts, "","秒","use_time_bar_chart");

@@ -574,46 +574,140 @@ for i in range(len(br2_neurons)):
     print("neuron count={}, method={}, events={}, vthresh={} ".format(br2_neurons[i].N,br2_neurons[i].method_choice, br2_neurons[i].events,best_vthresh),flush=True)
     neurons_info.append({"idx":i,"neuron_count":br2_neurons[i].N, "method":br2_neurons[i].method_choice, "vthresh":best_vthresh})
 
-# for display weights distributes 
-wt_labels = set()
+
+layers_wt_counts = []
+layers_wt_labels = []
+layers_wt_flt_counts = []
+layers_wt_flt_labels = []
+
 for i in range(len(br2_synapses)):
-    wts = np.array(br2_synapses[i].w).flatten().tolist()
-    wts = [str(x) for x in wts]
-    wt_labels |= set(wts)
+    wt_min = np.min(br2_synapses[i].w)
+    wt_max = np.max(br2_synapses[i].w)
+    if len(set(np.array(br2_synapses[i].w).flatten().tolist())) < 50:
+        wt_labels = set(br2_synapses[i].w)
+        wt_labels = list(sorted(wt_labels, key=lambda x : x))
+        wt_counts = [0]*(len(wt_labels))
+        for w in br2_synapses[i].w:
+            wt_counts[wt_labels.index(w)] +=1
+        wt_labels = list([str(x) for x in wt_labels])
+        layers_wt_counts.append(wt_counts)
+        layers_wt_labels.append(wt_labels)
+    else:
+        wt_labels = np.linspace(wt_min, wt_max, num=50)
+        wt_counts = [0]*(len(wt_labels) - 1)
+        for w in br2_synapses[i].w:
+            idx = 1
+            while idx < len(wt_labels) and wt_labels[idx] < w:
+                idx += 1
+            wt_counts[idx - 1] += 1
+        wt_labels = ["{:.2f}".format(x) for x in wt_labels]
+        layers_wt_counts.append(wt_counts)
+        layers_wt_labels.append(wt_labels)
 
-wt_counts=[0]*len(wt_labels)
-wt_labels = list(sorted(wt_labels, key=lambda x: float(x)))
-
-wt_flt_labels = set()
 for i in range(len(flt_all_wts)):
-    flt_wts = np.array(flt_all_wts[i]).flatten().tolist()
-    flt_wts = ["{:.1f}".format(x) for x in flt_wts]
-    wt_flt_labels |= set(flt_wts)
+    wt_min = np.min(flt_all_wts[i])
+    wt_max = np.max(flt_all_wts[i])
+    if len(set(np.array(flt_all_wts[i]).flatten().tolist())) < 50:
+        wt_labels = set(flt_all_wts[i])
+        wt_labels = list(sorted(wt_labels, key=lambda x : x))
+        wt_counts = [0]*(len(wt_labels))
+        for w in flt_all_wts[i]:
+            wt_counts[wt_labels.index(w)] +=1
+        wt_labels = list([str(x) for x in wt_labels])
+        layers_wt_flt_counts.append(wt_counts)
+        layers_wt_flt_labels.append(wt_labels)
+    else:
+        wt_labels = np.linspace(wt_min, wt_max, num=50)
+        wt_counts = [0]*(len(wt_labels) - 1)
+        for w in flt_all_wts[i]:
+            idx = 1
+            while idx < len(wt_labels) and wt_labels[idx] < w:
+                idx += 1
+            wt_counts[idx - 1] += 1
+        wt_labels = ["{:.2f}".format(x) for x in wt_labels]
+        layers_wt_flt_counts.append(wt_counts)
+        layers_wt_flt_labels.append(wt_labels)
 
-wt_flt_counts=[0]*len(wt_flt_labels)
-wt_flt_labels = list(sorted(wt_flt_labels, key=lambda x: float(x)))
+each_layer_wt_infos = {"wt_counts": layers_wt_counts, "wt_labels": layers_wt_labels, "flt_wt_counts": layers_wt_flt_counts, "flt_wt_labels": layers_wt_flt_labels}
 
-# wt_union_labels = wt_flt_labels + wt_labels
-# wt_union_labels = list(sorted(wt_union_labels, key = lambda x : float(x)))
+# for display weights distributes 
+wt_min, wt_max = 9999999, -9999999
+for i in range(len(br2_synapses)):
+    wt_min = min(wt_min, np.min(np.array(br2_synapses[i].w).flatten().tolist()))
+    wt_max = max(wt_max, np.max(np.array(br2_synapses[i].w).flatten().tolist()))
 
-# wt_union_counts = [0] * len(wt_union_labels)
-# flt_union_counts = [0] * len(wt_union_labels)
+wt_labels = np.linspace(wt_min, wt_max, num=50)
+
+wt_counts = [0]*(len(wt_labels) - 1)
 for i in range(len(br2_synapses)):
     wts = np.array(br2_synapses[i].w).flatten().tolist()
     for w in wts:
-        wt_counts[wt_labels.index(str(w))] +=1
-        # wt_union_counts[wt_union_labels.index(str(w))] += 1
+        idx = 1
+        while idx < len(wt_labels) and w > wt_labels[idx]:
+            idx +=1
+        wt_counts[idx - 1] += 1
 
-wt_labels = [str(x) for x in wt_labels]
+wt_labels = list(["{}".format(int(x)) for x in wt_labels])
 layer_weights = {"wt_label": wt_labels, "wt_count": wt_counts}
 
-for i in range(len(flt_all_wts)):
-    flt_wts = np.array(flt_all_wts[i]).flatten().tolist()
-    for w in flt_wts:
-        wt_flt_counts[wt_flt_labels.index("{:.1f}".format(w))] +=1
-        # flt_union_counts[wt_union_labels.index("{:.1f}".format(w))] += 1
+# wt_labels = set()
+# for i in range(len(br2_synapses)):
+#     wts = np.array(br2_synapses[i].w).flatten().tolist()
+#     wts = [str(x) for x in wts]
+#     wt_labels |= set(wts)
 
+# wt_counts=[0]*len(wt_labels)
+# wt_labels = list(sorted(wt_labels, key=lambda x: float(x)))
+
+# wt_flt_labels = set()
+# for i in range(len(flt_all_wts)):
+#     flt_wts = np.array(flt_all_wts[i]).flatten().tolist()
+#     flt_wts = ["{:.1f}".format(x) for x in flt_wts]
+#     wt_flt_labels |= set(flt_wts)
+
+# wt_flt_counts=[0]*len(wt_flt_labels)
+# wt_flt_labels = list(sorted(wt_flt_labels, key=lambda x: float(x)))
+
+# # wt_union_labels = wt_flt_labels + wt_labels
+# # wt_union_labels = list(sorted(wt_union_labels, key = lambda x : float(x)))
+
+# # wt_union_counts = [0] * len(wt_union_labels)
+# # flt_union_counts = [0] * len(wt_union_labels)
+# for i in range(len(br2_synapses)):
+#     wts = np.array(br2_synapses[i].w).flatten().tolist()
+#     for w in wts:
+#         wt_counts[wt_labels.index(str(w))] +=1
+#         # wt_union_counts[wt_union_labels.index(str(w))] += 1
+
+# wt_labels = [str(x) for x in wt_labels]
+# layer_weights = {"wt_label": wt_labels, "wt_count": wt_counts}
+
+wt_flt_min, wt_flt_max = 999999, -999999
+for i in range(len(flt_all_wts)):
+    wt_flt_min = min(wt_flt_min, np.min(np.array(flt_all_wts[i]).flatten().tolist()))
+    wt_flt_max = max(wt_flt_max, np.max(np.array(flt_all_wts[i]).flatten().tolist()))
+
+wt_flt_labels = np.linspace(wt_flt_min, wt_flt_max, num=50)
+wt_flt_counts = [0] * (len(wt_flt_labels) - 1)
+
+for i in range(len(flt_all_wts)):
+    wts = np.array(flt_all_wts[i]).flatten().tolist()
+    for w in wts:
+        idx = 0
+        while idx < len(wt_flt_labels) and wt_flt_labels[idx] < w:
+            idx +=1
+        wt_flt_counts[idx - 1] += 1
+
+wt_flt_labels = ["{:.2f}".format(x) for x in wt_flt_labels]
 flt_layer_weights = {"wt_label": wt_flt_labels, "wt_count": wt_flt_counts}
+
+# for i in range(len(flt_all_wts)):
+#     flt_wts = np.array(flt_all_wts[i]).flatten().tolist()
+#     for w in flt_wts:
+#         wt_flt_counts[wt_flt_labels.index("{:.1f}".format(w))] +=1
+#         # flt_union_counts[wt_union_labels.index("{:.1f}".format(w))] += 1
+
+# flt_layer_weights = {"wt_label": wt_flt_labels, "wt_count": wt_flt_counts}
 
 
 # Last layer spike counts info
@@ -641,6 +735,7 @@ brian2_snn_info = {
     "neurons_info":neurons_info,
     "layers_weights":layer_weights,
     "layer_flt_weights": flt_layer_weights,
+    "each_layer_wt_infos": each_layer_wt_infos,
     "origin_layer_names": origin_layer_names,
     "layer_extras": layer_extras,
     # "spikes":output_spike_info,

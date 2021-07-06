@@ -76,14 +76,14 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                   <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
-                    text-align: right;">测试数据量</font></td>
+                    text-align: right;">训练数据量</font></td>
                   <td id="test_data_amount" style="text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">
                   <td style="padding-left: 15px;border: solid 2px;border-color: #D6D6D6;padding-top: 20px;padding-bottom: 20px;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 16px;
                     color: #333333;
-                    text-align: right;">验证数据量</font></td>
+                    text-align: right;">测试数据量</font></td>
                   <td id="val_data_amount" style="text-align: right;padding-right: 15px;padding-top: 20px;padding-bottom: 20px;"></td>
                 </tr>
                 <tr style="border: solid 3px;height: 40px;border-color: #D6D6D6;">

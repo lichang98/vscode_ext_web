@@ -827,7 +827,7 @@ export function getConvertorModelPageV2(){
               var layer_idx = 0;
               for(var i=0;i<detail_info.length;++i){
                 if (detail_info[i].name !== "Conv2D" && detail_info[i].name !== "InputLayer" && detail_info[i].name !== "AveragePooling2D" &&
-                    detail_info[i].name !== "MaxPooling2D" && detail_info[i].name !== "Dropout" && detail_info[i].name !== "Dense") {
+                    detail_info[i].name !== "MaxPooling2D" && detail_info[i].name !== "Dense") {
                       continue;
                   }
                   layer_idx += 1

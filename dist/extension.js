@@ -9959,9 +9959,27 @@ function getSNNModelPage() {
       <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);margin-top: -70px;display: block;"><font style="color: #333;font-weight: bolder;">数据信息加载中...</font></span>
     </div>
   
+      <div style="height: 500px;margin-top: -5px;">
+        <div style="height: 460px;width: 740px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
+          <div style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+            font-size: 20px;
+            color: #333333;
+            letter-spacing: 1.14px;">模型连接图</font></div>
+          <div id="sangky_chart" style="width: 700px;height: 400px;display: inline-block;margin-left: 50px;overflow: auto;"></div>
+        </div>
+        <!--权重分布图-->
+        <div style="height: 460px;width: 770px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
+            <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;">脉冲神经网络权重分布</font></div>
+            <div id="weight_dist_chart" style="width: 700px;height: 400px;margin-left: 40px;margin-top: 40px;"></div>
+        </div>
+      </div>
+  
       <div style="height: 400px;">
           <!-- SNN神经元信息 -->
-          <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 770px;">
+          <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 740px;">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -10033,28 +10051,10 @@ function getSNNModelPage() {
                       font-size: 16px;
                       color: #666666;padding-top: 12px; padding-bottom: 12px;">平均连接个数</td>
                     </tr>
-                    <!-- 动态加载 -->
+                     动态加载 -->
                   </thead>
               </table>
-          </div> -->
-      </div>
-      <div style="height: 500px;margin-top: -5px;">
-          <!--权重分布图-->
-          <div style="height: 460px;width: 770px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
-              <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
-                font-size: 20px;
-                color: #333333;
-                letter-spacing: 1.14px;">脉冲神经网络权重分布</font></div>
-              <div id="weight_dist_chart" style="width: 700px;height: 400px;margin-left: 40px;margin-top: 10px;"></div>
-          </div>
-          <div style="height: 460px;width: 740px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
-              <div style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
-                font-size: 20px;
-                color: #333333;
-                letter-spacing: 1.14px;">模型连接图</font></div>
-              <div id="sangky_chart" style="width: 700px;height: 400px;display: inline-block;margin-left: 20px;"></div>
-          </div>
-      </div>
+        </div>
   </body>
   <style>
   
@@ -10135,6 +10135,10 @@ function getSNNModelPage() {
   }
   .container:last-child::after {
     content: 'large';
+  }
+  #sangky_chart svg {
+    width: 140%;
+    height: 140%;
   }
   </style>
   <!-- Compiled and minified CSS -->
@@ -10389,6 +10393,8 @@ function getSNNModelPage() {
   
                     let prev_rect = undefined;
                     let idx4layer = 0;
+                    let k_pos = 0;
+                    let extra_idx = -1;
                     for (let k = 0; k < origin_layer_names.length; ++k) {
                       var layer_idx = "layer_"+idx4layer;
                       if (k === 0) {
@@ -10397,7 +10403,7 @@ function getSNNModelPage() {
                         layer_idx = "out";
                       }
                       var rect = new joint.shapes.standard.Rectangle();
-                      rect.position(200, 40 * k + 20);
+                      rect.position(200, 40 * k_pos + 20);
                       rect.resize(300, 20);
                       rect.attr({
                           body: {
@@ -10427,6 +10433,32 @@ function getSNNModelPage() {
                         link.addTo(graph);
                       }
                       prev_rect = rect;
+                      if (origin_layer_names[k] === "Conv2D") {
+                        extra_idx++;
+                          if (infos.layer_extras[k] === "relu") {
+                            k_pos++;
+                            var rect_extra = new joint.shapes.standard.Rectangle();
+                            rect_extra.position(200, 40 * k_pos + 20);
+                            rect_extra.resize(300, 20);
+                            rect_extra.attr({
+                              body: {
+                                fill: "red"
+                              },
+                              label: {
+                                text: "Activation",
+                                fill: 'white'
+                              }
+                            });
+                            rect_extra.addTo(graph);
+                            var link_extra = new joint.shapes.standard.Link();
+                            link_extra.source(prev_rect);
+                            link_extra.target(rect_extra);
+                            link_extra.addTo(graph);
+  
+                            prev_rect = rect_extra;
+                        }
+                      }
+                      k_pos++;
                     }
   
                     $(".loading-div").hide(); // 隐藏加载提示
@@ -10488,6 +10520,8 @@ function getSNNModelPage() {
                         type: 'category',
                         data: flt_label_names,
                         name:"浮点权重",
+                        nameLocation: 'center',
+                        nameGap : 30,
                         nameTextStyle:{
                           color:"#999999",
                           fontFamily: 'SourceHanSansCN-Normal',
@@ -10500,12 +10534,15 @@ function getSNNModelPage() {
                           fontFamily: 'SourceHanSansCN-Normal',
                           fontSize: '14px',
                       },
-                      show:false
+                      show:true,
+                      position: 'top'
                     },
                     {
                         type: 'category',
                         data: label_names,
                         name:"权重",
+                        nameLocation: 'center',
+                        nameGap: 30,
                         nameTextStyle:{
                           color:"#999999",
                           fontFamily: 'SourceHanSansCN-Normal',
@@ -10527,6 +10564,8 @@ function getSNNModelPage() {
                       min: 1,
                       logBase: 2,
                       name:"浮点权重数量",
+                      nameLocation: 'center',
+                      nameGap: 40,
                       nameTextStyle:{
                         color:"#999999",
                         fontFamily: 'SourceHanSansCN-Normal',
@@ -10548,6 +10587,8 @@ function getSNNModelPage() {
                       min: 1,
                       logBase: 10,
                       name:"定点权重数量",
+                      nameLocation: 'center',
+                      nameGap: 40,
                       nameTextStyle:{
                         color:"#999999",
                         fontFamily: 'SourceHanSansCN-Normal',

@@ -176,8 +176,13 @@ model_lib = import_module("snntoolbox.parsing.model_libs.keras_input_lib")
 input_model = model_lib.load(os.path.dirname(model_path), os.path.basename(model_path))
 tmp_model = keras.models.load_model(os.path.join(os.path.dirname(model_path), "mnist_cnn.h5"))
 origin_layer_names = []
+layer_extras = []
 for i in range(len(tmp_model.layers)):
     origin_layer_names.append(tmp_model.layers[i].__class__.__name__)
+    if origin_layer_names[-1] == "Conv2D" and ("activation" in tmp_model.layers[i].__dict__.keys()) and ("relu" in str(tmp_model.layers[i].activation)):
+        layer_extras.append("relu")
+    elif origin_layer_names[-1] == "Conv2D":
+        layer_extras.append("relu")
 
 acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=testX[:50],y_test=testY[:50])
 ann_origin_acc = "{:.2%}".format(acc)
@@ -576,7 +581,7 @@ for i in range(len(br2_synapses)):
     wts = [str(x) for x in wts]
     wt_labels |= set(wts)
 
-# wt_counts=[0]*len(wt_labels)
+wt_counts=[0]*len(wt_labels)
 wt_labels = list(sorted(wt_labels, key=lambda x: float(x)))
 
 wt_flt_labels = set()
@@ -585,30 +590,30 @@ for i in range(len(flt_all_wts)):
     flt_wts = ["{:.1f}".format(x) for x in flt_wts]
     wt_flt_labels |= set(flt_wts)
 
-# wt_flt_counts=[0]*len(wt_flt_labels)
+wt_flt_counts=[0]*len(wt_flt_labels)
 wt_flt_labels = list(sorted(wt_flt_labels, key=lambda x: float(x)))
 
-wt_union_labels = wt_flt_labels + wt_labels
-wt_union_labels = list(sorted(wt_union_labels, key = lambda x : float(x)))
+# wt_union_labels = wt_flt_labels + wt_labels
+# wt_union_labels = list(sorted(wt_union_labels, key = lambda x : float(x)))
 
-wt_union_counts = [0] * len(wt_union_labels)
-flt_union_counts = [0] * len(wt_union_labels)
+# wt_union_counts = [0] * len(wt_union_labels)
+# flt_union_counts = [0] * len(wt_union_labels)
 for i in range(len(br2_synapses)):
     wts = np.array(br2_synapses[i].w).flatten().tolist()
     for w in wts:
-        # wt_counts[wt_labels.index(w)] +=1
-        wt_union_counts[wt_union_labels.index(str(w))] += 1
+        wt_counts[wt_labels.index(str(w))] +=1
+        # wt_union_counts[wt_union_labels.index(str(w))] += 1
 
 wt_labels = [str(x) for x in wt_labels]
-layer_weights = {"wt_label": wt_union_labels, "wt_count": wt_union_counts}
+layer_weights = {"wt_label": wt_labels, "wt_count": wt_counts}
 
 for i in range(len(flt_all_wts)):
     flt_wts = np.array(flt_all_wts[i]).flatten().tolist()
     for w in flt_wts:
-        # wt_flt_counts[wt_flt_labels.index("{:.1f}".format(w))] +=1
-        flt_union_counts[wt_union_labels.index("{:.1f}".format(w))] += 1
+        wt_flt_counts[wt_flt_labels.index("{:.1f}".format(w))] +=1
+        # flt_union_counts[wt_union_labels.index("{:.1f}".format(w))] += 1
 
-flt_layer_weights = {"wt_label": wt_union_labels, "wt_count": flt_union_counts}
+flt_layer_weights = {"wt_label": wt_flt_labels, "wt_count": wt_flt_counts}
 
 
 # Last layer spike counts info
@@ -637,6 +642,7 @@ brian2_snn_info = {
     "layers_weights":layer_weights,
     "layer_flt_weights": flt_layer_weights,
     "origin_layer_names": origin_layer_names,
+    "layer_extras": layer_extras,
     # "spikes":output_spike_info,
     "spikes":{
         "snn_test_imgs": snn_test_img_uris,

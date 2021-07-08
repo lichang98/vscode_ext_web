@@ -76,9 +76,15 @@
                 <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
                   <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                   font-size: 14px;
-                  color: #666666;padding-top: 12px;padding-bottom: 12px;">准确率</td>
+                  color: #666666;padding-top: 12px;padding-bottom: 12px;">ANN准确率</td>
                   <td id="simulate_acc" style="color: #e71f1fe0;text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
                 </tr>    
+                <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                  <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                  font-size: 14px;
+                  color: #666666;padding-top: 12px;padding-bottom: 12px;">SNN准确率</td>
+                  <td id="simulate_acc_snn" style="color: #e71f1fe0;text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+                </tr>  
             </table>
           </div>
         </div>
@@ -561,7 +567,8 @@ body {
                   $("#simulate_synapse_dt").text(infos.extra_simu_info.simulate_synapse_dt);
                   $("#simulate_delay").text(infos.extra_simu_info.simulate_delay);
                   $("#simulate_dura").text(infos.extra_simu_info.simulate_dura);
-                  $("#simulate_acc").text(infos.extra_simu_info.simulate_acc);
+                  $("#simulate_acc").text(infos.extra_simu_info.simulate_acc.substr(0, infos.extra_simu_info.simulate_acc.indexOf("-")));
+                  $("#simulate_acc_snn").text(infos.extra_simu_info.simulate_acc.substr(infos.extra_simu_info.simulate_acc.indexOf("-") + 4));
 
 
                   // fill layers spike info table

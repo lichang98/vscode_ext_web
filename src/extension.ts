@@ -189,14 +189,14 @@ export function activate(context: vscode.ExtensionContext) {
 	treeViewCvtor.onDidChangeVisibility((evt)=>{
 		if(evt.visible){
 			console.log("activity bar 转换图标被点击, treeview convertor 可见...");
-			if(currentPanel && currentPanel.title === "ANN-SNN转化"){
+			if(currentPanel && currentPanel.title === "ANN-SNN转换"){
 				currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
 				treeviewHome.reveal(treeview.data[0]);
 			}
 		}else{
 			setTimeout(()=>{
 				if(isAllOtherTreeViewInvisible()){
-					if(currentPanel && currentPanel.title === "ANN-SNN转化"){
+					if(currentPanel && currentPanel.title === "ANN-SNN转换"){
 						currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
 						treeviewHome.reveal(treeview.data[0]);
 					}
@@ -521,7 +521,7 @@ export function activate(context: vscode.ExtensionContext) {
 				PROJ_DESC_INFO.project_type = data.project_info.project_type;
 				addSlfProj(data.project_info.project_name);
 				inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name,[
-					new TreeItemNode("ANN-SNN转化",[
+					new TreeItemNode("ANN-SNN转换",[
 						new TreeItemNode("数据集",[
 							new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), new TreeItemNode("测试数据标签",[])
 						]), 
@@ -756,8 +756,8 @@ export function activate(context: vscode.ExtensionContext) {
 						execSync(checkCmd, {encoding: "buffer"});
 					} catch (err) {
 						console.log("发送xnorm 文件校验错误消息......");
-						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.xnorm)+
-													" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "<strong>文件 "+path.basename(data.choose_import_file_paths.xnorm)+
+													" 校验错误！</strong><br/>错误详情：<br/>"+iconv.decode(err.stderr, 'cp936')}));
 						return;
 					};
 					importXNorm(data.choose_import_file_paths.xnorm);
@@ -766,7 +766,7 @@ export function activate(context: vscode.ExtensionContext) {
 						execSync(checkCmd, {encoding: "buffer"});
 					} catch (err) {
 						console.log("发送xtest 文件校验错误消息......");
-						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.xtest)+" 校验错误："+
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "<strong>文件 "+path.basename(data.choose_import_file_paths.xtest)+" 校验错误！</strong><br/>错误详情：<br/>"+
 														iconv.decode(err.stderr, 'cp936')}));
 						return;
 					};
@@ -776,8 +776,8 @@ export function activate(context: vscode.ExtensionContext) {
 						execSync(checkCmd, {encoding: "buffer"});
 					} catch (err) {
 						console.log("发送ytest 文件校验错误消息......");
-						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.ytest)+
-														" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "<strong>文件 "+path.basename(data.choose_import_file_paths.ytest)+
+														" 校验错误！</strong><br/>错误详情：<br/>"+iconv.decode(err.stderr, 'cp936')}));
 						return;
 					};
 					importYTest(data.choose_import_file_paths.ytest);
@@ -786,8 +786,8 @@ export function activate(context: vscode.ExtensionContext) {
 						execSync(checkCmd, {encoding: "buffer"});
 					} catch (err) {
 						console.log("发送ann 模型文件校验错误消息......");
-						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件 "+path.basename(data.choose_import_file_paths.ann)+
-															" 校验错误："+iconv.decode(err.stderr, 'cp936')}));
+						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "<strong>文件 "+path.basename(data.choose_import_file_paths.ann)+
+															" 校验错误！</strong><br/>错误详情：<br/>"+iconv.decode(err.stderr, 'cp936')}));
 						return;
 					};
 					importANNFile(data.choose_import_file_paths.ann);
@@ -934,7 +934,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable2);
 
 	context.subscriptions.push(vscode.commands.registerCommand("treeView.proj_rename",()=>{
-		if(!currentPanel || currentPanel.title.trim() === "ANN-SNN转化"){
+		if(!currentPanel || currentPanel.title.trim() === "ANN-SNN转换"){
 			vscode.window.showErrorMessage("当前项目属性不可修改!!!");
 			return;
 		}
@@ -1021,7 +1021,7 @@ export function activate(context: vscode.ExtensionContext) {
 				// 显示treeview
 				addSlfProj(PROJ_DESC_INFO.project_name);
 				inMemTreeViewStruct.push(new TreeItemNode(PROJ_DESC_INFO.project_name,[
-					new TreeItemNode("ANN-SNN转化",[
+					new TreeItemNode("ANN-SNN转换",[
 						new TreeItemNode("数据集",[
 							new TreeItemNode("训练数据",[]), new TreeItemNode("测试数据",[]), new TreeItemNode("测试数据标签",[])
 						]), 
@@ -1563,7 +1563,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			// currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
 			console.log("title="+currentPanel.title);
-			if(currentPanel && currentPanel.title !== "ANN-SNN转化"){
+			if(currentPanel && currentPanel.title !== "ANN-SNN转换"){
 				console.log("PROJ_DESC_INFO="+PROJ_DESC_INFO);
 				if(PROJ_DESC_INFO.project_type === '图像分类'){
 					console.log("currentpanel="+currentPanel);
@@ -1579,7 +1579,7 @@ export function activate(context: vscode.ExtensionContext) {
 					currentPanel.webview.html = getANNSNNConvertFatiguePage();
 				}
 				currentPanel.reveal();
-				currentPanel.title = "ANN-SNN转化";
+				currentPanel.title = "ANN-SNN转换";
 				console.log("显示currentpane  模型转换   1");
 				if (!fs.existsSync(path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py"))) {
 					fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py"),`# -*- coding:utf-8 -*-

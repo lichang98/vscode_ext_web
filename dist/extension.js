@@ -188,7 +188,7 @@ function activate(context) {
     treeViewCvtor.onDidChangeVisibility((evt) => {
         if (evt.visible) {
             console.log("activity bar 转换图标被点击, treeview convertor 可见...");
-            if (currentPanel && currentPanel.title === "ANN-SNN转化") {
+            if (currentPanel && currentPanel.title === "ANN-SNN转换") {
                 currentPanel.webview.postMessage(JSON.stringify({ "ann_model_start_convert": "yes" }));
                 treeviewHome.reveal(treeview.data[0]);
             }
@@ -196,7 +196,7 @@ function activate(context) {
         else {
             setTimeout(() => {
                 if (isAllOtherTreeViewInvisible()) {
-                    if (currentPanel && currentPanel.title === "ANN-SNN转化") {
+                    if (currentPanel && currentPanel.title === "ANN-SNN转换") {
                         currentPanel.webview.postMessage(JSON.stringify({ "ann_model_start_convert": "yes" }));
                         treeviewHome.reveal(treeview.data[0]);
                     }
@@ -516,7 +516,7 @@ function activate(context) {
                 PROJ_DESC_INFO.project_type = data.project_info.project_type;
                 TreeViewProvider_1.addSlfProj(data.project_info.project_name);
                 inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(data.project_info.project_name, [
-                    new TreeViewProvider_1.TreeItemNode("ANN-SNN转化", [
+                    new TreeViewProvider_1.TreeItemNode("ANN-SNN转换", [
                         new TreeViewProvider_1.TreeItemNode("数据集", [
                             new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []), new TreeViewProvider_1.TreeItemNode("测试数据标签", [])
                         ]),
@@ -766,8 +766,8 @@ function activate(context) {
                     }
                     catch (err) {
                         console.log("发送xnorm 文件校验错误消息......");
-                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.xnorm) +
-                                " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
+                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.xnorm) +
+                                " 校验错误！</strong><br/>错误详情：<br/>" + iconv.decode(err.stderr, 'cp936') }));
                         return;
                     }
                     ;
@@ -778,7 +778,7 @@ function activate(context) {
                     }
                     catch (err) {
                         console.log("发送xtest 文件校验错误消息......");
-                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.xtest) + " 校验错误：" +
+                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.xtest) + " 校验错误！</strong><br/>错误详情：<br/>" +
                                 iconv.decode(err.stderr, 'cp936') }));
                         return;
                     }
@@ -790,8 +790,8 @@ function activate(context) {
                     }
                     catch (err) {
                         console.log("发送ytest 文件校验错误消息......");
-                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.ytest) +
-                                " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
+                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.ytest) +
+                                " 校验错误！</strong><br/>错误详情：<br/>" + iconv.decode(err.stderr, 'cp936') }));
                         return;
                     }
                     ;
@@ -802,8 +802,8 @@ function activate(context) {
                     }
                     catch (err) {
                         console.log("发送ann 模型文件校验错误消息......");
-                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件 " + path.basename(data.choose_import_file_paths.ann) +
-                                " 校验错误：" + iconv.decode(err.stderr, 'cp936') }));
+                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.ann) +
+                                " 校验错误！</strong><br/>错误详情：<br/>" + iconv.decode(err.stderr, 'cp936') }));
                         return;
                     }
                     ;
@@ -943,7 +943,7 @@ function activate(context) {
     });
     context.subscriptions.push(disposable2);
     context.subscriptions.push(vscode.commands.registerCommand("treeView.proj_rename", () => {
-        if (!currentPanel || currentPanel.title.trim() === "ANN-SNN转化") {
+        if (!currentPanel || currentPanel.title.trim() === "ANN-SNN转换") {
             vscode.window.showErrorMessage("当前项目属性不可修改!!!");
             return;
         }
@@ -1028,7 +1028,7 @@ function activate(context) {
                 // 显示treeview
                 TreeViewProvider_1.addSlfProj(PROJ_DESC_INFO.project_name);
                 inMemTreeViewStruct.push(new TreeViewProvider_1.TreeItemNode(PROJ_DESC_INFO.project_name, [
-                    new TreeViewProvider_1.TreeItemNode("ANN-SNN转化", [
+                    new TreeViewProvider_1.TreeItemNode("ANN-SNN转换", [
                         new TreeViewProvider_1.TreeItemNode("数据集", [
                             new TreeViewProvider_1.TreeItemNode("训练数据", []), new TreeViewProvider_1.TreeItemNode("测试数据", []), new TreeViewProvider_1.TreeItemNode("测试数据标签", [])
                         ]),
@@ -1563,7 +1563,7 @@ function activate(context) {
             }
             // currentPanel.webview.postMessage(JSON.stringify({"ann_model_start_convert":"yes"}));
             console.log("title=" + currentPanel.title);
-            if (currentPanel && currentPanel.title !== "ANN-SNN转化") {
+            if (currentPanel && currentPanel.title !== "ANN-SNN转换") {
                 console.log("PROJ_DESC_INFO=" + PROJ_DESC_INFO);
                 if (PROJ_DESC_INFO.project_type === '图像分类') {
                     console.log("currentpanel=" + currentPanel);
@@ -1582,7 +1582,7 @@ function activate(context) {
                     currentPanel.webview.html = get_fatigue_pages_1.getANNSNNConvertFatiguePage();
                 }
                 currentPanel.reveal();
-                currentPanel.title = "ANN-SNN转化";
+                currentPanel.title = "ANN-SNN转换";
                 console.log("显示currentpane  模型转换   1");
                 if (!fs.existsSync(path.join(path.dirname(PROJ_SAVE_PATH), "self_preprocess.py"))) {
                     fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH), "self_preprocess.py"), `# -*- coding:utf-8 -*-
@@ -5853,7 +5853,7 @@ exports.ITEM_ICON_MAP = new Map([
     ['模拟器', "imgs/simulate_icon.png"],
     ['编译', "imgs/darwin_binary.png"],
     ['Darwin二进制文件', "imgs/binary_compile_icon.png"],
-    ["ANN-SNN转化", "imgs/convert_icon.png",],
+    ["ANN-SNN转换", "imgs/convert_icon.png",],
     ["模型文件", "imgs/binary_compile_icon.png"],
     ["编解码配置文件", "imgs/binary_compile_icon.png"]
     // ['转换与仿真',"imgs/simulate_run.png"],
@@ -5921,7 +5921,7 @@ class TreeItemNode extends vscode_1.TreeItem {
             this.collapsibleState = expandState;
         }
         else {
-            if (contextVal === "root" || label === "ANN-SNN转化" || label === "训练数据" || label === "测试数据" || label === "测试数据标签" || label === "ANN模型" || label === "数据集") {
+            if (contextVal === "root" || label === "ANN-SNN转换" || label === "训练数据" || label === "测试数据" || label === "测试数据标签" || label === "ANN模型" || label === "数据集") {
                 this.collapsibleState = 2; // expand
             }
             else if (contextVal === 'rmable' || label.search("json") >= 0 || label.search(".b") >= 0 || label.search(".dat") >= 0 || label.search(".pickle") >= 0) {
@@ -7515,7 +7515,7 @@ function getConvertorPageV2() {
             const data = JSON.parse(event.data);
             if (data.show_error) {
               console.log("接收到show_error 消息："+data.show_error);
-              $("#error_detail").text(data.show_error);
+              $("#error_detail").html(data.show_error);
               if (data.display_loading) {
                 $("#loading_anim").css("display", "block");
                 $("#error_detail").css("color", "#000000");
@@ -9108,9 +9108,15 @@ function getSNNSimuPage() {
                   <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
                     <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                     font-size: 14px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">准确率</td>
+                    color: #666666;padding-top: 12px;padding-bottom: 12px;">ANN准确率</td>
                     <td id="simulate_acc" style="color: #e71f1fe0;text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
                   </tr>    
+                  <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                    <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                    font-size: 14px;
+                    color: #666666;padding-top: 12px;padding-bottom: 12px;">SNN准确率</td>
+                    <td id="simulate_acc_snn" style="color: #e71f1fe0;text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+                  </tr>  
               </table>
             </div>
           </div>
@@ -9593,7 +9599,8 @@ function getSNNSimuPage() {
                     $("#simulate_synapse_dt").text(infos.extra_simu_info.simulate_synapse_dt);
                     $("#simulate_delay").text(infos.extra_simu_info.simulate_delay);
                     $("#simulate_dura").text(infos.extra_simu_info.simulate_dura);
-                    $("#simulate_acc").text(infos.extra_simu_info.simulate_acc);
+                    $("#simulate_acc").text(infos.extra_simu_info.simulate_acc.substr(0, infos.extra_simu_info.simulate_acc.indexOf("-")));
+                    $("#simulate_acc_snn").text(infos.extra_simu_info.simulate_acc.substr(infos.extra_simu_info.simulate_acc.indexOf("-") + 4));
   
   
                     // fill layers spike info table
@@ -9984,8 +9991,8 @@ function getSNNModelPage() {
           <div style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
             font-size: 20px;
             color: #333333;
-            letter-spacing: 1.14px;">模型连接图</font></div>
-          <div id="sangky_chart" style="width: 700px;height: 400px;display: inline-block;margin-left: 50px;overflow: auto;"></div>
+            letter-spacing: 1.14px;">ANN SNN模型对应关系图</font></div>
+          <div id="sangky_chart" style="width: 700px;height: 400px;display: inline-block;margin-left: 50px;overflow-y: auto;overflow-x: hidden;"></div>
         </div>
         <!--权重分布图-->
         <div style="height: 460px;width: 770px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
@@ -10005,7 +10012,7 @@ function getSNNModelPage() {
         </div>
       </div>
   
-      <div style="height: 400px;">
+      <div style="height: 400px;margin-top: -25px;">
           <!-- SNN神经元信息 -->
           <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 740px;">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
@@ -10386,16 +10393,16 @@ function getSNNModelPage() {
                         model: graph,
                         width: 600,
                         height: 400,
-                        gridSize: 10,
+                        gridSize: 1,
                         drawGrid: true,
                         background: {
-                            color: '#D6D6D6'
+                            color: 'rgba(238,238,238,0.4)'
                         }
                     });
   
                     var rect_tip = new joint.shapes.standard.Rectangle();
                     rect_tip.position(20, 20);
-                    rect_tip.resize(120, 200);
+                    rect_tip.resize(160, 200);
                     rect_tip.attr({
                       body:{
                         fill:"rgb(255,248,220)"
@@ -10410,13 +10417,13 @@ function getSNNModelPage() {
   
                     var rect_legend1 = new joint.shapes.standard.Rectangle();
                     rect_legend1.position(40,40);
-                    rect_legend1.resize(80,30);
+                    rect_legend1.resize(120,30);
                     rect_legend1.attr({
                       body:{
                         fill: 'red'
                       },
                       label: {
-                        text: "删除",
+                        text: "ANN层(删除)",
                         fill:"black"
                       }
                     });
@@ -10424,13 +10431,13 @@ function getSNNModelPage() {
   
                     var rect_legend2 = new joint.shapes.standard.Rectangle();
                     rect_legend2.position(40, 90);
-                    rect_legend2.resize(80, 30);
+                    rect_legend2.resize(120, 30);
                     rect_legend2.attr({
                       body: {
                         fill: '#FF9800'
                       },
                       label: {
-                        text: "前向融合",
+                        text: "ANN层(前向融合)",
                         fill: "black"
                       }
                     });
@@ -10438,17 +10445,31 @@ function getSNNModelPage() {
                     
                     var rect_legend3 = new joint.shapes.standard.Rectangle();
                     rect_legend3.position(40, 140);
-                    rect_legend3.resize(80, 30);
+                    rect_legend3.resize(120, 30);
                     rect_legend3.attr({
                       body: {
                         fill: 'gray'
                       },
                       label: {
-                        text: "转换",
+                        text: "ANN层(转换)",
                         fill: 'black'
                       }
                     });
                     rect_legend3.addTo(graph);
+  
+                    var rect_legend4 = new joint.shapes.standard.Rectangle();
+                    rect_legend4.position(40, 190);
+                    rect_legend4.resize(120, 30);
+                    rect_legend4.attr({
+                      body: {
+                        fill: 'green'
+                      },
+                      label: {
+                        text: "SNN层",
+                        fill: 'black'
+                      }
+                    });
+                    rect_legend4.addTo(graph);
   
                     let prev_rect = undefined;
                     let idx4layer = 0;
@@ -10463,16 +10484,18 @@ function getSNNModelPage() {
                       }
                       var rect = new joint.shapes.standard.Rectangle();
                       rect.position(200, 40 * k_pos + 20);
-                      rect.resize(300, 20);
+                      rect.resize(120, 20);
                       rect.attr({
                           body: {
                               fill: 'gray'
                           },
                           label: {
-                              text: origin_layer_names[k] + "--->" + layer_idx,
+                              text: origin_layer_names[k],
                               fill: 'white'
                           }
                       });
+                      var rect_snn_ctpt = new joint.shapes.standard.Rectangle();
+                      var is_rect_snn_ctpt_added = false;
                       if (origin_layer_names[k] == "Activation" ||
                           origin_layer_names[k] == "Dropout" || origin_layer_names[k] == "Flatten") {
                           rect.attr("body/fill", "red");
@@ -10483,8 +10506,49 @@ function getSNNModelPage() {
                       }
                       else {
                         idx4layer += 1;
+                        // 对应snn层/input/out layer
+                        rect_snn_ctpt.position(350, 40 * k_pos + 20);
+                        rect_snn_ctpt.resize(120, 20);
+                        rect_snn_ctpt.attr({
+                          body: {
+                            fill: "green"
+                          },
+                          label: {
+                            text: "",
+                            fill:'white'
+                          }
+                        });
+                        if (k === 0) {
+                          rect_snn_ctpt.attr("label/text", "input");
+                        } else if (k === origin_layer_names.length - 1) {
+                          rect_snn_ctpt.attr("label/text", "out");
+                        } else {
+                          rect_snn_ctpt.attr("label/text", ""+layer_idx);
+                        }
+                        is_rect_snn_ctpt_added = true;
+                        // var rect_legend3 = new joint.shapes.standard.Rectangle();
+                        // rect_legend3.position(40, 140);
+                        // rect_legend3.resize(80, 30);
+                        // rect_legend3.attr({
+                        //   body: {
+                        //     fill: 'gray'
+                        //   },
+                        //   label: {
+                        //     text: "转换",
+                        //     fill: 'black'
+                        //   }
+                        // });
+                        // rect_legend3.addTo(graph);
                       }
                       rect.addTo(graph);
+                      if (is_rect_snn_ctpt_added) {
+                        rect_snn_ctpt.addTo(graph);
+                        var link_ann_snn_contpt = new joint.shapes.standard.Link();
+                        link_ann_snn_contpt.source(rect);
+                        link_ann_snn_contpt.target(rect_snn_ctpt);
+                        link_ann_snn_contpt.addTo(graph);
+                      }
+  
                       if (prev_rect !== undefined) {
                         var link = new joint.shapes.standard.Link();
                         link.source(prev_rect);
@@ -10498,7 +10562,7 @@ function getSNNModelPage() {
                             k_pos++;
                             var rect_extra = new joint.shapes.standard.Rectangle();
                             rect_extra.position(200, 40 * k_pos + 20);
-                            rect_extra.resize(300, 20);
+                            rect_extra.resize(120, 20);
                             rect_extra.attr({
                               body: {
                                 fill: "red"

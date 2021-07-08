@@ -455,7 +455,7 @@ body {
         const data = JSON.parse(event.data);
         if (data.show_error) {
           console.log("接收到show_error 消息："+data.show_error);
-          $("#error_detail").text(data.show_error);
+          $("#error_detail").html(data.show_error);
           if (data.display_loading) {
             $("#loading_anim").css("display", "block");
             $("#error_detail").css("color", "#000000");

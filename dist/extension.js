@@ -10544,6 +10544,8 @@ function getSNNModelPage() {
                       if (is_rect_snn_ctpt_added) {
                         rect_snn_ctpt.addTo(graph);
                         var link_ann_snn_contpt = new joint.shapes.standard.Link();
+                        link_ann_snn_contpt.attr("line/strokeDasharray", 1+' '+1);
+                        link_ann_snn_contpt.attr("line/stroke", '#7DCEA0');
                         link_ann_snn_contpt.source(rect);
                         link_ann_snn_contpt.target(rect_snn_ctpt);
                         link_ann_snn_contpt.addTo(graph);

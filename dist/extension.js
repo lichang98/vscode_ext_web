@@ -5104,12 +5104,13 @@ function getConvertorPageV2() {
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white; width: 747px">
         <div class="modal-content" style="width: 747px; height: 498px; background-color: white;">
-          <div style="background: #EEEEEE; height: 40px;">
+          <div style="background: #EEEEEE; height: 60px;">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
             margin-right: 30px;
             width: 30px;
             height: 30px;
             margin-top: 9px;
+            padding-top: 15px;
             ">
               &times;
             </button>
@@ -5117,11 +5118,8 @@ function getConvertorPageV2() {
             font-size: 24px;
             color: #333333;
             font-weight: bold;
-            letter-spacing: 1.26px;
-            margin-top: 27px;
-            
-            margin-left: 29px;
-            background: ">
+            letter-spacing: 1.26px;padding-left: 29px;padding-top: 15px;
+          ">
               项目创建向导
             </div>
           </div>
@@ -5411,17 +5409,15 @@ function getConvertorPageV2() {
     <div class="modal fade" id="myModal_show_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_show_error" aria-hidden="true" style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white;width: 800px;">
         <div class="modal-content" style="height: 495px; width: 560px; background-color: white;">
-          <div style="height: 90px; margin-top: 0; background: #EEEEEE;">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+          <div style="height: 70px; margin-top: -10px; background: #EEEEEE;">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
+            padding-right: 30px;
+            padding-top: 25px;
+            ">
               &times;
             </button>
-            <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Medium;
-            font-size: 20px;
-            font-weight: bold;
-            color:  #666666;
-            letter-spacing: 1.07px;
-            margin-left: 30px;
-            margin-top: 25px">
+            <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Medium;font-size: 25px;font-weight: bold;color: rgb(238, 20, 20);
+               letter-spacing: 1.07px; padding-left: 30px; padding-top: 20px;">
               警告
             </h4>
           </div>
@@ -5438,17 +5434,15 @@ function getConvertorPageV2() {
                 <div class="ispinner-blade"></div>
               </div>
             </div>
-            <div style="margin-top: 50px;">
-              <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
-              font-size: 22px;
-              color: #f87307;
-              letter-spacing: 1.26px; margin-left: 280px;width: 700px;overflow-y: auto;">错误信息</div>
+            <div align="center" style="height: 150px; padding-top: 60px;" ><img src="https://img01.sogoucdn.com/app/a/100520146/037c331c0a56c0643f7082d12da5d9c7" height=96px; width=96px; alt="警告"></div>
+            <div style="margin-top: 50px; width: 500px; height: 30px;">
+              <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 22px;color: #666666;letter-spacing: 1.26px; margin-left: 190px;">错误信息</div>
             </div>
           </div>
-          <div style="margin-top: 40px;margin-bottom: 40px;">
+          <div style="margin-top: 40px;">
             <button id="close_modal_btn" type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
             border-radius: 2px;
-            border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">关闭
+            margin-left: 210px;width: 150px;height: 50px; text-align: center;display: inline-block;" data-dismiss="modal">关闭
             </button>
           </div>
         </div><!-- /.modal-content -->
@@ -5577,8 +5571,8 @@ function getConvertorPageV2() {
                 $("#close_modal_btn").click();
                 console.log("close modal btn click.");
               } else {
-                $("#error_detail").css("height", "100px");
-                $("#error_detail").css("width", "750px");
+                $("#error_detail").css("height", "30px");
+                $("#error_detail").css("width", "500px");
                 $("#loading_anim").css("display", "none");
                 $("#error_detail").css("color", "#f87307");
                 $("#myModalLabel_show_error").css("color", "#ee1414");

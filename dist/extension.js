@@ -5102,9 +5102,9 @@ function getConvertorPageV2() {
     </button>
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: white;color: #333;">
-      <div class="modal-dialog" style="background-color: white;width: 800px;">
-        <div class="modal-content" style="background-color: white;">
-          <div>
+      <div class="modal-dialog" style="background-color: white; width: 747px">
+        <div class="modal-content" style="width: 747px; height: 498px; background-color: white;">
+          <div style="background: #EEEEEE; height: 40px;">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
             margin-right: 30px;
             width: 30px;
@@ -5119,7 +5119,9 @@ function getConvertorPageV2() {
             font-weight: bold;
             letter-spacing: 1.26px;
             margin-top: 27px;
-            margin-left: 29px;">
+            
+            margin-left: 29px;
+            background: ">
               项目创建向导
             </div>
           </div>
@@ -5408,16 +5410,18 @@ function getConvertorPageV2() {
     
     <div class="modal fade" id="myModal_show_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_show_error" aria-hidden="true" style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white;width: 800px;">
-        <div class="modal-content" style="background-color: white;">
-          <div>
+        <div class="modal-content" style="height: 495px; width: 560px; background-color: white;">
+          <div style="height: 90px; margin-top: 0; background: #EEEEEE;">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
               &times;
             </button>
-            <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Normal;
-            font-size: 24px;
+            <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Medium;
+            font-size: 20px;
             font-weight: bold;
-            color: #ee1414;
-            letter-spacing: 1.07px;margin-left: 20px;">
+            color:  #666666;
+            letter-spacing: 1.07px;
+            margin-left: 30px;
+            margin-top: 25px">
               警告
             </h4>
           </div>
@@ -5438,7 +5442,7 @@ function getConvertorPageV2() {
               <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
               font-size: 22px;
               color: #f87307;
-              letter-spacing: 1.26px;margin: auto;text-align: center;width: 100%;display: inline-block;height: 300px;width: 700px;overflow-y: auto;">错误信息</div>
+              letter-spacing: 1.26px; margin-left: 280px;width: 700px;overflow-y: auto;">错误信息</div>
             </div>
           </div>
           <div style="margin-top: 40px;margin-bottom: 40px;">
@@ -5578,7 +5582,9 @@ function getConvertorPageV2() {
                 $("#loading_anim").css("display", "none");
                 $("#error_detail").css("color", "#f87307");
                 $("#myModalLabel_show_error").css("color", "#ee1414");
-                $("#myModalLabel_show_error").text("错误");
+                if (data.is_error) {
+                    $("#myModalLabel_show_error").text("错误");
+                }
               }
               $("#alert_modal_btn").click();
             } else if (data.import_files) {
@@ -5637,29 +5643,29 @@ function getConvertorPageV2() {
            });
     
             $("#create").on("click",function(){
-                document.getElementById("project_name_error_id").style.display="none"
-                document.getElementById("proj_save_path_error_id").style.display="none"
+                document.getElementById("project_name_error_id").style.display="none";
+                document.getElementById("proj_save_path_error_id").style.display="none";
                 
                 console.log("创建xxx");
                 // 字段检查
                 if($("#project_name").val() === undefined || $("#project_name").val().toString().trim().length === 0 ||
                     $("#project_name").val() === ""
                 ){
-                  document.getElementById("project_name_error_id").style.display="block"
+                  document.getElementById("project_name_error_id").style.display="block";
                   return;
                 }else if($("#project_name").val().toString().trim().length > 20){
                   document.getElementById("project_name_error_id").value="项目名称不可超过20个字符";
                   document.getElementById("project_name_error_id").style.display="block";
                   return;
                 }else if($("#project_name").val().toString().trim().search("[\~\!\！\@\#\$\￥\%\<\>\》\《\.\?\？]") >=0){
-                  document.getElementById("project_name_error_id").value="项目名称不可包含特殊字符"
-                  document.getElementById("project_name_error_id").style.display="block"
+                  document.getElementById("project_name_error_id").value="项目名称不可包含特殊字符";
+                  document.getElementById("project_name_error_id").style.display="block";
                   return;
                 }
     
                 if($("#proj_save_path_input").val().toString().trim().length === 0
                  || $("#proj_save_path_input").val() === ""){
-                  document.getElementById("proj_save_path_error_id").style.display="block"
+                  document.getElementById("proj_save_path_error_id").style.display="block";
                   return;
                 }
     
@@ -5672,11 +5678,11 @@ function getConvertorPageV2() {
                 $("#dismiss").click();
             });
             $("#dismiss").on("click", function(){
-                document.getElementById("project_name").value = ""
-                document.getElementById("proj_save_path_input").value= ""
+                document.getElementById("project_name").value = "";
+                document.getElementById("proj_save_path_input").value= "";
                 
-                document.getElementById("project_name_error_id").style.display="none"
-                document.getElementById("proj_save_path_error_id").style.display="none"
+                document.getElementById("project_name_error_id").style.display="none";
+                document.getElementById("proj_save_path_error_id").style.display="none";
                 console.log("取消创建");
             });
     
@@ -33438,7 +33444,7 @@ function activate(context) {
                 }
                 else {
                     // vscode.window.showErrorMessage("请先导入数据!!");
-                    currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先导入数据！" }));
+                    currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先导入数据！", "is_error": false }));
                 }
             }
             else if (itemNode.label === path.basename(ANN_MODEL_FILE_PATH)) {

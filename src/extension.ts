@@ -1246,7 +1246,7 @@ export function activate(context: vscode.ExtensionContext) {
 						}
 				} else {
 					// vscode.window.showErrorMessage("请先导入数据!!");
-					currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请先导入数据！"}));
+					currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请先导入数据！", "is_error": false}));
 				}
 			}else if(itemNode.label === path.basename(ANN_MODEL_FILE_PATH!)){
 				if (ANN_MODEL_FILE_PATH) {

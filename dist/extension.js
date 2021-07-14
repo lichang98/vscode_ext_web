@@ -5103,8 +5103,8 @@ function getConvertorPageV2() {
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white; width: 747px">
-        <div class="modal-content" style="width: 747px; height: 498px; background-color: white;">
-          <div style="background: #EEEEEE; height: 60px;">
+        <div class="modal-content" style="width: 747px; height: 498px; background-color: white;border-radius: 15px;">
+          <div style="background: #EEEEEE; height: 60px; border-top-right-radius: 15px; border-top-left-radius: 15px;">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
             margin-right: 30px;
             width: 30px;
@@ -5408,8 +5408,8 @@ function getConvertorPageV2() {
     
     <div class="modal fade" id="myModal_show_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_show_error" aria-hidden="true" style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white;width: 800px;">
-        <div class="modal-content" style="height: 495px; width: 560px; background-color: white;">
-          <div style="height: 70px; margin-top: -10px; background: #EEEEEE;">
+        <div class="modal-content" style="height: 495px; width: 560px; background-color: white;border-radius: 15px;">
+          <div style="height: 70px; margin-top: -10px; background: #EEEEEE;border-top-right-radius: 15px; border-top-left-radius: 15px">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
             padding-right: 30px;
             padding-top: 25px;

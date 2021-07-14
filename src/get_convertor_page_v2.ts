@@ -1057,16 +1057,23 @@ export function getConvertorPageV2(){
       <div class="modal-dialog" style="background-color: white;width: 800px;">
         <div class="modal-content" style="background-color: white;">
           <div>
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
+            margin-right: 30px;
+            width: 30px;
+            height: 30px;
+            margin-top: 9px;
+            ">
               &times;
             </button>
-            <span id="myModalLabel" style="font-family: SourceHanSansCN-Normal;
+            <div id="myModalLabel" style="font-family: SourceHanSansCN-Medium;
             font-size: 24px;
             color: #333333;
             font-weight: bold;
-            letter-spacing: 1.26px;margin-left: 20px;">
+            letter-spacing: 1.26px;
+            margin-top: 27px;
+            margin-left: 29px;">
               项目创建向导
-            </span>
+            </div>
           </div>
           <div>
             <div id="alert_sheet" class="alert alert-danger" style="display: none;">
@@ -1083,7 +1090,7 @@ export function getConvertorPageV2(){
                             font-size: 22px;
                             color: #333333;
                             letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">项目名称: </label>
-                            <input type="text" id="project_name" style="background: #EEEEEE;
+                            <input type="text" id="project_name" style="background: white; 
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
                             border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
@@ -1092,12 +1099,24 @@ export function getConvertorPageV2(){
     letter-spacing: 0;
     line-height: 14px;">
                         </div>
+                        <div id="project_name_error">
+                            <p id="project_name_error_id" style="font-family: SourceHanSansCN-Normal;
+                            font-size: 18px;
+                            color: #EC7760;
+                            margin-left: 204px;
+                            margin-bottom: 2px;
+                            letter-spacing: 1.15px;
+                            display: none;
+                            ">
+                                项目名称不可为空
+                            </p>
+                        </div>
                         <div style="margin-top: 20px;">
                             <label for="select_type" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
                             letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">项目类别: </label>
-                            <select id="select_type" style="background: #EEEEEE;
+                            <select id="select_type" style="background: white;
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
                             border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
@@ -1116,7 +1135,7 @@ export function getConvertorPageV2(){
                           font-size: 22px;
                           color: #333333;
                           letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">项目路径: </label>
-                          <input type="text" id="proj_save_path_input" style="background: #EEEEEE;
+                          <input type="text" id="proj_save_path_input" style="background: white;
                           border: 1px solid #D9D9D9;
                           border-radius: 6px;
                           border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
@@ -1124,8 +1143,16 @@ export function getConvertorPageV2(){
     color: #999999;
     letter-spacing: 0;
     line-height: 14px;">
-                        <button id="span_save_path" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                        <button id="span_save_path" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
                         border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                        <p id="proj_save_path_error_id" style="font-family: SourceHanSansCN-Normal;
+                          font-size: 18px;
+                          color:  #EC7760;
+                          margin-left: 204px;
+                          margin-bottom: 2px;
+                          letter-spacing: 1.15px;
+                          height: ;
+                          display: none;">项目路径不可为空</p>
                       </div>
     
                     </form>
@@ -1136,7 +1163,7 @@ export function getConvertorPageV2(){
             border-radius: 2px;
             border-radius: 2px;width: 140px;margin-left: 200px;">关闭
             </button>
-            <button type="button" class="btn btn-primary" id="create" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+            <button type="button" class="btn btn-primary" onclick="checkoutCreateProjectAction()" id="create" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
             border-radius: 2px;
             border-radius: 2px;width: 140px;margin-left: 60px;">创建
             </button>
@@ -1562,33 +1589,29 @@ export function getConvertorPageV2(){
            });
     
             $("#create").on("click",function(){
+                document.getElementById("project_name_error_id").style.display="none"
+                document.getElementById("proj_save_path_error_id").style.display="none"
+                
                 console.log("创建xxx");
                 // 字段检查
-                if($("#project_name").val() === undefined || $("#project_name").val().toString().trim().length === 0){
-                  document.getElementById("alert_sheet").style.display = "block";
-                  document.getElementById("project_name").style.borderColor='#f82d2d';
-                  document.getElementById("lb_project_name").style.color = '#f82d2d';
-                  document.getElementById("error_band_text").innerHTML = '<strong>项目名称不可为空!</strong>';
+                if($("#project_name").val() === undefined || $("#project_name").val().toString().trim().length === 0 ||
+                    $("#project_name").val() === ""
+                ){
+                  document.getElementById("project_name_error_id").style.display="block"
                   return;
                 }else if($("#project_name").val().toString().trim().length > 20){
-                  document.getElementById("alert_sheet").style.display = "block";
-                  document.getElementById("project_name").style.borderColor='#f82d2d';
-                  document.getElementById("lb_project_name").style.color = '#f82d2d';
-                  document.getElementById("error_band_text").innerHTML = '<strong>项目名称不可超过20个字符!</strong>';
+                  document.getElementById("project_name_error_id").value="项目名称不可超过20个字符";
+                  document.getElementById("project_name_error_id").style.display="block";
                   return;
                 }else if($("#project_name").val().toString().trim().search("[\~\!\！\@\#\$\￥\%\<\>\》\《\.\?\？]") >=0){
-                  document.getElementById("alert_sheet").style.display = "block";
-                  document.getElementById("project_name").style.borderColor='#f82d2d';
-                  document.getElementById("lb_project_name").style.color = '#f82d2d';
-                  document.getElementById("error_band_text").innerHTML = '<strong>项目名称不可包含特殊字符!</strong>';
+                  document.getElementById("project_name_error_id").value="项目名称不可包含特殊字符"
+                  document.getElementById("project_name_error_id").style.display="block"
                   return;
                 }
     
-                if($("#proj_save_path_input").val().toString().trim().length === 0){
-                  document.getElementById("alert_sheet").style.display = "block";
-                  document.getElementById("span_save_path").style.color = '#f82d2d';
-                  document.getElementById("proj_save_path_input").style.borderColor = '#f82d2d';
-                  document.getElementById("error_band_text").innerHTML = '<strong>项目路径不可为空!</strong>';
+                if($("#proj_save_path_input").val().toString().trim().length === 0
+                 || $("#proj_save_path_input").val() === ""){
+                  document.getElementById("proj_save_path_error_id").style.display="block"
                   return;
                 }
     
@@ -1601,6 +1624,11 @@ export function getConvertorPageV2(){
                 $("#dismiss").click();
             });
             $("#dismiss").on("click", function(){
+                document.getElementById("project_name").value = ""
+                document.getElementById("proj_save_path_input").value= ""
+                
+                document.getElementById("project_name_error_id").style.display="none"
+                document.getElementById("proj_save_path_error_id").style.display="none"
                 console.log("取消创建");
             });
     

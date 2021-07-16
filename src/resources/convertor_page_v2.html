@@ -12,7 +12,7 @@
 
     <!-- 按钮触发模态框 -->
 <button id="modal_dialog" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" style="display: none;">
-	创建新的项目
+  创建新的项目
 </button>
 <button id="modal_dialog_projrefac" class="btn" data-toggle="modal" data-target="#myModalProjRefact" style="display: none;">
   修改项目属性
@@ -23,21 +23,28 @@
 </button>
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: white;color: #333;">
-	<div class="modal-dialog" style="background-color: white;width: 800px;">
-		<div class="modal-content" style="background-color: white;">
-			<div>
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
-					&times;
-				</button>
-				<span id="myModalLabel" style="font-family: SourceHanSansCN-Normal;
+  <div class="modal-dialog" style="background-color: white; width: 747px">
+    <div class="modal-content" style="width: 747px; height: 498px; background-color: white;border-radius: 15px;">
+      <div style="background: #EEEEEE; height: 60px; border-top-right-radius: 15px; border-top-left-radius: 15px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
+        margin-right: 30px;
+        width: 30px;
+        height: 30px;
+        margin-top: 9px;
+        padding-top: 15px;
+        ">
+          &times;
+        </button>
+        <div id="myModalLabel" style="font-family: SourceHanSansCN-Medium;
         font-size: 24px;
         color: #333333;
         font-weight: bold;
-        letter-spacing: 1.26px;margin-left: 20px;">
-					项目创建向导
-        </span>
-			</div>
-			<div>
+        letter-spacing: 1.26px;padding-left: 29px;padding-top: 15px;
+      ">
+          项目创建向导
+        </div>
+      </div>
+      <div>
         <div id="alert_sheet" class="alert alert-danger" style="display: none;">
           <a href="#" class="close" data-dismiss="alert">
               &times;
@@ -52,7 +59,7 @@
                         font-size: 22px;
                         color: #333333;
                         letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">项目名称: </label>
-                        <input type="text" id="project_name" style="background: #EEEEEE;
+                        <input type="text" id="project_name" style="background: white; 
                         border: 1px solid #D9D9D9;
                         border-radius: 6px;
                         border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
@@ -61,12 +68,24 @@ color: #999999;
 letter-spacing: 0;
 line-height: 14px;">
                     </div>
+                    <div id="project_name_error">
+                        <p id="project_name_error_id" style="font-family: SourceHanSansCN-Normal;
+                        font-size: 18px;
+                        color: #EC7760;
+                        margin-left: 204px;
+                        margin-bottom: 2px;
+                        letter-spacing: 1.15px;
+                        display: none;
+                        ">
+                            项目名称不可为空
+                        </p>
+                    </div>
                     <div style="margin-top: 20px;">
                         <label for="select_type" style="font-family: SourceHanSansCN-Normal;
                         font-size: 22px;
                         color: #333333;
                         letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">项目类别: </label>
-                        <select id="select_type" style="background: #EEEEEE;
+                        <select id="select_type" style="background: white;
                         border: 1px solid #D9D9D9;
                         border-radius: 6px;
                         border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
@@ -85,7 +104,7 @@ line-height: 14px;">
                       font-size: 22px;
                       color: #333333;
                       letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">项目路径: </label>
-                      <input type="text" id="proj_save_path_input" style="background: #EEEEEE;
+                      <input type="text" id="proj_save_path_input" style="background: white;
                       border: 1px solid #D9D9D9;
                       border-radius: 6px;
                       border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
@@ -93,44 +112,52 @@ font-size: 22px;
 color: #999999;
 letter-spacing: 0;
 line-height: 14px;">
-                    <button id="span_save_path" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                    <button id="span_save_path" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
                     border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                    <p id="proj_save_path_error_id" style="font-family: SourceHanSansCN-Normal;
+                      font-size: 18px;
+                      color:  #EC7760;
+                      margin-left: 204px;
+                      margin-bottom: 2px;
+                      letter-spacing: 1.15px;
+                      height: 20px;
+                      display: none;">项目路径不可为空</p>
                   </div>
 
                 </form>
-			</div>
-			<div style="margin-top: 40px;margin-bottom: 40px;">
-				<button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss" style="background: #F3F3F3;
+      </div>
+      <div style="margin-top: 40px;margin-bottom: 40px;">
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss" style="background: #F3F3F3;
         border: 1px solid #D7D7D7;
         border-radius: 2px;
         border-radius: 2px;width: 140px;margin-left: 200px;">关闭
-				</button>
-				<button type="button" class="btn btn-primary" id="create" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+        </button>
+        <button type="button" class="btn btn-primary" onclick="checkoutCreateProjectAction()" id="create" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
         border-radius: 2px;
         border-radius: 2px;width: 140px;margin-left: 60px;">创建
-				</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
 </div>
 
 <!--项目属性修改-->
 <div class="modal fade" id="myModalProjRefact" tabindex="-1" role="dialog" aria-labelledby="myModalLabelProjRefact" aria-hidden="true" style="background-color: white;color: #333;">
-	<div class="modal-dialog" style="background-color: white;width: 800px;">
-		<div class="modal-content" style="background-color: white;">
-			<div>
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
-					&times;
-				</button>
-				<h4 id="myModalLabelProjRefact" style="font-family: SourceHanSansCN-Normal;
+  <div class="modal-dialog" style="background-color: white;width: 800px;">
+    <div class="modal-content" style="background-color: white;">
+      <div>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+          &times;
+        </button>
+        <h4 id="myModalLabelProjRefact" style="font-family: SourceHanSansCN-Normal;
         font-size: 24px;
         font-weight: bold;
         color: #333333;
         letter-spacing: 1.07px;margin-left: 20px;">
-					项目属性修改
-				</h4>
-			</div>
-			<div class="modal-body">
+          项目属性修改
+        </h4>
+      </div>
+      <div class="modal-body">
                 <form role="form" id="project_info_form_projrefac">
                     <div style="margin-top: 50px;">
                         <label for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
@@ -166,20 +193,20 @@ line-height: 14px;">
                         </select>
                     </div>
                 </form>
-			</div>
-			<div style="margin-top: 40px;margin-bottom: 40px;">
-				<button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_projrefac" style="background: #F3F3F3;
+      </div>
+      <div style="margin-top: 40px;margin-bottom: 40px;">
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_projrefac" style="background: #F3F3F3;
         border: 1px solid #D7D7D7;
         border-radius: 2px;
         border-radius: 2px;width: 140px;margin-left: 200px;">取消
-				</button>
-				<button type="button" class="btn btn-primary" id="create_projrefac" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+        </button>
+        <button type="button" class="btn btn-primary" id="create_projrefac" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
         border-radius: 2px;
         border-radius: 2px;width: 140px;margin-left: 60px;">确认
-				</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
 </div>
 
 
@@ -187,104 +214,103 @@ line-height: 14px;">
 
 <!--导入数据与模型文件-->
 <div class="modal fade" id="myModalImportFiles" tabindex="-1" role="dialog" aria-labelledby="myModalLabelImportFiles" aria-hidden="true" style="background-color: white;color: #333;">
-	<div class="modal-dialog" style="background-color: white;width: 800px;">
-		<div class="modal-content" style="background-color: white;">
-			<div>
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
-					&times;
-				</button>
-				<h4 id="myModalLabelImportFiles" style="font-family: SourceHanSansCN-Normal;
-        font-size: 24px;
-        font-weight: bold;
+  <div class="modal-dialog" style="background-color: white;width: 800px;">
+    <div class="modal-content" style="background-color: white;">
+      <div style="background: #EEEEEE;padding: 15px;">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+          &times;
+        </button>
+        <h4 id="myModalLabelImportFiles" style="font-family: SourceHanSansCN-Medium;
+        font-size: 20px;
         color: #333333;
-        letter-spacing: 1.07px;margin-left: 20px;">
-					导入文件
-				</h4>
-			</div>
-			<div class="modal-body">
+        letter-spacing: 0.89px;">
+          导入文件
+        </h4>
+      </div>
+      <div class="modal-body">
                 <form role="form" id="project_info_form_import_files">
-                  <div style="margin-top: 20px;">
-                    <label for="import_files_xnorm"  style="font-family: SourceHanSansCN-Normal;
-                    font-size: 22px;
-                    color: #333333;
-                    letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">训练数据: </label>
-                    <input type="text" id="import_files_xnorm" style="background: #EEEEEE;
-                    border: 1px solid #D9D9D9;
+                  <div style="margin-top: 20px;margin-left: 100px;">
+                    <label for="import_files_xnorm"><font  style="font-family: SourceHanSansCN-Normal;
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;font-weight: normal;">训练数据: </font></label>
+                    <input type="text" id="import_files_xnorm" style="background: #FFFFFF;
+                    border: 1px solid #C0C0C0;
                     border-radius: 6px;
-                    border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
-                    font-size: 22px;
-                    color: #999999;
-                    letter-spacing: 0;
-                    line-height: 14px;">
-                    <button id="span_import_xnorm" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-                    border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                    border-radius: 6px;">
+                    <button id="span_import_xnorm" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+                    border-radius: 6px;
+                    border-radius: 6px;"><span style="font-family: SourceHanSansCN-Medium;
+font-size: 20px;
+color: #FFFFFF;
+letter-spacing: 1.14px;">浏览...</span></button>
                   </div>
 
-                  <div style="margin-top: 20px;">
-                    <label for="import_files_xtest"  style="font-family: SourceHanSansCN-Normal;
-                    font-size: 22px;
-                    color: #333333;
-                    letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">测试数据: </label>
-                    <input type="text" id="import_files_xtest" style="background: #EEEEEE;
-                    border: 1px solid #D9D9D9;
+                  <div style="margin-top: 20px;margin-left: 100px;">
+                    <label for="import_files_xtest"><font  style="font-family: SourceHanSansCN-Normal;
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;font-weight: normal;">测试数据: </font></label>
+                    <input type="text" id="import_files_xtest" style="background: #FFFFFF;
+                    border: 1px solid #C0C0C0;
                     border-radius: 6px;
-                    border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
-                    font-size: 22px;
-                    color: #999999;
-                    letter-spacing: 0;
-                    line-height: 14px;">
-                    <button id="span_import_xtest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-                    border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                    border-radius: 6px;">
+                    <button id="span_import_xtest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+                    border-radius: 6px;
+                    border-radius: 6px;"><span style="font-family: SourceHanSansCN-Medium;
+font-size: 20px;
+color: #FFFFFF;
+letter-spacing: 1.14px;">浏览...</span></button>
                   </div>
 
-                  <div style="margin-top: 20px;">
-                    <label for="import_files_ytest"  style="font-family: SourceHanSansCN-Normal;
-                    font-size: 22px;
-                    color: #333333;
-                    letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">测试数据标签: </label>
-                    <input type="text" id="import_files_ytest" style="background: #EEEEEE;
-                    border: 1px solid #D9D9D9;
+                  <div style="margin-top: 20px;margin-left: 60px;">
+                    <label for="import_files_ytest"><font  style="font-family: SourceHanSansCN-Normal;
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;font-weight: normal;">测试数据标签: </font></label>
+                    <input type="text" id="import_files_ytest" style="background: #FFFFFF;
+                    border: 1px solid #C0C0C0;
                     border-radius: 6px;
-                    border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
-                    font-size: 22px;
-                    color: #999999;
-                    letter-spacing: 0;
-                    line-height: 14px;">
-                    <button id="span_import_ytest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-                    border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                    border-radius: 6px;">
+                    <button id="span_import_ytest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+                    border-radius: 6px;
+                    border-radius: 6px;"><span style="font-family: SourceHanSansCN-Medium;
+font-size: 20px;
+color: #FFFFFF;
+letter-spacing: 1.14px;">浏览...</span></button>
                   </div>
 
-                  <div style="margin-top: 20px;">
-                    <label for="import_files_ann"  style="font-family: SourceHanSansCN-Normal;
-                    font-size: 22px;
-                    color: #333333;
-                    letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">ANN模型: </label>
-                    <input type="text" id="import_files_ann" style="background: #EEEEEE;
-                    border: 1px solid #D9D9D9;
+                  <div style="margin-top: 20px;margin-left: 95px;">
+                    <label for="import_files_ann"><font  style="font-family: SourceHanSansCN-Normal;
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;font-weight: normal;">ANN模型: </font></label>
+                    <input type="text" id="import_files_ann" style="background: #FFFFFF;
+                    border: 1px solid #C0C0C0;
                     border-radius: 6px;
-                    border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
-                    font-size: 22px;
-                    color: #999999;
-                    letter-spacing: 0;
-                    line-height: 14px;">
-                    <button id="span_import_ann" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-                    border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                    border-radius: 6px;">
+                    <button id="span_import_ann" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+                    border-radius: 6px;
+                    border-radius: 6px;"><span style="font-family: SourceHanSansCN-Medium;
+font-size: 20px;
+color: #FFFFFF;
+letter-spacing: 1.14px;">浏览...</span></button>
                   </div>
                 </form>
-			</div>
-			<div style="margin-top: 40px;margin-bottom: 40px;">
-				<button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_importFiles" style="background: #F3F3F3;
+      </div>
+      <div style="margin-top: 40px;margin-bottom: 40px;">
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_importFiles" style="background: #F3F3F3;
         border: 1px solid #D7D7D7;
         border-radius: 2px;
         border-radius: 2px;width: 140px;margin-left: 200px;">取消
-				</button>
-				<button type="button" class="btn btn-primary" id="create_importFiles" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+        </button>
+        <button type="button" class="btn btn-primary" id="create_importFiles" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
         border-radius: 2px;
         border-radius: 2px;width: 140px;margin-left: 60px;">确认
-				</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
 </div>
 
 
@@ -301,20 +327,22 @@ line-height: 14px;">
 
 
 <div class="modal fade" id="myModal_show_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_show_error" aria-hidden="true" style="background-color: white;color: #333;">
-	<div class="modal-dialog" style="background-color: white;width: 800px;">
-		<div class="modal-content" style="background-color: white;">
-			<div>
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
-					&times;
-				</button>
-				<h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Normal;
-        font-size: 24px;
-        font-weight: bold;
-        color: #ee1414;
-        letter-spacing: 1.07px;margin-left: 20px;">
-					警告
-				</h4>
-			</div>
+  <div class="modal-dialog" style="background-color: white;width: 800px;">
+    <div class="modal-content" style="height: 495px; width: 560px; background-color: white;border-radius: 15px;">
+      <div style="height: 70px; margin-top: -10px; background: #EEEEEE;border-top-right-radius: 15px; border-top-left-radius: 15px">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
+        padding-right: 30px;
+        padding-top: 25px;
+        ">
+          &times;
+        </button>
+        <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Medium;
+        font-size: 20px;
+        color: #666666;
+        letter-spacing: 0.89px;padding-left: 20px;padding-top: 20px;">
+          警告
+        </h4>
+      </div>
       <div class="modal-body">
         <div id="loading_anim" style="display: none;" class="container">
           <div class="ispinner ispinner-large" style="margin-left: 300px;margin-top: 100px;">
@@ -328,21 +356,19 @@ line-height: 14px;">
             <div class="ispinner-blade"></div>
           </div>
         </div>
-        <div style="margin-top: 50px;">
-          <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
-          font-size: 22px;
-          color: #f87307;
-          letter-spacing: 1.26px;margin: auto;text-align: center;width: 100%;display: inline-block;height: 300px;width: 700px;overflow-y: auto;">错误信息</div>
+        <div align="center" style="height: 150px; padding-top: 60px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
+        <div style="margin-top: 50px; width: 500px; height: 30px;">
+          <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 28px;color: #666666;letter-spacing: 1.25px; text-align: center;padding-left: 50px;">错误信息</div>
         </div>
       </div>
-			<div style="margin-top: 40px;margin-bottom: 40px;">
-				<button id="close_modal_btn" type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+      <div style="margin-top: 40px;">
+        <button id="close_modal_btn" type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
         border-radius: 2px;
-        border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">关闭
-				</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
+        margin-left: 210px;width: 150px;height: 50px; text-align: center;display: inline-block;" data-dismiss="modal">关闭
+        </button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal -->
 </div>
 
 <button id="alert_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_show_error" style="display: none;"></button>
@@ -408,8 +434,8 @@ body {
     border: 1px solid black;
   }
   .dropdown-content{
-   width: max-content !important;
-   height:auto !important;
+    width: max-content !important;
+    height:auto !important;
 }
 
 .container {
@@ -458,8 +484,8 @@ body {
           $("#error_detail").html(data.show_error);
           if (data.display_loading) {
             $("#loading_anim").css("display", "block");
-            $("#error_detail").css("color", "#000000");
-            $("#myModalLabel_show_error").css("color", "#000000");
+            // $("#error_detail").css("color", "#000000");
+            // $("#myModalLabel_show_error").css("color", "#000000");
             $("#myModalLabel_show_error").text("提示");
             $("#alert_modal_btn").click();
             console.log("alert_modal_btn click.");
@@ -467,12 +493,14 @@ body {
             $("#close_modal_btn").click();
             console.log("close modal btn click.");
           } else {
-            $("#error_detail").css("height", "100px");
-            $("#error_detail").css("width", "750px");
+            $("#error_detail").css("height", "30px");
+            $("#error_detail").css("width", "500px");
             $("#loading_anim").css("display", "none");
-            $("#error_detail").css("color", "#f87307");
-            $("#myModalLabel_show_error").css("color", "#ee1414");
-            $("#myModalLabel_show_error").text("错误");
+            // $("#error_detail").css("color", "#f87307");
+            // $("#myModalLabel_show_error").css("color", "#ee1414");
+            if (data.is_error) {
+                $("#myModalLabel_show_error").text("错误提示");
+            }
           }
           $("#alert_modal_btn").click();
         } else if (data.import_files) {
@@ -514,50 +542,46 @@ body {
         }));
         $("#dismiss_importFiles").click();
       });
-       // 选择项目文件保存路径
-       $("#span_save_path").on("click", function(){
-         // 发送消息到extension，打开选择路径的dialog
-         console.log("发送消息到extension，打开选择路径的dialog");
-         vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val()}));
-       });
+        // 选择项目文件保存路径
+        $("#span_save_path").on("click", function(){
+          // 发送消息到extension，打开选择路径的dialog
+          console.log("发送消息到extension，打开选择路径的dialog");
+          vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val()}));
+        });
 
-       $("#project_name").on('change',(evt)=>{
+        $("#project_name").on('change',(evt)=>{
         document.getElementById("alert_sheet").style.display = "none";
         document.getElementById("project_name").style.borderColor = '#D9D9D9';
         document.getElementById("lb_project_name").style.color = '#333333';
         if($("#proj_save_path_input").val().toString().trim().length !== 0){
           vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val(), "is_change_proj_name":true}));
         }
-       });
+        });
 
         $("#create").on("click",function(){
+            document.getElementById("project_name_error_id").style.display="none";
+            document.getElementById("proj_save_path_error_id").style.display="none";
+            
             console.log("创建xxx");
             // 字段检查
-            if($("#project_name").val() === undefined || $("#project_name").val().toString().trim().length === 0){
-              document.getElementById("alert_sheet").style.display = "block";
-              document.getElementById("project_name").style.borderColor='#f82d2d';
-              document.getElementById("lb_project_name").style.color = '#f82d2d';
-              document.getElementById("error_band_text").innerHTML = '<strong>项目名称不可为空!</strong>';
+            if($("#project_name").val() === undefined || $("#project_name").val().toString().trim().length === 0 ||
+                $("#project_name").val() === ""
+            ){
+              document.getElementById("project_name_error_id").style.display="block";
               return;
             }else if($("#project_name").val().toString().trim().length > 20){
-              document.getElementById("alert_sheet").style.display = "block";
-              document.getElementById("project_name").style.borderColor='#f82d2d';
-              document.getElementById("lb_project_name").style.color = '#f82d2d';
-              document.getElementById("error_band_text").innerHTML = '<strong>项目名称不可超过20个字符!</strong>';
+              document.getElementById("project_name_error_id").value="项目名称不可超过20个字符";
+              document.getElementById("project_name_error_id").style.display="block";
               return;
             }else if($("#project_name").val().toString().trim().search("[\~\!\！\@\#\$\￥\%\<\>\》\《\.\?\？]") >=0){
-              document.getElementById("alert_sheet").style.display = "block";
-              document.getElementById("project_name").style.borderColor='#f82d2d';
-              document.getElementById("lb_project_name").style.color = '#f82d2d';
-              document.getElementById("error_band_text").innerHTML = '<strong>项目名称不可包含特殊字符!</strong>';
+              document.getElementById("project_name_error_id").value="项目名称不可包含特殊字符";
+              document.getElementById("project_name_error_id").style.display="block";
               return;
             }
 
-            if($("#proj_save_path_input").val().toString().trim().length === 0){
-              document.getElementById("alert_sheet").style.display = "block";
-              document.getElementById("span_save_path").style.color = '#f82d2d';
-              document.getElementById("proj_save_path_input").style.borderColor = '#f82d2d';
-              document.getElementById("error_band_text").innerHTML = '<strong>项目路径不可为空!</strong>';
+            if($("#proj_save_path_input").val().toString().trim().length === 0
+              || $("#proj_save_path_input").val() === ""){
+              document.getElementById("proj_save_path_error_id").style.display="block";
               return;
             }
 
@@ -570,6 +594,11 @@ body {
             $("#dismiss").click();
         });
         $("#dismiss").on("click", function(){
+            document.getElementById("project_name").value = "";
+            document.getElementById("proj_save_path_input").value= "";
+            
+            document.getElementById("project_name_error_id").style.display="none";
+            document.getElementById("proj_save_path_error_id").style.display="none";
             console.log("取消创建");
         });
 

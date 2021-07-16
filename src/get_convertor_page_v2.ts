@@ -1151,7 +1151,7 @@ export function getConvertorPageV2(){
                           margin-left: 204px;
                           margin-bottom: 2px;
                           letter-spacing: 1.15px;
-                          height: ;
+                          height: 20px;
                           display: none;">项目路径不可为空</p>
                       </div>
     
@@ -1247,86 +1247,85 @@ export function getConvertorPageV2(){
     <div class="modal fade" id="myModalImportFiles" tabindex="-1" role="dialog" aria-labelledby="myModalLabelImportFiles" aria-hidden="true" style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white;width: 800px;">
         <div class="modal-content" style="background-color: white;">
-          <div>
+          <div style="background: #EEEEEE;padding: 15px;">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
               &times;
             </button>
-            <h4 id="myModalLabelImportFiles" style="font-family: SourceHanSansCN-Normal;
-            font-size: 24px;
-            font-weight: bold;
+            <h4 id="myModalLabelImportFiles" style="font-family: SourceHanSansCN-Medium;
+            font-size: 20px;
             color: #333333;
-            letter-spacing: 1.07px;margin-left: 20px;">
+            letter-spacing: 0.89px;">
               导入文件
             </h4>
           </div>
           <div class="modal-body">
                     <form role="form" id="project_info_form_import_files">
-                      <div style="margin-top: 20px;">
-                        <label for="import_files_xnorm"  style="font-family: SourceHanSansCN-Normal;
-                        font-size: 22px;
-                        color: #333333;
-                        letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">训练数据: </label>
-                        <input type="text" id="import_files_xnorm" style="background: #EEEEEE;
-                        border: 1px solid #D9D9D9;
+                      <div style="margin-top: 20px;margin-left: 100px;">
+                        <label for="import_files_xnorm"><font  style="font-family: SourceHanSansCN-Normal;
+                          font-size: 20px;
+                          color: #333333;
+                          letter-spacing: 1.14px;font-weight: normal;">训练数据: </font></label>
+                        <input type="text" id="import_files_xnorm" style="background: #FFFFFF;
+                        border: 1px solid #C0C0C0;
                         border-radius: 6px;
-                        border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
-                        font-size: 22px;
-                        color: #999999;
-                        letter-spacing: 0;
-                        line-height: 14px;">
-                        <button id="span_import_xnorm" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-                        border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                        border-radius: 6px;">
+                        <button id="span_import_xnorm" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+                        border-radius: 6px;
+                        border-radius: 6px;"><span style="font-family: SourceHanSansCN-Medium;
+    font-size: 20px;
+    color: #FFFFFF;
+    letter-spacing: 1.14px;">浏览...</span></button>
                       </div>
     
-                      <div style="margin-top: 20px;">
-                        <label for="import_files_xtest"  style="font-family: SourceHanSansCN-Normal;
-                        font-size: 22px;
-                        color: #333333;
-                        letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">测试数据: </label>
-                        <input type="text" id="import_files_xtest" style="background: #EEEEEE;
-                        border: 1px solid #D9D9D9;
+                      <div style="margin-top: 20px;margin-left: 100px;">
+                        <label for="import_files_xtest"><font  style="font-family: SourceHanSansCN-Normal;
+                          font-size: 20px;
+                          color: #333333;
+                          letter-spacing: 1.14px;font-weight: normal;">测试数据: </font></label>
+                        <input type="text" id="import_files_xtest" style="background: #FFFFFF;
+                        border: 1px solid #C0C0C0;
                         border-radius: 6px;
-                        border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
-                        font-size: 22px;
-                        color: #999999;
-                        letter-spacing: 0;
-                        line-height: 14px;">
-                        <button id="span_import_xtest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-                        border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                        border-radius: 6px;">
+                        <button id="span_import_xtest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+                        border-radius: 6px;
+                        border-radius: 6px;"><span style="font-family: SourceHanSansCN-Medium;
+    font-size: 20px;
+    color: #FFFFFF;
+    letter-spacing: 1.14px;">浏览...</span></button>
                       </div>
     
-                      <div style="margin-top: 20px;">
-                        <label for="import_files_ytest"  style="font-family: SourceHanSansCN-Normal;
-                        font-size: 22px;
-                        color: #333333;
-                        letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">测试数据标签: </label>
-                        <input type="text" id="import_files_ytest" style="background: #EEEEEE;
-                        border: 1px solid #D9D9D9;
+                      <div style="margin-top: 20px;margin-left: 60px;">
+                        <label for="import_files_ytest"><font  style="font-family: SourceHanSansCN-Normal;
+                          font-size: 20px;
+                          color: #333333;
+                          letter-spacing: 1.14px;font-weight: normal;">测试数据标签: </font></label>
+                        <input type="text" id="import_files_ytest" style="background: #FFFFFF;
+                        border: 1px solid #C0C0C0;
                         border-radius: 6px;
-                        border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
-                        font-size: 22px;
-                        color: #999999;
-                        letter-spacing: 0;
-                        line-height: 14px;">
-                        <button id="span_import_ytest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-                        border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                        border-radius: 6px;">
+                        <button id="span_import_ytest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+                        border-radius: 6px;
+                        border-radius: 6px;"><span style="font-family: SourceHanSansCN-Medium;
+    font-size: 20px;
+    color: #FFFFFF;
+    letter-spacing: 1.14px;">浏览...</span></button>
                       </div>
     
-                      <div style="margin-top: 20px;">
-                        <label for="import_files_ann"  style="font-family: SourceHanSansCN-Normal;
-                        font-size: 22px;
-                        color: #333333;
-                        letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">ANN模型: </label>
-                        <input type="text" id="import_files_ann" style="background: #EEEEEE;
-                        border: 1px solid #D9D9D9;
+                      <div style="margin-top: 20px;margin-left: 95px;">
+                        <label for="import_files_ann"><font  style="font-family: SourceHanSansCN-Normal;
+                          font-size: 20px;
+                          color: #333333;
+                          letter-spacing: 1.14px;font-weight: normal;">ANN模型: </font></label>
+                        <input type="text" id="import_files_ann" style="background: #FFFFFF;
+                        border: 1px solid #C0C0C0;
                         border-radius: 6px;
-                        border-radius: 6px;width: 380px;font-family: PingFangSC-Regular;
-                        font-size: 22px;
-                        color: #999999;
-                        letter-spacing: 0;
-                        line-height: 14px;">
-                        <button id="span_import_ann" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-                        border-radius: 6px;width: 80px;margin-left: 15px;"><span style="color: white;">浏览...</span></button>
+                        border-radius: 6px;">
+                        <button id="span_import_ann" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+                        border-radius: 6px;
+                        border-radius: 6px;"><span style="font-family: SourceHanSansCN-Medium;
+    font-size: 20px;
+    color: #FFFFFF;
+    letter-spacing: 1.14px;">浏览...</span></button>
                       </div>
                     </form>
           </div>
@@ -1368,8 +1367,10 @@ export function getConvertorPageV2(){
             ">
               &times;
             </button>
-            <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Medium;font-size: 25px;font-weight: bold;color: rgb(238, 20, 20);
-               letter-spacing: 1.07px; padding-left: 30px; padding-top: 20px;">
+            <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Medium;
+            font-size: 20px;
+            color: #666666;
+            letter-spacing: 0.89px;padding-left: 20px;padding-top: 20px;">
               警告
             </h4>
           </div>
@@ -1386,9 +1387,9 @@ export function getConvertorPageV2(){
                 <div class="ispinner-blade"></div>
               </div>
             </div>
-            <div align="center" style="height: 150px; padding-top: 60px;" ><img src="https://img01.sogoucdn.com/app/a/100520146/037c331c0a56c0643f7082d12da5d9c7" height=96px; width=96px; alt="警告"></div>
+            <div align="center" style="height: 150px; padding-top: 60px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
             <div style="margin-top: 50px; width: 500px; height: 30px;">
-              <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 22px;color: #666666;letter-spacing: 1.26px; margin-left: 190px;">错误信息</div>
+              <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 28px;color: #666666;letter-spacing: 1.25px; text-align: center;padding-left: 50px;">错误信息</div>
             </div>
           </div>
           <div style="margin-top: 40px;">
@@ -1464,8 +1465,8 @@ export function getConvertorPageV2(){
         border: 1px solid black;
       }
       .dropdown-content{
-       width: max-content !important;
-       height:auto !important;
+        width: max-content !important;
+        height:auto !important;
     }
     
     .container {
@@ -1514,8 +1515,8 @@ export function getConvertorPageV2(){
               $("#error_detail").html(data.show_error);
               if (data.display_loading) {
                 $("#loading_anim").css("display", "block");
-                $("#error_detail").css("color", "#000000");
-                $("#myModalLabel_show_error").css("color", "#000000");
+                // $("#error_detail").css("color", "#000000");
+                // $("#myModalLabel_show_error").css("color", "#000000");
                 $("#myModalLabel_show_error").text("提示");
                 $("#alert_modal_btn").click();
                 console.log("alert_modal_btn click.");
@@ -1526,10 +1527,10 @@ export function getConvertorPageV2(){
                 $("#error_detail").css("height", "30px");
                 $("#error_detail").css("width", "500px");
                 $("#loading_anim").css("display", "none");
-                $("#error_detail").css("color", "#f87307");
-                $("#myModalLabel_show_error").css("color", "#ee1414");
+                // $("#error_detail").css("color", "#f87307");
+                // $("#myModalLabel_show_error").css("color", "#ee1414");
                 if (data.is_error) {
-                    $("#myModalLabel_show_error").text("错误");
+                    $("#myModalLabel_show_error").text("错误提示");
                 }
               }
               $("#alert_modal_btn").click();
@@ -1572,21 +1573,21 @@ export function getConvertorPageV2(){
             }));
             $("#dismiss_importFiles").click();
           });
-           // 选择项目文件保存路径
-           $("#span_save_path").on("click", function(){
-             // 发送消息到extension，打开选择路径的dialog
-             console.log("发送消息到extension，打开选择路径的dialog");
-             vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val()}));
-           });
+            // 选择项目文件保存路径
+            $("#span_save_path").on("click", function(){
+              // 发送消息到extension，打开选择路径的dialog
+              console.log("发送消息到extension，打开选择路径的dialog");
+              vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val()}));
+            });
     
-           $("#project_name").on('change',(evt)=>{
+            $("#project_name").on('change',(evt)=>{
             document.getElementById("alert_sheet").style.display = "none";
             document.getElementById("project_name").style.borderColor = '#D9D9D9';
             document.getElementById("lb_project_name").style.color = '#333333';
             if($("#proj_save_path_input").val().toString().trim().length !== 0){
               vscode.postMessage(JSON.stringify({"select_save_proj_path_req":$("#project_name").val(), "is_change_proj_name":true}));
             }
-           });
+            });
     
             $("#create").on("click",function(){
                 document.getElementById("project_name_error_id").style.display="none";
@@ -1610,7 +1611,7 @@ export function getConvertorPageV2(){
                 }
     
                 if($("#proj_save_path_input").val().toString().trim().length === 0
-                 || $("#proj_save_path_input").val() === ""){
+                  || $("#proj_save_path_input").val() === ""){
                   document.getElementById("proj_save_path_error_id").style.display="block";
                   return;
                 }
@@ -2076,74 +2077,68 @@ export function getANNSNNConvertPage(){
   <div class="modal fade" id="myModal_select_alg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_select_alg" aria-hidden="true" style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white;width: 800px;">
           <div class="modal-content" style="background-color: white;">
-              <div>
-                  <button id="select_alg_modal_close" type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+              <div style="background: #EEEEEE;padding: 10px;">
+                  <button id="select_alg_modal_close" type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
+                  margin-right: 30px;margin-top: 10px;font-size: 40px;">
                       &times;
                   </button>
-                  <h4 id="myModalLabel_select_alg" style="font-family: SourceHanSansCN-Normal;
-          font-size: 24px;
-          font-weight: bold;
-          color: #333;
-          letter-spacing: 1.07px;margin-left: 20px;">
+                  <h4 id="myModalLabel_select_alg" style="font-family: SourceHanSansCN-Medium;
+                  font-size: 20px;
+                  color: #333333;
+                  letter-spacing: 0.89px;padding-top: 15px;padding-left: 20px;">
                       选择调用算法
                   </h4>
               </div>
               <div class="modal-body">
           <div style="margin-top: 30px;display: inline-block; width: 50%;">
               <div style="font-family: SourceHanSansCN-Normal;
-              font-size: 16px;
-              font-weight: bold;
-              color: #333;
-              letter-spacing: 1.07px;">预处理步骤：</div>
-              <div class="radio" style="margin-top: 30px;">
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;margin-left: 40px;">预处理步骤：</div>
+              <div class="radio" style="margin-top: 30px;margin-left: 80px;">
                   <label>
                       <input type="radio" name="alg_call_radios" id="default_alg" value="default_alg" checked> <span style="font-family: SourceHanSansCN-Normal;
-                      font-size: 16px;
-                      font-weight: bold;
-                      color: #333;
-                      letter-spacing: 1.07px;margin-left: 20px;">默认算法</span>
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;">默认算法</span>
                   </label>
               </div>
-              <div class="radio" style="margin-top: 30px;">
+              <div class="radio" style="margin-top: 30px;margin-left: 80px;">
                   <label>
                       <input type="radio" name="alg_call_radios" id="self_alg" value="self_alg"> <span style="font-family: SourceHanSansCN-Normal;
-                      font-size: 16px;
-                      font-weight: bold;
-                      color: #333;
-                      letter-spacing: 1.07px;margin-left: 20px;">自定义算法</span>
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;">自定义算法</span>
                   </label>
               </div>
           </div>
           <div style="margin-top: 30px;display: inline-block;width: 50%;">
               <div style="font-family: SourceHanSansCN-Normal;
-              font-size: 16px;
-              font-weight: bold;
-              color: #333;
-              letter-spacing: 1.07px;">参数调优步骤：</div>
-              <div class="radio" style="margin-top: 30px;">
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;margin-left: 40px;">参数调优步骤：</div>
+              <div class="radio" style="margin-top: 30px;margin-left: 80px;">
                   <label>
                       <input type="radio" name="opt_alg_call_radios" id="default_opt_alg" value="default_opt_alg" checked> <span style="font-family: SourceHanSansCN-Normal;
-                      font-size: 16px;
-                      font-weight: bold;
-                      color: #333;
-                      letter-spacing: 1.07px;margin-left: 20px;">默认算法</span>
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;">默认算法</span>
                   </label>
               </div>
-              <div class="radio" style="margin-top: 30px;">
+              <div class="radio" style="margin-top: 30px;margin-left: 80px;">
                   <label>
                       <input type="radio" name="opt_alg_call_radios" id="self_opt_alg" value="self_opt_alg"> <span style="font-family: SourceHanSansCN-Normal;
-                      font-size: 16px;
-                      font-weight: bold;
-                      color: #333;
-                      letter-spacing: 1.07px;margin-left: 20px;">自定义算法</span>
+                      font-size: 20px;
+                      color: #333333;
+                      letter-spacing: 1.14px;">自定义算法</span>
                   </label>
               </div>
           </div>
               </div>
               <div style="margin-top: 40px;margin-bottom: 40px;">
                   <button  id="check_alg_select_btn" type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-          border-radius: 2px;
-          border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">确认
+                  border-radius: 6px;
+                  border-radius: 6px;width: 150px;height: 50px;margin-left: calc(40%);" data-dismiss="modal">确认
                   </button>
               </div>
           </div><!-- /.modal-content -->

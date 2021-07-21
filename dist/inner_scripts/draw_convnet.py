@@ -162,7 +162,7 @@ def label(xy, text, xy_off=[0, 4]):
              family='sans-serif', size=8)
 
 
-def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,save_fig_path,task_type=0, draw_conv_names=[]):
+def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,save_fig_path,task_type=0, draw_conv_names=[], full_connect_names=[]):
 
     fc_unit_size = 2
     layer_width = 40
@@ -266,7 +266,8 @@ def run_draw(conv_size_list, conv_num_list, kernel_size_list, dense_size_list,sa
             num_list[ind]))
 
     text_list = ['Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected', 'Fully\nconnected']
-
+    if len(full_connect_names) > 0:
+        text_list = full_connect_names
     for ind in range(len(size_list)):
         label(top_left_list[ind], text_list[ind], xy_off=[30, -65])
 

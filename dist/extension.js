@@ -6038,8 +6038,7 @@ exports.TreeViewProvider = TreeViewProvider;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getSNNModelPage = exports.getSNNSimuPage = exports.getANNSNNConvertPage = exports.getConvertorPageV2 = exports.getConvertorModelPageV2 = exports.getConvertorDataPageV2 = void 0;
 function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, test_sample0, test_sample1, test_sample2, test_sample3, test_sample4, test_sample5, test_sample6, test_sample7, test_sample8, test_sample9) {
-    return `
-  <!DOCTYPE html>
+    return `<!DOCTYPE html>
   <html style="height: 100%;width: 100%;">
   
   <head>
@@ -6469,6 +6468,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
                       },
                       fontFamily: 'Helvetica',
                       fontSize: '12px',
+                      rotate: 30
                     },
                     nameLocation: 'center',
                     nameGap: 30
@@ -6553,8 +6553,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
           var bar_chart_data = echarts.init(document.getElementById(target_id));
           bar_chart_data.setOption(option);
       }
-  </script>
-  `;
+  </script>`;
 }
 exports.getConvertorDataPageV2 = getConvertorDataPageV2;
 function getConvertorModelPageV2() {
@@ -7716,8 +7715,7 @@ function getConvertorPageV2() {
 }
 exports.getConvertorPageV2 = getConvertorPageV2;
 function getANNSNNConvertPage() {
-    return `
-  <!DOCTYPE html>
+    return `<!DOCTYPE html>
   <html style="height: 640px;width: 100%;">
   
   <head>
@@ -7771,7 +7769,7 @@ function getANNSNNConvertPage() {
                       <label for="select_dt"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                           font-size: 16px;
                           color: #333333;
-                          letter-spacing: 0.91px;">神经元与突触dt</font></label>
+                          letter-spacing: 0.91px;">时间步</font></label>
                       <select class="form-control" id="select_dt">
                           <option>1ms</option>
                           <option>0.1ms</option>
@@ -7804,7 +7802,7 @@ function getANNSNNConvertPage() {
                       <div for="select_dura"><font style="font-family: SourceHanSansCN-Normal;font-weight: normal;
                           font-size: 16px;
                           color: #333333;
-                          letter-spacing: 0.91px;">模拟时长(ms)</font></div>
+                          letter-spacing: 0.91px;">模拟时间步</font></div>
                               <input type="text" id="select_dura" style="background: #ffffff;
                               border: 1px solid #D9D9D9;
                               border-radius: 6px;
@@ -9981,8 +9979,7 @@ function getSNNSimuPage() {
 }
 exports.getSNNSimuPage = getSNNSimuPage;
 function getSNNModelPage() {
-    return `
-  <!DOCTYPE html>
+    return `<!DOCTYPE html>
   <html style="height: 640px;width: 100%;">
   
   <head>
@@ -10014,7 +10011,7 @@ function getSNNModelPage() {
           <div style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
             font-size: 20px;
             color: #333333;
-            letter-spacing: 1.14px;">ANN SNN模型对应关系图</font></div>
+            letter-spacing: 1.14px;">ANN-SNN模型对应关系图</font></div>
           <div id="sangky_chart" style="width: 700px;height: 400px;display: inline-block;margin-left: 50px;overflow-y: auto;overflow-x: hidden;"></div>
         </div>
         <!--权重分布图-->
@@ -10323,21 +10320,28 @@ function getSNNModelPage() {
                     $("#select_wt_layer").change(()=>{
                       let select_which = $("#select_wt_layer").val();
                       if (select_which.indexOf("input") >=0){
+                        var yaxis_max = Math.max(Math.ceil(Math.log10(Math.max(...infos.each_layer_wt_infos.flt_wt_counts[0]))), 
+                                                Math.ceil(Math.log10(Math.max(...infos.each_layer_wt_infos.wt_counts[0]))))
                         display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[0], infos.each_layer_wt_infos.flt_wt_counts[0], 
-                                  infos.each_layer_wt_infos.wt_labels[0], infos.each_layer_wt_infos.wt_counts[0]);
+                                  infos.each_layer_wt_infos.wt_labels[0], infos.each_layer_wt_infos.wt_counts[0], yaxis_max);
                       } else if(select_which.indexOf("out") >=0){
                         var len_of_lay = infos.each_layer_wt_infos.flt_wt_labels.length - 1;
+                        var yaxis_max = Math.max(Math.ceil(Math.log10(Math.max(...infos.each_layer_wt_infos.flt_wt_counts[len_of_lay]))), 
+                                                Math.ceil(Math.log10(Math.max(...infos.each_layer_wt_infos.wt_counts[len_of_lay]))));
                         display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[len_of_lay], infos.each_layer_wt_infos.flt_wt_counts[len_of_lay], 
-                                  infos.each_layer_wt_infos.wt_labels[len_of_lay], infos.each_layer_wt_infos.wt_counts[len_of_lay]);
+                                  infos.each_layer_wt_infos.wt_labels[len_of_lay], infos.each_layer_wt_infos.wt_counts[len_of_lay], yaxis_max);
                       } else {
                         var idx = parseInt(select_which.substr(select_which.lastIndexOf("_") + 1)) - 1;
+                        var yaxis_max = Math.max(Math.ceil(Math.log10(Math.max(...infos.each_layer_wt_infos.flt_wt_counts[idx]))),
+                                                Math.ceil(Math.log10(Math.max(...infos.each_layer_wt_infos.wt_counts[idx]))));
                         display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[idx], infos.each_layer_wt_infos.flt_wt_counts[idx], 
-                                  infos.each_layer_wt_infos.wt_labels[idx], infos.each_layer_wt_infos.wt_counts[idx]);
+                                  infos.each_layer_wt_infos.wt_labels[idx], infos.each_layer_wt_infos.wt_counts[idx], yaxis_max);
                       }
                     });
-  
+                    var yaxis_max = Math.max(Math.ceil(Math.log10(Math.max(...infos.each_layer_wt_infos.flt_wt_counts[0]))),
+                                            Math.ceil(Math.log10(Math.max(...infos.each_layer_wt_infos.wt_counts[0]))));
                     display_weight_chart(infos.each_layer_wt_infos.flt_wt_labels[0], infos.each_layer_wt_infos.flt_wt_counts[0], 
-                                  infos.each_layer_wt_infos.wt_labels[0], infos.each_layer_wt_infos.wt_counts[0]);
+                                  infos.each_layer_wt_infos.wt_labels[0], infos.each_layer_wt_infos.wt_counts[0], yaxis_max);
                     // display_weight_chart(infos.layer_flt_weights.wt_label, infos.layer_flt_weights.wt_count,infos.layers_weights.wt_label, infos.layers_weights.wt_count);
   
                     // 仿真配置与结果表格
@@ -10424,8 +10428,8 @@ function getSNNModelPage() {
                     });
   
                     var rect_tip = new joint.shapes.standard.Rectangle();
-                    rect_tip.position(20, 20);
-                    rect_tip.resize(160, 200);
+                    rect_tip.position(460, 180);
+                    rect_tip.resize(120, 200);
                     rect_tip.attr({
                       body:{
                         fill:"rgb(255,248,220)"
@@ -10433,63 +10437,68 @@ function getSNNModelPage() {
                       label: {
                         text: joint.util.breakText("图例", {width: 80}),
                         fill: "black",
-                        refY: "5%"
+                        refY: "5%",
+                        fontSize: 12
                       }
                     });
                     rect_tip.addTo(graph);
   
                     var rect_legend1 = new joint.shapes.standard.Rectangle();
-                    rect_legend1.position(40,40);
-                    rect_legend1.resize(120,30);
+                    rect_legend1.position(480,200);
+                    rect_legend1.resize(80,30);
                     rect_legend1.attr({
                       body:{
                         fill: 'red'
                       },
                       label: {
                         text: "ANN层(删除)",
-                        fill:"black"
+                        fill:"black",
+                        fontSize:10
                       }
                     });
                     rect_legend1.addTo(graph);
   
                     var rect_legend2 = new joint.shapes.standard.Rectangle();
-                    rect_legend2.position(40, 90);
-                    rect_legend2.resize(120, 30);
+                    rect_legend2.position(480, 250);
+                    rect_legend2.resize(80, 30);
                     rect_legend2.attr({
                       body: {
                         fill: '#FF9800'
                       },
                       label: {
                         text: "ANN层(前向融合)",
-                        fill: "black"
+                        fill: "black",
+                        fontSize: 10
                       }
                     });
                     rect_legend2.addTo(graph);
                     
                     var rect_legend3 = new joint.shapes.standard.Rectangle();
-                    rect_legend3.position(40, 140);
-                    rect_legend3.resize(120, 30);
+                    rect_legend3.position(480, 300);
+                    rect_legend3.resize(80, 30);
                     rect_legend3.attr({
                       body: {
                         fill: 'gray'
                       },
                       label: {
                         text: "ANN层(转换)",
-                        fill: 'black'
+                        fill: 'black',
+                        fontSize: 10
                       }
                     });
                     rect_legend3.addTo(graph);
   
                     var rect_legend4 = new joint.shapes.standard.Rectangle();
-                    rect_legend4.position(40, 190);
-                    rect_legend4.resize(120, 30);
+                    rect_legend4.position(480, 350);
+                    rect_legend4.resize(80, 30);
                     rect_legend4.attr({
                       body: {
                         fill: 'green'
                       },
                       label: {
                         text: "SNN层",
-                        fill: 'black'
+                        fill: 'black',
+                        fontSize: 10
                       }
                     });
                     rect_legend4.addTo(graph);
@@ -10506,7 +10515,7 @@ function getSNNModelPage() {
                         layer_idx = "out";
                       }
                       var rect = new joint.shapes.standard.Rectangle();
-                      rect.position(200, 40 * k_pos + 20);
+                      rect.position(40, 40 * k_pos + 20);
                       rect.resize(120, 20);
                       rect.attr({
                           body: {
@@ -10530,7 +10539,7 @@ function getSNNModelPage() {
                       else {
                         idx4layer += 1;
                         // 对应snn层/input/out layer
-                        rect_snn_ctpt.position(350, 40 * k_pos + 20);
+                        rect_snn_ctpt.position(200, 40 * k_pos + 20);
                         rect_snn_ctpt.resize(120, 20);
                         rect_snn_ctpt.attr({
                           body: {
@@ -10567,7 +10576,7 @@ function getSNNModelPage() {
                       if (is_rect_snn_ctpt_added) {
                         rect_snn_ctpt.addTo(graph);
                         var link_ann_snn_contpt = new joint.shapes.standard.Link();
-                        link_ann_snn_contpt.attr("line/strokeDasharray", 1+' '+1);
+                        link_ann_snn_contpt.attr("line/strokeDasharray",1+' '+1);
                         link_ann_snn_contpt.attr("line/stroke", '#7DCEA0');
                         link_ann_snn_contpt.source(rect);
                         link_ann_snn_contpt.target(rect_snn_ctpt);
@@ -10586,7 +10595,7 @@ function getSNNModelPage() {
                           if (infos.layer_extras[k] === "relu") {
                             k_pos++;
                             var rect_extra = new joint.shapes.standard.Rectangle();
-                            rect_extra.position(200, 40 * k_pos + 20);
+                            rect_extra.position(40, 40 * k_pos + 20);
                             rect_extra.resize(120, 20);
                             rect_extra.attr({
                               body: {
@@ -10646,7 +10655,9 @@ function getSNNModelPage() {
             });
         });
   
-        function display_weight_chart(flt_label_names, flt_label_counts,label_names, label_counts){
+        function display_weight_chart(flt_label_names, flt_label_counts,label_names, label_counts, yaxis_max){
+          var ytick_max = Math.pow(10, yaxis_max);
+          console.log("interval="+yaxis_max+", ytick_max="+ytick_max);
             var opt = {
                   tooltip: {
                       trigger: 'axis',
@@ -10710,7 +10721,9 @@ function getSNNModelPage() {
                    {
                       type: 'log',
                       min: 1,
-                      logBase: 2,
+                      max: ytick_max,
+                      interval: yaxis_max,
+                      logBase: 10,
                       name:"浮点权重数量",
                       nameLocation: 'center',
                       nameGap: 40,
@@ -10733,6 +10746,8 @@ function getSNNModelPage() {
                     {
                       type: 'log',
                       min: 1,
+                      max: ytick_max,
+                      interval: yaxis_max,
                       logBase: 10,
                       name:"定点权重数量",
                       nameLocation: 'center',
@@ -10759,14 +10774,24 @@ function getSNNModelPage() {
                       type: 'bar',
                       name: "浮点数权重",
                       xAxisIndex:0,
-                      YAxisIndex:0
+                      YAxisIndex:0,
+                      itemStyle: {
+                        normal: {
+                          color: "rgba(237, 58, 18, 0.47)"
+                        }
+                      }
                   },
                   {
                     data: label_counts,
                     type: 'bar',
                     name: "定点数权重",
                     xAxisIndex:1,
-                    yAxisIndex:1
+                    yAxisIndex:1,
+                    itemStyle: {
+                      normal: {
+                        color: "rgba(8, 41, 150, 0.3)"
+                      }
+                    }
                   }
                 ]
               };
@@ -10907,7 +10932,6 @@ function getSNNModelPage() {
   </script>
   
   </html>
-  
   `;
 }
 exports.getSNNModelPage = getSNNModelPage;

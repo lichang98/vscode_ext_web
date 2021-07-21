@@ -11,7 +11,8 @@ from PIL import Image
 import os
 import shutil
 
-from tensorflow.python.keras.backend import dtype
+from tensorflow.python.keras.engine.base_layer import Layer
+
 
 base_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -67,13 +68,18 @@ max_vis_each_layer=5
 
 selected_idxs = list(np.random.randint(20, size=max_vis_each_layer))
 draw_conv_names = [] # names for conv and pooling
+full_connect_names = [] # names for fully connected layers
+
+all_layer_names = [e.__class__.__name__ for e in model.layers]
 
 for layer in model.layers:
     if layer.__class__.__name__ == "Conv2D" or layer.__class__.__name__ == "MaxPooling2D" or layer.__class__.__name__ == "AveragePooling2D":
-        if layer.__class__.__name__ == "Conv2D":
-            draw_conv_names.append(layer.__class__.__name__)
+        draw_conv_names.append(layer.__class__.__name__+"_"+str((idx + 1)))
+    elif layer.__class__.__name__ == "Dense":
+        if "Dropout" not in all_layer_names:
+            full_connect_names.append(layer.__class__.__name__ + "_"+str(idx + 1))
         else:
-            draw_conv_names.append("Pooling")
+            full_connect_names.append(layer.__class__.__name__+"_"+str(idx))
     if layer.__class__.__name__ == "Conv2D" or layer.__class__.__name__ == "InputLayer" or layer.__class__.__name__ == "AveragePooling2D"\
                     or layer.__class__.__name__ == "MaxPooling2D" or layer.__class__.__name__ == "Dropout" or layer.__class__.__name__ == "Dense":
         idx +=1
@@ -168,7 +174,7 @@ draw_convnet.run_draw(conv_size_list=conv_sizes,
                     conv_num_list=conv_channels,
                     kernel_size_list=kernel_sizes,
                     dense_size_list=dense_sizes,
-                    save_fig_path=os.path.join(base_path, "ann_model_vis.png"),task_type=task_type, draw_conv_names=draw_conv_names)
+                    save_fig_path=os.path.join(base_path, "ann_model_vis.png"),task_type=task_type, draw_conv_names=draw_conv_names, full_connect_names=full_connect_names)
 
 shutil.move(os.path.join(base_path, "ann_model_vis.png"), os.path.join(base_path, "layer_vis_imgs","ann_model_vis.png"))
 model_vis_img_info = {"model_vis_img_path":os.path.join(base_path, "layer_vis_imgs","ann_model_vis.png")}

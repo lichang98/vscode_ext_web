@@ -579,27 +579,32 @@ layers_wt_counts = []
 layers_wt_labels = []
 layers_wt_flt_counts = []
 layers_wt_flt_labels = []
+layer_bin_counts = []
+
+for i in range(len(br2_synapses)):
+    layer_bin_counts.append(min(50, min(len(set(np.array(br2_synapses[i].w).flatten().tolist())), len(set(np.array(flt_all_wts[i]).flatten().tolist())))))
 
 for i in range(len(br2_synapses)):
     wt_min = np.min(br2_synapses[i].w)
     wt_max = np.max(br2_synapses[i].w)
-    if len(set(np.array(br2_synapses[i].w).flatten().tolist())) < 50:
-        wt_labels = set(br2_synapses[i].w)
-        wt_labels = list(sorted(wt_labels, key=lambda x : x))
-        wt_counts = [0]*(len(wt_labels))
+
+    if layer_bin_counts[i] == 1:
+        wt_labels = []
+        wt_labels.append(float(wt_min))
+        wt_counts=[0]
         for w in br2_synapses[i].w:
-            wt_counts[wt_labels.index(w)] +=1
-        wt_labels = list([str(x) for x in wt_labels])
+            wt_counts[0] +=1
         layers_wt_counts.append(wt_counts)
+        wt_labels = ["{:.2f}".format(x) for x in wt_labels]
         layers_wt_labels.append(wt_labels)
     else:
-        wt_labels = np.linspace(wt_min, wt_max, num=50)
+        wt_labels = np.linspace(wt_min, wt_max, num=layer_bin_counts[i])
         wt_counts = [0]*(len(wt_labels) - 1)
         for w in br2_synapses[i].w:
             idx = 1
             while idx < len(wt_labels) and wt_labels[idx] < w:
                 idx += 1
-            wt_counts[idx - 1] += 1
+            wt_counts[min(idx - 1, len(wt_counts) - 1)] += 1
         wt_labels = ["{:.2f}".format(x) for x in wt_labels]
         layers_wt_counts.append(wt_counts)
         layers_wt_labels.append(wt_labels)
@@ -607,23 +612,22 @@ for i in range(len(br2_synapses)):
 for i in range(len(flt_all_wts)):
     wt_min = np.min(flt_all_wts[i])
     wt_max = np.max(flt_all_wts[i])
-    if len(set(np.array(flt_all_wts[i]).flatten().tolist())) < 50:
-        wt_labels = set(flt_all_wts[i])
-        wt_labels = list(sorted(wt_labels, key=lambda x : x))
-        wt_counts = [0]*(len(wt_labels))
-        for w in flt_all_wts[i]:
-            wt_counts[wt_labels.index(w)] +=1
-        wt_labels = list([str(x) for x in wt_labels])
+
+    if layer_bin_counts[i] == 1:
+        wt_labels = []
+        wt_labels.append(float(wt_min))
+        wt_counts = [int(len(flt_all_wts[i]))]
         layers_wt_flt_counts.append(wt_counts)
+        wt_labels = ["{:.2f}".format(x) for x in wt_labels]
         layers_wt_flt_labels.append(wt_labels)
     else:
-        wt_labels = np.linspace(wt_min, wt_max, num=50)
+        wt_labels = np.linspace(wt_min, wt_max, num=layer_bin_counts[i])
         wt_counts = [0]*(len(wt_labels) - 1)
         for w in flt_all_wts[i]:
             idx = 1
             while idx < len(wt_labels) and wt_labels[idx] < w:
                 idx += 1
-            wt_counts[idx - 1] += 1
+            wt_counts[min(idx - 1, len(wt_counts) - 1)] += 1
         wt_labels = ["{:.2f}".format(x) for x in wt_labels]
         layers_wt_flt_counts.append(wt_counts)
         layers_wt_flt_labels.append(wt_labels)

@@ -802,6 +802,12 @@ function process_pie_reset(process_pie, option) {
 
 let processPie = undefined;
 
+// each stage finish stub
+let s1_fin_stub = 152;
+let s2_fin_stub = 228;
+let s3_fin_stub = 330;
+let s4_fin_stub = 397;
+
       $(document).ready(function(){
         $("#select_vthresh").val("21"); // default value
         $("#select_dura").val("100");
@@ -836,26 +842,26 @@ let processPie = undefined;
                 console.log("data split list len="+log_output_lists.length);
                 // $("#log_output_div").html(log_output_lists.join("<br/>"));
                 // document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
-                if(log_output_lists.length <= 152){
-                    console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/152*100)+"%");
-                        document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/152*100)+"%";
+                if(log_output_lists.length <= s1_fin_stub){
+                    console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/s1_fin_stub*100)+"%");
+                        document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/s1_fin_stub*100)+"%";
                 }
                 if(stage1_convert_finish){
-                    if(log_output_lists.length < 228 && stage2_preprocess_finish !== true){
+                    if(log_output_lists.length < s2_fin_stub && stage2_preprocess_finish !== true){
                         console.log("increase sub progress bar 2");
-                            document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-152)/(228-152)*100)+"%";
+                            document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-s1_fin_stub)/(s2_fin_stub-s1_fin_stub)*100)+"%";
                     }
                 }
                 if(stage2_preprocess_finish){
-                    if(log_output_lists.length < 330 && stage3_search_finish !== true){
+                    if(log_output_lists.length < s3_fin_stub && stage3_search_finish !== true){
                         console.log("increase sub progress bar 3");
-                            document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-228)/(330-228)*100)+"%";
+                            document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-s2_fin_stub)/(s3_fin_stub-s2_fin_stub)*100)+"%";
                     }
                 }
                 if(stage3_search_finish){
-                    if(log_output_lists.length < 397 && stage4_all_finish !== true){
+                    if(log_output_lists.length < s4_fin_stub && stage4_all_finish !== true){
                         console.log("increase sub progress bar 4");
-                            document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-330)/(397-330)*100)+"%";
+                            document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-s3_fin_stub)/(s4_fin_stub-s3_fin_stub)*100)+"%";
                     }
                 }
                 // if(stage4_all_finish !== true){
@@ -865,7 +871,7 @@ let processPie = undefined;
                 // $(".wave").attr("height", ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
                 // $(".wave").css("height",  ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
                 // $("#total_progress_text").text(""+Math.min(Math.floor((log_output_lists.length / 397) * 100), 100)+"%");
-                process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / 397) * 100), 100));
+                process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / s4_fin_stub) * 100), 100));
                 document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                 document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                 document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</div>";
@@ -1142,6 +1148,18 @@ color: #666666;'>参数缩放系数</td>\
               } else if (data.show_error)  {
                 $("#error_detail").text(data.show_error);
                 $("#alert_modal_btn").click();
+              } else if (data.preset_param) {
+                  console.log("转换界面接收到预设参数.....");
+                  if (data.vthresh) {
+                      console.log("设置预设参数：vthresh="+data.vthresh);
+                    $("#select_vthresh").val(data.vthresh);
+                  }
+              } else if (data.progress_stub) {
+                  console.log("转换界面接收到log fin stub..... s1="+data.s1_fin_stub+", s2="+data.s2_fin_stub+", s3="+data.s3_fin_stub+", s4="+data.s4_fin_stub);
+                  s1_fin_stub = parseInt(data.s1_fin_stub);
+                  s2_fin_stub = parseInt(data.s2_fin_stub);
+                  s3_fin_stub = parseInt(data.s3_fin_stub);
+                  s4_fin_stub = parseInt(data.s4_fin_stub);
               }
           });
 

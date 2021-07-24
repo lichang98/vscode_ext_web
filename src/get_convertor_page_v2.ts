@@ -115,34 +115,34 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
             <div id="bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
             <ul id="sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 640px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
               <li id="sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img1_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img1" onclick="sample_img_click(this);" src="${sample1}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img1" onclick="sample_img_click(this);" src="${sample1}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img2_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img2" onclick="sample_img_click(this);" src="${sample2}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img2" onclick="sample_img_click(this);" src="${sample2}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img3_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img3" onclick="sample_img_click(this);" src="${sample3}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img3" onclick="sample_img_click(this);" src="${sample3}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img4_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img4" onclick="sample_img_click(this);" src="${sample4}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img4" onclick="sample_img_click(this);" src="${sample4}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img5_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img5" onclick="sample_img_click(this);" src="${sample5}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img5" onclick="sample_img_click(this);" src="${sample5}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img6_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img6" onclick="sample_img_click(this);" src="${sample6}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img6" onclick="sample_img_click(this);" src="${sample6}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img7_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img7" onclick="sample_img_click(this);" src="${sample7}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img7" onclick="sample_img_click(this);" src="${sample7}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img8_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img8" onclick="sample_img_click(this);" src="${sample8}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img8" onclick="sample_img_click(this);" src="${sample8}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img9_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img9" onclick="sample_img_click(this);" src="${sample9}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img9" onclick="sample_img_click(this);" src="${sample9}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
             
@@ -158,34 +158,34 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
             <div id="test_bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
             <ul id="test_sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 700px;overflow: auto;display: block;white-space: nowrap;">
               <li id="test_sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img0" onclick="sample_img_click(this);" src="${test_sample0}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img0" onclick="sample_img_click(this);" src="${test_sample0}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img1_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img1" onclick="sample_img_click(this);" src="${test_sample1}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img1" onclick="sample_img_click(this);" src="${test_sample1}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img2_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img2" onclick="sample_img_click(this);" src="${test_sample2}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img2" onclick="sample_img_click(this);" src="${test_sample2}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img3_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img3" onclick="sample_img_click(this);" src="${test_sample3}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img3" onclick="sample_img_click(this);" src="${test_sample3}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img4_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img4" onclick="sample_img_click(this);" src="${test_sample4}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img4" onclick="sample_img_click(this);" src="${test_sample4}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img5_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img5" onclick="sample_img_click(this);" src="${test_sample5}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img5" onclick="sample_img_click(this);" src="${test_sample5}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img6_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img6" onclick="sample_img_click(this);" src="${test_sample6}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img6" onclick="sample_img_click(this);" src="${test_sample6}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img7_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img7" onclick="sample_img_click(this);" src="${test_sample7}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img7" onclick="sample_img_click(this);" src="${test_sample7}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img8_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img8" onclick="sample_img_click(this);" src="${test_sample8}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img8" onclick="sample_img_click(this);" src="${test_sample8}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img9_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img9" onclick="sample_img_click(this);" src="${test_sample9}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img9" onclick="sample_img_click(this);" src="${test_sample9}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
           </div>
@@ -1027,8 +1027,7 @@ export function getConvertorModelPageV2(){
 }
 
 export function getConvertorPageV2(){
-    return `
-    <!DOCTYPE html>
+    return `<!DOCTYPE html>
     <html style="height: 100%;width: 100%;">
     
     <head>
@@ -1127,6 +1126,7 @@ export function getConvertorPageV2(){
                                 <option>语义分割</option>
                                 <option>语音识别</option>
                                 <option>疲劳检测</option>
+                                <option>年龄检测</option>
                             </select>
                         </div>
                         <div style="margin-top: 20px;">
@@ -1220,6 +1220,7 @@ export function getConvertorPageV2(){
                                 <option>语音识别</option>
                                 <option>目标检测</option>
                                 <option>疲劳检测</option>
+                                <option>年龄检测</option>
                             </select>
                         </div>
                     </form>
@@ -1501,6 +1502,22 @@ export function getConvertorPageV2(){
     
     <script>
     
+    
+    function modal_show_error_dialog_show() {
+      if (!$("#myModal_show_error").is(":visible")) {
+        $("#alert_modal_btn").click();
+      } else {
+        $("#alert_modal_btn").click();
+        $("#alert_modal_btn").click();
+      }  
+    }
+    
+    function modal_show_error_dialog_hide() {
+      if ($("#myModal_show_error").is(":visible")) {
+        $("#alert_modal_btn").click();
+      }
+    }
+    
         const vscode = acquireVsCodeApi();
         $(document).ready(function(){
           $("#close_modal_btn").on("click", ()=>{
@@ -1517,10 +1534,10 @@ export function getConvertorPageV2(){
                 // $("#error_detail").css("color", "#000000");
                 // $("#myModalLabel_show_error").css("color", "#000000");
                 $("#myModalLabel_show_error").text("提示");
-                $("#alert_modal_btn").click();
+                modal_show_error_dialog_show();
                 console.log("alert_modal_btn click.");
               } else if(data.hide) {
-                $("#close_modal_btn").click();
+                modal_show_error_dialog_hide();
                 console.log("close modal btn click.");
               } else {
                 $("#error_detail").css("height", "30px");
@@ -1531,8 +1548,8 @@ export function getConvertorPageV2(){
                 if (data.is_error) {
                     $("#myModalLabel_show_error").text("错误提示");
                 }
+                modal_show_error_dialog_show();
               }
-              $("#alert_modal_btn").click();
             } else if (data.import_files) {
               // 导入数据与模型文件
               $("#modal_dialog_import_files").click();
@@ -2491,6 +2508,12 @@ export function getANNSNNConvertPage(){
   
   let processPie = undefined;
   
+  // each stage finish stub
+  let s1_fin_stub = 152;
+  let s2_fin_stub = 228;
+  let s3_fin_stub = 330;
+  let s4_fin_stub = 397;
+  
         $(document).ready(function(){
           $("#select_vthresh").val("21"); // default value
           $("#select_dura").val("100");
@@ -2525,26 +2548,26 @@ export function getANNSNNConvertPage(){
                   console.log("data split list len="+log_output_lists.length);
                   // $("#log_output_div").html(log_output_lists.join("<br/>"));
                   // document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
-                  if(log_output_lists.length <= 152){
-                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/152*100)+"%");
-                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/152*100)+"%";
+                  if(log_output_lists.length <= s1_fin_stub){
+                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/s1_fin_stub*100)+"%");
+                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/s1_fin_stub*100)+"%";
                   }
                   if(stage1_convert_finish){
-                      if(log_output_lists.length < 228 && stage2_preprocess_finish !== true){
+                      if(log_output_lists.length < s2_fin_stub && stage2_preprocess_finish !== true){
                           console.log("increase sub progress bar 2");
-                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-152)/(228-152)*100)+"%";
+                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-s1_fin_stub)/(s2_fin_stub-s1_fin_stub)*100)+"%";
                       }
                   }
                   if(stage2_preprocess_finish){
-                      if(log_output_lists.length < 330 && stage3_search_finish !== true){
+                      if(log_output_lists.length < s3_fin_stub && stage3_search_finish !== true){
                           console.log("increase sub progress bar 3");
-                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-228)/(330-228)*100)+"%";
+                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-s2_fin_stub)/(s3_fin_stub-s2_fin_stub)*100)+"%";
                       }
                   }
                   if(stage3_search_finish){
-                      if(log_output_lists.length < 397 && stage4_all_finish !== true){
+                      if(log_output_lists.length < s4_fin_stub && stage4_all_finish !== true){
                           console.log("increase sub progress bar 4");
-                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-330)/(397-330)*100)+"%";
+                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-s3_fin_stub)/(s4_fin_stub-s3_fin_stub)*100)+"%";
                       }
                   }
                   // if(stage4_all_finish !== true){
@@ -2554,7 +2577,7 @@ export function getANNSNNConvertPage(){
                   // $(".wave").attr("height", ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
                   // $(".wave").css("height",  ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
                   // $("#total_progress_text").text(""+Math.min(Math.floor((log_output_lists.length / 397) * 100), 100)+"%");
-                  process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / 397) * 100), 100));
+                  process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / s4_fin_stub) * 100), 100));
                   document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                   document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                   document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</div>";
@@ -2831,6 +2854,18 @@ export function getANNSNNConvertPage(){
                 } else if (data.show_error)  {
                   $("#error_detail").text(data.show_error);
                   $("#alert_modal_btn").click();
+                } else if (data.preset_param) {
+                    console.log("转换界面接收到预设参数.....");
+                    if (data.vthresh) {
+                        console.log("设置预设参数：vthresh="+data.vthresh);
+                      $("#select_vthresh").val(data.vthresh);
+                    }
+                } else if (data.progress_stub) {
+                    console.log("转换界面接收到log fin stub..... s1="+data.s1_fin_stub+", s2="+data.s2_fin_stub+", s3="+data.s3_fin_stub+", s4="+data.s4_fin_stub);
+                    s1_fin_stub = parseInt(data.s1_fin_stub);
+                    s2_fin_stub = parseInt(data.s2_fin_stub);
+                    s3_fin_stub = parseInt(data.s3_fin_stub);
+                    s4_fin_stub = parseInt(data.s4_fin_stub);
                 }
             });
   
@@ -3017,14 +3052,12 @@ export function getANNSNNConvertPage(){
       }
   </script>
   
-  </html>
-  `;
+  </html>`;
 }
 
 
 export function getSNNSimuPage(){
-  return `
-  <!DOCTYPE html>
+  return `<!DOCTYPE html>
   <html style="height: 640px;width: 100%;">
   
   <head>
@@ -3183,7 +3216,7 @@ export function getSNNSimuPage(){
                   </tr>
               </table>
               <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
-              <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
+              <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: 0px;z-index: 2;">
               </ul>
           </div>
       </div>
@@ -3317,7 +3350,6 @@ export function getSNNSimuPage(){
                       img_li.style.marginRight = "20px";
                       var img_tag = document.createElement("img");
                       // img_tag.id = "sample_img_"+i;
-                      img_tag.style.opacity = "0.5";
                       img_tag.style.display = "block";
                       img_tag.onclick = function(){
                         console.log("draw NO."+i+" img and spikes");
@@ -3947,8 +3979,7 @@ export function getSNNSimuPage(){
         }
   </script>
   
-  </html>
-  `;
+  </html>`;
 }
 
 

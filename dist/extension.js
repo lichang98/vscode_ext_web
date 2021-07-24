@@ -575,7 +575,7 @@ function activate(context) {
                 console.log("Extension 接收到 webview的消息，启动脚本......");
                 sleep(1000);
                 // let scriptPath = undefined;
-                if (PROJ_DESC_INFO.project_type === '图像分类') {
+                if (PROJ_DESC_INFO.project_type === '图像分类' || PROJ_DESC_INFO.project_type === "年龄检测") {
                     CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
                         wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")) + " 0";
                 }
@@ -760,31 +760,35 @@ function activate(context) {
             else if (data.choose_import_file_paths) {
                 console.log("选择的文件路径为：" + JSON.stringify(data.choose_import_file_paths));
                 currentPanel.webview.postMessage(JSON.stringify({ "show_error": "文件校验中，请稍等......", "display_loading": "yes" })).then(() => {
-                    let checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.xnorm + " 0";
-                    try {
-                        child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                    if (PROJ_DESC_INFO.project_type !== "疲劳检测") {
+                        let checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.xnorm + " 0";
+                        try {
+                            child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                        }
+                        catch (err) {
+                            console.log("发送xnorm 文件校验错误消息......");
+                            currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.xnorm) +
+                                    " 校验错误！</strong><br/>错误详情：<br/>" + iconv.decode(err.stderr, 'cp936') }));
+                            return;
+                        }
+                        ;
                     }
-                    catch (err) {
-                        console.log("发送xnorm 文件校验错误消息......");
-                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.xnorm) +
-                                " 校验错误！</strong><br/>错误详情：<br/>" + iconv.decode(err.stderr, 'cp936') }));
-                        return;
-                    }
-                    ;
                     importXNorm(data.choose_import_file_paths.xnorm);
-                    checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.xtest + " 0";
-                    try {
-                        child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                    if (PROJ_DESC_INFO.project_type !== "疲劳检测") {
+                        let checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.xtest + " 0";
+                        try {
+                            child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                        }
+                        catch (err) {
+                            console.log("发送xtest 文件校验错误消息......");
+                            currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.xtest) + " 校验错误！</strong><br/>错误详情：<br/>" +
+                                    iconv.decode(err.stderr, 'cp936') }));
+                            return;
+                        }
+                        ;
                     }
-                    catch (err) {
-                        console.log("发送xtest 文件校验错误消息......");
-                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.xtest) + " 校验错误！</strong><br/>错误详情：<br/>" +
-                                iconv.decode(err.stderr, 'cp936') }));
-                        return;
-                    }
-                    ;
                     importXTest(data.choose_import_file_paths.xtest);
-                    checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.ytest + " 1";
+                    let checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + data.choose_import_file_paths.ytest + " 1";
                     try {
                         child_process_1.execSync(checkCmd, { encoding: "buffer" });
                     }
@@ -1215,7 +1219,7 @@ function activate(context) {
                     }
                     panelDataVis.reveal();
                     // currentPanel.webview.html = getConvertorDataPageV2(
-                    if (PROJ_DESC_INFO.project_type === '图像分类') {
+                    if (PROJ_DESC_INFO.project_type === '图像分类' || PROJ_DESC_INFO.project_type === "年龄检测") {
                         panelDataVis.webview.html = get_convertor_page_v2_1.getConvertorDataPageV2(panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample0.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample1.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample2.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample3.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample4.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample5.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample6.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample7.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample8.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "sample9.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample0.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample1.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample2.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample3.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample4.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample5.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample6.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample7.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample8.png"))), panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, "src", "resources", "script_res", "test_sample9.png"))));
                     }
                     else if (PROJ_DESC_INFO.project_type === '语义分割') {
@@ -1356,15 +1360,17 @@ function activate(context) {
             vscode.window.showOpenDialog(options).then(fileUri => {
                 if (fileUri && fileUri[0]) {
                     console.log("selected path: " + fileUri[0].fsPath);
-                    let checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + fileUri[0].fsPath + " 0";
-                    try {
-                        child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                    if (PROJ_DESC_INFO.project_type !== "疲劳检测") {
+                        let checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + fileUri[0].fsPath + " 0";
+                        try {
+                            child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                        }
+                        catch (err) {
+                            currentPanel.webview.postMessage(JSON.stringify({ "show_error": iconv.decode(err.stderr, 'cp936') }));
+                            return;
+                        }
+                        ;
                     }
-                    catch (err) {
-                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": iconv.decode(err.stderr, 'cp936') }));
-                        return;
-                    }
-                    ;
                     X_NORM_DATA_PATH = fileUri[0].fsPath;
                     X_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "colorX.npz");
                     X_ORIGIN_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "originColorX.npz");
@@ -1417,15 +1423,17 @@ function activate(context) {
             vscode.window.showOpenDialog(options).then(fileUri => {
                 if (fileUri && fileUri[0]) {
                     console.log("selected path: " + fileUri[0].fsPath);
-                    let checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + fileUri[0].fsPath + " 0";
-                    try {
-                        child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                    if (PROJ_DESC_INFO.project_type !== "疲劳检测") {
+                        let checkCmd = PYTHON_INTERPRETER + " " + path.join(__dirname, "darwin2sim", "data_srcfile_checker.py") + " " + fileUri[0].fsPath + " 0";
+                        try {
+                            child_process_1.execSync(checkCmd, { encoding: "buffer" });
+                        }
+                        catch (err) {
+                            currentPanel.webview.postMessage(JSON.stringify({ "show_error": iconv.decode(err.stderr, 'cp936') }));
+                            return;
+                        }
+                        ;
                     }
-                    catch (err) {
-                        currentPanel.webview.postMessage(JSON.stringify({ "show_error": iconv.decode(err.stderr, 'cp936') }));
-                        return;
-                    }
-                    ;
                     X_TEST_DATA_PATH = fileUri[0].fsPath;
                     // 添加到treeview下
                     // ITEM_ICON_MAP.set("x_test","imgs/file.png");
@@ -1565,7 +1573,7 @@ function activate(context) {
             console.log("title=" + currentPanel.title);
             if (currentPanel && currentPanel.title !== "ANN-SNN转换") {
                 console.log("PROJ_DESC_INFO=" + PROJ_DESC_INFO);
-                if (PROJ_DESC_INFO.project_type === '图像分类') {
+                if (PROJ_DESC_INFO.project_type === '图像分类' || PROJ_DESC_INFO.project_type === "年龄检测") {
                     console.log("currentpanel=" + currentPanel);
                     currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
                 }
@@ -1575,14 +1583,34 @@ function activate(context) {
                 }
                 else if (PROJ_DESC_INFO.project_type === "语音识别") {
                     console.log("语音识别模型转换界面");
-                    currentPanel.webview.html = get_speech_pages_1.getANNSNNConvertSpeechPage();
+                    // currentPanel.webview.html = getANNSNNConvertSpeechPage();
+                    currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
                 }
                 else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
                     console.log("疲劳检测模型转换界面");
-                    currentPanel.webview.html = get_fatigue_pages_1.getANNSNNConvertFatiguePage();
+                    // currentPanel.webview.html = getANNSNNConvertFatiguePage();
+                    currentPanel.webview.html = get_convertor_page_v2_1.getANNSNNConvertPage();
                 }
                 currentPanel.reveal();
                 currentPanel.title = "ANN-SNN转换";
+                setTimeout(() => {
+                    if (PROJ_DESC_INFO.project_type === "语音识别") {
+                        console.log("语音识别任务向 模型转换界面发送预设参数。。。。");
+                        currentPanel.webview.postMessage(JSON.stringify({ "preset_param": "yes", "vthresh": 92 }));
+                    }
+                    else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
+                        console.log("疲劳检测任务向  模型转换界面发送预设参数。。。。");
+                        currentPanel.webview.postMessage(JSON.stringify({ "preset_param": "yes", "vthresh": 33 }));
+                        currentPanel.webview.postMessage(JSON.stringify({ "progress_stub": "yes",
+                            "s1_fin_stub": 83, "s2_fin_stub": 1033, "s3_fin_stub": 1133, "s4_fin_stub": 1199 }));
+                    }
+                    else if (PROJ_DESC_INFO.project_type === "年龄检测") {
+                        console.log("年龄你个检测任务向  模型转换界面发送预设参数。。。。");
+                        currentPanel.webview.postMessage(JSON.stringify({ "preset_param": "yes", "vthresh": 33 }));
+                        currentPanel.webview.postMessage(JSON.stringify({ "progress_stub": "yes",
+                            "s1_fin_stub": 83, "s2_fin_stub": 1033, "s3_fin_stub": 1133, "s4_fin_stub": 1199 }));
+                    }
+                }, 800);
                 console.log("显示currentpane  模型转换   1");
                 if (!fs.existsSync(path.join(path.dirname(PROJ_SAVE_PATH), "self_preprocess.py"))) {
                     fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH), "self_preprocess.py"), `# -*- coding:utf-8 -*-
@@ -1757,7 +1785,8 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
                     console.log("SNN仿真界面就绪.....");
                     fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
                         if (panelSNNModelVis) {
-                            if (PROJ_DESC_INFO.project_type === "图像分类" || PROJ_DESC_INFO.project_type === "语义分割" || PROJ_DESC_INFO.project_type === "疲劳检测") {
+                            if (PROJ_DESC_INFO.project_type === "图像分类" || PROJ_DESC_INFO.project_type === "语义分割" || PROJ_DESC_INFO.project_type === "疲劳检测"
+                                || PROJ_DESC_INFO.project_type === "年龄检测") {
                                 console.log("SNN仿真界面发送 snn_info 数据....");
                                 panelSNNModelVis.webview.postMessage(JSON.stringify({ "snn_info": data }));
                             }
@@ -1781,7 +1810,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
                     });
                 }
             });
-            if (PROJ_DESC_INFO.project_type === '图像分类') {
+            if (PROJ_DESC_INFO.project_type === '图像分类' || PROJ_DESC_INFO.project_type === "年龄检测") {
                 panelSNNModelVis.webview.html = get_convertor_page_v2_1.getSNNSimuPage();
             }
             else if (PROJ_DESC_INFO.project_type === '语义分割') {
@@ -6145,34 +6174,34 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
             <div id="bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
             <ul id="sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 640px;overflow-x: auto;display: block;background: rgb(238,238,238);white-space: nowrap;">
               <li id="sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img0" onclick="sample_img_click(this);" src="${sample0}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img1_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img1" onclick="sample_img_click(this);" src="${sample1}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img1" onclick="sample_img_click(this);" src="${sample1}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img2_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img2" onclick="sample_img_click(this);" src="${sample2}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img2" onclick="sample_img_click(this);" src="${sample2}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img3_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img3" onclick="sample_img_click(this);" src="${sample3}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img3" onclick="sample_img_click(this);" src="${sample3}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img4_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img4" onclick="sample_img_click(this);" src="${sample4}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img4" onclick="sample_img_click(this);" src="${sample4}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img5_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img5" onclick="sample_img_click(this);" src="${sample5}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img5" onclick="sample_img_click(this);" src="${sample5}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img6_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img6" onclick="sample_img_click(this);" src="${sample6}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img6" onclick="sample_img_click(this);" src="${sample6}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img7_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img7" onclick="sample_img_click(this);" src="${sample7}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img7" onclick="sample_img_click(this);" src="${sample7}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img8_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img8" onclick="sample_img_click(this);" src="${sample8}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img8" onclick="sample_img_click(this);" src="${sample8}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="sample_img9_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="sample_img9" onclick="sample_img_click(this);" src="${sample9}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="sample_img9" onclick="sample_img_click(this);" src="${sample9}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
             
@@ -6188,34 +6217,34 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
             <div id="test_bar_chart_histgram" style="width: 700px;height: 370px;margin-top: -20px;display: block;margin-bottom: 40px;"></div>
             <ul id="test_sample_imgs_ul" style="margin-top: -40px;height: 80px;width: 700px;overflow: auto;display: block;white-space: nowrap;">
               <li id="test_sample_img0_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img0" onclick="sample_img_click(this);" src="${test_sample0}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img0" onclick="sample_img_click(this);" src="${test_sample0}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img1_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img1" onclick="sample_img_click(this);" src="${test_sample1}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img1" onclick="sample_img_click(this);" src="${test_sample1}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img2_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img2" onclick="sample_img_click(this);" src="${test_sample2}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img2" onclick="sample_img_click(this);" src="${test_sample2}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img3_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img3" onclick="sample_img_click(this);" src="${test_sample3}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img3" onclick="sample_img_click(this);" src="${test_sample3}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img4_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img4" onclick="sample_img_click(this);" src="${test_sample4}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img4" onclick="sample_img_click(this);" src="${test_sample4}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img5_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img5" onclick="sample_img_click(this);" src="${test_sample5}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img5" onclick="sample_img_click(this);" src="${test_sample5}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img6_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img6" onclick="sample_img_click(this);" src="${test_sample6}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img6" onclick="sample_img_click(this);" src="${test_sample6}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img7_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img7" onclick="sample_img_click(this);" src="${test_sample7}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img7" onclick="sample_img_click(this);" src="${test_sample7}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img8_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img8" onclick="sample_img_click(this);" src="${test_sample8}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img8" onclick="sample_img_click(this);" src="${test_sample8}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
               <li id="test_sample_img9_li" style="list-style: none;display: inline-block;height: 60px;width: 70px;">
-                <img id="test_sample_img9" onclick="sample_img_click(this);" src="${test_sample9}" style="opacity: 0.5;width: 50px;height: 50px;margin-left: 20px;">
+                <img id="test_sample_img9" onclick="sample_img_click(this);" src="${test_sample9}" style="opacity: 1.0;width: 50px;height: 50px;margin-left: 20px;">
               </li>
             </ul>
           </div>
@@ -7056,8 +7085,7 @@ function getConvertorModelPageV2() {
 }
 exports.getConvertorModelPageV2 = getConvertorModelPageV2;
 function getConvertorPageV2() {
-    return `
-    <!DOCTYPE html>
+    return `<!DOCTYPE html>
     <html style="height: 100%;width: 100%;">
     
     <head>
@@ -7156,6 +7184,7 @@ function getConvertorPageV2() {
                                 <option>语义分割</option>
                                 <option>语音识别</option>
                                 <option>疲劳检测</option>
+                                <option>年龄检测</option>
                             </select>
                         </div>
                         <div style="margin-top: 20px;">
@@ -7249,6 +7278,7 @@ function getConvertorPageV2() {
                                 <option>语音识别</option>
                                 <option>目标检测</option>
                                 <option>疲劳检测</option>
+                                <option>年龄检测</option>
                             </select>
                         </div>
                     </form>
@@ -7530,6 +7560,22 @@ function getConvertorPageV2() {
     
     <script>
     
+    
+    function modal_show_error_dialog_show() {
+      if (!$("#myModal_show_error").is(":visible")) {
+        $("#alert_modal_btn").click();
+      } else {
+        $("#alert_modal_btn").click();
+        $("#alert_modal_btn").click();
+      }  
+    }
+    
+    function modal_show_error_dialog_hide() {
+      if ($("#myModal_show_error").is(":visible")) {
+        $("#alert_modal_btn").click();
+      }
+    }
+    
         const vscode = acquireVsCodeApi();
         $(document).ready(function(){
           $("#close_modal_btn").on("click", ()=>{
@@ -7546,10 +7592,10 @@ function getConvertorPageV2() {
                 // $("#error_detail").css("color", "#000000");
                 // $("#myModalLabel_show_error").css("color", "#000000");
                 $("#myModalLabel_show_error").text("提示");
-                $("#alert_modal_btn").click();
+                modal_show_error_dialog_show();
                 console.log("alert_modal_btn click.");
               } else if(data.hide) {
-                $("#close_modal_btn").click();
+                modal_show_error_dialog_hide();
                 console.log("close modal btn click.");
               } else {
                 $("#error_detail").css("height", "30px");
@@ -7560,8 +7606,8 @@ function getConvertorPageV2() {
                 if (data.is_error) {
                     $("#myModalLabel_show_error").text("错误提示");
                 }
+                modal_show_error_dialog_show();
               }
-              $("#alert_modal_btn").click();
             } else if (data.import_files) {
               // 导入数据与模型文件
               $("#modal_dialog_import_files").click();
@@ -8519,6 +8565,12 @@ function getANNSNNConvertPage() {
   
   let processPie = undefined;
   
+  // each stage finish stub
+  let s1_fin_stub = 152;
+  let s2_fin_stub = 228;
+  let s3_fin_stub = 330;
+  let s4_fin_stub = 397;
+  
         $(document).ready(function(){
           $("#select_vthresh").val("21"); // default value
           $("#select_dura").val("100");
@@ -8553,26 +8605,26 @@ function getANNSNNConvertPage() {
                   console.log("data split list len="+log_output_lists.length);
                   // $("#log_output_div").html(log_output_lists.join("<br/>"));
                   // document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
-                  if(log_output_lists.length <= 152){
-                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/152*100)+"%");
-                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/152*100)+"%";
+                  if(log_output_lists.length <= s1_fin_stub){
+                      console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/s1_fin_stub*100)+"%");
+                          document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/s1_fin_stub*100)+"%";
                   }
                   if(stage1_convert_finish){
-                      if(log_output_lists.length < 228 && stage2_preprocess_finish !== true){
+                      if(log_output_lists.length < s2_fin_stub && stage2_preprocess_finish !== true){
                           console.log("increase sub progress bar 2");
-                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-152)/(228-152)*100)+"%";
+                              document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-s1_fin_stub)/(s2_fin_stub-s1_fin_stub)*100)+"%";
                       }
                   }
                   if(stage2_preprocess_finish){
-                      if(log_output_lists.length < 330 && stage3_search_finish !== true){
+                      if(log_output_lists.length < s3_fin_stub && stage3_search_finish !== true){
                           console.log("increase sub progress bar 3");
-                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-228)/(330-228)*100)+"%";
+                              document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-s2_fin_stub)/(s3_fin_stub-s2_fin_stub)*100)+"%";
                       }
                   }
                   if(stage3_search_finish){
-                      if(log_output_lists.length < 397 && stage4_all_finish !== true){
+                      if(log_output_lists.length < s4_fin_stub && stage4_all_finish !== true){
                           console.log("increase sub progress bar 4");
-                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-330)/(397-330)*100)+"%";
+                              document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-s3_fin_stub)/(s4_fin_stub-s3_fin_stub)*100)+"%";
                       }
                   }
                   // if(stage4_all_finish !== true){
@@ -8582,7 +8634,7 @@ function getANNSNNConvertPage() {
                   // $(".wave").attr("height", ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
                   // $(".wave").css("height",  ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
                   // $("#total_progress_text").text(""+Math.min(Math.floor((log_output_lists.length / 397) * 100), 100)+"%");
-                  process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / 397) * 100), 100));
+                  process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / s4_fin_stub) * 100), 100));
                   document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                   document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                   document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</div>";
@@ -8859,6 +8911,18 @@ function getANNSNNConvertPage() {
                 } else if (data.show_error)  {
                   $("#error_detail").text(data.show_error);
                   $("#alert_modal_btn").click();
+                } else if (data.preset_param) {
+                    console.log("转换界面接收到预设参数.....");
+                    if (data.vthresh) {
+                        console.log("设置预设参数：vthresh="+data.vthresh);
+                      $("#select_vthresh").val(data.vthresh);
+                    }
+                } else if (data.progress_stub) {
+                    console.log("转换界面接收到log fin stub..... s1="+data.s1_fin_stub+", s2="+data.s2_fin_stub+", s3="+data.s3_fin_stub+", s4="+data.s4_fin_stub);
+                    s1_fin_stub = parseInt(data.s1_fin_stub);
+                    s2_fin_stub = parseInt(data.s2_fin_stub);
+                    s3_fin_stub = parseInt(data.s3_fin_stub);
+                    s4_fin_stub = parseInt(data.s4_fin_stub);
                 }
             });
   
@@ -9045,13 +9109,11 @@ function getANNSNNConvertPage() {
       }
   </script>
   
-  </html>
-  `;
+  </html>`;
 }
 exports.getANNSNNConvertPage = getANNSNNConvertPage;
 function getSNNSimuPage() {
-    return `
-  <!DOCTYPE html>
+    return `<!DOCTYPE html>
   <html style="height: 640px;width: 100%;">
   
   <head>
@@ -9210,7 +9272,7 @@ function getSNNSimuPage() {
                   </tr>
               </table>
               <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
-              <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
+              <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: 0px;z-index: 2;">
               </ul>
           </div>
       </div>
@@ -9344,7 +9406,6 @@ function getSNNSimuPage() {
                       img_li.style.marginRight = "20px";
                       var img_tag = document.createElement("img");
                       // img_tag.id = "sample_img_"+i;
-                      img_tag.style.opacity = "0.5";
                       img_tag.style.display = "block";
                       img_tag.onclick = function(){
                         console.log("draw NO."+i+" img and spikes");
@@ -9974,8 +10035,7 @@ function getSNNSimuPage() {
         }
   </script>
   
-  </html>
-  `;
+  </html>`;
 }
 exports.getSNNSimuPage = getSNNSimuPage;
 function getSNNModelPage() {
@@ -16708,8 +16768,7 @@ function getANNSNNConvertFatiguePage() {
 }
 exports.getANNSNNConvertFatiguePage = getANNSNNConvertFatiguePage;
 function getSNNSimuFatiguePage() {
-    return `
-    <!DOCTYPE html>
+    return `<!DOCTYPE html>
     <html style="height: 640px;width: 100%;">
     
     <head>
@@ -16720,19 +16779,31 @@ function getSNNSimuFatiguePage() {
     <body class="dark-mode" style="height: 100%;width: 100%;white-space: nowrap;overflow: auto;">
     
       <div class="loading-div">
-        <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;"></i>
-        <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">仿真数据加载中...</font></span>
+        <div class="container"  style="margin-left: calc(50vw - 5px);">
+          <div class="ispinner ispinner-large">
+            <div class="ispinner-blade"></div>
+            <div class="ispinner-blade"></div>
+            <div class="ispinner-blade"></div>
+            <div class="ispinner-blade"></div>
+            <div class="ispinner-blade"></div>
+            <div class="ispinner-blade"></div>
+            <div class="ispinner-blade"></div>
+            <div class="ispinner-blade"></div>
+          </div>
+        </div>
+        <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
+        <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);margin-top: -70px;display: block;"><font style="color: #333;font-weight: bolder;">仿真数据加载中...</font></span>
       </div>
     
         <div style="margin-top: 5px;display: block;">
     
-            <div style="background: rgba(238,238,238,0.4);width: 400px;height: 380px;display: inline-block;">
+            <div style="background: rgba(238,238,238,0.4);width: 700px;height: 380px;display: inline-block;vertical-align: bottom;">
               <div>
                 <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                   font-size: 20px;
                   color: #333333;
                   letter-spacing: 1.14px;">仿真配置结果评估</font></div>
-                <table id="layer_conf_val" style="width: 320px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
+                <table id="layer_conf_val" style="width: 600px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
                     <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
                     <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
                       <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
@@ -16742,126 +16813,118 @@ function getSNNSimuFatiguePage() {
                       font-size: 16px;
                       color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">指标值</td>
                     </tr>
-                    <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
-                      <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
-                      font-size: 14px;
-                      color: #666666;padding-top: 12px;padding-bottom: 12px;">膜电位阈值</td>
-                      <td id="simulate_vthresh" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
-                    </tr>
                     <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
                       <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;padding-top: 12px;padding-bottom: 12px;">神经元时间步长</td>
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">神经元时间步长(ms)</td>
                       <td id="simulate_neuron_dt" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
                     </tr>
                     <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
                       <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;padding-top: 12px;padding-bottom: 12px;">突触时间步长</td>
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">突触时间步长(ms)</td>
                       <td id="simulate_synapse_dt" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
                     </tr>
                     <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
                       <td  style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;padding-top: 12px;padding-bottom: 12px;">延迟</td>
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">脉冲传输延迟(ms)</td>
                       <td id="simulate_delay" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
                     </tr>
                     <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
                       <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;padding-top: 12px;padding-bottom: 12px;">仿真时长</td>
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">仿真时长(ms)</td>
                       <td id="simulate_dura" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
                     </tr>
                     <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
                       <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
                       font-size: 14px;
-                      color: #666666;padding-top: 12px;padding-bottom: 12px;">准确率</td>
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">ANN准确率</td>
                       <td id="simulate_acc" style="color: #e71f1fe0;text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+                    </tr>    
+                    <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                      <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                      font-size: 14px;
+                      color: #666666;padding-top: 12px;padding-bottom: 12px;">SNN准确率</td>
+                      <td id="simulate_acc_snn" style="color: #e71f1fe0;text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
                     </tr>    
                 </table>
               </div>
             </div>
     
-            <div style="background: rgba(238,238,238,0.4);width: 500px;height: 380px;display: inline-block;">
-              <div style="text-align: center;margin-left: 40px;"><font style="font-family: SourceHanSansCN-Normal;
+            <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;">
+              <div style="text-align: center;margin: auto;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
                 letter-spacing: 1.14px;">放电次数均值方差统计</font></div>
-              <table id="snn_layers_spike_table" style="width: 420px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
-                <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
-                  <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                  font-size: 16px;
-                  color: #666666;padding-top: 12px;padding-bottom: 12px;">层编号</td>
-                  <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                  font-size: 16px;
-                  color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数均值</td>
-                  <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                  font-size: 16px;
-                  color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数方差</td>
-                </tr>
-              </table>
+                <div style="width: 640px;height: 340px;overflow-y: scroll;margin-left: 80px;">
+                  <table id="snn_layers_spike_table" style="width: 600px;height: 380px;margin-left:10px;margin-top: 5px;margin-right: 280px;border: solid 3px #D6D6D6;">
+                    <!-- <caption class="white-text" style="caption-side: top;text-align: center;"></caption> -->
+                  </table>
+                </div>
+            </div>
             </div>
     
-            <div style="background: rgba(238,238,238,0.4);width: 600px;height: 380px;display: inline-block;">
-              <div>
-                <div id="neurons_v_out_div" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+            <div style="margin-top: 5px;display: block;">
+              <!-- <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
+                <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                   font-size: 20px;
                   color: #333333;
-                  letter-spacing: 1.14px;">神经元放电</font></div>
-                <div style="width: 360px;margin-left: 40px;margin-top: 20px;">
-                  <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                      <label class="control-label col-md-8" for="select_which_layer"><font style="font-family: PingFangSC-Regular;font-weight: normal;
-                        font-size: 16px;
-                        color: #000000;
-                        text-align: left;">选择神经元层</font></label>
-                      <div class="col-md-4">
-                        <select class="form-control" id="select_which_layer">
-                          <option>输入层</option>
-                          <option>输出层</option>
-                      </select>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-                <div id="neurons_v_chart" style="width: 540px;height: 320px;margin-left: 40px;margin-top: 20px;"></div>
-              </div>
-            </div>
-        </div>
-        <div style="margin-top: 5px;display: block;">
-            <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
-              <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
-                font-size: 20px;
-                color: #333333;
-                letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
-              <div id="input_spike_charts" style="width:660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
-              <ul id="input_spike_sample_imgs_ul" class="scale_img" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
-              </ul>
-            </div>
-            <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
-                <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
-                  font-size: 20px;
-                  color: #333333;
-                  letter-spacing: 1.14px;">脉冲神经网络输出层脉冲</font></div>
-                <span style="margin-left: 280px;font-family: SourceHanSansCN-Normal;
-                font-size: 14px;
-                color: #e71f1fe0;
-                letter-spacing: 0.8px;">红色标记图像为输出层预测错误</span>
-                <div id="model_layers_vis_tab_caption" style="text-align: center;background: rgba(238,238,238,1.00);border: solid 1px #D6D6D6;width: 460px;margin-left: 180px;"><font style="font-family: SourceHanSansCN-Medium;
-                  font-size: 14px;
-                  color: #666666;">统计计数</font></div>
-                <table id="spike_out_count_table" style="margin-left: 180px;border: solid 3px #D6D6D6;color: #333;width: 460px;">
-                    <tr id="out_labels" style="border: solid 2px #D6D6D6;">
-                    </tr>
-                    <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
-                    </tr>
-                </table>
-                <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
-                <ul id="sample_imgs_ul" class="scale_img" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
+                  letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
+                <div id="input_spike_charts" style="width:660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
+                <ul id="input_spike_sample_imgs_ul" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
                 </ul>
-            </div>
-        </div>
+              </div> -->
+              <div style="background: rgba(238,238,238,0.4);width: 700px;height: 460px;display: inline-block;">
+                <div>
+                  <div id="neurons_v_out_div" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+                    font-size: 20px;
+                    color: #333333;
+                    letter-spacing: 1.14px;">神经元放电</font></div>
+                  <div style="width: 360px;margin-left: 40px;margin-top: 20px;">
+                    <form class="form-horizontal" role="form">
+                      <div class="form-group">
+                        <label class="control-label col-md-8" for="select_which_layer"><font style="font-family: PingFangSC-Regular;font-weight: normal;
+                          font-size: 16px;
+                          color: #000000;
+                          text-align: left;">选择神经元层</font></label>
+                        <div class="col-md-4">
+                          <select class="form-control" id="select_which_layer">
+                            <option>layer_1</option>
+                            <option>out</option>
+                        </select>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <div id="neurons_v_chart" style="width: 640px;height: 320px;margin-left: 40px;margin-top: 20px;"></div>
+                </div>
+              </div>
+      
+              <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
+                  <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+                    font-size: 20px;
+                    color: #333333;
+                    letter-spacing: 1.14px;">脉冲神经网络输出层脉冲</font></div>
+                  <span style="margin-left: 280px;font-family: SourceHanSansCN-Normal;
+                  font-size: 14px;
+                  color: #e71f1fe0;
+                  letter-spacing: 0.8px;">红色标记图像为输出层预测错误</span>
+                  <div id="model_layers_vis_tab_caption" style="text-align: center;background: rgba(238,238,238,1.00);border: solid 1px #D6D6D6;width: 460px;margin-left: 180px;"><font style="font-family: SourceHanSansCN-Medium;
+                    font-size: 14px;
+                    color: #666666;">统计计数</font></div>
+                  <table id="spike_out_count_table" style="margin-left: 180px;border: solid 3px #D6D6D6;color: #333;width: 460px;">
+                      <tr id="out_labels" style="border: solid 2px #D6D6D6;">
+                      </tr>
+                      <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
+                      </tr>
+                  </table>
+                  <div id="spike_charts" style="width: 660px;height: 260px;margin-left: 70px;display: inline-block;"></div>
+                  <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: 0px;z-index: 2;">
+                  </ul>
+              </div>
+          </div>
     </body>
     <style>
     
@@ -16929,10 +16992,34 @@ function getSNNSimuFatiguePage() {
       transform: scale(3);
     }
     
+    .container {
+      position: relative;
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      margin: 15px;
+      box-sizing: border-box;
+    }
+    .container:last-child {
+      padding: 31.5px;
+    }
+    .container::after {
+      position: absolute;
+      width: 100px;
+      height: 60px;
+      left: 0;
+      bottom: -30px;
+      line-height: 30px;
+      text-align: center;
+    }
+    .container:last-child::after {
+      content: 'large';
+    }
     </style>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
+    <link rel="stylesheet" media="all" href="http://localhost:6003/css/ispinner.prefixed.css" />
     
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -16941,9 +17028,9 @@ function getSNNSimuFatiguePage() {
     <script>
       const vscode = acquireVsCodeApi();
       let prev_clicked_li = undefined;
-      let prev_clicked_input_li = undefined;
+      // let prev_clicked_input_li = undefined;
       let prev_clicked_img = undefined;
-      let prev_clicked_input_img = undefined;
+      // let prev_clicked_input_img = undefined;
       let need_red_img_li = new Array();
     
           $(document).ready(function(){
@@ -17076,6 +17163,7 @@ function getSNNSimuFatiguePage() {
                           console.log("check spike_counts of "+i+", ="+spike_counts);
                           // mark reds
                           for(let k=0;k<need_red_img_li.length;++k){
+                            console.log("mark red for id="+need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]);
                             if(prev_clicked_li === need_red_img_li[k]){
                               // document.getElementById(need_red_img_li[k]).style.backgroundColor = "yellow";  
                               document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '10px outset orange';
@@ -17084,7 +17172,9 @@ function getSNNSimuFatiguePage() {
                               // document.getElementById(need_red_img_li[k]).style.border = '2px dashed red';
                               document.getElementById(need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]).style.border = '5px dashed red';
                             }
+                            console.log("mark red for id="+need_red_img_li[k].split('_')[0]+'_'+need_red_img_li[k].split('_')[2]+" done.");
                           }
+                          console.log("img i="+i+", onclick exec done....");
                         }
                         // img_tag.src = test_img_uris[i];
                         img_tag.src = "http://localhost:6003/seg/data_vis/test_sample_"+i+".png";
@@ -17117,39 +17207,39 @@ function getSNNSimuFatiguePage() {
     
                       console.log("创建输入层脉冲激发图......");
                       // 创建输入层脉冲激发图
-                      for(let i=0;i<Math.min(infos.spikes.snn_input_spikes.length, 20);++i){
-                        var input_img_li = document.createElement("li");
-                        input_img_li.style.listStyle = "none";
-                        input_img_li.id = "inputimg_li_"+i;
-                        input_img_li.style.width = "53px";
-                        input_img_li.style.height = "50px";
-                        input_img_li.style.display = "inline-block";
-                        input_img_li.style.marginRight = "10px";
-                        var input_img_tag = document.createElement("img");
-                        // input_img_tag.src = test_img_uris[i];
-                        input_img_tag.src = "http://localhost:6003/seg/data_vis/test_sample_"+i+".png";
-                        input_img_tag.id = "inputimg_"+i;
-                        input_img_tag.style.width = "50px";
-                        input_img_tag.style.height = "50px";
-                        input_img_tag.onclick = ()=>{
-                          console.log("input spike display img idx "+i);
-                          // if(prev_clicked_input_li !== undefined){
-                          //   document.getElementById(prev_clicked_input_li).style.backgroundColor ="";
-                          // }
-                          // document.getElementById("input_img_li_"+i).style.backgroundColor = "chocolate";
-                          prev_clicked_input_li = "inputimg_li_"+i;
-                          if(prev_clicked_input_img !== undefined){
-                            document.getElementById(prev_clicked_input_img).style.border = '';
-                          }
-                          prev_clicked_input_img = 'inputimg_'+i;
-                          document.getElementById(prev_clicked_input_img).style.border = '10px outset orange';
-                          console.log("Current cls_names="+infos.spikes.snn_input_spikes[i].cls_names);
-                          console.log("Current spike data="+infos.spikes.snn_input_spikes[i].spike_tuples);
-                          display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
-                        };
-                        input_img_li.appendChild(input_img_tag);
-                        document.getElementById("input_spike_sample_imgs_ul").appendChild(input_img_li);
-                      }
+                      // for(let i=0;i<Math.min(infos.spikes.snn_input_spikes.length, 20);++i){
+                      //   var input_img_li = document.createElement("li");
+                      //   input_img_li.style.listStyle = "none";
+                      //   input_img_li.id = "inputimg_li_"+i;
+                      //   input_img_li.style.width = "53px";
+                      //   input_img_li.style.height = "50px";
+                      //   input_img_li.style.display = "inline-block";
+                      //   input_img_li.style.marginRight = "10px";
+                      //   var input_img_tag = document.createElement("img");
+                      //   // input_img_tag.src = test_img_uris[i];
+                      //   input_img_tag.src = "http://localhost:6003/seg/data_vis/test_sample_"+i+".png";
+                      //   input_img_tag.id = "inputimg_"+i;
+                      //   input_img_tag.style.width = "50px";
+                      //   input_img_tag.style.height = "50px";
+                      //   input_img_tag.onclick = ()=>{
+                      //     console.log("input spike display img idx "+i);
+                      //     // if(prev_clicked_input_li !== undefined){
+                      //     //   document.getElementById(prev_clicked_input_li).style.backgroundColor ="";
+                      //     // }
+                      //     // document.getElementById("input_img_li_"+i).style.backgroundColor = "chocolate";
+                      //     prev_clicked_input_li = "inputimg_li_"+i;
+                      //     if(prev_clicked_input_img !== undefined){
+                      //       document.getElementById(prev_clicked_input_img).style.border = '';
+                      //     }
+                      //     prev_clicked_input_img = 'inputimg_'+i;
+                      //     document.getElementById(prev_clicked_input_img).style.border = '10px outset orange';
+                      //     console.log("Current cls_names="+infos.spikes.snn_input_spikes[i].cls_names);
+                      //     console.log("Current spike data="+infos.spikes.snn_input_spikes[i].spike_tuples);
+                      //     display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
+                      //   };
+                      //   input_img_li.appendChild(input_img_tag);
+                      //   document.getElementById("input_spike_sample_imgs_ul").appendChild(input_img_li);
+                      // }
                      
                       // 神经元放电图
                       let tms = infos.record_layer_v.tms;
@@ -17203,12 +17293,55 @@ function getSNNSimuFatiguePage() {
     
                       // fill tables
                       console.log("填充表格数据.....");
-                      $("#simulate_vthresh").text(infos.extra_simu_info.simulate_vthresh);
                       $("#simulate_neuron_dt").text(infos.extra_simu_info.simulate_neuron_dt);
                       $("#simulate_synapse_dt").text(infos.extra_simu_info.simulate_synapse_dt);
                       $("#simulate_delay").text(infos.extra_simu_info.simulate_delay);
                       $("#simulate_dura").text(infos.extra_simu_info.simulate_dura);
-                      $("#simulate_acc").text(infos.extra_simu_info.simulate_acc);
+                      $("#simulate_acc").text(infos.extra_simu_info.simulate_acc.substr(0, infos.extra_simu_info.simulate_acc.indexOf("-")));
+                      $("#simulate_acc_snn").text(infos.extra_simu_info.simulate_acc.substr(infos.extra_simu_info.simulate_acc.indexOf("-") + 4));
+    
+                      let table_line = document.createElement("tr");
+                        table_line.style.height = "25px";
+                        table_line.style.border = "solid 2px #D6D6D6";
+                        table_line.style.color = "#333";
+    
+                        let td_id = document.createElement("td");
+                        td_id.style.fontFamily = 'SourceHanSansCN-Medium';
+                        td_id.style.backgroundColor = '#EEEEEE';
+                        td_id.style.fontSize = '16px';
+                        td_id.style.color = '#666666';
+                        td_id.style.textAlign = 'center';
+                        td_id.style.border = "solid 2px #D6D6D6";
+                        td_id.style.paddingTop = '12px';
+                        td_id.style.paddingBottom = '12px';
+                        td_id.innerText = "层编号";
+                        table_line.appendChild(td_id);
+    
+                        let td_id2 = document.createElement("td");
+                        td_id2.style.fontFamily = 'SourceHanSansCN-Medium';
+                        td_id2.style.fontSize = '16px';
+                        td_id2.style.color = '#666666';
+                        td_id2.style.textAlign = 'center';
+                        td_id2.style.backgroundColor = '#EEEEEE';
+                        td_id2.style.border = "solid 2px #D6D6D6";
+                        td_id2.style.paddingTop = '12px';
+                        td_id2.style.paddingBottom = '12px';
+                        td_id2.innerText = "放电次数均值";
+                        table_line.appendChild(td_id2);
+    
+                        let td_id3 = document.createElement("td");
+                        td_id3.style.fontFamily = 'SourceHanSansCN-Medium';
+                        td_id3.style.fontSize = '16px';
+                        td_id3.style.color = '#666666';
+                        td_id3.style.textAlign = 'center';
+                        td_id3.style.backgroundColor = '#EEEEEE';
+                        td_id3.style.border = "solid 2px #D6D6D6";
+                        td_id3.style.paddingTop = '12px';
+                        td_id3.style.paddingBottom = '12px';
+                        td_id3.innerText = "放电次数方差";
+                        table_line.appendChild(td_id3);
+    
+                        document.getElementById("snn_layers_spike_table").appendChild(table_line);
     
     
                       // fill layers spike info table
@@ -17229,7 +17362,14 @@ function getSNNSimuFatiguePage() {
                         td_id.style.border = "solid 2px #D6D6D6";
                         td_id.style.paddingTop = '12px';
                         td_id.style.paddingBottom = '12px';
-                        td_id.innerText = ""+j;
+                        // td_id.innerText = ""+j;
+                        if (j == 0) {
+                          td_id.innerText = "input";
+                        } else if (j == infos.record_spike_out_info.spike_count_avgs.length - 1) {
+                          td_id.innerText = "out";
+                        } else {
+                          td_id.innerText = "layer_"+j;
+                        }
                         table_line.appendChild(td_id);
     
                         let td_spike_avg = document.createElement("td");
@@ -17259,8 +17399,8 @@ function getSNNSimuFatiguePage() {
                         document.getElementById("snn_layers_spike_table").appendChild(table_line);
                       }
                       console.log("Auto click first image.......");
-                      document.getElementById("img_0").click();
-                      document.getElementById("inputimg_0").click();
+                      document.getElementById("img_1").click();
+                      // document.getElementById("inputimg_0").click();
                       
                       $(".loading-div").hide(); // 隐藏加载提示
                   }
@@ -17296,7 +17436,7 @@ function getSNNSimuFatiguePage() {
     
           function calc_need_red(test_img_spikes, test_img_uris){
             // label_span.innerText = "标签: "+test_img_uris[i].split("/")[5].split("_")[4].split(".")[0];
-            for(let i=0;i<test_img_spikes.length;++i){
+            for(let i=0;i<Math.min(test_img_spikes.length, 20);++i){
               console.log("test_img_spikes i="+i+"  spike tuples="+test_img_spikes[i].spike_tuples);
               let cls_idx = 0;
               if(test_img_spikes[i].spike_tuples.length > 0){
@@ -17346,7 +17486,7 @@ function getSNNSimuFatiguePage() {
                     xAxis: {
                         type:'category',
                         data: labels,
-                        name: "类别",
+                        name: "时间(ms)",
                         nameTextStyle:{
                           color:"#999999"
                         },
@@ -17359,7 +17499,7 @@ function getSNNSimuFatiguePage() {
                     yAxis: {
                         type: 'value',
                         scale:true,
-                        name:"时间(brian2 ms)",
+                        name:"类别",
                         nameTextStyle:{
                           color:"#999999"
                         },
@@ -17495,8 +17635,7 @@ function getSNNSimuFatiguePage() {
           }
     </script>
     
-    </html>
-    `;
+    </html>`;
 }
 exports.getSNNSimuFatiguePage = getSNNSimuFatiguePage;
 

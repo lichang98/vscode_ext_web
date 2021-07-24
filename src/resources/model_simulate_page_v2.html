@@ -157,7 +157,7 @@
                 </tr>
             </table>
             <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
-            <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
+            <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: 0px;z-index: 2;">
             </ul>
         </div>
     </div>
@@ -291,7 +291,6 @@ body {
                     img_li.style.marginRight = "20px";
                     var img_tag = document.createElement("img");
                     // img_tag.id = "sample_img_"+i;
-                    img_tag.style.opacity = "0.5";
                     img_tag.style.display = "block";
                     img_tag.onclick = function(){
                       console.log("draw NO."+i+" img and spikes");

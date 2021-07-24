@@ -7,7 +7,7 @@ import sys
 
 model_path = sys.argv[1]
 
-MAX_NEURON_COUNT = 20000
+MAX_NEURON_COUNT = 50000
 
 model = keras.models.load_model(model_path)
 
@@ -17,7 +17,6 @@ def get_name(layer):
     return layer.__class__.__name__
 
 assert len(model.layers) > 1 and get_name(model.layers[0]) == "InputLayer", "Assert contain input layer!"
-assert model.layers[0].output_shape[0][0] == 1, "Assert batch_size == 1!"
 
 valid_layers = ['InputLayer', 'Conv2D', 'MaxPooling2D', 'AveragePooling2D', 'Activation','BatchNormalization', 'Dense', 'Flatten', 'Dropout']
 for i in range(len(model.layers)):

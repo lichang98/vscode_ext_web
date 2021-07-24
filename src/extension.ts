@@ -580,7 +580,7 @@ export function activate(context: vscode.ExtensionContext) {
 				console.log("Extension 接收到 webview的消息，启动脚本......");
 				sleep(1000);
 				// let scriptPath = undefined;
-				if(PROJ_DESC_INFO.project_type === '图像分类'){
+				if(PROJ_DESC_INFO.project_type === '图像分类' || PROJ_DESC_INFO.project_type === "年龄检测"){
 					CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
 									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")) + " 0";
 				}else if(PROJ_DESC_INFO.project_type === "语义分割"){
@@ -751,27 +751,31 @@ export function activate(context: vscode.ExtensionContext) {
 			} else if (data.choose_import_file_paths) {
 				console.log("选择的文件路径为："+JSON.stringify(data.choose_import_file_paths));
 				currentPanel!.webview.postMessage(JSON.stringify({"show_error": "文件校验中，请稍等......", "display_loading":"yes"})).then(()=>{
-					let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.xnorm+ " 0";
-					try {
-						execSync(checkCmd, {encoding: "buffer"});
-					} catch (err) {
-						console.log("发送xnorm 文件校验错误消息......");
-						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "<strong>文件 "+path.basename(data.choose_import_file_paths.xnorm)+
-													" 校验错误！</strong><br/>错误详情：<br/>"+iconv.decode(err.stderr, 'cp936')}));
-						return;
-					};
+					if (PROJ_DESC_INFO.project_type !== "疲劳检测") {
+						let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.xnorm+ " 0";
+						try {
+							execSync(checkCmd, {encoding: "buffer"});
+						} catch (err) {
+							console.log("发送xnorm 文件校验错误消息......");
+							currentPanel!.webview.postMessage(JSON.stringify({"show_error": "<strong>文件 "+path.basename(data.choose_import_file_paths.xnorm)+
+														" 校验错误！</strong><br/>错误详情：<br/>"+iconv.decode(err.stderr, 'cp936')}));
+							return;
+						};
+					}
 					importXNorm(data.choose_import_file_paths.xnorm);
-					checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.xtest+ " 0";
-					try {
-						execSync(checkCmd, {encoding: "buffer"});
-					} catch (err) {
-						console.log("发送xtest 文件校验错误消息......");
-						currentPanel!.webview.postMessage(JSON.stringify({"show_error": "<strong>文件 "+path.basename(data.choose_import_file_paths.xtest)+" 校验错误！</strong><br/>错误详情：<br/>"+
-														iconv.decode(err.stderr, 'cp936')}));
-						return;
-					};
+					if (PROJ_DESC_INFO.project_type !== "疲劳检测") {
+						let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.xtest+ " 0";
+						try {
+							execSync(checkCmd, {encoding: "buffer"});
+						} catch (err) {
+							console.log("发送xtest 文件校验错误消息......");
+							currentPanel!.webview.postMessage(JSON.stringify({"show_error": "<strong>文件 "+path.basename(data.choose_import_file_paths.xtest)+" 校验错误！</strong><br/>错误详情：<br/>"+
+															iconv.decode(err.stderr, 'cp936')}));
+							return;
+						};
+					}
 					importXTest(data.choose_import_file_paths.xtest);
-					checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.ytest+ " 1";
+					let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+data.choose_import_file_paths.ytest+ " 1";
 					try {
 						execSync(checkCmd, {encoding: "buffer"});
 					} catch (err) {
@@ -1214,7 +1218,7 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 					panelDataVis.reveal();
 					// currentPanel.webview.html = getConvertorDataPageV2(
-						if(PROJ_DESC_INFO.project_type === '图像分类'){
+						if(PROJ_DESC_INFO.project_type === '图像分类' || PROJ_DESC_INFO.project_type === "年龄检测"){
 							panelDataVis.webview.html = getConvertorDataPageV2(
 								panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample0.png"))),
 								panelDataVis.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath,"src","resources","script_res","sample1.png"))),
@@ -1364,13 +1368,15 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showOpenDialog(options).then(fileUri => {
 				if(fileUri && fileUri[0]){
 					console.log("selected path: "+fileUri[0].fsPath);
-					let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+fileUri[0].fsPath+ " 0";
-					try {
-						execSync(checkCmd, {encoding: "buffer"});
-					} catch (err) {
-						currentPanel!.webview.postMessage(JSON.stringify({"show_error": iconv.decode(err.stderr, 'cp936')}));
-						return;
-					};
+					if (PROJ_DESC_INFO.project_type !== "疲劳检测") {
+						let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+fileUri[0].fsPath+ " 0";
+						try {
+							execSync(checkCmd, {encoding: "buffer"});
+						} catch (err) {
+							currentPanel!.webview.postMessage(JSON.stringify({"show_error": iconv.decode(err.stderr, 'cp936')}));
+							return;
+						};
+					}
 					X_NORM_DATA_PATH = fileUri[0].fsPath;
 					X_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "colorX.npz");
 					X_ORIGIN_COLOR_DATA_PATH = path.join(path.dirname(X_NORM_DATA_PATH), "originColorX.npz");
@@ -1422,13 +1428,16 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showOpenDialog(options).then(fileUri => {
 				if(fileUri && fileUri[0]){
 					console.log("selected path: "+fileUri[0].fsPath);
-					let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+fileUri[0].fsPath+ " 0";
-					try {
-						execSync(checkCmd, {encoding: "buffer"});
-					} catch (err) {
-						currentPanel!.webview.postMessage(JSON.stringify({"show_error": iconv.decode(err.stderr, 'cp936')}));
-						return;
-					};
+					if (PROJ_DESC_INFO.project_type !== "疲劳检测") {
+						let checkCmd = PYTHON_INTERPRETER+" "+path.join(__dirname, "darwin2sim", "data_srcfile_checker.py")+ " "+fileUri[0].fsPath+ " 0";
+						try {
+							execSync(checkCmd, {encoding: "buffer"});
+						} catch (err) {
+							currentPanel!.webview.postMessage(JSON.stringify({"show_error": iconv.decode(err.stderr, 'cp936')}));
+							return;
+						};
+					}
+
 					X_TEST_DATA_PATH = fileUri[0].fsPath;
 					
 					// 添加到treeview下
@@ -1565,7 +1574,7 @@ export function activate(context: vscode.ExtensionContext) {
 			console.log("title="+currentPanel.title);
 			if(currentPanel && currentPanel.title !== "ANN-SNN转换"){
 				console.log("PROJ_DESC_INFO="+PROJ_DESC_INFO);
-				if(PROJ_DESC_INFO.project_type === '图像分类'){
+				if(PROJ_DESC_INFO.project_type === '图像分类' || PROJ_DESC_INFO.project_type === "年龄检测"){
 					console.log("currentpanel="+currentPanel);
 					currentPanel.webview.html = getANNSNNConvertPage();
 				}else if(PROJ_DESC_INFO.project_type === "语义分割"){
@@ -1573,13 +1582,31 @@ export function activate(context: vscode.ExtensionContext) {
 					currentPanel.webview.html = getANNSNNConvertSegPage();
 				}else if(PROJ_DESC_INFO.project_type === "语音识别"){
 					console.log("语音识别模型转换界面");
-					currentPanel.webview.html = getANNSNNConvertSpeechPage();
+					// currentPanel.webview.html = getANNSNNConvertSpeechPage();
+					currentPanel.webview.html = getANNSNNConvertPage();
 				}else if(PROJ_DESC_INFO.project_type === "疲劳检测") {
 					console.log("疲劳检测模型转换界面");
-					currentPanel.webview.html = getANNSNNConvertFatiguePage();
+					// currentPanel.webview.html = getANNSNNConvertFatiguePage();
+					currentPanel.webview.html = getANNSNNConvertPage();
 				}
 				currentPanel.reveal();
 				currentPanel.title = "ANN-SNN转换";
+				setTimeout(() => {
+					if(PROJ_DESC_INFO.project_type === "语音识别") {
+						console.log("语音识别任务向 模型转换界面发送预设参数。。。。");
+						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 92}));
+					} else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
+						console.log("疲劳检测任务向  模型转换界面发送预设参数。。。。");
+						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 33}));
+						currentPanel!.webview.postMessage(JSON.stringify({"progress_stub": "yes", 
+								"s1_fin_stub": 83, "s2_fin_stub": 1033, "s3_fin_stub": 1133, "s4_fin_stub": 1199}));
+					} else if (PROJ_DESC_INFO.project_type === "年龄检测") {
+						console.log("年龄你个检测任务向  模型转换界面发送预设参数。。。。");
+						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 33}));
+						currentPanel!.webview.postMessage(JSON.stringify({"progress_stub": "yes", 
+								"s1_fin_stub": 83, "s2_fin_stub": 1033, "s3_fin_stub": 1133, "s4_fin_stub": 1199}));
+					}
+				}, 800);
 				console.log("显示currentpane  模型转换   1");
 				if (!fs.existsSync(path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py"))) {
 					fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py"),`# -*- coding:utf-8 -*-
@@ -1759,7 +1786,8 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 					console.log("SNN仿真界面就绪.....");
 					fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
 						if(panelSNNModelVis){
-							if(PROJ_DESC_INFO.project_type === "图像分类" || PROJ_DESC_INFO.project_type === "语义分割" || PROJ_DESC_INFO.project_type === "疲劳检测") {
+							if(PROJ_DESC_INFO.project_type === "图像分类" || PROJ_DESC_INFO.project_type === "语义分割" || PROJ_DESC_INFO.project_type === "疲劳检测"
+													|| PROJ_DESC_INFO.project_type === "年龄检测") {
 								console.log("SNN仿真界面发送 snn_info 数据....");
 								panelSNNModelVis.webview.postMessage(JSON.stringify({"snn_info":data}));
 							}else if(PROJ_DESC_INFO.project_type === "语音识别") {
@@ -1781,7 +1809,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 					});
 				}
 			});
-			if(PROJ_DESC_INFO.project_type === '图像分类'){
+			if(PROJ_DESC_INFO.project_type === '图像分类' || PROJ_DESC_INFO.project_type === "年龄检测"){
 				panelSNNModelVis.webview.html = getSNNSimuPage();
 			}else if(PROJ_DESC_INFO.project_type === '语义分割'){
 				panelSNNModelVis.webview.html = getSegSimulatePage();

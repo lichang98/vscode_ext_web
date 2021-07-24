@@ -18,5 +18,4 @@ else:
     arr_y = np.load(file_path)
     assert len(arr_y.files) == 1 and arr_y.files[0] == "arr_0", "标签数据需要使用numpy.savez(file_name, arr) 方式保存！"
     arr_y = arr_y["arr_0"]
-    assert arr_y.dtype == np.int, "标签需要是整型！"
     assert np.sum(arr_y) == len(arr_y), "标签需要使用 One-Hot 方式编码！"

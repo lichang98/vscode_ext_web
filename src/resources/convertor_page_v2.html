@@ -97,6 +97,7 @@ line-height: 14px;">
                             <option>语义分割</option>
                             <option>语音识别</option>
                             <option>疲劳检测</option>
+                            <option>年龄检测</option>
                         </select>
                     </div>
                     <div style="margin-top: 20px;">
@@ -190,6 +191,7 @@ line-height: 14px;">
                             <option>语音识别</option>
                             <option>目标检测</option>
                             <option>疲劳检测</option>
+                            <option>年龄检测</option>
                         </select>
                     </div>
                 </form>
@@ -471,6 +473,22 @@ body {
 
 <script>
 
+
+function modal_show_error_dialog_show() {
+  if (!$("#myModal_show_error").is(":visible")) {
+    $("#alert_modal_btn").click();
+  } else {
+    $("#alert_modal_btn").click();
+    $("#alert_modal_btn").click();
+  }  
+}
+
+function modal_show_error_dialog_hide() {
+  if ($("#myModal_show_error").is(":visible")) {
+    $("#alert_modal_btn").click();
+  }
+}
+
     const vscode = acquireVsCodeApi();
     $(document).ready(function(){
       $("#close_modal_btn").on("click", ()=>{
@@ -487,10 +505,10 @@ body {
             // $("#error_detail").css("color", "#000000");
             // $("#myModalLabel_show_error").css("color", "#000000");
             $("#myModalLabel_show_error").text("提示");
-            $("#alert_modal_btn").click();
+            modal_show_error_dialog_show();
             console.log("alert_modal_btn click.");
           } else if(data.hide) {
-            $("#close_modal_btn").click();
+            modal_show_error_dialog_hide();
             console.log("close modal btn click.");
           } else {
             $("#error_detail").css("height", "30px");
@@ -501,8 +519,8 @@ body {
             if (data.is_error) {
                 $("#myModalLabel_show_error").text("错误提示");
             }
+            modal_show_error_dialog_show();
           }
-          $("#alert_modal_btn").click();
         } else if (data.import_files) {
           // 导入数据与模型文件
           $("#modal_dialog_import_files").click();

@@ -1123,7 +1123,6 @@ export function getConvertorPageV2(){
     letter-spacing: 0;
     line-height: 14px;">
                                 <option>图像分类</option>
-                                <option>语义分割</option>
                                 <option>语音识别</option>
                                 <option>疲劳检测</option>
                                 <option>年龄检测</option>
@@ -1218,7 +1217,6 @@ export function getConvertorPageV2(){
     line-height: 14px;">
                                 <option>图像分类</option>
                                 <option>语音识别</option>
-                                <option>目标检测</option>
                                 <option>疲劳检测</option>
                                 <option>年龄检测</option>
                             </select>

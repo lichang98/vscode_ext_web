@@ -1778,9 +1778,9 @@ export function getSNNSimuFatiguePage():string{
     
                             td_child = document.createElement("td");
                             if(test_img_spikes[i].cls_names[j] === '1'){
-                              td_child.innerText = '疲劳';
+                              td_child.innerText = '疲劳(1)';
                             }else{
-                              td_child.innerText = "正常";
+                              td_child.innerText = "正常(0)";
                             }
                             td_child.style.width = "33px";
                             td_child.style.border = "solid 2px #D6D6D6";

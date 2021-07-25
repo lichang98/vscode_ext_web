@@ -580,7 +580,7 @@ export function activate(context: vscode.ExtensionContext) {
 				console.log("Extension 接收到 webview的消息，启动脚本......");
 				sleep(1000);
 				// let scriptPath = undefined;
-				if(PROJ_DESC_INFO.project_type === '图像分类' || PROJ_DESC_INFO.project_type === "年龄检测"){
+				if(PROJ_DESC_INFO.project_type === '图像分类'){
 					CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
 									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")) + " 0";
 				}else if(PROJ_DESC_INFO.project_type === "语义分割"){
@@ -588,11 +588,14 @@ export function activate(context: vscode.ExtensionContext) {
 					wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")) + " 0";
 				}else if(PROJ_DESC_INFO.project_type === "语音识别"){
 					CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
-									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""))+ " 2";
+									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""))+ " 4";
 				}else if(PROJ_DESC_INFO.project_type === "疲劳检测") {
 					CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
 									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")) + " 0";
-				}else {
+				} else if (PROJ_DESC_INFO.project_type === "年龄检测") {
+					CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py "+ webParamVthresh+" "+ 
+									wevParamNeuronDt+" "+ webParamSynapseDt+" "+webParamDelay+" "+webParamDura+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")) + " 3";	
+				} else {
 					//TODO Other task type
 				}
 				// 
@@ -1594,17 +1597,17 @@ export function activate(context: vscode.ExtensionContext) {
 				setTimeout(() => {
 					if(PROJ_DESC_INFO.project_type === "语音识别") {
 						console.log("语音识别任务向 模型转换界面发送预设参数。。。。");
-						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 92}));
+						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 13}));
 					} else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
 						console.log("疲劳检测任务向  模型转换界面发送预设参数。。。。");
-						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 33}));
+						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 5}));
 						currentPanel!.webview.postMessage(JSON.stringify({"progress_stub": "yes", 
-								"s1_fin_stub": 83, "s2_fin_stub": 1033, "s3_fin_stub": 1133, "s4_fin_stub": 1199}));
+								"s1_fin_stub": 83, "s2_fin_stub": 572, "s3_fin_stub": 674, "s4_fin_stub": 701}));
 					} else if (PROJ_DESC_INFO.project_type === "年龄检测") {
 						console.log("年龄你个检测任务向  模型转换界面发送预设参数。。。。");
-						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 33}));
+						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 7}));
 						currentPanel!.webview.postMessage(JSON.stringify({"progress_stub": "yes", 
-								"s1_fin_stub": 83, "s2_fin_stub": 1033, "s3_fin_stub": 1133, "s4_fin_stub": 1199}));
+								"s1_fin_stub": 121, "s2_fin_stub": 333, "s3_fin_stub": 433, "s4_fin_stub": 460}));
 					}
 				}, 800);
 				console.log("显示currentpane  模型转换   1");

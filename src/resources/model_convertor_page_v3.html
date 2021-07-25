@@ -517,10 +517,10 @@
 
 
 <div class="modal fade" id="myModal_show_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_show_error" aria-hidden="true" style="background-color: white;color: #333;">
-	<div class="modal-dialog" style="background-color: white;width: 800px;">
+	<div class="modal-dialog" style="background-color: white;width: 500px;">
 		<div class="modal-content" style="background-color: white;">
-			<div>
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+			<div style="height:70px; margin-top: -10px; background: #EEEEEE;border-top-right-radius: 15px; border-top-left-radius: 15px;padding-top: 10px;">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;margin-top: 10px;">
 					&times;
 				</button>
 				<h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Normal;
@@ -532,6 +532,7 @@
 				</h4>
 			</div>
 			<div class="modal-body">
+        <div id="modal_dialog_error_icon" align="center" style="height: 120px; padding-top: 30px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
         <div style="margin-top: 50px;">
           <span id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
           font-size: 22px;
@@ -541,8 +542,8 @@
 			</div>
 			<div style="margin-top: 40px;margin-bottom: 40px;">
 				<button type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-        border-radius: 2px;
-        border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">关闭
+                border-radius: 2px;
+                margin-left: 180px;width: 150px;height: 50px; text-align: center;display: inline-block;" data-dismiss="modal">关闭
 				</button>
 			</div>
 		</div><!-- /.modal-content -->

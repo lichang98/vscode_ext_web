@@ -575,7 +575,7 @@ function activate(context) {
                 console.log("Extension 接收到 webview的消息，启动脚本......");
                 sleep(1000);
                 // let scriptPath = undefined;
-                if (PROJ_DESC_INFO.project_type === '图像分类' || PROJ_DESC_INFO.project_type === "年龄检测") {
+                if (PROJ_DESC_INFO.project_type === '图像分类') {
                     CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
                         wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")) + " 0";
                 }
@@ -585,11 +585,15 @@ function activate(context) {
                 }
                 else if (PROJ_DESC_INFO.project_type === "语音识别") {
                     CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
-                        wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")) + " 2";
+                        wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")) + " 4";
                 }
                 else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
                     CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
                         wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")) + " 0";
+                }
+                else if (PROJ_DESC_INFO.project_type === "年龄检测") {
+                    CONVERT_SCRIPT_PARAMS = path.join(__dirname, "darwin2sim", "convert_with_stb.py " + webParamVthresh + " " +
+                        wevParamNeuronDt + " " + webParamSynapseDt + " " + webParamDelay + " " + webParamDura + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")) + " 3";
                 }
                 else {
                     //TODO Other task type
@@ -1596,19 +1600,19 @@ function activate(context) {
                 setTimeout(() => {
                     if (PROJ_DESC_INFO.project_type === "语音识别") {
                         console.log("语音识别任务向 模型转换界面发送预设参数。。。。");
-                        currentPanel.webview.postMessage(JSON.stringify({ "preset_param": "yes", "vthresh": 92 }));
+                        currentPanel.webview.postMessage(JSON.stringify({ "preset_param": "yes", "vthresh": 13 }));
                     }
                     else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
                         console.log("疲劳检测任务向  模型转换界面发送预设参数。。。。");
-                        currentPanel.webview.postMessage(JSON.stringify({ "preset_param": "yes", "vthresh": 33 }));
+                        currentPanel.webview.postMessage(JSON.stringify({ "preset_param": "yes", "vthresh": 5 }));
                         currentPanel.webview.postMessage(JSON.stringify({ "progress_stub": "yes",
-                            "s1_fin_stub": 83, "s2_fin_stub": 1033, "s3_fin_stub": 1133, "s4_fin_stub": 1199 }));
+                            "s1_fin_stub": 83, "s2_fin_stub": 572, "s3_fin_stub": 674, "s4_fin_stub": 701 }));
                     }
                     else if (PROJ_DESC_INFO.project_type === "年龄检测") {
                         console.log("年龄你个检测任务向  模型转换界面发送预设参数。。。。");
-                        currentPanel.webview.postMessage(JSON.stringify({ "preset_param": "yes", "vthresh": 33 }));
+                        currentPanel.webview.postMessage(JSON.stringify({ "preset_param": "yes", "vthresh": 7 }));
                         currentPanel.webview.postMessage(JSON.stringify({ "progress_stub": "yes",
-                            "s1_fin_stub": 83, "s2_fin_stub": 1033, "s3_fin_stub": 1133, "s4_fin_stub": 1199 }));
+                            "s1_fin_stub": 121, "s2_fin_stub": 333, "s3_fin_stub": 433, "s4_fin_stub": 460 }));
                     }
                 }, 800);
                 console.log("显示currentpane  模型转换   1");
@@ -7434,7 +7438,7 @@ function getConvertorPageV2() {
           </div>
           <div class="modal-body">
             <div id="loading_anim" style="display: none;" class="container">
-              <div class="ispinner ispinner-large" style="margin-left: 300px;margin-top: 100px;">
+              <div class="ispinner ispinner-large" style="margin-left: 220px;margin-top: 100px;">
                 <div class="ispinner-blade"></div>
                 <div class="ispinner-blade"></div>
                 <div class="ispinner-blade"></div>
@@ -7445,9 +7449,9 @@ function getConvertorPageV2() {
                 <div class="ispinner-blade"></div>
               </div>
             </div>
-            <div align="center" style="height: 150px; padding-top: 60px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
-            <div style="margin-top: 50px; width: 500px; height: 30px;">
-              <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 28px;color: #666666;letter-spacing: 1.25px; text-align: center;padding-left: 50px;">错误信息</div>
+            <div id="modal_dialog_error_icon" align="center" style="height: 120px; padding-top: 30px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
+            <div style="margin-top: 10px; width: 500px; height: 100px;">
+              <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 28px;color: #666666;letter-spacing: 1.25px; text-align: center;padding-left: 50px;overflow-y: auto;white-space: pre-wrap;">错误信息</div>
             </div>
           </div>
           <div style="margin-top: 40px;">
@@ -7531,7 +7535,7 @@ function getConvertorPageV2() {
       position: relative;
       display: inline-block;
       width: 100px;
-      height: 100px;
+      height: 30px;
       margin: 15px;
       box-sizing: border-box;
     }
@@ -7564,10 +7568,7 @@ function getConvertorPageV2() {
     function modal_show_error_dialog_show() {
       if (!$("#myModal_show_error").is(":visible")) {
         $("#alert_modal_btn").click();
-      } else {
-        $("#alert_modal_btn").click();
-        $("#alert_modal_btn").click();
-      }  
+      }
     }
     
     function modal_show_error_dialog_hide() {
@@ -7587,26 +7588,29 @@ function getConvertorPageV2() {
             if (data.show_error) {
               console.log("接收到show_error 消息："+data.show_error);
               $("#error_detail").html(data.show_error);
+              $("#modal_dialog_error_icon").css("opacity",1.0);
               if (data.display_loading) {
                 $("#loading_anim").css("display", "block");
+                $("#modal_dialog_error_icon").css("opacity", 0.0);
                 // $("#error_detail").css("color", "#000000");
                 // $("#myModalLabel_show_error").css("color", "#000000");
                 $("#myModalLabel_show_error").text("提示");
                 modal_show_error_dialog_show();
-                console.log("alert_modal_btn click.");
+                console.log("alert_modal_btn click show error.....");
               } else if(data.hide) {
                 modal_show_error_dialog_hide();
-                console.log("close modal btn click.");
+                console.log("close modal btn click hide ......");
               } else {
-                $("#error_detail").css("height", "30px");
+                $("#error_detail").css("height", "140px");
                 $("#error_detail").css("width", "500px");
                 $("#loading_anim").css("display", "none");
                 // $("#error_detail").css("color", "#f87307");
                 // $("#myModalLabel_show_error").css("color", "#ee1414");
-                if (data.is_error) {
-                    $("#myModalLabel_show_error").text("错误提示");
-                }
+                // if (data.is_error) {
+                //     $("#myModalLabel_show_error").text("错误提示");
+                // }
                 modal_show_error_dialog_show();
+                console.log("modal aleret_modal_btn click 错误提示。。。。")
               }
             } else if (data.import_files) {
               // 导入数据与模型文件
@@ -8280,10 +8284,10 @@ function getANNSNNConvertPage() {
   
   
   <div class="modal fade" id="myModal_show_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_show_error" aria-hidden="true" style="background-color: white;color: #333;">
-    <div class="modal-dialog" style="background-color: white;width: 800px;">
+    <div class="modal-dialog" style="background-color: white;width: 500px;">
       <div class="modal-content" style="background-color: white;">
-        <div>
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+        <div style="height:70px; margin-top: -10px; background: #EEEEEE;border-top-right-radius: 15px; border-top-left-radius: 15px;padding-top: 10px;">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;margin-top: 10px;">
             &times;
           </button>
           <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Normal;
@@ -8295,6 +8299,7 @@ function getANNSNNConvertPage() {
           </h4>
         </div>
         <div class="modal-body">
+          <div id="modal_dialog_error_icon" align="center" style="height: 120px; padding-top: 30px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
           <div style="margin-top: 50px;">
             <span id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
             font-size: 22px;
@@ -8304,8 +8309,8 @@ function getANNSNNConvertPage() {
         </div>
         <div style="margin-top: 40px;margin-bottom: 40px;">
           <button type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-          border-radius: 2px;
-          border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">关闭
+                  border-radius: 2px;
+                  margin-left: 180px;width: 150px;height: 50px; text-align: center;display: inline-block;" data-dismiss="modal">关闭
           </button>
         </div>
       </div><!-- /.modal-content -->
@@ -9265,12 +9270,14 @@ function getSNNSimuPage() {
               <div id="model_layers_vis_tab_caption" style="text-align: center;background: rgba(238,238,238,1.00);border: solid 1px #D6D6D6;width: 460px;margin-left: 180px;"><font style="font-family: SourceHanSansCN-Medium;
                 font-size: 14px;
                 color: #666666;">统计计数</font></div>
-              <table id="spike_out_count_table" style="margin-left: 180px;border: solid 3px #D6D6D6;color: #333;width: 460px;">
-                  <tr id="out_labels" style="border: solid 2px #D6D6D6;">
-                  </tr>
-                  <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
-                  </tr>
-              </table>
+                <div style="width: 460px;overflow: auto;margin-left: 180px;">
+                  <table id="spike_out_count_table" style="border: solid 3px #D6D6D6;color: #333;width: 460px;">
+                    <tr id="out_labels" style="border: solid 2px #D6D6D6;">
+                    </tr>
+                    <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
+                    </tr>
+                  </table>
+                </div>
               <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
               <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: 0px;z-index: 2;">
               </ul>
@@ -14515,8 +14522,7 @@ function getANNSNNConvertSpeechPage() {
 }
 exports.getANNSNNConvertSpeechPage = getANNSNNConvertSpeechPage;
 function getSNNSimuSpeechPage() {
-    return `
-  <!DOCTYPE html>
+    return `<!DOCTYPE html>
   <html style="height: 640px;width: 100%;">
   
   <head>
@@ -14527,148 +14533,159 @@ function getSNNSimuSpeechPage() {
   <body class="dark-mode" style="height: 100%;width: 100%;white-space: nowrap;overflow: auto;">
   
     <div class="loading-div">
-      <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i>
-      <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);display: block;"><font style="color: #333;font-weight: bolder;">仿真数据加载中...</font></span>
+      <div class="container"  style="margin-left: calc(50vw - 5px);">
+        <div class="ispinner ispinner-large">
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+          <div class="ispinner-blade"></div>
+        </div>
+      </div>
+      <!-- <i class="fa fa-spinner fa-pulse fa-3x fa-fw" style="display: block;margin-left: 50vw;color: #333;"></i> -->
+      <span style="color: #333;height: 50px;width: 120px;margin-left: calc(50vw - 20px);margin-top: -70px;display: block;"><font style="color: #333;font-weight: bolder;">仿真数据加载中...</font></span>
     </div>
+    <div style="margin-top: 5px;display: block;">
   
-      <div style="margin-top: 5px;display: block;">
-  
-          <div style="background: rgba(238,238,238,0.4);width: 400px;height: 380px;display: inline-block;">
-            <div>
-              <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
-                font-size: 20px;
-                color: #333333;
-                letter-spacing: 1.14px;">仿真配置结果评估</font></div>
-              <table id="layer_conf_val" style="width: 320px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
-                  <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
-                  <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
-                    <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                    font-size: 16px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">统计指标</td>
-                    <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
-                    font-size: 16px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">指标值</td>
-                  </tr>
-                  <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
-                    <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
-                    font-size: 14px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">膜电位阈值</td>
-                    <td id="simulate_vthresh" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
-                  </tr>
-                  <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
-                    <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
-                    font-size: 14px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">神经元时间步长</td>
-                    <td id="simulate_neuron_dt" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
-                  </tr>
-                  <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
-                    <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
-                    font-size: 14px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">突触时间步长</td>
-                    <td id="simulate_synapse_dt" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
-                  </tr>
-                  <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
-                    <td  style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
-                    font-size: 14px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">延迟</td>
-                    <td id="simulate_delay" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
-                  </tr>
-                  <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
-                    <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
-                    font-size: 14px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">仿真时长</td>
-                    <td id="simulate_dura" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
-                  </tr>
-                  <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
-                    <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
-                    font-size: 14px;
-                    color: #666666;padding-top: 12px;padding-bottom: 12px;">准确率</td>
-                    <td id="simulate_acc" style="color: #e71f1fe0;text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
-                  </tr>    
-              </table>
-            </div>
-          </div>
-  
-          <div style="background: rgba(238,238,238,0.4);width: 500px;height: 380px;display: inline-block;">
-            <div style="text-align: center;margin-left: 40px;"><font style="font-family: SourceHanSansCN-Normal;
-              font-size: 20px;
-              color: #333333;
-              letter-spacing: 1.14px;">放电次数均值方差统计</font></div>
-            <table id="snn_layers_spike_table" style="width: 420px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
+      <div style="background: rgba(238,238,238,0.4);width: 700px;height: 380px;display: inline-block;vertical-align: bottom;">
+        <div>
+          <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+            font-size: 20px;
+            color: #333333;
+            letter-spacing: 1.14px;">仿真配置结果评估</font></div>
+          <table id="layer_conf_val" style="width: 600px;margin-left:40px;margin-top: 5px;border: solid 3px #D6D6D6;">
               <caption class="white-text" style="caption-side: top;text-align: center;"></caption>
               <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
-                <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                 font-size: 16px;
-                color: #666666;padding-top: 12px;padding-bottom: 12px;">层编号</td>
-                <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">统计指标</td>
+                <td style="border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
                 font-size: 16px;
-                color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数均值</td>
-                <td style="text-align: center;border: solid 2px #D6D6D6;background: #EEEEEE;font-family: SourceHanSansCN-Medium;
+                color: #666666;padding-top: 12px;padding-bottom: 12px;text-align: center;">指标值</td>
+              </tr>
+              <!-- <tr style="height: 25px; border: solid 2px #D6D6D6;color: #333;">
+                <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                font-size: 14px;
+                color: #666666;padding-top: 12px;padding-bottom: 12px;">膜电位阈值</td>
+                <td id="simulate_vthresh" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+              </tr> -->
+              <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                font-size: 14px;
+                color: #666666;padding-top: 12px;padding-bottom: 12px;">神经元时间步长(ms)</td>
+                <td id="simulate_neuron_dt" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+              </tr>
+              <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                font-size: 14px;
+                color: #666666;padding-top: 12px;padding-bottom: 12px;">突触时间步长(ms)</td>
+                <td id="simulate_synapse_dt" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+              </tr>
+              <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                <td  style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                font-size: 14px;
+                color: #666666;padding-top: 12px;padding-bottom: 12px;">脉冲传输延迟(ms)</td>
+                <td id="simulate_delay" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+              </tr>
+              <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                font-size: 14px;
+                color: #666666;padding-top: 12px;padding-bottom: 12px;">仿真时长(ms)</td>
+                <td id="simulate_dura" style="text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+              </tr>
+              <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                font-size: 14px;
+                color: #666666;padding-top: 12px;padding-bottom: 12px;">ANN准确率</td>
+                <td id="simulate_acc" style="color: #e71f1fe0;text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+              </tr>    
+              <tr style="height: 25px;border: solid 2px #D6D6D6;color: #333;">
+                <td style="padding-left: 15px;border: solid 2px #D6D6D6;font-family: SourceHanSansCN-Medium;
+                font-size: 14px;
+                color: #666666;padding-top: 12px;padding-bottom: 12px;">SNN准确率</td>
+                <td id="simulate_acc_snn" style="color: #e71f1fe0;text-align: right;padding-right: 15px;padding-top: 12px;padding-bottom: 12px;"></td>
+              </tr>  
+          </table>
+        </div>
+      </div>
+  
+      <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;">
+        <div style="text-align: center;margin: auto;"><font style="font-family: SourceHanSansCN-Normal;
+          font-size: 20px;
+          color: #333333;
+          letter-spacing: 1.14px;">放电次数均值方差统计</font></div>
+          <div style="width: 640px;height: 340px;overflow-y: scroll;margin-left: 80px;">
+            <table id="snn_layers_spike_table" style="width: 600px;height: 380px;margin-left:10px;margin-top: 5px;margin-right: 280px;border: solid 3px #D6D6D6;">
+              <!-- <caption class="white-text" style="caption-side: top;text-align: center;"></caption> -->
+            </table>
+          </div>
+      </div>
+  
+  </div>
+  <div style="margin-top: 5px;display: block;">
+    <!-- <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
+      <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+        font-size: 20px;
+        color: #333333;
+        letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
+      <div id="input_spike_charts" style="width:660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
+      <ul id="input_spike_sample_imgs_ul" style="height: 80px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
+      </ul>
+    </div> -->
+    <div style="background: rgba(238,238,238,0.4);width: 700px;height: 460px;display: inline-block;">
+      <div>
+        <div id="neurons_v_out_div" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+          font-size: 20px;
+          color: #333333;
+          letter-spacing: 1.14px;">神经元放电</font></div>
+        <div style="width: 360px;margin-left: 40px;margin-top: 20px;">
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label class="control-label col-md-8" for="select_which_layer"><font style="font-family: PingFangSC-Regular;font-weight: normal;
                 font-size: 16px;
-                color: #666666;padding-top: 12px;padding-bottom: 12px;">放电次数方差</td>
+                color: #000000;
+                text-align: left;">选择神经元层</font></label>
+              <div class="col-md-4">
+                <select class="form-control" id="select_which_layer">
+                  <option>layer_1</option>
+                  <option>out</option>
+              </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div id="neurons_v_chart" style="width: 640px;height: 320px;margin-left: 40px;margin-top: 20px;"></div>
+      </div>
+    </div>
+  
+    <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
+        <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
+          font-size: 20px;
+          color: #333333;
+          letter-spacing: 1.14px;">脉冲神经网络输出层脉冲</font></div>
+        <span style="margin-left: 280px;font-family: SourceHanSansCN-Normal;
+        font-size: 14px;
+        color: #e71f1fe0;
+        letter-spacing: 0.8px;">红色标记图像为输出层预测错误</span>
+        <div id="model_layers_vis_tab_caption" style="text-align: center;background: rgba(238,238,238,1.00);border: solid 1px #D6D6D6;width: 460px;margin-left: 180px;"><font style="font-family: SourceHanSansCN-Medium;
+          font-size: 14px;
+          color: #666666;">统计计数</font></div>
+          <div style="width: 460px;overflow: auto;margin-left: 180px;">
+            <table id="spike_out_count_table" style="border: solid 3px #D6D6D6;color: #333;width: 460px;">
+              <tr id="out_labels" style="border: solid 2px #D6D6D6;">
+              </tr>
+              <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
               </tr>
             </table>
           </div>
-  
-          <div style="background: rgba(238,238,238,0.4);width: 600px;height: 380px;display: inline-block;">
-            <div>
-              <div id="neurons_v_out_div" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
-                font-size: 20px;
-                color: #333333;
-                letter-spacing: 1.14px;">神经元放电</font></div>
-              <div style="width: 360px;margin-left: 40px;margin-top: 20px;">
-                <form class="form-horizontal" role="form">
-                  <div class="form-group">
-                    <label class="control-label col-md-8" for="select_which_layer"><font style="font-family: PingFangSC-Regular;font-weight: normal;
-                      font-size: 16px;
-                      color: #000000;
-                      text-align: left;">选择神经元层</font></label>
-                    <div class="col-md-4">
-                      <select class="form-control" id="select_which_layer">
-                        <option>输入层</option>
-                        <option>输出层</option>
-                    </select>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <div id="neurons_v_chart" style="width: 540px;height: 320px;margin-left: 40px;margin-top: 20px;"></div>
-            </div>
-          </div>
-      </div>
-      <div style="margin-top: 5px;display: block;">
-          <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
-            <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
-              font-size: 20px;
-              color: #333333;
-              letter-spacing: 1.14px;">脉冲神经网络输入层脉冲</font></div>
-            <div id="input_spike_charts" style="width:660px;height: 400px;margin-left: 70px;display: inline-block;margin-top: 20px;"></div>
-            <ul id="input_spike_sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 55px;margin-top: -40px;z-index: 2;">
-            </ul>
-          </div>
-          <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
-              <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
-                font-size: 20px;
-                color: #333333;
-                letter-spacing: 1.14px;">脉冲神经网络输出层脉冲</font></div>
-              <span style="margin-left: 280px;font-family: SourceHanSansCN-Normal;
-              font-size: 14px;
-              color: #e71f1fe0;
-              letter-spacing: 0.8px;">红色标记图像为输出层预测错误</span>
-              <div id="model_layers_vis_tab_caption" style="text-align: center;background: rgba(238,238,238,1.00);border: solid 1px #D6D6D6;width: 460px;margin-left: 180px;"><font style="font-family: SourceHanSansCN-Medium;
-                font-size: 14px;
-                color: #666666;">统计计数</font></div>
-              <table id="spike_out_count_table" style="margin-left: 180px;border: solid 3px #D6D6D6;color: #333;width: 460px;">
-                  <tr id="out_labels" style="border: solid 2px #D6D6D6;">
-                  </tr>
-                  <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
-                  </tr>
-              </table>
-              <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
-              <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: -40px;z-index: 2;">
-              </ul>
-          </div>
-      </div>
+        <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
+        <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: 0px;z-index: 2;">
+        </ul>
+    </div>
+  </div>
   </body>
   <style>
   
@@ -14726,10 +14743,34 @@ function getSNNSimuSpeechPage() {
     vertical-align: middle;
   } 
   
+  .container {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    margin: 15px;
+    box-sizing: border-box;
+  }
+  .container:last-child {
+    padding: 31.5px;
+  }
+  .container::after {
+    position: absolute;
+    width: 100px;
+    height: 60px;
+    left: 0;
+    bottom: -30px;
+    line-height: 30px;
+    text-align: center;
+  }
+  .container:last-child::after {
+    content: 'large';
+  }
   </style>
   <!-- Compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
+  <link rel="stylesheet" media="all" href="http://localhost:6003/css/ispinner.prefixed.css" />
   
   <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -14920,60 +14961,60 @@ function getSNNSimuSpeechPage() {
   
                     console.log("创建输入层脉冲激发图......");
                     // 创建输入层脉冲激发图
-                    for(let i=0;i<Math.min(infos.spikes.snn_input_spikes.length, 20);++i){
-                      var input_img_li = document.createElement("li");
-                      input_img_li.style.listStyle = "none";
-                      input_img_li.id = "inputimg_li_"+i;
-                      input_img_li.style.width = "53px";
-                      input_img_li.style.height = "50";
-                      input_img_li.style.display = "inline-block";
-                      input_img_li.style.marginRight = "10px";
-                      var input_img_tag = document.createElement("img");
-                      // input_img_tag.src = test_img_uris[i];
-                      input_img_tag.src = "http://localhost:6003/speech_cls/data_vis/test_sample_amp_"+i+".png";
-                      input_img_tag.id = "inputimg_"+i;
-                      input_img_tag.style.width = "50px";
-                      input_img_tag.style.height = "50px";
-                      input_img_tag.style.opacity = "0.5";
-                      input_img_tag.onclick = ()=>{
-                        console.log("input spike display img idx "+i);
-                        // request for audio
-                        vscode.postMessage(JSON.stringify({"fetch_audio": "http://localhost:6003/speech_cls/audio/test_sample_audio_"+i+".wav"}));
+                    // for(let i=0;i<Math.min(infos.spikes.snn_input_spikes.length, 20);++i){
+                    //   var input_img_li = document.createElement("li");
+                    //   input_img_li.style.listStyle = "none";
+                    //   input_img_li.id = "inputimg_li_"+i;
+                    //   input_img_li.style.width = "53px";
+                    //   input_img_li.style.height = "50";
+                    //   input_img_li.style.display = "inline-block";
+                    //   input_img_li.style.marginRight = "10px";
+                    //   var input_img_tag = document.createElement("img");
+                    //   // input_img_tag.src = test_img_uris[i];
+                    //   input_img_tag.src = "http://localhost:6003/speech_cls/data_vis/test_sample_amp_"+i+".png";
+                    //   input_img_tag.id = "inputimg_"+i;
+                    //   input_img_tag.style.width = "50px";
+                    //   input_img_tag.style.height = "50px";
+                    //   input_img_tag.style.opacity = "0.5";
+                    //   input_img_tag.onclick = ()=>{
+                    //     console.log("input spike display img idx "+i);
+                    //     // request for audio
+                    //     vscode.postMessage(JSON.stringify({"fetch_audio": "http://localhost:6003/speech_cls/audio/test_sample_audio_"+i+".wav"}));
   
-                        // if(prev_clicked_input_li !== undefined){
-                        //   document.getElementById(prev_clicked_input_li).style.backgroundColor ="";
-                        // }
-                        // document.getElementById("input_img_li_"+i).style.backgroundColor = "chocolate";
-                        prev_clicked_input_li = "inputimg_li_"+i;
-                        if(prev_clicked_input_img !== undefined){
-                          document.getElementById(prev_clicked_input_img).style.border = '';
-                        }
-                        prev_clicked_input_img = 'inputimg_'+i;
-                        document.getElementById(prev_clicked_input_img).style.border = '10px outset orange';
-                        console.log("Current cls_names="+infos.spikes.snn_input_spikes[i].cls_names);
-                        console.log("Current spike data="+infos.spikes.snn_input_spikes[i].spike_tuples);
-                        display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
-                      };
-                      input_img_li.appendChild(input_img_tag);
-                      document.getElementById("input_spike_sample_imgs_ul").appendChild(input_img_li);
+                    //     // if(prev_clicked_input_li !== undefined){
+                    //     //   document.getElementById(prev_clicked_input_li).style.backgroundColor ="";
+                    //     // }
+                    //     // document.getElementById("input_img_li_"+i).style.backgroundColor = "chocolate";
+                    //     prev_clicked_input_li = "inputimg_li_"+i;
+                    //     if(prev_clicked_input_img !== undefined){
+                    //       document.getElementById(prev_clicked_input_img).style.border = '';
+                    //     }
+                    //     prev_clicked_input_img = 'inputimg_'+i;
+                    //     document.getElementById(prev_clicked_input_img).style.border = '10px outset orange';
+                    //     console.log("Current cls_names="+infos.spikes.snn_input_spikes[i].cls_names);
+                    //     console.log("Current spike data="+infos.spikes.snn_input_spikes[i].spike_tuples);
+                    //     display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
+                    //   };
+                    //   input_img_li.appendChild(input_img_tag);
+                    //   document.getElementById("input_spike_sample_imgs_ul").appendChild(input_img_li);
   
-                      var label_span = document.createElement("span");
-                      label_span.style.color = "#333";
-                      label_span.style.height='14px';
-                      label_span.style.display = "block";
-                      label_span.innerText = "标签："+sample_audio_info.sample_imgs[i].label;
-                      input_img_li.appendChild(label_span);
+                    //   var label_span = document.createElement("span");
+                    //   label_span.style.color = "#333";
+                    //   label_span.style.height='14px';
+                    //   label_span.style.display = "block";
+                    //   label_span.innerText = "标签："+sample_audio_info.sample_imgs[i].label;
+                    //   input_img_li.appendChild(label_span);
   
-                      // var layer_li = document.createElement("li");
-                      // layer_li.style.listStyle="circle";
-                      // layer_li.id = "input_layer_li_"+i;
-                      // document.getElementById("layer_indexs").appendChild(layer_li);
-                      // layer_li.onclick = ()=>{
-                      //   console.log("Input layer "+i+" is clicked");
-                      //   // display input spike
-                      //   display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
-                      // };
-                    }
+                    //   // var layer_li = document.createElement("li");
+                    //   // layer_li.style.listStyle="circle";
+                    //   // layer_li.id = "input_layer_li_"+i;
+                    //   // document.getElementById("layer_indexs").appendChild(layer_li);
+                    //   // layer_li.onclick = ()=>{
+                    //   //   console.log("Input layer "+i+" is clicked");
+                    //   //   // display input spike
+                    //   //   display_input_spikes_scatter_chart(infos.spikes.snn_input_spikes[i].cls_names, infos.spikes.snn_input_spikes[i].spike_tuples);
+                    //   // };
+                    // }
   
                     console.log("标记错误样例数据.....");
                     // mark reds
@@ -15028,7 +15069,7 @@ function getSNNSimuSpeechPage() {
   
                     $("#select_which_layer").change(()=>{
                       let select_layer_val = $("#select_which_layer").val();
-                      if(select_layer_val === "输入层"){
+                      if(select_layer_val === "layer_1"){
                         display_neuron_v_linechart(tms[0], data_series_input);
                         console.log("显示输入层：tms[0]="+tms[0]);
                         console.log("显示输入层：data_series="+data_series_input);
@@ -15041,13 +15082,55 @@ function getSNNSimuSpeechPage() {
   
                     // fill tables
                     console.log("填充表格数据.....");
-                    $("#simulate_vthresh").text(infos.extra_simu_info.simulate_vthresh);
                     $("#simulate_neuron_dt").text(infos.extra_simu_info.simulate_neuron_dt);
                     $("#simulate_synapse_dt").text(infos.extra_simu_info.simulate_synapse_dt);
                     $("#simulate_delay").text(infos.extra_simu_info.simulate_delay);
                     $("#simulate_dura").text(infos.extra_simu_info.simulate_dura);
-                    $("#simulate_acc").text(infos.extra_simu_info.simulate_acc);
+                    $("#simulate_acc").text(infos.extra_simu_info.simulate_acc.substr(0, infos.extra_simu_info.simulate_acc.indexOf("-")));
+                    $("#simulate_acc_snn").text(infos.extra_simu_info.simulate_acc.substr(infos.extra_simu_info.simulate_acc.indexOf("-") + 4));
   
+                    let table_line = document.createElement("tr");
+                      table_line.style.height = "25px";
+                      table_line.style.border = "solid 2px #D6D6D6";
+                      table_line.style.color = "#333";
+  
+                      let td_id = document.createElement("td");
+                      td_id.style.fontFamily = 'SourceHanSansCN-Medium';
+                      td_id.style.backgroundColor = '#EEEEEE';
+                      td_id.style.fontSize = '16px';
+                      td_id.style.color = '#666666';
+                      td_id.style.textAlign = 'center';
+                      td_id.style.border = "solid 2px #D6D6D6";
+                      td_id.style.paddingTop = '12px';
+                      td_id.style.paddingBottom = '12px';
+                      td_id.innerText = "层编号";
+                      table_line.appendChild(td_id);
+  
+                      let td_id2 = document.createElement("td");
+                      td_id2.style.fontFamily = 'SourceHanSansCN-Medium';
+                      td_id2.style.fontSize = '16px';
+                      td_id2.style.color = '#666666';
+                      td_id2.style.textAlign = 'center';
+                      td_id2.style.backgroundColor = '#EEEEEE';
+                      td_id2.style.border = "solid 2px #D6D6D6";
+                      td_id2.style.paddingTop = '12px';
+                      td_id2.style.paddingBottom = '12px';
+                      td_id2.innerText = "放电次数均值";
+                      table_line.appendChild(td_id2);
+  
+                      let td_id3 = document.createElement("td");
+                      td_id3.style.fontFamily = 'SourceHanSansCN-Medium';
+                      td_id3.style.fontSize = '16px';
+                      td_id3.style.color = '#666666';
+                      td_id3.style.textAlign = 'center';
+                      td_id3.style.backgroundColor = '#EEEEEE';
+                      td_id3.style.border = "solid 2px #D6D6D6";
+                      td_id3.style.paddingTop = '12px';
+                      td_id3.style.paddingBottom = '12px';
+                      td_id3.innerText = "放电次数方差";
+                      table_line.appendChild(td_id3);
+  
+                      document.getElementById("snn_layers_spike_table").appendChild(table_line);
   
                     // fill layers spike info table
                     // $("#snn_layers_spike_table")
@@ -15098,7 +15181,7 @@ function getSNNSimuSpeechPage() {
                     }
                     console.log("Auto click first image.......");
                     document.getElementById("img_0").click();
-                    document.getElementById("inputimg_0").click();
+                    // document.getElementById("inputimg_0").click();
                     
                     $(".loading-div").hide(); // 隐藏加载提示
                 }else if(data.audioBuf){
@@ -15356,8 +15439,7 @@ function getSNNSimuSpeechPage() {
         }
   </script>
   
-  </html>
-  `;
+  </html>`;
 }
 exports.getSNNSimuSpeechPage = getSNNSimuSpeechPage;
 
@@ -17147,9 +17229,9 @@ function getSNNSimuFatiguePage() {
     
                             td_child = document.createElement("td");
                             if(test_img_spikes[i].cls_names[j] === '1'){
-                              td_child.innerText = '疲劳';
+                              td_child.innerText = '疲劳(1)';
                             }else{
-                              td_child.innerText = "正常";
+                              td_child.innerText = "正常(0)";
                             }
                             td_child.style.width = "33px";
                             td_child.style.border = "solid 2px #D6D6D6";

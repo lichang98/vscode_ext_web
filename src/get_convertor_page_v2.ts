@@ -1376,7 +1376,7 @@ export function getConvertorPageV2(){
           </div>
           <div class="modal-body">
             <div id="loading_anim" style="display: none;" class="container">
-              <div class="ispinner ispinner-large" style="margin-left: 300px;margin-top: 100px;">
+              <div class="ispinner ispinner-large" style="margin-left: 220px;margin-top: 100px;">
                 <div class="ispinner-blade"></div>
                 <div class="ispinner-blade"></div>
                 <div class="ispinner-blade"></div>
@@ -1387,9 +1387,9 @@ export function getConvertorPageV2(){
                 <div class="ispinner-blade"></div>
               </div>
             </div>
-            <div align="center" style="height: 150px; padding-top: 60px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
-            <div style="margin-top: 50px; width: 500px; height: 30px;">
-              <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 28px;color: #666666;letter-spacing: 1.25px; text-align: center;padding-left: 50px;">错误信息</div>
+            <div id="modal_dialog_error_icon" align="center" style="height: 120px; padding-top: 30px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
+            <div style="margin-top: 10px; width: 500px; height: 100px;">
+              <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 28px;color: #666666;letter-spacing: 1.25px; text-align: center;padding-left: 50px;overflow-y: auto;white-space: pre-wrap;">错误信息</div>
             </div>
           </div>
           <div style="margin-top: 40px;">
@@ -1473,7 +1473,7 @@ export function getConvertorPageV2(){
       position: relative;
       display: inline-block;
       width: 100px;
-      height: 100px;
+      height: 30px;
       margin: 15px;
       box-sizing: border-box;
     }
@@ -1506,10 +1506,7 @@ export function getConvertorPageV2(){
     function modal_show_error_dialog_show() {
       if (!$("#myModal_show_error").is(":visible")) {
         $("#alert_modal_btn").click();
-      } else {
-        $("#alert_modal_btn").click();
-        $("#alert_modal_btn").click();
-      }  
+      }
     }
     
     function modal_show_error_dialog_hide() {
@@ -1529,26 +1526,29 @@ export function getConvertorPageV2(){
             if (data.show_error) {
               console.log("接收到show_error 消息："+data.show_error);
               $("#error_detail").html(data.show_error);
+              $("#modal_dialog_error_icon").css("opacity",1.0);
               if (data.display_loading) {
                 $("#loading_anim").css("display", "block");
+                $("#modal_dialog_error_icon").css("opacity", 0.0);
                 // $("#error_detail").css("color", "#000000");
                 // $("#myModalLabel_show_error").css("color", "#000000");
                 $("#myModalLabel_show_error").text("提示");
                 modal_show_error_dialog_show();
-                console.log("alert_modal_btn click.");
+                console.log("alert_modal_btn click show error.....");
               } else if(data.hide) {
                 modal_show_error_dialog_hide();
-                console.log("close modal btn click.");
+                console.log("close modal btn click hide ......");
               } else {
-                $("#error_detail").css("height", "30px");
+                $("#error_detail").css("height", "140px");
                 $("#error_detail").css("width", "500px");
                 $("#loading_anim").css("display", "none");
                 // $("#error_detail").css("color", "#f87307");
                 // $("#myModalLabel_show_error").css("color", "#ee1414");
-                if (data.is_error) {
-                    $("#myModalLabel_show_error").text("错误提示");
-                }
+                // if (data.is_error) {
+                //     $("#myModalLabel_show_error").text("错误提示");
+                // }
                 modal_show_error_dialog_show();
+                console.log("modal aleret_modal_btn click 错误提示。。。。")
               }
             } else if (data.import_files) {
               // 导入数据与模型文件
@@ -2223,10 +2223,10 @@ export function getANNSNNConvertPage(){
   
   
   <div class="modal fade" id="myModal_show_error" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_show_error" aria-hidden="true" style="background-color: white;color: #333;">
-    <div class="modal-dialog" style="background-color: white;width: 800px;">
+    <div class="modal-dialog" style="background-color: white;width: 500px;">
       <div class="modal-content" style="background-color: white;">
-        <div>
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
+        <div style="height:70px; margin-top: -10px; background: #EEEEEE;border-top-right-radius: 15px; border-top-left-radius: 15px;padding-top: 10px;">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;margin-top: 10px;">
             &times;
           </button>
           <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Normal;
@@ -2238,6 +2238,7 @@ export function getANNSNNConvertPage(){
           </h4>
         </div>
         <div class="modal-body">
+          <div id="modal_dialog_error_icon" align="center" style="height: 120px; padding-top: 30px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
           <div style="margin-top: 50px;">
             <span id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
             font-size: 22px;
@@ -2247,8 +2248,8 @@ export function getANNSNNConvertPage(){
         </div>
         <div style="margin-top: 40px;margin-bottom: 40px;">
           <button type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-          border-radius: 2px;
-          border-radius: 2px;width: 100%;margin: auto;text-align: center;display: inline-block;" data-dismiss="modal">关闭
+                  border-radius: 2px;
+                  margin-left: 180px;width: 150px;height: 50px; text-align: center;display: inline-block;" data-dismiss="modal">关闭
           </button>
         </div>
       </div><!-- /.modal-content -->
@@ -3209,12 +3210,14 @@ export function getSNNSimuPage(){
               <div id="model_layers_vis_tab_caption" style="text-align: center;background: rgba(238,238,238,1.00);border: solid 1px #D6D6D6;width: 460px;margin-left: 180px;"><font style="font-family: SourceHanSansCN-Medium;
                 font-size: 14px;
                 color: #666666;">统计计数</font></div>
-              <table id="spike_out_count_table" style="margin-left: 180px;border: solid 3px #D6D6D6;color: #333;width: 460px;">
-                  <tr id="out_labels" style="border: solid 2px #D6D6D6;">
-                  </tr>
-                  <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
-                  </tr>
-              </table>
+                <div style="width: 460px;overflow: auto;margin-left: 180px;">
+                  <table id="spike_out_count_table" style="border: solid 3px #D6D6D6;color: #333;width: 460px;">
+                    <tr id="out_labels" style="border: solid 2px #D6D6D6;">
+                    </tr>
+                    <tr id="out_counts_tr" style="border: solid 2px #D6D6D6;">
+                    </tr>
+                  </table>
+                </div>
               <div id="spike_charts" style="width: 660px;height: 320px;margin-left: 70px;display: inline-block;"></div>
               <ul id="sample_imgs_ul" style="height: 90px;width: 660px;overflow: auto; white-space: nowrap;display: block;margin-left: 80px;margin-top: 0px;z-index: 2;">
               </ul>

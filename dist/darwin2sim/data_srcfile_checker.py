@@ -11,7 +11,7 @@ if file_type == 0:
     arr = np.load(file_path)
     assert len(arr.files) == 1 and arr.files[0] == "arr_0", "输入数据需使用numpy.savez(file_name, arr)方式保存！"
     arr = arr["arr_0"]
-    assert len(arr.shape) == 4 and arr.shape[3] == 1, "输入数据的维度需要为 (N, X, Y, 1)！"
+    # assert len(arr.shape) == 4 and arr.shape[3] == 1, "输入数据的维度需要为 (N, X, Y, 1)！"
     assert np.max(arr) <= 1 and np.min(arr) >=0, "输入数据需要是 [0, 1] 之间的浮点数！"
 else:
     assert os.path.basename(file_path).count(".") > 0 and os.path.basename(file_path).split(".")[1] == "npz", "标签数据需要是 One-Hot 方式编码的numpy array, 并保存为 .npz 文件！"

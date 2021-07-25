@@ -31,9 +31,11 @@ if len(sys.argv) > 6:
 # 0 mnist
 # 1 semantic segmentation
 # 2 speech
+# 3 age detection
+# 4 speech normal
 task_type = 0
 if len(sys.argv) > 7:
-    task_type = sys.argv[7]
+    task_type = int(sys.argv[7])
 
 # 1: using self defined parameter normalization method
 run_alg = 0 # using default algorithms
@@ -102,6 +104,75 @@ stage1_time_use=0
 stage2_time_use=0
 stage3_time_use=0
 stage4_time_use=0
+
+def fixpt3(weights,bit_width=8):
+    range_pos = (2**(bit_width-1))-1
+    range_neg = -(2**(bit_width-1))
+
+    postive_wts = []
+    negative_wts = []
+    for wt in weights[:-1]:
+        postive_wts.extend(wt[wt >=0])
+        negative_wts.extend(wt[wt < 0])
+    
+    fac_pos = range_pos / (np.max(postive_wts) + 0.0000001)
+    fac_neg = range_neg / (np.min(negative_wts) - 0.0000001)
+
+    for i in range(len(weights) - 1):
+        weights[i][weights[i] >=0] *= fac_pos
+        weights[i][weights[i] < 0] *= fac_neg
+        weights[i] = np.array(weights[i], dtype="int32")
+        weights[i] = np.clip(weights[i], range_neg, range_pos)
+    
+    fac_pos = range_pos / (np.max(weights[-1]) + 0.0000001)
+    fac_neg = range_neg / (np.min(weights[-1]) - 0.0000001)
+    weights[-1][weights[-1] >=0] *= fac_pos
+    weights[-1][weights[-1] < 0] *= fac_neg
+    weights[-1] = np.array(weights[-1], dtype="int32")
+    weights[-1] = np.clip(weights[-1], range_neg, range_pos)
+
+    return weights
+
+
+def fixpt2(weights,bit_width=8):
+    range_pos = (2**(bit_width-1))-1
+    range_neg = -(2**(bit_width-1))
+
+    postive_wts = []
+    negative_wts = []
+    for wt in weights:
+        postive_wts.extend(wt[wt >= 0])
+        negative_wts.extend(wt[wt < 0])
+    
+    max_pos_wt = np.percentile(postive_wts, 99.99)
+    min_pos_wt = np.percentile(postive_wts, 0.01)
+    near0_neg_wt = np.percentile(negative_wts, 99.99)
+    far0_neg_wt = np.percentile(negative_wts, 0.01)
+    # max_pos_wt = np.max([np.max(wt) for wt in weights])
+    # min_pos_wt = np.min([np.min(wt[wt >=0]) for wt in weights if len(wt[wt >=0]) > 0])
+    # near0_neg_wt = np.max([np.max(wt[wt <0]) for wt in weights if len(wt[wt < 0]) > 0])
+    # far0_neg_wt = np.min([np.min(wt[wt <0]) for wt in weights if len(wt[wt < 0]) > 0])
+    print("max_pos_wt={}, min_pos_wt={}, near0 neg wt={}, far0_neg_wt={}".format(max_pos_wt, min_pos_wt, near0_neg_wt, far0_neg_wt),flush=True)
+    scale_fac_pos = range_pos / (max_pos_wt-min_pos_wt)
+    scale_fac_neg = range_neg/(far0_neg_wt - near0_neg_wt)
+    for i in range(len(weights)):
+        # weights[i][weights[i] >=0][weights[i][weights[i] >=0] <= min_pos_wt] = min_pos_wt
+        # weights[i][weights[i] >=0][weights[i][weights[i] >=0] >= max_pos_wt] = max_pos_wt
+        weights[i][weights[i] >= 0] = np.clip(weights[i][weights[i] >= 0], min_pos_wt, max_pos_wt)
+        # print("clip post weight max={}, min={}".format(np.max(weights[i][weights[i] >=0]), np.min(weights[i][weights[i] < 0])))
+        weights[i][weights[i] >=0] = scale_fac_pos * (weights[i][weights[i] >=0]-min_pos_wt)
+        
+        # weights[i][weights[i] <0][weights[i][weights[i] <0] <= far0_neg_wt] = far0_neg_wt
+        # weights[i][weights[i] <0][weights[i][weights[i] <0] >= near0_neg_wt] = near0_neg_wt
+        weights[i][weights[i] <0] = np.clip(weights[i][weights[i] <0], far0_neg_wt, near0_neg_wt)
+        # print("clip neg weight near0={}, far0={}".format(np.max(weights[i][weights[i] < 0]), np.min(weights[i][weights[i] < 0])))
+        weights[i][weights[i] <0] = scale_fac_neg * (weights[i][weights[i] <0]-near0_neg_wt)
+
+        weights[i][weights[i] >=0] = np.floor(weights[i][weights[i] >=0])
+        weights[i][weights[i] <0] = np.ceil(weights[i][weights[i] <0])
+        wt_statics.extend(np.array(copy.deepcopy(weights[i]), dtype="int32").flatten())
+
+    return weights
 
 
 def fixpt(weights,bit_width=8):
@@ -282,8 +353,12 @@ if task_type == 2:
     all_wts, vths = fixpt_integer_vth(all_wts, layer_connections_pairs)
     vths = [int(e) for e in vths]
     print("vths={}".format(vths))
-else:
+elif task_type == 0:
     all_wts = fixpt(all_wts)
+elif task_type == 4:
+    all_wts = fixpt3(all_wts)
+else:
+    all_wts = fixpt2(all_wts)
 
 for i in range(len(br2_synapses)):
     br2_synapses[i].w = all_wts[i]
@@ -424,12 +499,24 @@ for i in range(50):
     for cls in range(len(first_layer_spikes)):
         for j in range(len(first_layer_spikes[cls])):
             input_spike_tuples.append([cls, int(first_layer_spikes[cls][j])])
-    
-    snn_test_output_spikes.append({
-        "cls_names":[str(x) for x in range(len(last_layer_spikes))],
-        "spike_tuples": spike_tuples,
-        "label_counts": len(testY[0])
-    })
+    # FIXME ["15~20", "20~25", "25~30", "30~35", "35~40", "40~45", "45~50", "50~55", "55~60", "60~65", "65~70", "70~75"]
+    cls_names = [str(x) for x in range(len(last_layer_spikes))]
+    if task_type == 3:
+        age_labels = ["15~20", "20~25", "25~30", "30~35", "35~40", "40~45", "45~50", "50~55", "55~60", "60~65", "65~70", "70~75"]
+        cls_names = []
+        for k in range(len(last_layer_spikes)):
+            cls_names.append("{}({})".format(age_labels[k], k))
+        snn_test_output_spikes.append({
+            "cls_names": cls_names,
+            "spike_tuples": spike_tuples,
+            "label_counts": len(testY[0])
+        })
+    else:
+        snn_test_output_spikes.append({
+            "cls_names":[str(x) for x in range(len(last_layer_spikes))],
+            "spike_tuples": spike_tuples,
+            "label_counts": len(testY[0])
+        })
 
     snn_test_input_spikes.append({
         "cls_names": [str(x) for x in range(len(first_layer_spikes))],

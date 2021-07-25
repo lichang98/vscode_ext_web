@@ -347,7 +347,7 @@ letter-spacing: 1.14px;">浏览...</span></button>
       </div>
       <div class="modal-body">
         <div id="loading_anim" style="display: none;" class="container">
-          <div class="ispinner ispinner-large" style="margin-left: 300px;margin-top: 100px;">
+          <div class="ispinner ispinner-large" style="margin-left: 220px;margin-top: 100px;">
             <div class="ispinner-blade"></div>
             <div class="ispinner-blade"></div>
             <div class="ispinner-blade"></div>
@@ -358,9 +358,9 @@ letter-spacing: 1.14px;">浏览...</span></button>
             <div class="ispinner-blade"></div>
           </div>
         </div>
-        <div align="center" style="height: 150px; padding-top: 60px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
-        <div style="margin-top: 50px; width: 500px; height: 30px;">
-          <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 28px;color: #666666;letter-spacing: 1.25px; text-align: center;padding-left: 50px;">错误信息</div>
+        <div id="modal_dialog_error_icon" align="center" style="height: 120px; padding-top: 30px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
+        <div style="margin-top: 10px; width: 500px; height: 100px;">
+          <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 28px;color: #666666;letter-spacing: 1.25px; text-align: center;padding-left: 50px;overflow-y: auto;white-space: pre-wrap;">错误信息</div>
         </div>
       </div>
       <div style="margin-top: 40px;">
@@ -444,7 +444,7 @@ body {
   position: relative;
   display: inline-block;
   width: 100px;
-  height: 100px;
+  height: 30px;
   margin: 15px;
   box-sizing: border-box;
 }
@@ -477,10 +477,7 @@ body {
 function modal_show_error_dialog_show() {
   if (!$("#myModal_show_error").is(":visible")) {
     $("#alert_modal_btn").click();
-  } else {
-    $("#alert_modal_btn").click();
-    $("#alert_modal_btn").click();
-  }  
+  }
 }
 
 function modal_show_error_dialog_hide() {
@@ -500,26 +497,29 @@ function modal_show_error_dialog_hide() {
         if (data.show_error) {
           console.log("接收到show_error 消息："+data.show_error);
           $("#error_detail").html(data.show_error);
+          $("#modal_dialog_error_icon").css("opacity",1.0);
           if (data.display_loading) {
             $("#loading_anim").css("display", "block");
+            $("#modal_dialog_error_icon").css("opacity", 0.0);
             // $("#error_detail").css("color", "#000000");
             // $("#myModalLabel_show_error").css("color", "#000000");
             $("#myModalLabel_show_error").text("提示");
             modal_show_error_dialog_show();
-            console.log("alert_modal_btn click.");
+            console.log("alert_modal_btn click show error.....");
           } else if(data.hide) {
             modal_show_error_dialog_hide();
-            console.log("close modal btn click.");
+            console.log("close modal btn click hide ......");
           } else {
-            $("#error_detail").css("height", "30px");
+            $("#error_detail").css("height", "140px");
             $("#error_detail").css("width", "500px");
             $("#loading_anim").css("display", "none");
             // $("#error_detail").css("color", "#f87307");
             // $("#myModalLabel_show_error").css("color", "#ee1414");
-            if (data.is_error) {
-                $("#myModalLabel_show_error").text("错误提示");
-            }
+            // if (data.is_error) {
+            //     $("#myModalLabel_show_error").text("错误提示");
+            // }
             modal_show_error_dialog_show();
+            console.log("modal aleret_modal_btn click 错误提示。。。。")
           }
         } else if (data.import_files) {
           // 导入数据与模型文件

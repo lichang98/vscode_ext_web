@@ -65,6 +65,12 @@ def getSegTestImg(imgres):
         img = f.read()
         return Response(img, mimetype='image/png')
 
+@app.route("/data_vis/<imgres>")
+def getDataVisImg(imgres):
+    with open(path.join(base_path, "..", "..", "src", "resources", "script_res", imgres), "rb") as f:
+        img = f.read()
+        return Response(img, mimetype="image/png")
+
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')
     if func is None:

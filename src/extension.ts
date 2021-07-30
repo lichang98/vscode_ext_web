@@ -1882,6 +1882,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 	vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function(){
 		if(DARWIN_LANG_FILE_PATHS.length === 0){
 			// vscode.window.showErrorMessage("请先完成转换步骤！！！");
+			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！"}));
 			return;
 		}
 		if(!ITEM_ICON_MAP.has("SNN二进制模型")){

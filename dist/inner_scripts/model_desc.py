@@ -154,7 +154,7 @@ for layer in model.layers:
 
         print("layer name={}, output shape={}, channel size={}, kernel_size={}".format(layer.__class__.__name__,\
                 layer.output_shape[1:-1],layer.output_shape[-1],layer.kernel_size))
-    elif layer.__class__.__name__ == "AveragePooling2D":
+    elif layer.__class__.__name__ == "AveragePooling2D" or layer.__class__.__name__ == "MaxPooling2D":
         conv_sizes.append(layer.output_shape[1:-1])
         conv_channels.append(layer.output_shape[-1])
         kernel_sizes.append(layer.pool_size)

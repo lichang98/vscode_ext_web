@@ -312,9 +312,19 @@ $(document).ready(function(){
           $("#sample_img"+(10-i-1)).remove();
         }
       }
+      var test_sample_count = data.test_sample_imgs.length;
+      if (test_sample_count < 10) {
+        for (var i=0; i < 10 - test_sample_count;++i) {
+          $("#test_sample_img"+(10-i-1)).remove();
+        }
+      }
       for(var i=0;i<sample_count;++i){
-        $("#sample_img"+i).hide();
-        $("#sample_img"+i).show();
+        $("#sample_img"+i).attr("src", "");
+        $("#sample_img"+i).attr("src", "http://localhost:6003/data_vis/sample"+i+".png");
+      }
+      for(var i=0;i < test_sample_count;++i) {
+        $("#test_sample_img"+i).attr("src", "");
+        $("#test_sample_img"+i).attr("src", "http://localhost:6003/data_vis/test_sample"+i+".png");
       }
       var class_labels = new Array();
       var class_ratios = new Array();

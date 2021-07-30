@@ -322,9 +322,19 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
             $("#sample_img"+(10-i-1)).remove();
           }
         }
+        var test_sample_count = data.test_sample_imgs.length;
+        if (test_sample_count < 10) {
+          for (var i=0; i < 10 - test_sample_count;++i) {
+            $("#test_sample_img"+(10-i-1)).remove();
+          }
+        }
         for(var i=0;i<sample_count;++i){
-          $("#sample_img"+i).hide();
-          $("#sample_img"+i).show();
+          $("#sample_img"+i).attr("src", "");
+          $("#sample_img"+i).attr("src", "http://localhost:6003/data_vis/sample"+i+".png");
+        }
+        for(var i=0;i < test_sample_count;++i) {
+          $("#test_sample_img"+i).attr("src", "");
+          $("#test_sample_img"+i).attr("src", "http://localhost:6003/data_vis/test_sample"+i+".png");
         }
         var class_labels = new Array();
         var class_ratios = new Array();
@@ -1033,9 +1043,9 @@ export function getConvertorPageV2(){
     <head>
       <meta charset="UTF-8">
       <title>模型转换器</title>
-      <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-      <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-      <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <link rel="stylesheet" href="http://localhost:6003/css/bootstrap337.min.css">
+      <script src="http://localhost:6003/js/jquery211.min.js"></script>
+      <script src="http://localhost:6003/js/bootstrap337.min.js"></script>
     </head>
     <body class="dark-mode" style="height: 100%;width: 100%;overflow: hidden;">
     
@@ -1841,8 +1851,8 @@ export function getANNSNNConvertPage(){
                       </div>
                   </div>
               
-                  <div class="col-md-1" style="margin-top: 20px;">
-                      <i class="material-icons" style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">remove</i>
+                  <div class="col-md-1" style="margin-top: -10px;">
+                      <i style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">—</i>
                   </div>
               
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
@@ -1869,8 +1879,8 @@ export function getANNSNNConvertPage(){
                       </div>
                   </div>
   
-                  <div class="col-md-1" style="margin-top: 20px;">
-                      <i class="material-icons" style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">remove</i>
+                  <div class="col-md-1" style="margin-top: -10px;">
+                      <i style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">—</i>
                   </div>
   
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
@@ -1897,8 +1907,8 @@ export function getANNSNNConvertPage(){
                       </div>
                   </div>
               
-                  <div class="col-md-1" style="margin-top: 20px;">
-                      <i class="material-icons" style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">remove</i>
+                  <div class="col-md-1" style="margin-top: -10px;">
+                      <i style="font-size: 80px;transform: scaleX(2.0);-webkit-background-clip: text;-webkit-text-fill-color: transparent;background-image: linear-gradient(180deg, #FFA73C 50%, #FFDDA6 100%);">—</i>
                   </div>
               
                   <div class="col-md-2" style="margin-left: -6px;text-align: center;">
@@ -2367,7 +2377,7 @@ export function getANNSNNConvertPage(){
       font-family: 'Material Icons';
       font-style: normal;
       font-weight: 400;
-      src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.cnpmjs.org/s/materialicons/v7/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+      src: local('Material Icons'), local('MaterialIcons-Regular'), url(http://localhost:6003/js/gfont.woff2) format('woff2');
     }
   
     .material-icons {
@@ -2405,11 +2415,11 @@ export function getANNSNNConvertPage(){
   }
   </style>
   <!-- Compiled and minified CSS -->
-  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://localhost:6003/css/bootstrap337.min.css">
   
-  <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdn.staticfile.org/echarts/5.0.1/echarts.min.js"></script>
+  <script src="http://localhost:6003/js/jquery211.min.js"></script>
+  <script src="http://localhost:6003/js/bootstrap337.min.js"></script>
+  <script src="http://localhost:6003/js/echarts501.min.js"></script>
   <link rel="stylesheet" href="http://localhost:6003/css/font-awesome.min.css">
   
   <script>

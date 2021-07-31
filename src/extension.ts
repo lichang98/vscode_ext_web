@@ -1669,7 +1669,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 	is a list contains weights of each layer, and the weights are in [-128, 127].
 	Parameters
 	----------
-	layer_weights_int: Quantized weights of each layer
+	layer_weights_int: Quantized weights of each layer, you can also calculate with supported infomation with your own method
 	layer_weights_float: Origin float-point weights of each layer
 	
 	Returns

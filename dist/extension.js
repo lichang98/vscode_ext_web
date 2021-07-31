@@ -1674,7 +1674,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 	is a list contains weights of each layer, and the weights are in [-128, 127].
 	Parameters
 	----------
-	layer_weights_int: Quantized weights of each layer
+	layer_weights_int: Quantized weights of each layer, you can also calculate with supported infomation with your own method
 	layer_weights_float: Origin float-point weights of each layer
 	
 	Returns
@@ -8309,11 +8309,8 @@ function getANNSNNConvertPage() {
         </div>
         <div class="modal-body">
           <div id="modal_dialog_error_icon" align="center" style="height: 120px; padding-top: 30px;" ><img src="http://127.0.0.1:6003/src/img/warning.png" height=96px; width=96px; alt="警告"></div>
-          <div style="margin-top: 50px;">
-            <span id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Normal;
-            font-size: 22px;
-            color: #f87307;
-            letter-spacing: 1.26px;margin: auto;text-align: center;width: 100%;display: inline-block;">错误信息</span>
+          <div style="margin-top: 10px; width: 500px; height: 100px;">
+            <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 28px;color: #666666;letter-spacing: 1.25px; text-align: center;padding-left: 50px;overflow-y: auto;white-space: pre-wrap;height: 100%;width: 95%;">错误信息</div>
           </div>
         </div>
         <div style="margin-top: 40px;margin-bottom: 40px;">
@@ -8919,8 +8916,10 @@ function getANNSNNConvertPage() {
                   stage4_all_finish = false;
                   $(".loading-div").show();
   
-                  $("#error_msg_div").text(data.exec_error);
-                  $("#exec_error_modal_btn").click();
+                  // $("#error_msg_div").text(data.exec_error);
+                  // $("#exec_error_modal_btn").click();
+                  $("#error_detail").text(data.exec_error);
+                  $("#alert_modal_btn").click();
                   document.getElementById("total_progress_ball").style.display = "none";
                 } else if (data.show_error)  {
                   $("#error_detail").text(data.show_error);

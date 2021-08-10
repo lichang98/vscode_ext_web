@@ -169,6 +169,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
 
 	let currPanelDisposed:boolean = false;
+	let tmpDarlangWebview: vscode.WebviewPanel|undefined = undefined;
 
 	function isAllOtherTreeViewInvisible(){
 		return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible
@@ -187,6 +188,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 	treeViewCvtor.onDidChangeVisibility((evt)=>{
+		currentPanel?.reveal();
 		if(evt.visible){
 			console.log("activity bar 转换图标被点击, treeview convertor 可见...");
 			if(currentPanel && currentPanel.title === "ANN-SNN转换"){
@@ -207,6 +209,7 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	treeViewImportFiles.onDidChangeVisibility((evt)=>{
+		currentPanel?.reveal();
 		if (evt.visible) {
 			console.log("treeviewImportFiles activity icon 点击, visibility 可见....");
 			currentPanel!.webview.postMessage(JSON.stringify({"import_files": "yes"}));
@@ -222,6 +225,7 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	
 	treeViewSim.onDidChangeVisibility((evt)=>{
+		panelSNNModelVis?.reveal();
 		if(evt.visible){
 			console.log("模拟页面可用！");
 			// 点击仿真器快捷方式，启动仿真
@@ -340,22 +344,28 @@ export function activate(context: vscode.ExtensionContext) {
 		// vscode.window.showInformationMessage(label);
 		console.log("label is :["+label+"]");
 		if(label.search("snn_digit_darlang") !== -1){
-		// 执行 darwinlang map 生成脚本
-		let tmpDarlangWebview = vscode.window.createWebviewPanel("darwin lang", label,vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
-		tmpDarlangWebview.webview.html = darlangWebContent();
-		tmpDarlangWebview.title = label;
-		let targetDarlangFilePath = path.join(__dirname, "darwin2sim", "model_out" , path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "darlang_out","snn_digit_darlang.json");
-		let commandStr: string = PYTHON_INTERPRETER + path.join(__dirname, "load_graph.py") + " " + targetDarlangFilePath + " " + path.join(__dirname);
-		exec(commandStr, (err, stdout, stderr)=>{
-			tmpDarlangWebview.reveal();
-			if(err){
-				console.log("执行 load_grph.py 错误："+err);
-			}else{
-				let mapFileDisk = vscode.Uri.file(path.join(__dirname, "map.json"));
-				let fileSrc = tmpDarlangWebview.webview.asWebviewUri(mapFileDisk).toString();
-				tmpDarlangWebview.webview.postMessage({resultUri: fileSrc});
+			if (tmpDarlangWebview) {
+				return;
 			}
-		});
+			// 执行 darwinlang map 生成脚本
+			tmpDarlangWebview = vscode.window.createWebviewPanel("darwin lang", label,vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+			tmpDarlangWebview.webview.html = darlangWebContent();
+			tmpDarlangWebview.title = label;
+			let targetDarlangFilePath = path.join(__dirname, "darwin2sim", "model_out" , path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "darlang_out","snn_digit_darlang.json");
+			let commandStr: string = PYTHON_INTERPRETER + path.join(__dirname, "load_graph.py") + " " + targetDarlangFilePath + " " + path.join(__dirname);
+			exec(commandStr, (err, stdout, stderr)=>{
+				tmpDarlangWebview!.reveal();
+				if(err){
+					console.log("执行 load_grph.py 错误："+err);
+				}else{
+					let mapFileDisk = vscode.Uri.file(path.join(__dirname, "map.json"));
+					let fileSrc = tmpDarlangWebview!.webview.asWebviewUri(mapFileDisk).toString();
+					tmpDarlangWebview!.webview.postMessage({resultUri: fileSrc});
+				}
+			});
+			tmpDarlangWebview.onDidDispose(e=>{
+				tmpDarlangWebview = undefined;
+			});
 		}else if(label.search("txt") !== -1){
 			// 显示二进制的darlang文件
 			console.log("显示二进制的darwinLang");
@@ -469,17 +479,17 @@ export function activate(context: vscode.ExtensionContext) {
 		if(currentPanel){
 			currentPanel.reveal(columnToShowIn);
 		}else{
-			currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+			currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换工具",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 			// 主界面由electron 应用启动
 			currentPanel.webview.html =getConvertorPageV2();
 			bindCurrentPanelReceiveMsg(currentPanel);
 		}
 		currentPanelInterval = setInterval(()=>{
 			if(currPanelDisposed){
-				currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+				currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换工具",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 				// 主界面由electron 应用启动
 				currentPanel.webview.html =getConvertorPageV2();
-				currentPanel.title = "模型转换器";
+				currentPanel.title = "模型转换工具";
 				bindCurrentPanelReceiveMsg(currentPanel);
 				currPanelDisposed = false;
 				isCurrentPanelClosedByRemoveProj = false;
@@ -504,7 +514,7 @@ export function activate(context: vscode.ExtensionContext) {
 					console.log("Jump to convertor page");
 					if(currentPanel){
 						currentPanel.webview.html = getConvertorPageV2();
-						currentPanel.title = "模型转换器";
+						currentPanel.title = "模型转换工具";
 					}
 				}
 			}else if(data.project_info){
@@ -1191,7 +1201,7 @@ export function activate(context: vscode.ExtensionContext) {
 		ANN_MODEL_FILE_PATH = undefined;
 		DARWIN_LANG_BIN_PATHS.splice(0);
 		DARWIN_LANG_FILE_PATHS.splice(0);
-		// currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+		// currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换工具",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 		// // 主界面由electron 应用启动
 		// currentPanel.webview.html =getConvertorPageV2();
 		// bindCurrentPanelReceiveMsg(currentPanel);

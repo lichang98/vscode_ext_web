@@ -173,6 +173,7 @@ function activate(context) {
     let treeViewImportFiles = vscode.window.createTreeView("act_import_files-item", { treeDataProvider: treeViewItemsImportFiles });
     // let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
     let currPanelDisposed = false;
+    let tmpDarlangWebview = undefined;
     function isAllOtherTreeViewInvisible() {
         return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible;
     }
@@ -186,6 +187,7 @@ function activate(context) {
         }
     }
     treeViewCvtor.onDidChangeVisibility((evt) => {
+        currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.reveal();
         if (evt.visible) {
             console.log("activity bar 转换图标被点击, treeview convertor 可见...");
             if (currentPanel && currentPanel.title === "ANN-SNN转换") {
@@ -206,6 +208,7 @@ function activate(context) {
         }
     });
     treeViewImportFiles.onDidChangeVisibility((evt) => {
+        currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.reveal();
         if (evt.visible) {
             console.log("treeviewImportFiles activity icon 点击, visibility 可见....");
             currentPanel.webview.postMessage(JSON.stringify({ "import_files": "yes" }));
@@ -221,6 +224,7 @@ function activate(context) {
         }
     });
     treeViewSim.onDidChangeVisibility((evt) => {
+        panelSNNModelVis === null || panelSNNModelVis === void 0 ? void 0 : panelSNNModelVis.reveal();
         if (evt.visible) {
             console.log("模拟页面可用！");
             // 点击仿真器快捷方式，启动仿真
@@ -331,8 +335,11 @@ function activate(context) {
         // vscode.window.showInformationMessage(label);
         console.log("label is :[" + label + "]");
         if (label.search("snn_digit_darlang") !== -1) {
+            if (tmpDarlangWebview) {
+                return;
+            }
             // 执行 darwinlang map 生成脚本
-            let tmpDarlangWebview = vscode.window.createWebviewPanel("darwin lang", label, vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+            tmpDarlangWebview = vscode.window.createWebviewPanel("darwin lang", label, vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
             tmpDarlangWebview.webview.html = darlangWebContent();
             tmpDarlangWebview.title = label;
             let targetDarlangFilePath = path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out", "snn_digit_darlang.json");
@@ -347,6 +354,9 @@ function activate(context) {
                     let fileSrc = tmpDarlangWebview.webview.asWebviewUri(mapFileDisk).toString();
                     tmpDarlangWebview.webview.postMessage({ resultUri: fileSrc });
                 }
+            });
+            tmpDarlangWebview.onDidDispose(e => {
+                tmpDarlangWebview = undefined;
             });
         }
         else if (label.search("txt") !== -1) {
@@ -463,17 +473,17 @@ function activate(context) {
             currentPanel.reveal(columnToShowIn);
         }
         else {
-            currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+            currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换工具", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
             // 主界面由electron 应用启动
             currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
             bindCurrentPanelReceiveMsg(currentPanel);
         }
         currentPanelInterval = setInterval(() => {
             if (currPanelDisposed) {
-                currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+                currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换工具", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
                 // 主界面由electron 应用启动
                 currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
-                currentPanel.title = "模型转换器";
+                currentPanel.title = "模型转换工具";
                 bindCurrentPanelReceiveMsg(currentPanel);
                 currPanelDisposed = false;
                 isCurrentPanelClosedByRemoveProj = false;
@@ -498,7 +508,7 @@ function activate(context) {
                     console.log("Jump to convertor page");
                     if (currentPanel) {
                         currentPanel.webview.html = get_convertor_page_v2_1.getConvertorPageV2();
-                        currentPanel.title = "模型转换器";
+                        currentPanel.title = "模型转换工具";
                     }
                 }
             }
@@ -1194,7 +1204,7 @@ function activate(context) {
         ANN_MODEL_FILE_PATH = undefined;
         DARWIN_LANG_BIN_PATHS.splice(0);
         DARWIN_LANG_FILE_PATHS.splice(0);
-        // currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换器",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+        // currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换工具",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
         // // 主界面由electron 应用启动
         // currentPanel.webview.html =getConvertorPageV2();
         // bindCurrentPanelReceiveMsg(currentPanel);
@@ -7322,10 +7332,11 @@ function getConvertorPageV2() {
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
               &times;
             </button>
-            <h4 id="myModalLabelImportFiles" style="font-family: SourceHanSansCN-Medium;
-            font-size: 20px;
+            <h4 id="myModalLabelImportFiles" style="font-family: SourceHanSansCN-Normal;
+            font-size: 24px;
+            font-weight: bold;
             color: #333333;
-            letter-spacing: 0.89px;">
+            letter-spacing: 1.07px;margin-left: 20px;">
               导入文件
             </h4>
           </div>
@@ -7333,13 +7344,13 @@ function getConvertorPageV2() {
                     <form role="form" id="project_info_form_import_files">
                       <div style="margin-top: 20px;margin-left: 100px;">
                         <label for="import_files_xnorm"><font  style="font-family: SourceHanSansCN-Normal;
-                          font-size: 20px;
+                          font-size: 22px;
                           color: #333333;
-                          letter-spacing: 1.14px;font-weight: normal;">训练数据: </font></label>
+                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">训练数据: </font></label>
                         <input type="text" id="import_files_xnorm" style="background: #FFFFFF;
                         border: 1px solid #C0C0C0;
                         border-radius: 6px;
-                        border-radius: 6px;">
+                        border-radius: 6px;margin-left: 5px;">
                         <button id="span_import_xnorm" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
                         border-radius: 6px;
                         border-radius: 6px;"><span style="font-family: SourceHanSansCN-Medium;
@@ -7350,13 +7361,13 @@ function getConvertorPageV2() {
     
                       <div style="margin-top: 20px;margin-left: 100px;">
                         <label for="import_files_xtest"><font  style="font-family: SourceHanSansCN-Normal;
-                          font-size: 20px;
+                          font-size: 22px;
                           color: #333333;
-                          letter-spacing: 1.14px;font-weight: normal;">测试数据: </font></label>
+                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">测试数据: </font></label>
                         <input type="text" id="import_files_xtest" style="background: #FFFFFF;
                         border: 1px solid #C0C0C0;
                         border-radius: 6px;
-                        border-radius: 6px;">
+                        border-radius: 6px;margin-left: 5px;">
                         <button id="span_import_xtest" type="button" class="btn btn-default" style="background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
                         border-radius: 6px;
                         border-radius: 6px;"><span style="font-family: SourceHanSansCN-Medium;
@@ -7367,9 +7378,9 @@ function getConvertorPageV2() {
     
                       <div style="margin-top: 20px;margin-left: 60px;">
                         <label for="import_files_ytest"><font  style="font-family: SourceHanSansCN-Normal;
-                          font-size: 20px;
+                          font-size: 22px;
                           color: #333333;
-                          letter-spacing: 1.14px;font-weight: normal;">测试数据标签: </font></label>
+                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">测试数据标签: </font></label>
                         <input type="text" id="import_files_ytest" style="background: #FFFFFF;
                         border: 1px solid #C0C0C0;
                         border-radius: 6px;
@@ -7384,9 +7395,9 @@ function getConvertorPageV2() {
     
                       <div style="margin-top: 20px;margin-left: 95px;">
                         <label for="import_files_ann"><font  style="font-family: SourceHanSansCN-Normal;
-                          font-size: 20px;
+                          font-size: 22px;
                           color: #333333;
-                          letter-spacing: 1.14px;font-weight: normal;">ANN模型: </font></label>
+                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">ANN模型: </font></label>
                         <input type="text" id="import_files_ann" style="background: #FFFFFF;
                         border: 1px solid #C0C0C0;
                         border-radius: 6px;

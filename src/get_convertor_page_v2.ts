@@ -1556,6 +1556,7 @@ export function getConvertorPageV2(){
                 // if (data.is_error) {
                 //     $("#myModalLabel_show_error").text("错误提示");
                 // }
+                $("#myModalLabel_show_error").text("警告");
                 modal_show_error_dialog_show();
                 console.log("modal aleret_modal_btn click 错误提示。。。。")
               }
@@ -2240,7 +2241,6 @@ export function getANNSNNConvertPage(){
           </button>
           <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Normal;
           font-size: 24px;
-          font-weight: bold;
           letter-spacing: 1.07px;margin-left: 20px;">
             警告
           </h4>

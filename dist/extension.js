@@ -782,7 +782,7 @@ function activate(context) {
                         catch (err) {
                             console.log("发送xnorm 文件校验错误消息......");
                             currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.xnorm) +
-                                    " 校验错误！</strong><br/>错误详情：<br/>" + iconv.decode(err.stderr, 'cp936') }));
+                                    " 校验错误！</strong><br/>错误信息：<br/>" + iconv.decode(err.stderr, 'cp936') }));
                             return;
                         }
                         ;
@@ -795,7 +795,7 @@ function activate(context) {
                         }
                         catch (err) {
                             console.log("发送xtest 文件校验错误消息......");
-                            currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.xtest) + " 校验错误！</strong><br/>错误详情：<br/>" +
+                            currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.xtest) + " 校验错误！</strong><br/>错误信息：<br/>" +
                                     iconv.decode(err.stderr, 'cp936') }));
                             return;
                         }
@@ -809,7 +809,7 @@ function activate(context) {
                     catch (err) {
                         console.log("发送ytest 文件校验错误消息......");
                         currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.ytest) +
-                                " 校验错误！</strong><br/>错误详情：<br/>" + iconv.decode(err.stderr, 'cp936') }));
+                                " 校验错误！</strong><br/>错误信息：<br/>" + iconv.decode(err.stderr, 'cp936') }));
                         return;
                     }
                     ;
@@ -821,7 +821,7 @@ function activate(context) {
                     catch (err) {
                         console.log("发送ann 模型文件校验错误消息......");
                         currentPanel.webview.postMessage(JSON.stringify({ "show_error": "<strong>文件 " + path.basename(data.choose_import_file_paths.ann) +
-                                " 校验错误！</strong><br/>错误详情：<br/>" + iconv.decode(err.stderr, 'cp936') }));
+                                " 校验错误！</strong><br/>错误信息：<br/>" + iconv.decode(err.stderr, 'cp936') }));
                         return;
                     }
                     ;
@@ -7629,6 +7629,7 @@ function getConvertorPageV2() {
                 // if (data.is_error) {
                 //     $("#myModalLabel_show_error").text("错误提示");
                 // }
+                $("#myModalLabel_show_error").text("警告");
                 modal_show_error_dialog_show();
                 console.log("modal aleret_modal_btn click 错误提示。。。。")
               }
@@ -8312,7 +8313,6 @@ function getANNSNNConvertPage() {
           </button>
           <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Normal;
           font-size: 24px;
-          font-weight: bold;
           letter-spacing: 1.07px;margin-left: 20px;">
             警告
           </h4>

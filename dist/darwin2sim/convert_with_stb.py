@@ -83,6 +83,7 @@ sys_param_synapsedt = None
 sys_param_delay = None
 sys_param_total_dura = None
 
+
 if len(sys.argv) > 5:
     sys_param_vthresh = int(sys.argv[1])
     sys_param_neurondt = float(sys.argv[2])

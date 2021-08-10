@@ -8313,7 +8313,6 @@ function getANNSNNConvertPage() {
           <h4 id="myModalLabel_show_error" style="font-family: SourceHanSansCN-Normal;
           font-size: 24px;
           font-weight: bold;
-          color: #ee1414;
           letter-spacing: 1.07px;margin-left: 20px;">
             警告
           </h4>
@@ -8929,7 +8928,7 @@ function getANNSNNConvertPage() {
   
                   // $("#error_msg_div").text(data.exec_error);
                   // $("#exec_error_modal_btn").click();
-                  $("#error_detail").text(data.exec_error);
+                  $("#error_detail").html("<strong>转换代码执行错误！</strong><br/>错误信息：<br/>"+data.exec_error);
                   $("#alert_modal_btn").click();
                   document.getElementById("total_progress_ball").style.display = "none";
                 } else if (data.show_error)  {

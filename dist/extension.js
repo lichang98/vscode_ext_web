@@ -829,6 +829,65 @@ function activate(context) {
                     currentPanel.webview.postMessage(JSON.stringify({ "show_error": "ok", "hide": "yes" }));
                 });
             }
+            else if (data.config_fname) {
+                let genScript = path.join(__dirname, "darwin2sim", "gen_darwin2_bin_files.py");
+                let cmdStr = PYTHON_INTERPRETER + " " + genScript + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + " " + path.join(path.dirname(PROJ_SAVE_PATH), "packed_bin_files.dat") + " " + data.config_fname;
+                // vscode.window.showInformationMessage("二进制文件生成中，请稍等......");
+                if (!LOG_OUTPUT_CHANNEL) {
+                    LOG_OUTPUT_CHANNEL = vscode.window.createOutputChannel("Darwin Convertor");
+                }
+                LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.show();
+                LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("二进制文件编译中...");
+                let binaryCompilingInterval = setInterval(() => {
+                    LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("...");
+                }, 500);
+                child_process_1.exec(cmdStr, (err, stdout, stderr) => {
+                    clearInterval(binaryCompilingInterval);
+                    if (err) {
+                        console.log("执行darwin2二进制部署文件错误...");
+                        vscode.window.showErrorMessage("二进制文件生成错误!!!");
+                        LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译错误!\n");
+                    }
+                    else {
+                        fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(path.dirname(PROJ_SAVE_PATH), data.config_fname));
+                        fs.renameSync(path.join(path.dirname(PROJ_SAVE_PATH), "packed_bin_files.dat"), path.join(path.dirname(PROJ_SAVE_PATH), data.pack_fname));
+                        DARWIN_LANG_BIN_PATHS.splice(0);
+                        inMemTreeViewStruct[0].children.splice(1, 1);
+                        treeview.data = inMemTreeViewStruct;
+                        treeview.refresh();
+                        inMemTreeViewStruct[0].children.push(new TreeViewProvider_1.TreeItemNode("编译", [
+                            new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [
+                                new TreeViewProvider_1.TreeItemNode("模型文件", [], false, "模型文件", 2),
+                                new TreeViewProvider_1.TreeItemNode("编解码配置文件", [], false, "模型文件", 2)
+                            ], false, "Darwin二进制文件", 2)
+                        ], false, "编译", 2));
+                        inMemTreeViewStruct[0].children[1].children[0].children[0].children.splice(0);
+                        inMemTreeViewStruct[0].children[1].children[0].children[1].children.splice(0);
+                        fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out"), (err, files) => {
+                            files.forEach(file => {
+                                if (file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1) {
+                                    DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", file));
+                                    if (file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
+                                        file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {
+                                        TreeViewProvider_1.addDarwinFiles(data.config_fname);
+                                        TreeViewProvider_1.addDarwinFiles(data.pack_fname);
+                                        inMemTreeViewStruct[0].children[1].children[0].children[0].children.splice(0);
+                                        inMemTreeViewStruct[0].children[1].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(data.config_fname));
+                                        inMemTreeViewStruct[0].children[1].children[0].children[1].children.splice(0);
+                                        inMemTreeViewStruct[0].children[1].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(data.pack_fname));
+                                    }
+                                }
+                                treeview.data = inMemTreeViewStruct;
+                                treeview.refresh();
+                            });
+                            autoSaveWithCheck();
+                            // vscode.window.showInformationMessage("二进制文件生成结束!");
+                            LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译成功!\n");
+                        });
+                        treeview.refresh();
+                    }
+                });
+            }
         });
     }
     function importXNorm(file_path) {
@@ -1580,6 +1639,7 @@ function activate(context) {
             // 发送消息到web view ，开始模型的转换
             console.log("模型转换页面打开");
             if (!ANN_MODEL_FILE_PATH) {
+                currentPanel.reveal();
                 currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先导入ANN模型文件！" }));
                 return;
             }
@@ -1704,6 +1764,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
     vscode.commands.registerCommand("snn_model_ac.show_snn_model", () => {
         if (DARWIN_LANG_FILE_PATHS.length === 0) {
             // vscode.window.showErrorMessage("请先完成转换步骤！！！");
+            currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.reveal();
             currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先完成转换步骤！" }));
             return;
         }
@@ -1771,11 +1832,12 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
             panelSNNModelVis = undefined;
         }
         if (DARWIN_LANG_FILE_PATHS.length === 0) {
+            currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.reveal();
             currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先完成转换步骤！" }));
             return;
         }
         if (!panelSNNModelVis) {
-            panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN仿真", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+            panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN模拟", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
             panelSNNModelVis.onDidDispose(() => {
                 panelSNNModelVis = undefined;
             }, null, context.subscriptions);
@@ -1796,12 +1858,12 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
                 let data = JSON.parse(evt);
                 if (data.snn_simulate_ready) {
                     // 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
-                    console.log("SNN仿真界面就绪.....");
+                    console.log("SNN模拟界面就绪.....");
                     fs.readFile(path.join(__dirname, "inner_scripts", "brian2_snn_info.json"), "utf-8", (evt, data) => {
                         if (panelSNNModelVis) {
                             if (PROJ_DESC_INFO.project_type === "图像分类" || PROJ_DESC_INFO.project_type === "语义分割" || PROJ_DESC_INFO.project_type === "疲劳检测"
                                 || PROJ_DESC_INFO.project_type === "年龄检测") {
-                                console.log("SNN仿真界面发送 snn_info 数据....");
+                                console.log("SNN模拟界面发送 snn_info 数据....");
                                 panelSNNModelVis.webview.postMessage(JSON.stringify({ "snn_info": data }));
                             }
                             else if (PROJ_DESC_INFO.project_type === "语音识别") {
@@ -1836,7 +1898,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
             else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
                 panelSNNModelVis.webview.html = get_fatigue_pages_1.getSNNSimuFatiguePage();
             }
-            panelSNNModelVis.title = "SNN仿真";
+            panelSNNModelVis.title = "SNN模拟";
             panelSNNModelVis.reveal();
         }
     });
@@ -1892,6 +1954,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
     });
     // // 启动将darwinlang 文件转换为二进制文件的操作
     vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function () {
+        currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.reveal();
         if (DARWIN_LANG_FILE_PATHS.length === 0) {
             // vscode.window.showErrorMessage("请先完成转换步骤！！！");
             currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先完成转换步骤！" }));
@@ -1900,6 +1963,8 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
         if (!TreeViewProvider_1.ITEM_ICON_MAP.has("SNN二进制模型")) {
             TreeViewProvider_1.addSlfFile("SNN二进制模型");
         }
+        // 设置config 与 打包文件名称的提示框
+        currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.webview.postMessage(JSON.stringify({ "start_compile_binary": "yes" }));
         // inMemTreeViewStruct.push(new TreeItemNode(PROJ_DESC_INFO.project_name,[
         // 	new TreeItemNode("模型转换",[
         // 		new TreeItemNode("数据集",[
@@ -1917,66 +1982,6 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
         // 		])
         // 	])
         // ], true, "root"));
-        let genScript = path.join(__dirname, "darwin2sim", "gen_darwin2_bin_files.py");
-        let cmdStr = PYTHON_INTERPRETER + " " + genScript + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + " " + path.join(path.dirname(PROJ_SAVE_PATH), "packed_bin_files.dat");
-        // vscode.window.showInformationMessage("二进制文件生成中，请稍等......");
-        if (!LOG_OUTPUT_CHANNEL) {
-            LOG_OUTPUT_CHANNEL = vscode.window.createOutputChannel("Darwin Convertor");
-        }
-        LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.show();
-        LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("二进制文件编译中...");
-        let binaryCompilingInterval = setInterval(() => {
-            LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("...");
-        }, 500);
-        child_process_1.exec(cmdStr, (err, stdout, stderr) => {
-            clearInterval(binaryCompilingInterval);
-            if (err) {
-                console.log("执行darwin2二进制部署文件错误...");
-                vscode.window.showErrorMessage("二进制文件生成错误!!!");
-                LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译错误!\n");
-            }
-            else {
-                fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(path.dirname(PROJ_SAVE_PATH), "config.b"));
-                DARWIN_LANG_BIN_PATHS.splice(0);
-                inMemTreeViewStruct[0].children.splice(1, 1);
-                treeview.data = inMemTreeViewStruct;
-                treeview.refresh();
-                inMemTreeViewStruct[0].children.push(new TreeViewProvider_1.TreeItemNode("编译", [
-                    new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [
-                        new TreeViewProvider_1.TreeItemNode("模型文件", [], false, "模型文件", 2),
-                        new TreeViewProvider_1.TreeItemNode("编解码配置文件", [], false, "模型文件", 2)
-                    ], false, "Darwin二进制文件", 2)
-                ], false, "编译", 2));
-                inMemTreeViewStruct[0].children[1].children[0].children[0].children.splice(0);
-                inMemTreeViewStruct[0].children[1].children[0].children[1].children.splice(0);
-                fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out"), (err, files) => {
-                    files.forEach(file => {
-                        if (file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1) {
-                            DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", file));
-                            if (file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
-                                file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {
-                                if (file.search("config.b") !== -1) {
-                                    TreeViewProvider_1.addDarwinFiles("config.b");
-                                    inMemTreeViewStruct[0].children[1].children[0].children[0].children.splice(0);
-                                    inMemTreeViewStruct[0].children[1].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
-                                }
-                                else if (file.search("connfiles") !== -1) {
-                                    TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
-                                    inMemTreeViewStruct[0].children[1].children[0].children[1].children.splice(0);
-                                    inMemTreeViewStruct[0].children[1].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
-                                }
-                            }
-                        }
-                        treeview.data = inMemTreeViewStruct;
-                        treeview.refresh();
-                    });
-                    autoSaveWithCheck();
-                    // vscode.window.showInformationMessage("二进制文件生成结束!");
-                    LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译成功!\n");
-                });
-                treeview.refresh();
-            }
-        });
         // if(!ITEM_ICON_MAP.has("SNN二进制模型")){
         // 	// ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
         // 	addSlfFile("SNN二进制模型");
@@ -6168,7 +6173,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
                 </tr>
               </table>
             </div>
-            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 400px;margin-left: 15px;width: 760px;">
+            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 400px;margin-left: 8px;width: 760px;">
               <div style="text-align: center;margin-bottom:20px;color: #333;font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
@@ -6178,7 +6183,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
               <div id="bar_chart_testdata_container" style="width: 700px;height: 400px;margin-left:20px;margin-top: -30px;"></div>
             </div>
         </div>
-        <div class="row" style="height: 45%;width: 100%;margin-top:30px;">
+        <div class="row" style="height: 45%;width: 100%;margin-top:-20px;">
           <div id="sample_data_div" class="col-md-5" style="height:410;width: 700px;background: rgba(238,238,238,0.4);margin-left: 50px;">
             <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
             font-size: 20px;
@@ -6221,7 +6226,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
             </ul>
             
           </div>
-          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 410px;width: 760px;background: rgba(238,238,238,0.4);margin-left: 15px;">
+          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 410px;width: 760px;background: rgba(238,238,238,0.4);margin-left: 8px;">
             <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
             font-size: 20px;
             color: #333333;
@@ -6611,8 +6616,7 @@ function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sam
 }
 exports.getConvertorDataPageV2 = getConvertorDataPageV2;
 function getConvertorModelPageV2() {
-    return `
-  <!DOCTYPE html>
+    return `<!DOCTYPE html>
   <html style="height: 100%;width: 100%;">
   
   <head>
@@ -6708,7 +6712,7 @@ function getConvertorModelPageV2() {
               </div>
     
               <!--模型详细信息表格-->
-              <div style="background: rgba(238,238,238,0.4);height: 440px;margin-left: 10px;width: 740px;display: inline-block;vertical-align: top;padding-left: 40px;margin-right: 40px;">
+              <div style="background: rgba(238,238,238,0.4);height: 440px;margin-left: 8px;width: 740px;display: inline-block;vertical-align: top;padding-left: 40px;margin-right: 40px;">
                 <div style="text-align: center;font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -6739,7 +6743,7 @@ function getConvertorModelPageV2() {
             </div>
   
             <!--模型各层的可视化-->
-            <div style="width: 100%;margin-top: 12px;">
+            <div style="width: 100%;margin-top: 10px;">
               <div id="model_layers_vis" style="background: rgba(238,238,238,0.4);display: inline-block;width: 700px;height: 400px;">
                 <div id="model_layers_vis_tab_caption" style="text-align: center;font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
@@ -6760,7 +6764,7 @@ function getConvertorModelPageV2() {
                 <div id="tmp_peer"></div>
               </div>
               <!-- 显示各层的参数量占比 -->
-              <div style="background: rgba(238,238,238,0.4);margin-left: 10px;width: 740px;height: 400px;vertical-align: top;display: inline-block;">
+              <div style="background: rgba(238,238,238,0.4);margin-left: 8px;width: 740px;height: 400px;vertical-align: top;display: inline-block;">
                 <div style="text-align: center;margin-left: 100px;font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -7105,8 +7109,7 @@ function getConvertorModelPageV2() {
           var bar_chart_layer_params = echarts.init(document.getElementById("layer_param_percent_div"));
           bar_chart_layer_params.setOption(option);
       }
-  </script>
-  `;
+  </script>`;
 }
 exports.getConvertorModelPageV2 = getConvertorModelPageV2;
 function getConvertorPageV2() {
@@ -7327,8 +7330,8 @@ function getConvertorPageV2() {
     <!--导入数据与模型文件-->
     <div class="modal fade" id="myModalImportFiles" tabindex="-1" role="dialog" aria-labelledby="myModalLabelImportFiles" aria-hidden="true" style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white;width: 800px;">
-        <div class="modal-content" style="background-color: white;">
-          <div style="background: #EEEEEE;padding: 15px;">
+        <div class="modal-content" style="background-color: white;border-radius: 15px;">
+          <div style="background: #EEEEEE;padding: 15px; height: 60px; border-top-right-radius: 15px; border-top-left-radius: 15px;">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
               &times;
             </button>
@@ -8173,25 +8176,27 @@ function getANNSNNConvertPage() {
   
   <div class="modal fade" id="myModal_select_alg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_select_alg" aria-hidden="true" style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white;width: 800px;">
-          <div class="modal-content" style="background-color: white;">
-              <div style="background: #EEEEEE;padding: 10px;">
+          <div class="modal-content" style="background-color: white;border-radius: 15px;">
+              <div style="background: #EEEEEE;padding: 15px; height: 60px; border-top-right-radius: 15px; border-top-left-radius: 15px;">
                   <button id="select_alg_modal_close" type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
                   margin-right: 30px;margin-top: 10px;font-size: 40px;">
                       &times;
                   </button>
-                  <h4 id="myModalLabel_select_alg" style="font-family: SourceHanSansCN-Medium;
-                  font-size: 20px;
+                  <h4 id="myModalLabel_select_alg" style="font-family: SourceHanSansCN-Normal;
+                  font-size: 24px;
+                  font-weight: bold;
                   color: #333333;
-                  letter-spacing: 0.89px;padding-top: 15px;padding-left: 20px;">
+                  letter-spacing: 1.07px;margin-left: 20px;">
                       选择调用算法
                   </h4>
               </div>
               <div class="modal-body">
           <div style="margin-top: 30px;display: inline-block; width: 50%;">
               <div style="font-family: SourceHanSansCN-Normal;
-              font-size: 20px;
+              font-size: 22px;
+              font-weight: bold;
               color: #333333;
-              letter-spacing: 1.14px;margin-left: 40px;">预处理步骤：</div>
+              letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">预处理步骤：</div>
               <div class="radio" style="margin-top: 30px;margin-left: 80px;">
                   <label>
                       <input type="radio" name="alg_call_radios" id="default_alg" value="default_alg" checked> <span style="font-family: SourceHanSansCN-Normal;
@@ -8211,9 +8216,10 @@ function getANNSNNConvertPage() {
           </div>
           <div style="margin-top: 30px;display: inline-block;width: 50%;">
               <div style="font-family: SourceHanSansCN-Normal;
-              font-size: 20px;
+              font-size: 22px;
+              font-weight: bold;
               color: #333333;
-              letter-spacing: 1.14px;margin-left: 40px;">参数调优步骤：</div>
+              letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">参数调优步骤：</div>
               <div class="radio" style="margin-top: 30px;margin-left: 80px;">
                   <label>
                       <input type="radio" name="opt_alg_call_radios" id="default_opt_alg" value="default_opt_alg" checked> <span style="font-family: SourceHanSansCN-Normal;
@@ -8334,6 +8340,93 @@ function getANNSNNConvertPage() {
   </div>
   
   <button id="alert_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_show_error" style="display: none;"></button>
+  
+  
+  <!-- 二进制文件重命名提示框 -->
+  <div class="modal fade" id="compile_binary_rnm_dialog" tabindex="-1" role="dialog" aria-labelledby="compile_binary_rnm_dialog_label" aria-hidden="true" 
+                  style="background-color: white;color: #333;">
+      <div class="modal-dialog" style="background-color: white; width: 747px">
+        <div class="modal-content" style="width: 747px; height: 498px; background-color: white;border-radius: 15px;">
+          <div style="background: #EEEEEE; height: 60px; border-top-right-radius: 15px; border-top-left-radius: 15px;">
+            <button type="button" id="close_binary_fname_dialog_btn" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
+            margin-right: 30px;
+            width: 30px;
+            height: 30px;
+            margin-top: 9px;
+            padding-top: 15px;
+            ">
+              &times;
+            </button>
+            <div id="compile_binary_rnm_dialog_label" style="font-family: SourceHanSansCN-Medium;
+            font-size: 24px;
+            color: #333333;
+            font-weight: bold;
+            letter-spacing: 1.26px;padding-left: 29px;padding-top: 15px;
+          ">
+              生成二进制文件
+            </div>
+          </div>
+          <div>
+                    <form role="form" id="binary_model_file">
+                        <div id="bin_model_div" style="margin-top: 50px;">
+                            <label for="bin_model_name" id="lb_bin_model_name" style="font-family: SourceHanSansCN-Normal;
+                            font-size: 22px;
+                            color: #333333;
+                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">模型文件: </label>
+                            <input type="text" id="bin_model_name" style="background: white; 
+                            border: 1px solid #D9D9D9;
+                            border-radius: 6px;
+                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 14px;" placeholder="config.b">
+                        </div>
+                        <p id="bin_model_fname_error" style="font-family: SourceHanSansCN-Normal;
+                        font-size: 18px;
+                        color:  #EC7760;
+                        margin-left: 204px;
+                        margin-bottom: 2px;
+                        letter-spacing: 1.15px;
+                        height: 20px;
+                        display: none;">名称长度为10以内，小写英文字母，.b 后缀</p>
+  
+                        <div id="bin_pack_file_div" style="margin-top: 50px;">
+                          <label for="bin_pack_file_name" id="lb_bin_pack_file_name" style="font-family: SourceHanSansCN-Normal;
+                          font-size: 22px;
+                          color: #333333;
+                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">编解码配置文件: </label>
+                          <input type="text" id="bin_pack_file_name" style="background: white; 
+                          border: 1px solid #D9D9D9;
+                          border-radius: 6px;
+                          border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+  font-size: 22px;
+  color: #999999;
+  letter-spacing: 0;
+  line-height: 14px;" placeholder="packed_bin_files.dat">
+                      </div>
+                      <p id="bin_pack_fname_err" style="font-family: SourceHanSansCN-Normal;
+                      font-size: 18px;
+                      color:  #EC7760;
+                      margin-left: 204px;
+                      margin-bottom: 2px;
+                      letter-spacing: 1.15px;
+                      height: 20px;
+                      display: none;">名称长度为10以内，小写英文字母、下划线，.dat 后缀</p>
+  
+                    </form>
+          </div>
+          <div style="margin-top: 80px;margin-bottom: 40px;">
+              <button type="button" class="btn btn-primary" onclick="binary_compile_check()" id="binary_file_ok_btn" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+              border-radius: 2px;
+              border-radius: 2px;width: 200px;height: 40px;margin-left: 260px;">确认
+              </button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+  
+    <button id="rnm_binary_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-dismiss="modal" data-target="#compile_binary_rnm_dialog" style="display: none;"></button>
   
   </body>
   <style>
@@ -8499,6 +8592,9 @@ function getANNSNNConvertPage() {
   let stage3_search_finish=false;
   let stage4_all_finish=false;
   
+  let config_fname = undefined;
+  let pack_fname = undefined;
+  
   let error_occurred = false;
   
   let log_output_lists = new Array();
@@ -8556,6 +8652,71 @@ function getANNSNNConvertPage() {
           animationDurationUpdate: 10
       }]
   };
+  
+  
+  $("#bin_model_name").on('change', (e)=> {
+      $("#bin_model_fname_error").css("display", "none");
+      $("#bin_pack_fname_err").css("display", "none");
+  });
+  
+  $("#bin_pack_fname_err").on('change', (e) => {
+      $("#bin_model_fname_error").css("display", "none");
+      $("#bin_pack_fname_err").css("display", "none");
+  });
+  
+  function binary_compile_check() {
+      $("#bin_model_fname_error").css("display", "none");
+      $("#bin_pack_fname_err").css("display", "none");
+      config_fname = $("#bin_model_name").val().toString().trim();
+      pack_fname = $("#bin_pack_file_name").val().toString().trim();
+      console.log("config file name="+config_fname);
+      console.log("packed file name="+pack_fname);
+      if (config_fname.length === 0 || config_fname.length >= 10) {
+          $("#bin_model_fname_error").text("名称长度为10以内，小写英文字母，.b 后缀");
+          $("#bin_model_fname_error").css("display", "block");
+          console.log("bin fname length check failed.");
+      } else if (pack_fname.length == 0 || pack_fname.length >= 30) {
+          $("#bin_pack_fname_err").text("名称长度为30以内，小写英文字母、下划线，.dat 后缀");
+          $("#bin_pack_fname_err").css("display", "block");
+          console.log("bin pack fname length failed.");
+      } else {
+          for (var i =0; i < config_fname.length - 2;++i) {
+              if (!(config_fname[i] >= 'a' && config_fname[i] <= 'z')) {
+                  $("#bin_model_fname_error").text("名称长度为10以内，小写英文字母，.b 后缀");
+                  $("#bin_model_fname_error").css("display", "block");
+                  console.log("bin model file name check failed.");
+                  return;
+              }
+          }
+          if(!(config_fname[config_fname.length - 2] === '.' && config_fname[config_fname.length - 1] >= 'a' && config_fname[config_fname.length - 1] <= 'z')) {
+              $("#bin_model_fname_error").text("后缀需要是 .b");
+              $("#bin_model_fname_error").css("display", "block");
+              console.log("bin model file name suffix check failed")
+              return;
+          }
+  
+          for (var i =0; i < pack_fname.length - 4; ++i) {
+              if (!((pack_fname[i] >= 'a' && pack_fname[i] <= 'z') || pack_fname[i] === '_')) {
+                  $("#bin_pack_fname_err").text("名称长度为30以内，小写英文字母、下划线，.dat 后缀");
+                  $("#bin_pack_fname_err").css("display", "block");
+                  console.log("pack file name check failed");
+                  return;
+              }
+          }
+          if (pack_fname.substr(pack_fname.length - 4) !== ".dat") {
+              $("#bin_pack_fname_err").text("后缀需要是  .dat");
+              $("#bin_pack_fname_err").css("display", "block");
+              console.log("bin pack file suffix check failed");
+              return;
+          }
+  
+          $("#close_binary_fname_dialog_btn").click();
+          // 发送到extension
+          vscode.postMessage(JSON.stringify({"config_fname": config_fname, "pack_fname": pack_fname}));
+      }
+  }
+  
+  
   function process_pie_init(option) {
       let processByPie = echarts.init(document.getElementById("total_progress_ball"));
       option.title.text = "0%";
@@ -8946,6 +9107,9 @@ function getANNSNNConvertPage() {
                     s2_fin_stub = parseInt(data.s2_fin_stub);
                     s3_fin_stub = parseInt(data.s3_fin_stub);
                     s4_fin_stub = parseInt(data.s4_fin_stub);
+                } else if (data.start_compile_binary) {
+                    $("#rnm_binary_btn").click();
+  
                 }
             });
   
@@ -9227,7 +9391,7 @@ function getSNNSimuPage() {
             </div>
           </div>
   
-          <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;">
+          <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;margin-left: 6px;">
             <div style="text-align: center;margin: auto;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
@@ -9240,7 +9404,7 @@ function getSNNSimuPage() {
           </div>
   
       </div>
-      <div style="margin-top: 5px;display: block;">
+      <div style="margin-top: 10px;display: block;">
           <!-- <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
             <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
@@ -9276,7 +9440,7 @@ function getSNNSimuPage() {
             </div>
           </div>
   
-          <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
+          <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);margin-left: 6px;">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -10100,7 +10264,7 @@ function getSNNModelPage() {
           <div id="sangky_chart" style="width: 700px;height: 400px;display: inline-block;margin-left: 50px;overflow-y: auto;overflow-x: hidden;"></div>
         </div>
         <!--权重分布图-->
-        <div style="height: 460px;width: 770px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
+        <div style="height: 460px;width: 770px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);margin-left: 6px;">
             <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
@@ -10117,7 +10281,7 @@ function getSNNModelPage() {
         </div>
       </div>
   
-      <div style="height: 400px;margin-top: -25px;">
+      <div style="height: 400px;margin-top: -30px;">
           <!-- SNN神经元信息 -->
           <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 740px;">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
@@ -10149,7 +10313,7 @@ function getSNNModelPage() {
               </table>
           </div>
   
-          <div style="display: inline-block;background: rgba(238,238,238,0.4);height: 400px;width: 750px;">
+          <div style="display: inline-block;background: rgba(238,238,238,0.4);height: 400px;width: 750px;margin-left: 6px;">
             <div style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
@@ -14630,7 +14794,7 @@ function getSNNSimuSpeechPage() {
         </div>
       </div>
   
-      <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;">
+      <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;margin-left: 8px;">
         <div style="text-align: center;margin: auto;"><font style="font-family: SourceHanSansCN-Normal;
           font-size: 20px;
           color: #333333;
@@ -14643,7 +14807,7 @@ function getSNNSimuSpeechPage() {
       </div>
   
   </div>
-  <div style="margin-top: 5px;display: block;">
+  <div style="margin-top: 10px;display: block;">
     <!-- <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
       <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
         font-size: 20px;
@@ -14679,7 +14843,7 @@ function getSNNSimuSpeechPage() {
       </div>
     </div>
   
-    <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
+    <div style="width: 760px;height: 460px;display: inline-block;margin-left: 8px;vertical-align: top;background: rgba(238,238,238,0.4);">
         <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
           font-size: 20px;
           color: #333333;
@@ -15471,8 +15635,7 @@ exports.getSNNSimuSpeechPage = getSNNSimuSpeechPage;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getSNNSimuFatiguePage = exports.getANNSNNConvertFatiguePage = exports.getFatigueDataVisPage = void 0;
 function getFatigueDataVisPage() {
-    return `
-    <!DOCTYPE html>
+    return `<!DOCTYPE html>
     <html style="height: 100%;width: 100%;">
     
     <head>
@@ -15556,7 +15719,7 @@ function getFatigueDataVisPage() {
                 <div id="bar_chart_testdata_container" style="width: 700px;height: 400px;margin-left:20px;margin-top: -30px;"></div>
               </div>
           </div>
-          <div class="row" style="height: 45%;width: 100%;margin-top:30px;">
+          <div class="row" style="height: 45%;width: 100%;margin-top:-10px;">
             <div id="sample_data_div" class="col-md-5" style="height:410;width: 700px;background: rgba(238,238,238,0.4);margin-left: 50px;">
               <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
               font-size: 20px;
@@ -15966,8 +16129,7 @@ function getFatigueDataVisPage() {
         var bar_chart_data = echarts.init(document.getElementById(target_id));
         bar_chart_data.setOption(option);
     }
-    </script>
-    `;
+    </script>`;
 }
 exports.getFatigueDataVisPage = getFatigueDataVisPage;
 function getANNSNNConvertFatiguePage() {
@@ -16953,7 +17115,7 @@ function getSNNSimuFatiguePage() {
               </div>
             </div>
     
-            <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;">
+            <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;margin-left: 8px;">
               <div style="text-align: center;margin: auto;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -16966,7 +17128,7 @@ function getSNNSimuFatiguePage() {
             </div>
             </div>
     
-            <div style="margin-top: 5px;display: block;">
+            <div style="margin-top: 12px;display: block;">
               <!-- <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
                 <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                   font-size: 20px;
@@ -17002,7 +17164,7 @@ function getSNNSimuFatiguePage() {
                 </div>
               </div>
       
-              <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
+              <div style="width: 760px;height: 460px;display: inline-block;margin-left: 8px;vertical-align: top;background: rgba(238,238,238,0.4);">
                   <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 20px;
                     color: #333333;

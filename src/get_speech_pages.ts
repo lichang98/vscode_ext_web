@@ -1434,7 +1434,7 @@ export function getSNNSimuSpeechPage():string{
         </div>
       </div>
   
-      <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;">
+      <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;margin-left: 8px;">
         <div style="text-align: center;margin: auto;"><font style="font-family: SourceHanSansCN-Normal;
           font-size: 20px;
           color: #333333;
@@ -1447,7 +1447,7 @@ export function getSNNSimuSpeechPage():string{
       </div>
   
   </div>
-  <div style="margin-top: 5px;display: block;">
+  <div style="margin-top: 10px;display: block;">
     <!-- <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
       <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
         font-size: 20px;
@@ -1483,7 +1483,7 @@ export function getSNNSimuSpeechPage():string{
       </div>
     </div>
   
-    <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
+    <div style="width: 760px;height: 460px;display: inline-block;margin-left: 8px;vertical-align: top;background: rgba(238,238,238,0.4);">
         <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
           font-size: 20px;
           color: #333333;

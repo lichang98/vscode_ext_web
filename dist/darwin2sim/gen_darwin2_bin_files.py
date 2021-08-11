@@ -8,12 +8,17 @@ import struct
 baseDirPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(baseDirPath)
 import pack_bin_files
+import shutil
 
 outputPath = os.path.join(baseDirPath, "model_out", "test", "darlang_out")
 # argv 1: project name
 if len(sys.argv) > 1:
     outputPath = os.path.join(baseDirPath, "model_out", sys.argv[1], "darlang_out")
 sys.path.append(os.path.join(baseDirPath, "..", "darlang"))
+self_def_config_fname = "config.b"
+if len(sys.argv) > 3:
+    self_def_config_fname = sys.argv[3]
+
 import darlang
 
 darlang_json_file = os.path.join(outputPath, "snn_digit_darlang.json")
@@ -49,8 +54,9 @@ convert(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.txt"), os.pat
 # rename 1_1config.b to config.b
 if os.path.exists(os.path.join(outputPath,"..", "bin_darwin_out", "config.b")):
     os.remove(os.path.join(outputPath,"..", "bin_darwin_out", "config.b"))
-os.rename(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.b"), os.path.join(outputPath,"..", "bin_darwin_out", "config.b"))
-target_files = [os.path.join(outputPath,"..", "bin_darwin_out", "config.b"),
+shutil.copyfile(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.b"), os.path.join(outputPath,"..", "bin_darwin_out", "config.b"))
+shutil.copyfile(os.path.join(outputPath,"..", "bin_darwin_out", "1_1config.b"), os.path.join(outputPath,"..", "bin_darwin_out", self_def_config_fname))
+target_files = [os.path.join(outputPath,"..", "bin_darwin_out", self_def_config_fname),
                 os.path.join(outputPath,"..", "bin_darwin_out", "1_1clear.txt"),
                 os.path.join(outputPath,"..", "bin_darwin_out", "1_1enable.txt"),
                 os.path.join(outputPath,"..", "bin_darwin_out", "connfiles1_1"),

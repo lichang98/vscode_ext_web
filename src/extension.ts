@@ -810,6 +810,68 @@ export function activate(context: vscode.ExtensionContext) {
 					importANNFile(data.choose_import_file_paths.ann);
 					currentPanel!.webview.postMessage(JSON.stringify({"show_error":"ok", "hide": "yes"}));
 				});
+			} else if (data.config_fname) {
+
+				let genScript = path.join(__dirname, "darwin2sim", "gen_darwin2_bin_files.py");
+				let cmdStr = PYTHON_INTERPRETER+" "+genScript+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2", "")+" "+path.join(path.dirname(PROJ_SAVE_PATH!), "packed_bin_files.dat") + " " + data.config_fname;
+				// vscode.window.showInformationMessage("二进制文件生成中，请稍等......");
+				if (!LOG_OUTPUT_CHANNEL) {
+					LOG_OUTPUT_CHANNEL = vscode.window.createOutputChannel("Darwin Convertor");
+				}
+				LOG_OUTPUT_CHANNEL?.show();
+				LOG_OUTPUT_CHANNEL?.append("二进制文件编译中...");
+				let binaryCompilingInterval = setInterval(()=>{
+					LOG_OUTPUT_CHANNEL?.append("...");
+				}, 500);
+				exec(cmdStr, (err, stdout, stderr)=>{
+					clearInterval(binaryCompilingInterval);
+					if(err){
+						console.log("执行darwin2二进制部署文件错误...");
+						vscode.window.showErrorMessage("二进制文件生成错误!!!");
+						LOG_OUTPUT_CHANNEL?.append("\n二进制文件编译错误!\n");
+					}else{
+						fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),"bin_darwin_out", "config.b"),
+										path.join(path.dirname(PROJ_SAVE_PATH!), data.config_fname));
+						fs.renameSync(path.join(path.dirname(PROJ_SAVE_PATH!), "packed_bin_files.dat"), path.join(path.dirname(PROJ_SAVE_PATH!), data.pack_fname) );
+						DARWIN_LANG_BIN_PATHS.splice(0);
+		
+						inMemTreeViewStruct[0].children!.splice(1,1);
+						treeview.data = inMemTreeViewStruct;
+						treeview.refresh();
+						inMemTreeViewStruct[0].children!.push(new TreeItemNode("编译", [
+							new TreeItemNode("Darwin二进制文件", [
+								new TreeItemNode("模型文件", [], false, "模型文件", 2),
+								new TreeItemNode("编解码配置文件", [], false, "模型文件", 2)
+							], false, "Darwin二进制文件", 2)
+						], false, "编译", 2));
+		
+						inMemTreeViewStruct[0].children![1].children![0].children![0].children!.splice(0);
+						inMemTreeViewStruct[0].children![1].children![0].children![1].children!.splice(0);
+						fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out"), (err, files)=>{
+							files.forEach(file => {
+								if(file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1){
+									DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out", file));
+									if(file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
+												file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1){
+										addDarwinFiles(data.config_fname);
+										addDarwinFiles(data.pack_fname);
+										inMemTreeViewStruct[0].children![1].children![0].children![0].children!.splice(0);
+										inMemTreeViewStruct[0].children![1].children![0].children![0].children!.push(new TreeItemNode(data.config_fname));
+										inMemTreeViewStruct[0].children![1].children![0].children![1].children!.splice(0);
+										inMemTreeViewStruct[0].children![1].children![0].children![1].children!.push(new TreeItemNode(data.pack_fname));
+									}
+								}
+								treeview.data = inMemTreeViewStruct;
+								treeview.refresh();
+							});
+							autoSaveWithCheck();
+							// vscode.window.showInformationMessage("二进制文件生成结束!");
+							LOG_OUTPUT_CHANNEL?.append("\n二进制文件编译成功!\n");
+						});
+						treeview.refresh();
+					}
+				});
+
 			}
 		});
 	}
@@ -1579,6 +1641,7 @@ export function activate(context: vscode.ExtensionContext) {
 			// 发送消息到web view ，开始模型的转换
 			console.log("模型转换页面打开");
 			if (!ANN_MODEL_FILE_PATH) {
+				currentPanel.reveal();
 				currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请先导入ANN模型文件！"}));
 				return;
 			}
@@ -1699,6 +1762,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 	vscode.commands.registerCommand("snn_model_ac.show_snn_model", ()=>{
 		if (DARWIN_LANG_FILE_PATHS.length === 0) {
 			// vscode.window.showErrorMessage("请先完成转换步骤！！！");
+			currentPanel?.reveal();
 			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！"}));
 			return;
 		}
@@ -1770,11 +1834,12 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 			panelSNNModelVis = undefined;
 		}
 		if (DARWIN_LANG_FILE_PATHS.length === 0) {
+			currentPanel?.reveal();
 			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！"}));
 			return;
 		}
 		if(!panelSNNModelVis){
-			panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN仿真",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+			panelSNNModelVis = vscode.window.createWebviewPanel("snnvis", "SNN模拟",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
 			panelSNNModelVis.onDidDispose(()=>{
 				panelSNNModelVis = undefined;
 			},null, context.subscriptions);
@@ -1796,12 +1861,12 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 				let data = JSON.parse(evt);
 				if(data.snn_simulate_ready){
 					// 在完成转换（包含仿真）之后，加载显示SNN以及过程信息
-					console.log("SNN仿真界面就绪.....");
+					console.log("SNN模拟界面就绪.....");
 					fs.readFile(path.join(__dirname, "inner_scripts","brian2_snn_info.json"),"utf-8",(evt,data)=>{
 						if(panelSNNModelVis){
 							if(PROJ_DESC_INFO.project_type === "图像分类" || PROJ_DESC_INFO.project_type === "语义分割" || PROJ_DESC_INFO.project_type === "疲劳检测"
 													|| PROJ_DESC_INFO.project_type === "年龄检测") {
-								console.log("SNN仿真界面发送 snn_info 数据....");
+								console.log("SNN模拟界面发送 snn_info 数据....");
 								panelSNNModelVis.webview.postMessage(JSON.stringify({"snn_info":data}));
 							}else if(PROJ_DESC_INFO.project_type === "语音识别") {
 								console.log("语音识别SNN模型仿真界面snn_info 以及样例数据...");
@@ -1831,7 +1896,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 			}else if(PROJ_DESC_INFO.project_type === "疲劳检测") {
 				panelSNNModelVis.webview.html = getSNNSimuFatiguePage();
 			}
-			panelSNNModelVis.title = "SNN仿真";
+			panelSNNModelVis.title = "SNN模拟";
 			panelSNNModelVis.reveal();
 		}
 	});
@@ -1890,6 +1955,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 
 	// // 启动将darwinlang 文件转换为二进制文件的操作
 	vscode.commands.registerCommand("bin_darlang_convertor.start_convert", function(){
+		currentPanel?.reveal();
 		if(DARWIN_LANG_FILE_PATHS.length === 0){
 			// vscode.window.showErrorMessage("请先完成转换步骤！！！");
 			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！"}));
@@ -1898,6 +1964,10 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 		if(!ITEM_ICON_MAP.has("SNN二进制模型")){
 			addSlfFile("SNN二进制模型");
 		}
+
+		// 设置config 与 打包文件名称的提示框
+		currentPanel?.webview.postMessage(JSON.stringify({"start_compile_binary": "yes"}));
+
 
 
 	// inMemTreeViewStruct.push(new TreeItemNode(PROJ_DESC_INFO.project_name,[
@@ -1920,67 +1990,6 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 
 
 
-		let genScript = path.join(__dirname, "darwin2sim", "gen_darwin2_bin_files.py");
-		let cmdStr = PYTHON_INTERPRETER+" "+genScript+" "+path.basename(PROJ_SAVE_PATH!).replace("\.dar2", "")+" "+path.join(path.dirname(PROJ_SAVE_PATH!), "packed_bin_files.dat");
-		// vscode.window.showInformationMessage("二进制文件生成中，请稍等......");
-		if (!LOG_OUTPUT_CHANNEL) {
-			LOG_OUTPUT_CHANNEL = vscode.window.createOutputChannel("Darwin Convertor");
-		}
-		LOG_OUTPUT_CHANNEL?.show();
-		LOG_OUTPUT_CHANNEL?.append("二进制文件编译中...");
-		let binaryCompilingInterval = setInterval(()=>{
-			LOG_OUTPUT_CHANNEL?.append("...");
-		}, 500);
-		exec(cmdStr, (err, stdout, stderr)=>{
-			clearInterval(binaryCompilingInterval);
-			if(err){
-				console.log("执行darwin2二进制部署文件错误...");
-				vscode.window.showErrorMessage("二进制文件生成错误!!!");
-				LOG_OUTPUT_CHANNEL?.append("\n二进制文件编译错误!\n");
-			}else{
-				fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),"bin_darwin_out", "config.b"),
-								path.join(path.dirname(PROJ_SAVE_PATH!), "config.b"));
-				DARWIN_LANG_BIN_PATHS.splice(0);
-
-				inMemTreeViewStruct[0].children!.splice(1,1);
-				treeview.data = inMemTreeViewStruct;
-				treeview.refresh();
-				inMemTreeViewStruct[0].children!.push(new TreeItemNode("编译", [
-					new TreeItemNode("Darwin二进制文件", [
-						new TreeItemNode("模型文件", [], false, "模型文件", 2),
-						new TreeItemNode("编解码配置文件", [], false, "模型文件", 2)
-					], false, "Darwin二进制文件", 2)
-				], false, "编译", 2));
-
-				inMemTreeViewStruct[0].children![1].children![0].children![0].children!.splice(0);
-				inMemTreeViewStruct[0].children![1].children![0].children![1].children!.splice(0);
-				fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out"), (err, files)=>{
-					files.forEach(file => {
-						if(file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1){
-							DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out", file));
-							if(file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
-										file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1){
-								if(file.search("config.b") !== -1){
-									addDarwinFiles("config.b");
-									inMemTreeViewStruct[0].children![1].children![0].children![0].children!.splice(0);
-									inMemTreeViewStruct[0].children![1].children![0].children![0].children!.push(new TreeItemNode("config.b"));
-								}else if(file.search("connfiles") !==-1){
-									addDarwinFiles("packed_bin_files.dat");
-									inMemTreeViewStruct[0].children![1].children![0].children![1].children!.splice(0);
-									inMemTreeViewStruct[0].children![1].children![0].children![1].children!.push(new TreeItemNode("packed_bin_files.dat"));
-								}
-							}
-						}
-						treeview.data = inMemTreeViewStruct;
-						treeview.refresh();
-					});
-					autoSaveWithCheck();
-					// vscode.window.showInformationMessage("二进制文件生成结束!");
-					LOG_OUTPUT_CHANNEL?.append("\n二进制文件编译成功!\n");
-				});
-				treeview.refresh();
-			}
-		});
 		// if(!ITEM_ICON_MAP.has("SNN二进制模型")){
 		// 	// ITEM_ICON_MAP.set("SNN二进制模型", "imgs/file.png");
 		// 	addSlfFile("SNN二进制模型");

@@ -94,7 +94,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
                 </tr>
               </table>
             </div>
-            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 400px;margin-left: 15px;width: 760px;">
+            <div class="col-md-5" style="background: rgba(238,238,238,0.4);height: 400px;margin-left: 8px;width: 760px;">
               <div style="text-align: center;margin-bottom:20px;color: #333;font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
@@ -104,7 +104,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
               <div id="bar_chart_testdata_container" style="width: 700px;height: 400px;margin-left:20px;margin-top: -30px;"></div>
             </div>
         </div>
-        <div class="row" style="height: 45%;width: 100%;margin-top:30px;">
+        <div class="row" style="height: 45%;width: 100%;margin-top:-20px;">
           <div id="sample_data_div" class="col-md-5" style="height:410;width: 700px;background: rgba(238,238,238,0.4);margin-left: 50px;">
             <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
             font-size: 20px;
@@ -147,7 +147,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
             </ul>
             
           </div>
-          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 410px;width: 760px;background: rgba(238,238,238,0.4);margin-left: 15px;">
+          <div id="sample_testdataset_data_div" class="col-md-5" style="height: 410px;width: 760px;background: rgba(238,238,238,0.4);margin-left: 8px;">
             <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
             font-size: 20px;
             color: #333333;
@@ -538,8 +538,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
 
 
 export function getConvertorModelPageV2(){
-  return `
-  <!DOCTYPE html>
+  return `<!DOCTYPE html>
   <html style="height: 100%;width: 100%;">
   
   <head>
@@ -635,7 +634,7 @@ export function getConvertorModelPageV2(){
               </div>
     
               <!--模型详细信息表格-->
-              <div style="background: rgba(238,238,238,0.4);height: 440px;margin-left: 10px;width: 740px;display: inline-block;vertical-align: top;padding-left: 40px;margin-right: 40px;">
+              <div style="background: rgba(238,238,238,0.4);height: 440px;margin-left: 8px;width: 740px;display: inline-block;vertical-align: top;padding-left: 40px;margin-right: 40px;">
                 <div style="text-align: center;font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -666,7 +665,7 @@ export function getConvertorModelPageV2(){
             </div>
   
             <!--模型各层的可视化-->
-            <div style="width: 100%;margin-top: 12px;">
+            <div style="width: 100%;margin-top: 10px;">
               <div id="model_layers_vis" style="background: rgba(238,238,238,0.4);display: inline-block;width: 700px;height: 400px;">
                 <div id="model_layers_vis_tab_caption" style="text-align: center;font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
@@ -687,7 +686,7 @@ export function getConvertorModelPageV2(){
                 <div id="tmp_peer"></div>
               </div>
               <!-- 显示各层的参数量占比 -->
-              <div style="background: rgba(238,238,238,0.4);margin-left: 10px;width: 740px;height: 400px;vertical-align: top;display: inline-block;">
+              <div style="background: rgba(238,238,238,0.4);margin-left: 8px;width: 740px;height: 400px;vertical-align: top;display: inline-block;">
                 <div style="text-align: center;margin-left: 100px;font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -1032,8 +1031,7 @@ export function getConvertorModelPageV2(){
           var bar_chart_layer_params = echarts.init(document.getElementById("layer_param_percent_div"));
           bar_chart_layer_params.setOption(option);
       }
-  </script>
-  `;
+  </script>`;
 }
 
 export function getConvertorPageV2(){
@@ -1254,8 +1252,8 @@ export function getConvertorPageV2(){
     <!--导入数据与模型文件-->
     <div class="modal fade" id="myModalImportFiles" tabindex="-1" role="dialog" aria-labelledby="myModalLabelImportFiles" aria-hidden="true" style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white;width: 800px;">
-        <div class="modal-content" style="background-color: white;">
-          <div style="background: #EEEEEE;padding: 15px;">
+        <div class="modal-content" style="background-color: white;border-radius: 15px;">
+          <div style="background: #EEEEEE;padding: 15px; height: 60px; border-top-right-radius: 15px; border-top-left-radius: 15px;">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);margin-right: 30px;">
               &times;
             </button>
@@ -2101,25 +2099,27 @@ export function getANNSNNConvertPage(){
   
   <div class="modal fade" id="myModal_select_alg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_select_alg" aria-hidden="true" style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white;width: 800px;">
-          <div class="modal-content" style="background-color: white;">
-              <div style="background: #EEEEEE;padding: 10px;">
+          <div class="modal-content" style="background-color: white;border-radius: 15px;">
+              <div style="background: #EEEEEE;padding: 15px; height: 60px; border-top-right-radius: 15px; border-top-left-radius: 15px;">
                   <button id="select_alg_modal_close" type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
                   margin-right: 30px;margin-top: 10px;font-size: 40px;">
                       &times;
                   </button>
-                  <h4 id="myModalLabel_select_alg" style="font-family: SourceHanSansCN-Medium;
-                  font-size: 20px;
+                  <h4 id="myModalLabel_select_alg" style="font-family: SourceHanSansCN-Normal;
+                  font-size: 24px;
+                  font-weight: bold;
                   color: #333333;
-                  letter-spacing: 0.89px;padding-top: 15px;padding-left: 20px;">
+                  letter-spacing: 1.07px;margin-left: 20px;">
                       选择调用算法
                   </h4>
               </div>
               <div class="modal-body">
           <div style="margin-top: 30px;display: inline-block; width: 50%;">
               <div style="font-family: SourceHanSansCN-Normal;
-              font-size: 20px;
+              font-size: 22px;
+              font-weight: bold;
               color: #333333;
-              letter-spacing: 1.14px;margin-left: 40px;">预处理步骤：</div>
+              letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">预处理步骤：</div>
               <div class="radio" style="margin-top: 30px;margin-left: 80px;">
                   <label>
                       <input type="radio" name="alg_call_radios" id="default_alg" value="default_alg" checked> <span style="font-family: SourceHanSansCN-Normal;
@@ -2139,9 +2139,10 @@ export function getANNSNNConvertPage(){
           </div>
           <div style="margin-top: 30px;display: inline-block;width: 50%;">
               <div style="font-family: SourceHanSansCN-Normal;
-              font-size: 20px;
+              font-size: 22px;
+              font-weight: bold;
               color: #333333;
-              letter-spacing: 1.14px;margin-left: 40px;">参数调优步骤：</div>
+              letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">参数调优步骤：</div>
               <div class="radio" style="margin-top: 30px;margin-left: 80px;">
                   <label>
                       <input type="radio" name="opt_alg_call_radios" id="default_opt_alg" value="default_opt_alg" checked> <span style="font-family: SourceHanSansCN-Normal;
@@ -2262,6 +2263,93 @@ export function getANNSNNConvertPage(){
   </div>
   
   <button id="alert_modal_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal_show_error" style="display: none;"></button>
+  
+  
+  <!-- 二进制文件重命名提示框 -->
+  <div class="modal fade" id="compile_binary_rnm_dialog" tabindex="-1" role="dialog" aria-labelledby="compile_binary_rnm_dialog_label" aria-hidden="true" 
+                  style="background-color: white;color: #333;">
+      <div class="modal-dialog" style="background-color: white; width: 747px">
+        <div class="modal-content" style="width: 747px; height: 498px; background-color: white;border-radius: 15px;">
+          <div style="background: #EEEEEE; height: 60px; border-top-right-radius: 15px; border-top-left-radius: 15px;">
+            <button type="button" id="close_binary_fname_dialog_btn" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
+            margin-right: 30px;
+            width: 30px;
+            height: 30px;
+            margin-top: 9px;
+            padding-top: 15px;
+            ">
+              &times;
+            </button>
+            <div id="compile_binary_rnm_dialog_label" style="font-family: SourceHanSansCN-Medium;
+            font-size: 24px;
+            color: #333333;
+            font-weight: bold;
+            letter-spacing: 1.26px;padding-left: 29px;padding-top: 15px;
+          ">
+              生成二进制文件
+            </div>
+          </div>
+          <div>
+                    <form role="form" id="binary_model_file">
+                        <div id="bin_model_div" style="margin-top: 50px;">
+                            <label for="bin_model_name" id="lb_bin_model_name" style="font-family: SourceHanSansCN-Normal;
+                            font-size: 22px;
+                            color: #333333;
+                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">模型文件: </label>
+                            <input type="text" id="bin_model_name" style="background: white; 
+                            border: 1px solid #D9D9D9;
+                            border-radius: 6px;
+                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+    font-size: 22px;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 14px;" placeholder="config.b">
+                        </div>
+                        <p id="bin_model_fname_error" style="font-family: SourceHanSansCN-Normal;
+                        font-size: 18px;
+                        color:  #EC7760;
+                        margin-left: 204px;
+                        margin-bottom: 2px;
+                        letter-spacing: 1.15px;
+                        height: 20px;
+                        display: none;">名称长度为10以内，小写英文字母，.b 后缀</p>
+  
+                        <div id="bin_pack_file_div" style="margin-top: 50px;">
+                          <label for="bin_pack_file_name" id="lb_bin_pack_file_name" style="font-family: SourceHanSansCN-Normal;
+                          font-size: 22px;
+                          color: #333333;
+                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">编解码配置文件: </label>
+                          <input type="text" id="bin_pack_file_name" style="background: white; 
+                          border: 1px solid #D9D9D9;
+                          border-radius: 6px;
+                          border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+  font-size: 22px;
+  color: #999999;
+  letter-spacing: 0;
+  line-height: 14px;" placeholder="packed_bin_files.dat">
+                      </div>
+                      <p id="bin_pack_fname_err" style="font-family: SourceHanSansCN-Normal;
+                      font-size: 18px;
+                      color:  #EC7760;
+                      margin-left: 204px;
+                      margin-bottom: 2px;
+                      letter-spacing: 1.15px;
+                      height: 20px;
+                      display: none;">名称长度为10以内，小写英文字母、下划线，.dat 后缀</p>
+  
+                    </form>
+          </div>
+          <div style="margin-top: 80px;margin-bottom: 40px;">
+              <button type="button" class="btn btn-primary" onclick="binary_compile_check()" id="binary_file_ok_btn" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+              border-radius: 2px;
+              border-radius: 2px;width: 200px;height: 40px;margin-left: 260px;">确认
+              </button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal -->
+    </div>
+  
+    <button id="rnm_binary_btn" class="btn btn-primary btn-lg" data-toggle="modal" data-dismiss="modal" data-target="#compile_binary_rnm_dialog" style="display: none;"></button>
   
   </body>
   <style>
@@ -2427,6 +2515,9 @@ export function getANNSNNConvertPage(){
   let stage3_search_finish=false;
   let stage4_all_finish=false;
   
+  let config_fname = undefined;
+  let pack_fname = undefined;
+  
   let error_occurred = false;
   
   let log_output_lists = new Array();
@@ -2484,6 +2575,71 @@ export function getANNSNNConvertPage(){
           animationDurationUpdate: 10
       }]
   };
+  
+  
+  $("#bin_model_name").on('change', (e)=> {
+      $("#bin_model_fname_error").css("display", "none");
+      $("#bin_pack_fname_err").css("display", "none");
+  });
+  
+  $("#bin_pack_fname_err").on('change', (e) => {
+      $("#bin_model_fname_error").css("display", "none");
+      $("#bin_pack_fname_err").css("display", "none");
+  });
+  
+  function binary_compile_check() {
+      $("#bin_model_fname_error").css("display", "none");
+      $("#bin_pack_fname_err").css("display", "none");
+      config_fname = $("#bin_model_name").val().toString().trim();
+      pack_fname = $("#bin_pack_file_name").val().toString().trim();
+      console.log("config file name="+config_fname);
+      console.log("packed file name="+pack_fname);
+      if (config_fname.length === 0 || config_fname.length >= 10) {
+          $("#bin_model_fname_error").text("名称长度为10以内，小写英文字母，.b 后缀");
+          $("#bin_model_fname_error").css("display", "block");
+          console.log("bin fname length check failed.");
+      } else if (pack_fname.length == 0 || pack_fname.length >= 30) {
+          $("#bin_pack_fname_err").text("名称长度为30以内，小写英文字母、下划线，.dat 后缀");
+          $("#bin_pack_fname_err").css("display", "block");
+          console.log("bin pack fname length failed.");
+      } else {
+          for (var i =0; i < config_fname.length - 2;++i) {
+              if (!(config_fname[i] >= 'a' && config_fname[i] <= 'z')) {
+                  $("#bin_model_fname_error").text("名称长度为10以内，小写英文字母，.b 后缀");
+                  $("#bin_model_fname_error").css("display", "block");
+                  console.log("bin model file name check failed.");
+                  return;
+              }
+          }
+          if(!(config_fname[config_fname.length - 2] === '.' && config_fname[config_fname.length - 1] >= 'a' && config_fname[config_fname.length - 1] <= 'z')) {
+              $("#bin_model_fname_error").text("后缀需要是 .b");
+              $("#bin_model_fname_error").css("display", "block");
+              console.log("bin model file name suffix check failed")
+              return;
+          }
+  
+          for (var i =0; i < pack_fname.length - 4; ++i) {
+              if (!((pack_fname[i] >= 'a' && pack_fname[i] <= 'z') || pack_fname[i] === '_')) {
+                  $("#bin_pack_fname_err").text("名称长度为30以内，小写英文字母、下划线，.dat 后缀");
+                  $("#bin_pack_fname_err").css("display", "block");
+                  console.log("pack file name check failed");
+                  return;
+              }
+          }
+          if (pack_fname.substr(pack_fname.length - 4) !== ".dat") {
+              $("#bin_pack_fname_err").text("后缀需要是  .dat");
+              $("#bin_pack_fname_err").css("display", "block");
+              console.log("bin pack file suffix check failed");
+              return;
+          }
+  
+          $("#close_binary_fname_dialog_btn").click();
+          // 发送到extension
+          vscode.postMessage(JSON.stringify({"config_fname": config_fname, "pack_fname": pack_fname}));
+      }
+  }
+  
+  
   function process_pie_init(option) {
       let processByPie = echarts.init(document.getElementById("total_progress_ball"));
       option.title.text = "0%";
@@ -2874,6 +3030,9 @@ export function getANNSNNConvertPage(){
                     s2_fin_stub = parseInt(data.s2_fin_stub);
                     s3_fin_stub = parseInt(data.s3_fin_stub);
                     s4_fin_stub = parseInt(data.s4_fin_stub);
+                } else if (data.start_compile_binary) {
+                    $("#rnm_binary_btn").click();
+  
                 }
             });
   
@@ -3156,7 +3315,7 @@ export function getSNNSimuPage(){
             </div>
           </div>
   
-          <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;">
+          <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;margin-left: 6px;">
             <div style="text-align: center;margin: auto;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
@@ -3169,7 +3328,7 @@ export function getSNNSimuPage(){
           </div>
   
       </div>
-      <div style="margin-top: 5px;display: block;">
+      <div style="margin-top: 10px;display: block;">
           <!-- <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
             <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
@@ -3205,7 +3364,7 @@ export function getSNNSimuPage(){
             </div>
           </div>
   
-          <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
+          <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);margin-left: 6px;">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -4030,7 +4189,7 @@ export function getSNNModelPage():string{
           <div id="sangky_chart" style="width: 700px;height: 400px;display: inline-block;margin-left: 50px;overflow-y: auto;overflow-x: hidden;"></div>
         </div>
         <!--权重分布图-->
-        <div style="height: 460px;width: 770px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);">
+        <div style="height: 460px;width: 770px;display: inline-block;vertical-align: top;background: rgba(238,238,238,0.4);margin-left: 6px;">
             <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;
@@ -4047,7 +4206,7 @@ export function getSNNModelPage():string{
         </div>
       </div>
   
-      <div style="height: 400px;margin-top: -25px;">
+      <div style="height: 400px;margin-top: -30px;">
           <!-- SNN神经元信息 -->
           <div style="display: inline-block;background: rgba(238,238,238,0.4); height: 400px;width: 740px;">
               <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
@@ -4079,7 +4238,7 @@ export function getSNNModelPage():string{
               </table>
           </div>
   
-          <div style="display: inline-block;background: rgba(238,238,238,0.4);height: 400px;width: 750px;">
+          <div style="display: inline-block;background: rgba(238,238,238,0.4);height: 400px;width: 750px;margin-left: 6px;">
             <div style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
               font-size: 20px;
               color: #333333;

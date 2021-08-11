@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 
 export function getFatigueDataVisPage():string{
-    return `
-    <!DOCTYPE html>
+    return `<!DOCTYPE html>
     <html style="height: 100%;width: 100%;">
     
     <head>
@@ -86,7 +85,7 @@ export function getFatigueDataVisPage():string{
                 <div id="bar_chart_testdata_container" style="width: 700px;height: 400px;margin-left:20px;margin-top: -30px;"></div>
               </div>
           </div>
-          <div class="row" style="height: 45%;width: 100%;margin-top:30px;">
+          <div class="row" style="height: 45%;width: 100%;margin-top:-10px;">
             <div id="sample_data_div" class="col-md-5" style="height:410;width: 700px;background: rgba(238,238,238,0.4);margin-left: 50px;">
               <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
               font-size: 20px;
@@ -496,8 +495,7 @@ export function getFatigueDataVisPage():string{
         var bar_chart_data = echarts.init(document.getElementById(target_id));
         bar_chart_data.setOption(option);
     }
-    </script>
-    `;
+    </script>`;
 }
 
 
@@ -1484,7 +1482,7 @@ export function getSNNSimuFatiguePage():string{
               </div>
             </div>
     
-            <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;">
+            <div style="background: rgba(238,238,238,0.4);width: 750px;height: 380px;display: inline-block;margin-left: 8px;">
               <div style="text-align: center;margin: auto;"><font style="font-family: SourceHanSansCN-Normal;
                 font-size: 20px;
                 color: #333333;
@@ -1497,7 +1495,7 @@ export function getSNNSimuFatiguePage():string{
             </div>
             </div>
     
-            <div style="margin-top: 5px;display: block;">
+            <div style="margin-top: 12px;display: block;">
               <!-- <div style="display: inline-block;width: 760px;height: 460px;background: rgba(238,238,238,0.4);">
                 <div id="model_input_spike_cap" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                   font-size: 20px;
@@ -1533,7 +1531,7 @@ export function getSNNSimuFatiguePage():string{
                 </div>
               </div>
       
-              <div style="width: 760px;height: 460px;display: inline-block;margin: left 20px;vertical-align: top;background: rgba(238,238,238,0.4);">
+              <div style="width: 760px;height: 460px;display: inline-block;margin-left: 8px;vertical-align: top;background: rgba(238,238,238,0.4);">
                   <div id="model_layers_vis_tab_caption" style="text-align: center;"><font style="font-family: SourceHanSansCN-Normal;
                     font-size: 20px;
                     color: #333333;

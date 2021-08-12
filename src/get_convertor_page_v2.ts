@@ -104,7 +104,7 @@ export function getConvertorDataPageV2(sample0:vscode.Uri,sample1:vscode.Uri,sam
               <div id="bar_chart_testdata_container" style="width: 700px;height: 400px;margin-left:20px;margin-top: -30px;"></div>
             </div>
         </div>
-        <div class="row" style="height: 45%;width: 100%;margin-top:-20px;">
+        <div class="row" style="height: 45%;width: 100%;margin-top: 10px;">
           <div id="sample_data_div" class="col-md-5" style="height:410;width: 700px;background: rgba(238,238,238,0.4);margin-left: 50px;">
             <div style="text-align: center;margin-left:15px;color: black;font-family: SourceHanSansCN-Normal;
             font-size: 20px;
@@ -2269,7 +2269,7 @@ export function getANNSNNConvertPage(){
   <div class="modal fade" id="compile_binary_rnm_dialog" tabindex="-1" role="dialog" aria-labelledby="compile_binary_rnm_dialog_label" aria-hidden="true" 
                   style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white; width: 747px">
-        <div class="modal-content" style="width: 747px; height: 498px; background-color: white;border-radius: 15px;">
+        <div class="modal-content" style="width: 747px; height: 360px; background-color: white;border-radius: 15px;">
           <div style="background: #EEEEEE; height: 60px; border-top-right-radius: 15px; border-top-left-radius: 15px;">
             <button type="button" id="close_binary_fname_dialog_btn" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
             margin-right: 30px;
@@ -2277,6 +2277,7 @@ export function getANNSNNConvertPage(){
             height: 30px;
             margin-top: 9px;
             padding-top: 15px;
+            display: none;
             ">
               &times;
             </button>
@@ -2286,24 +2287,43 @@ export function getANNSNNConvertPage(){
             font-weight: bold;
             letter-spacing: 1.26px;padding-left: 29px;padding-top: 15px;
           ">
-              生成二进制文件
+              重命名二进制文件
             </div>
           </div>
           <div>
                     <form role="form" id="binary_model_file">
-                        <div id="bin_model_div" style="margin-top: 50px;">
+  
+                      <div>
+                          <label for="option_label" style="font-family: SourceHanSansCN-Normal;
+                          font-size: 22px;
+                          color: #333333;
+                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;margin-left: 100px;">是否重命名编译生成二进制文件：</label>
+                          <select id="option_label" style="margin-top: 20px; margin-left: 160px;background: white; 
+                          border: 1px solid #D9D9D9;
+                          border-radius: 6px;
+                          border-radius: 6px;width: 80px;font-family: PingFangSC-Regular;
+  font-size: 22px;
+  color: #999999;
+  letter-spacing: 0;
+  line-height: 14px;">
+                            <option>是</option>
+                            <option>否</option>
+                          </select>
+                      </div>
+  
+                        <div id="bin_model_div" style="margin-top: 15px;">
                             <label for="bin_model_name" id="lb_bin_model_name" style="font-family: SourceHanSansCN-Normal;
                             font-size: 22px;
                             color: #333333;
-                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">模型文件: </label>
+                            letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;margin-left: 30px;">模型文件名: </label>
                             <input type="text" id="bin_model_name" style="background: white; 
                             border: 1px solid #D9D9D9;
                             border-radius: 6px;
-                            border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+                            border-radius: 6px;width: 400px;font-family: PingFangSC-Regular;
     font-size: 22px;
     color: #999999;
     letter-spacing: 0;
-    line-height: 14px;" placeholder="config.b">
+    line-height: 14px;" placeholder=".b后缀文件名">
                         </div>
                         <p id="bin_model_fname_error" style="font-family: SourceHanSansCN-Normal;
                         font-size: 18px;
@@ -2314,19 +2334,19 @@ export function getANNSNNConvertPage(){
                         height: 20px;
                         display: none;">名称长度为10以内，小写英文字母，.b 后缀</p>
   
-                        <div id="bin_pack_file_div" style="margin-top: 50px;">
+                        <div id="bin_pack_file_div" style="margin-top: 15px;">
                           <label for="bin_pack_file_name" id="lb_bin_pack_file_name" style="font-family: SourceHanSansCN-Normal;
                           font-size: 22px;
                           color: #333333;
-                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;">编解码配置文件: </label>
-                          <input type="text" id="bin_pack_file_name" style="background: white; 
+                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;margin-left: 30px;">编解码配置文件名: </label>
+                          <input type="text" id="bin_pack_file_name" style="background:white; 
                           border: 1px solid #D9D9D9;
                           border-radius: 6px;
-                          border-radius: 6px;width: 478px;font-family: PingFangSC-Regular;
+                          border-radius: 6px;width: 400px;font-family: PingFangSC-Regular;
   font-size: 22px;
   color: #999999;
   letter-spacing: 0;
-  line-height: 14px;" placeholder="packed_bin_files.dat">
+  line-height: 14px;" placeholder=".dat后缀文件名">
                       </div>
                       <p id="bin_pack_fname_err" style="font-family: SourceHanSansCN-Normal;
                       font-size: 18px;
@@ -2339,10 +2359,15 @@ export function getANNSNNConvertPage(){
   
                     </form>
           </div>
-          <div style="margin-top: 80px;margin-bottom: 40px;">
+          <div style="margin-top: 40px;margin-bottom: 40px;">
+              <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss_compile_dialog" style="background: #F3F3F3;
+              border: 1px solid #D7D7D7;
+              border-radius: 4px;
+              border-radius: 4px;width: 140px;margin-left: 160px;">取消编译
+              </button>
               <button type="button" class="btn btn-primary" onclick="binary_compile_check()" id="binary_file_ok_btn" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
-              border-radius: 2px;
-              border-radius: 2px;width: 200px;height: 40px;margin-left: 260px;">确认
+              border-radius: 4px;
+              border-radius: 4px;width: 140px;height: 40px;margin-left: 120px;">开始编译
               </button>
           </div>
         </div><!-- /.modal-content -->
@@ -2576,6 +2601,21 @@ export function getANNSNNConvertPage(){
       }]
   };
   
+  $("#option_label").on("change", (e)=> {
+      console.log("编译二进制文件对话框选项切换");
+      let opt_compile = $("#option_label").val();
+      if (opt_compile === "是") {
+          $("#bin_model_name").prop("disabled", false);
+          $("#bin_pack_file_name").prop("disabled", false);
+          $("#bin_model_name").css("background", "white");
+          $("#bin_pack_file_name").css("background", "white");
+      } else {
+          $("#bin_model_name").prop("disabled", true);
+          $("#bin_pack_file_name").prop("disabled", true);
+          $("#bin_model_name").css("background", "rgb(209,209,209)");
+          $("#bin_pack_file_name").css("background", "rgb(209,209,209)");
+      }
+  });
   
   $("#bin_model_name").on('change', (e)=> {
       $("#bin_model_fname_error").css("display", "none");

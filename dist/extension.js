@@ -8691,6 +8691,8 @@ function getANNSNNConvertPage() {
           $("#bin_pack_file_name").prop("disabled", true);
           $("#bin_model_name").css("background", "rgb(209,209,209)");
           $("#bin_pack_file_name").css("background", "rgb(209,209,209)");
+          $("#bin_model_name").val("config.b");
+          $("#bin_pack_file_name").val("packed_bin_files.dat");
       }
   });
   

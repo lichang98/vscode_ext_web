@@ -174,6 +174,8 @@ function activate(context) {
     // let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
     let currPanelDisposed = false;
     let tmpDarlangWebview = undefined;
+    let isCompiling = false;
+    let isConversionExeced = false;
     function isAllOtherTreeViewInvisible() {
         return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible;
     }
@@ -682,6 +684,7 @@ function activate(context) {
                 }
                 let commandStr = PYTHON_INTERPRETER + CONVERT_SCRIPT_PARAMS;
                 currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.webview.postMessage(JSON.stringify({ "log_output": "模型转换程序启动中......" }));
+                isConversionExeced = true;
                 let scriptProcess = child_process_1.exec(commandStr, {});
                 // let logOutputPanel = vscode.window.createOutputChannel("Darwin Convertor");
                 if (LOG_OUTPUT_CHANNEL === undefined) {
@@ -837,10 +840,11 @@ function activate(context) {
                     LOG_OUTPUT_CHANNEL = vscode.window.createOutputChannel("Darwin Convertor");
                 }
                 LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.show();
-                LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("二进制文件编译中...");
+                LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译中...");
                 let binaryCompilingInterval = setInterval(() => {
-                    LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("...");
+                    LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append(".");
                 }, 500);
+                isCompiling = true;
                 child_process_1.exec(cmdStr, (err, stdout, stderr) => {
                     clearInterval(binaryCompilingInterval);
                     if (err) {
@@ -850,7 +854,9 @@ function activate(context) {
                     }
                     else {
                         fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(path.dirname(PROJ_SAVE_PATH), data.config_fname));
+                        fs.renameSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", data.config_fname));
                         fs.renameSync(path.join(path.dirname(PROJ_SAVE_PATH), "packed_bin_files.dat"), path.join(path.dirname(PROJ_SAVE_PATH), data.pack_fname));
+                        fs.copyFileSync(path.join(path.dirname(PROJ_SAVE_PATH), data.pack_fname), path.join(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", data.pack_fname)));
                         DARWIN_LANG_BIN_PATHS.splice(0);
                         inMemTreeViewStruct[0].children.splice(1, 1);
                         treeview.data = inMemTreeViewStruct;
@@ -886,6 +892,7 @@ function activate(context) {
                         });
                         treeview.refresh();
                     }
+                    isCompiling = false;
                 });
             }
         });
@@ -1196,13 +1203,13 @@ function activate(context) {
                         path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("1_1config.txt") >= 0) {
                         continue;
                     }
-                    if (DARWIN_LANG_BIN_PATHS[i].toString().search("config.b") !== -1) {
-                        TreeViewProvider_1.addDarwinFiles("config.b");
-                        inMemTreeViewStruct[0].children[1].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode("config.b"));
+                    if (path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).search(".b") !== -1 && path.basename(DARWIN_LANG_BIN_PATHS[i].toString()) !== "1_1config.b") {
+                        TreeViewProvider_1.addDarwinFiles(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()));
+                        inMemTreeViewStruct[0].children[1].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(path.basename(DARWIN_LANG_BIN_PATHS[i].toString())));
                     }
-                    else if (DARWIN_LANG_BIN_PATHS[i].toString().search("connfiles") !== -1) {
-                        TreeViewProvider_1.addDarwinFiles("packed_bin_files.dat");
-                        inMemTreeViewStruct[0].children[1].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                    else if (path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).search(".dat") !== -1) {
+                        TreeViewProvider_1.addDarwinFiles(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()));
+                        inMemTreeViewStruct[0].children[1].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(path.basename(DARWIN_LANG_BIN_PATHS[i].toString())));
                     }
                     // if(inMemTreeViewStruct[0].children){
                     // 	var childLen = inMemTreeViewStruct[0].children.length;
@@ -1263,6 +1270,8 @@ function activate(context) {
         ANN_MODEL_FILE_PATH = undefined;
         DARWIN_LANG_BIN_PATHS.splice(0);
         DARWIN_LANG_FILE_PATHS.splice(0);
+        isConversionExeced = false;
+        isCompiling = false;
         // currentPanel = vscode.window.createWebviewPanel("darwin2web", "模型转换工具",vscode.ViewColumn.One,{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
         // // 主界面由electron 应用启动
         // currentPanel.webview.html =getConvertorPageV2();
@@ -1762,7 +1771,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
     });
     // 启动显示SNN模型的命令
     vscode.commands.registerCommand("snn_model_ac.show_snn_model", () => {
-        if (DARWIN_LANG_FILE_PATHS.length === 0) {
+        if (DARWIN_LANG_FILE_PATHS.length === 0 || !isConversionExeced) {
             // vscode.window.showErrorMessage("请先完成转换步骤！！！");
             currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.reveal();
             currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先完成转换步骤！" }));
@@ -1831,7 +1840,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
             panelSNNModelVis.dispose();
             panelSNNModelVis = undefined;
         }
-        if (DARWIN_LANG_FILE_PATHS.length === 0) {
+        if (DARWIN_LANG_FILE_PATHS.length === 0 || !isConversionExeced) {
             currentPanel === null || currentPanel === void 0 ? void 0 : currentPanel.reveal();
             currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先完成转换步骤！" }));
             return;
@@ -1958,6 +1967,10 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
         if (DARWIN_LANG_FILE_PATHS.length === 0) {
             // vscode.window.showErrorMessage("请先完成转换步骤！！！");
             currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请先完成转换步骤！" }));
+            return;
+        }
+        if (isCompiling) {
+            currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请等待当前编译结束!" }));
             return;
         }
         if (!TreeViewProvider_1.ITEM_ICON_MAP.has("SNN二进制模型")) {

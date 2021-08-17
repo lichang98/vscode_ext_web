@@ -859,11 +859,15 @@ export function activate(context: vscode.ExtensionContext) {
 						fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out"), (err, files)=>{
 							files.forEach(file => {
 								if(file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1){
-									DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out", file));
+									if (file.search("\\.b") === -1 && file.search("\\.dat") === -1) {
+										DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out", file));
+									}
 									if(file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
 												file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1){
 										addDarwinFiles(data.config_fname);
 										addDarwinFiles(data.pack_fname);
+										DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out", data.config_fname));
+										DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out", data.pack_fname));
 										inMemTreeViewStruct[0].children![1].children![0].children![0].children!.splice(0);
 										inMemTreeViewStruct[0].children![1].children![0].children![0].children!.push(new TreeItemNode(data.config_fname));
 										inMemTreeViewStruct[0].children![1].children![0].children![1].children!.splice(0);
@@ -1194,36 +1198,63 @@ export function activate(context: vscode.ExtensionContext) {
 				// ITEM_ICON_MAP.set("SNN二进制模型", "imgs/darwin_icon_model_new.png");
 				addDarwinFold("SNN二进制模型");
 				// inMemTreeViewStruct[0].children?.push(new TreeItemNode("SNN二进制模型",[]));
-				for(let i=0;i<DARWIN_LANG_BIN_PATHS.length;++i){
-					if(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("clear") >=0 || 
-							path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("enable") >=0||
-							path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("re_config") >=0||
-							path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("nodelist")>=0||
-							path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("linkout") >=0||
-							path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("layerWidth") >=0 ||
-							path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("1_1config.txt") >=0){
-								continue;
+
+				let darwinBinFile = "";
+				let darwinPackFile = "";
+
+				for (let i=0; i < DARWIN_LANG_BIN_PATHS.length;++i) {
+					if (path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).search("\\.b") > 0) {
+						darwinBinFile = path.basename(DARWIN_LANG_BIN_PATHS[i].toString());
+					} else if (path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).search("\\.dat") > 0) {
+						darwinPackFile = path.basename(DARWIN_LANG_BIN_PATHS[i].toString());
 					}
-					if(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).search(".b") !== -1 && path.basename(DARWIN_LANG_BIN_PATHS[i].toString()) !== "1_1config.b"){
-						addDarwinFiles(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()));
-						inMemTreeViewStruct[0].children![1].children![0].children![0].children!.push(new TreeItemNode(path.basename(DARWIN_LANG_BIN_PATHS[i].toString())));
-					}else if(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).search(".dat") !== -1){
-						addDarwinFiles(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()));
-						inMemTreeViewStruct[0].children![1].children![0].children![1].children!.push(new TreeItemNode(path.basename(DARWIN_LANG_BIN_PATHS[i].toString())));
-					}
-					// if(inMemTreeViewStruct[0].children){
-					// 	var childLen = inMemTreeViewStruct[0].children.length;
-					// 	// ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
-					// 	if(DARWIN_LANG_BIN_PATHS[i].toString().search("config.b") !== -1){
-					// 		addDarwinFiles("config.b");
-					// 		inMemTreeViewStruct[0].children[childLen-1].children?.push(new TreeItemNode("config.b"));
-					// 	}else if(DARWIN_LANG_BIN_PATHS[i].toString().search("connfiles") !== -1){
-					// 		addDarwinFiles("packed_bin_files.dat");
-					// 		inMemTreeViewStruct[0].children[childLen-1].children?.push(new TreeItemNode("packed_bin_files.dat"));
-					// 	}
-					// 	// inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
-					// }
 				}
+
+				if (darwinBinFile === "1_1config.b") {
+					darwinBinFile = "config.b";
+				}
+
+				addDarwinFiles(darwinBinFile);
+				addDarwinFiles(darwinPackFile);
+				inMemTreeViewStruct[0].children![1].children![0].children![0].children!.push(new TreeItemNode(darwinBinFile));
+				inMemTreeViewStruct[0].children![1].children![0].children![1].children!.push(new TreeItemNode(darwinPackFile));
+
+				// for(let i=0;i<DARWIN_LANG_BIN_PATHS.length;++i){
+				// 	if(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("clear") >=0 || 
+				// 			path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("enable") >=0||
+				// 			path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("re_config") >=0||
+				// 			path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("nodelist")>=0||
+				// 			path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("linkout") >=0||
+				// 			path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("layerWidth") >=0 ||
+				// 			path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("1_1config.txt") >=0){
+				// 				continue;
+				// 	}
+
+				// 	if (path.basename(DARWIN_LANG_BIN_PATHS[i].toString()) === "1_1config.b") {
+				// 		addDarwinFiles("config.b");
+				// 		inMemTreeViewStruct[0].children![1].children![0].children![0].children!.push(new TreeItemNode("config.b"));
+				// 	} else if(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).search("\\.b") > 0){
+				// 		console.log("加载二进制文件到节点0："+path.basename(DARWIN_LANG_BIN_PATHS[i].toString()));
+				// 		addDarwinFiles(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()));
+				// 		inMemTreeViewStruct[0].children![1].children![0].children![0].children!.push(new TreeItemNode(path.basename(DARWIN_LANG_BIN_PATHS[i].toString())));
+				// 	}else if(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).search("\\.dat") > 0){
+				// 		console.log("加载二进制文件到节点1："+path.basename(DARWIN_LANG_BIN_PATHS[i].toString()));
+				// 		addDarwinFiles(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()));
+				// 		inMemTreeViewStruct[0].children![1].children![0].children![1].children!.push(new TreeItemNode(path.basename(DARWIN_LANG_BIN_PATHS[i].toString())));
+				// 	}
+				// 	// if(inMemTreeViewStruct[0].children){
+				// 	// 	var childLen = inMemTreeViewStruct[0].children.length;
+				// 	// 	// ITEM_ICON_MAP.set(path.basename(darwinlang_bin_paths[i].toString()), "imgs/file.png");
+				// 	// 	if(DARWIN_LANG_BIN_PATHS[i].toString().search("config.b") !== -1){
+				// 	// 		addDarwinFiles("config.b");
+				// 	// 		inMemTreeViewStruct[0].children[childLen-1].children?.push(new TreeItemNode("config.b"));
+				// 	// 	}else if(DARWIN_LANG_BIN_PATHS[i].toString().search("connfiles") !== -1){
+				// 	// 		addDarwinFiles("packed_bin_files.dat");
+				// 	// 		inMemTreeViewStruct[0].children[childLen-1].children?.push(new TreeItemNode("packed_bin_files.dat"));
+				// 	// 	}
+				// 	// 	// inMemTreeViewStruct[0].children[child_len-1].children?.push(new TreeItemNode(path.basename(darwinlang_bin_paths[i].toString())));
+				// 	// }
+				// }
 
 				treeview.data = inMemTreeViewStruct;
 				treeview.refresh();

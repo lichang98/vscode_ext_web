@@ -10,6 +10,7 @@ sys.path.append(baseDirPath)
 import pack_bin_files
 import shutil
 
+
 outputPath = os.path.join(baseDirPath, "model_out", "test", "darlang_out")
 # argv 1: project name
 if len(sys.argv) > 1:

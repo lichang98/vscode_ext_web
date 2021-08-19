@@ -10,7 +10,7 @@ import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getAN
 import {getSegDataVisPage, getSegSimulatePage, getANNSNNConvertSegPage} from "./get_seg_pages";
 import {getSpeechClsDataPage, getANNSNNConvertSpeechPage, getSNNSimuSpeechPage} from "./get_speech_pages";
 import {getFatigueDataVisPage, getANNSNNConvertFatiguePage, getSNNSimuFatiguePage} from "./get_fatigue_pages";
-import {exec, execSync} from "child_process";
+import {ChildProcess, exec, execSync, spawn} from "child_process";
 const decode = require('audio-decode');
 var encoding = require('encoding');
 const iconv = require('iconv-lite');
@@ -173,6 +173,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let isCompiling:boolean = false;
 	let isConversionExeced = false;
+
+	let compileSubProc: undefined|ChildProcess = undefined;
+	let binaryCompilingInterval:NodeJS.Timeout|undefined = undefined;
 
 	function isAllOtherTreeViewInvisible(){
 		return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible;
@@ -824,12 +827,12 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 				LOG_OUTPUT_CHANNEL?.show();
 				LOG_OUTPUT_CHANNEL?.append("\n二进制文件编译中...");
-				let binaryCompilingInterval = setInterval(()=>{
+				binaryCompilingInterval = setInterval(()=>{
 					LOG_OUTPUT_CHANNEL?.append(".");
 				}, 500);
 				isCompiling = true;
-				exec(cmdStr, (err, stdout, stderr)=>{
-					clearInterval(binaryCompilingInterval);
+				compileSubProc = exec(cmdStr, (err, stdout, stderr)=>{
+					clearInterval(binaryCompilingInterval!);
 					if(err){
 						console.log("执行darwin2二进制部署文件错误...");
 						vscode.window.showErrorMessage("二进制文件生成错误!!!");
@@ -886,6 +889,19 @@ export function activate(context: vscode.ExtensionContext) {
 					isCompiling = false;
 				});
 
+				console.log("编译进程号："+compileSubProc.pid);
+			} else if (data.stop_compile) {
+				console.log("extension 接收到结束编译信号。。。。");
+				if (process.platform === "win32") {
+					spawn("taskkill", ["/pid", ""+compileSubProc!.pid, '/f', '/t']);
+				} else {
+					process.kill(-compileSubProc!.pid);
+				}
+				clearInterval(binaryCompilingInterval!);
+				LOG_OUTPUT_CHANNEL?.append("\n编译进程停止中...");
+				binaryCompilingInterval = setInterval(()=>{
+					LOG_OUTPUT_CHANNEL?.append(".");
+				}, 500);
 			}
 		});
 	}
@@ -2005,7 +2021,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 			return;
 		}
 		if (isCompiling) {
-			currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请等待当前编译结束!"}));
+			currentPanel!.webview.postMessage(JSON.stringify({"show_error":"请等待当前编译结束!", "show_stop_compile": "yes"}));
 			return;
 		}
 		if(!ITEM_ICON_MAP.has("SNN二进制模型")){

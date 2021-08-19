@@ -176,6 +176,8 @@ function activate(context) {
     let tmpDarlangWebview = undefined;
     let isCompiling = false;
     let isConversionExeced = false;
+    let compileSubProc = undefined;
+    let binaryCompilingInterval = undefined;
     function isAllOtherTreeViewInvisible() {
         return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible;
     }
@@ -841,11 +843,11 @@ function activate(context) {
                 }
                 LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.show();
                 LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译中...");
-                let binaryCompilingInterval = setInterval(() => {
+                binaryCompilingInterval = setInterval(() => {
                     LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append(".");
                 }, 500);
                 isCompiling = true;
-                child_process_1.exec(cmdStr, (err, stdout, stderr) => {
+                compileSubProc = child_process_1.exec(cmdStr, (err, stdout, stderr) => {
                     clearInterval(binaryCompilingInterval);
                     if (err) {
                         console.log("执行darwin2二进制部署文件错误...");
@@ -898,6 +900,21 @@ function activate(context) {
                     }
                     isCompiling = false;
                 });
+                console.log("编译进程号：" + compileSubProc.pid);
+            }
+            else if (data.stop_compile) {
+                console.log("extension 接收到结束编译信号。。。。");
+                if (process.platform === "win32") {
+                    child_process_1.spawn("taskkill", ["/pid", "" + compileSubProc.pid, '/f', '/t']);
+                }
+                else {
+                    process.kill(-compileSubProc.pid);
+                }
+                clearInterval(binaryCompilingInterval);
+                LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n编译进程停止中...");
+                binaryCompilingInterval = setInterval(() => {
+                    LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append(".");
+                }, 500);
             }
         });
     }
@@ -1995,7 +2012,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
             return;
         }
         if (isCompiling) {
-            currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请等待当前编译结束!" }));
+            currentPanel.webview.postMessage(JSON.stringify({ "show_error": "请等待当前编译结束!", "show_stop_compile": "yes" }));
             return;
         }
         if (!TreeViewProvider_1.ITEM_ICON_MAP.has("SNN二进制模型")) {
@@ -8366,6 +8383,12 @@ function getANNSNNConvertPage() {
           <div style="margin-top: 10px; width: 500px; height: 100px;">
             <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 28px;color: #666666;letter-spacing: 1.25px; text-align: center;padding-left: 50px;overflow-y: auto;white-space: pre-wrap;height: 100%;width: 95%;">错误信息</div>
           </div>
+                  <div>
+                      <button type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #ffccaf 0%, #e93434 100%);
+                      border-radius: 100px;
+                      margin-left: 155px;width: 160px;height: 50px; text-align: center;display: none;" id="stp_compile_btn">停止编译
+                      </button>
+                  </div>
         </div>
         <div style="margin-top: 40px;margin-bottom: 40px;">
           <button type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
@@ -8716,6 +8739,13 @@ function getANNSNNConvertPage() {
       }]
   };
   
+  $("#stp_compile_btn").on("click", (e) => {
+      vscode.postMessage(JSON.stringify({"stop_compile": "yes"}));
+      console.log("发送停止编译。。。。");
+      $("#alert_modal_btn").click();
+  });
+  
+  
   $("#option_label").on("change", (e)=> {
       console.log("编译二进制文件对话框选项切换");
       let opt_compile = $("#option_label").val();
@@ -8752,7 +8782,7 @@ function getANNSNNConvertPage() {
       console.log("config file name="+config_fname);
       console.log("packed file name="+pack_fname);
       if (config_fname.length === 0 || config_fname.length >= 10) {
-          $("#bin_model_fname_error").text("名称长度为10以内，小写英文字母，.b 后缀");
+          $("#bin_model_fname_error").text("名称长度为9以内，数字小写英文字母，.b 后缀");
           $("#bin_model_fname_error").css("display", "block");
           console.log("bin fname length check failed.");
       } else if (pack_fname.length == 0 || pack_fname.length >= 30) {
@@ -8762,7 +8792,7 @@ function getANNSNNConvertPage() {
       } else {
           for (var i =0; i < config_fname.length - 2;++i) {
               if (!(config_fname[i] >= 'a' && config_fname[i] <= 'z')) {
-                  $("#bin_model_fname_error").text("名称长度为10以内，小写英文字母，.b 后缀");
+                  $("#bin_model_fname_error").text("名称长度为9以内，数字小写英文字母，.b 后缀");
                   $("#bin_model_fname_error").css("display", "block");
                   console.log("bin model file name check failed.");
                   return;
@@ -9174,6 +9204,9 @@ function getANNSNNConvertPage() {
                   document.getElementById("total_progress_ball").style.display = "none";
                 } else if (data.show_error)  {
                   $("#error_detail").text(data.show_error);
+                  if (data.show_stop_compile) {
+                      $("#stp_compile_btn").css("display", "inline-block");
+                  }
                   $("#alert_modal_btn").click();
                 } else if (data.preset_param) {
                     console.log("转换界面接收到预设参数.....");

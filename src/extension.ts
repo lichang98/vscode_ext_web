@@ -307,6 +307,12 @@ export function activate(context: vscode.ExtensionContext) {
 	let panelSNNModelVis:vscode.WebviewPanel|undefined = undefined;
 	let panelSNNVisWeb:vscode.WebviewPanel|undefined = undefined;
 
+	let sampleImgsDir = path.join(__dirname, "..", "src", "resources", "script_res");
+	let snnInfoFileDir = path.join(__dirname, "inner_scripts");
+	let SNAP_SHOT_FNAME = "proj_snap_shot.pkl";
+	let snapshotScript = path.join(__dirname, "darwin2sim", "proj_snapshot.py");
+	let snapshotApplyScript = path.join(__dirname, "darwin2sim", "proj_snapshot_apply.py");
+
 	let PROJ_DESC_INFO = {
 		"project_name":"",
 		"project_type":"",
@@ -741,6 +747,12 @@ export function activate(context: vscode.ExtensionContext) {
 						});
 						vscode.commands.executeCommand("item_darwinLang_convertor.start_convert");
 					}
+
+					// 将生成的brian2_snn_info.json 文件打包，并在项目文件中记录，在加载工程文件后覆盖原有文件
+					let snapshotProcess = exec(PYTHON_INTERPRETER+" "+ snapshotScript+ " "+sampleImgsDir+" "+ path.join(snnInfoFileDir, "brian2_snn_info.json")+" "+path.join(path.dirname(PROJ_SAVE_PATH!), SNAP_SHOT_FNAME));
+					snapshotProcess.stderr?.on("data", (e)=>{
+						console.log("生成snapshot 文件错误："+e);
+					});
 				});
 			} else if (data.import_choose_path) {
 				const options:vscode.OpenDialogOptions = {
@@ -1275,6 +1287,16 @@ export function activate(context: vscode.ExtensionContext) {
 				treeview.data = inMemTreeViewStruct;
 				treeview.refresh();
 			}
+
+			// 应用snapshot 文件
+			// 应用之前清空 sample img 所在文件夹
+			fs.readdirSync(sampleImgsDir).forEach(file=>{
+				fs.unlinkSync(path.join(sampleImgsDir, file));
+			});
+			let snapShotApplyProcess =exec(PYTHON_INTERPRETER + " " + snapshotApplyScript+ " " + path.join(path.dirname(PROJ_SAVE_PATH!), SNAP_SHOT_FNAME) + " " + sampleImgsDir + " " + snnInfoFileDir);
+			snapShotApplyProcess.stderr?.on("data", (e)=>{
+				console.log("snapshot 应用错误："+e);
+			});
 		});
 	}));
 
@@ -1819,7 +1841,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 
 	// 启动显示SNN模型的命令
 	vscode.commands.registerCommand("snn_model_ac.show_snn_model", ()=>{
-		if (DARWIN_LANG_FILE_PATHS.length === 0 || !isConversionExeced) {
+		if (DARWIN_LANG_FILE_PATHS.length === 0) {
 			// vscode.window.showErrorMessage("请先完成转换步骤！！！");
 			currentPanel?.reveal();
 			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！"}));
@@ -1892,7 +1914,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 			panelSNNModelVis.dispose();
 			panelSNNModelVis = undefined;
 		}
-		if (DARWIN_LANG_FILE_PATHS.length === 0 || !isConversionExeced) {
+		if (DARWIN_LANG_FILE_PATHS.length === 0) {
 			currentPanel?.reveal();
 			currentPanel!.webview.postMessage(JSON.stringify({"show_error": "请先完成转换步骤！"}));
 			return;

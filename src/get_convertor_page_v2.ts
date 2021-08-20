@@ -3074,6 +3074,8 @@ export function getANNSNNConvertPage(){
                   $("#error_detail").text(data.show_error);
                   if (data.show_stop_compile) {
                       $("#stp_compile_btn").css("display", "inline-block");
+                  } else {
+                      $("#stp_compile_btn").css("display", "none");
                   }
                   $("#alert_modal_btn").click();
                 } else if (data.preset_param) {

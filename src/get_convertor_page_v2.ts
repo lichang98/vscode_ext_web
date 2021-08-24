@@ -1526,7 +1526,7 @@ export function getConvertorPageV2(){
         $(document).ready(function(){
           $("#close_modal_btn").on("click", ()=>{
             $("#error_detail").css("height", "300px");
-            $("#error_detail").css("width", "700px");
+            $("#error_detail").css("width", "500px");
           });
           window.addEventListener("message", (event)=>{
             const data = JSON.parse(event.data);
@@ -1534,6 +1534,9 @@ export function getConvertorPageV2(){
               console.log("接收到show_error 消息："+data.show_error);
               $("#error_detail").html(data.show_error);
               $("#modal_dialog_error_icon").css("opacity",1.0);
+    
+              $("#error_detail").css("height", "300px");
+              $("#error_detail").css("width", "500px");
               if (data.display_loading) {
                 $("#loading_anim").css("display", "block");
                 $("#modal_dialog_error_icon").css("opacity", 0.0);
@@ -2251,18 +2254,16 @@ export function getANNSNNConvertPage(){
           <div style="margin-top: 10px; width: 500px; height: 100px;">
             <div id="error_detail" for="project_name_projrefac" style="font-family: SourceHanSansCN-Bold;font-size: 28px;color: #666666;letter-spacing: 1.25px; text-align: center;padding-left: 50px;overflow-y: auto;white-space: pre-wrap;height: 100%;width: 95%;">错误信息</div>
           </div>
-                  <div>
-                      <button type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #ffccaf 0%, #e93434 100%);
-                      border-radius: 100px;
-                      margin-left: 155px;width: 160px;height: 50px; text-align: center;display: none;" id="stp_compile_btn">停止编译
-                      </button>
-                  </div>
         </div>
         <div style="margin-top: 40px;margin-bottom: 40px;">
-          <button type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+          <button id="error_dialog_close_btn" type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
                   border-radius: 2px;
                   margin-left: 180px;width: 150px;height: 50px; text-align: center;display: inline-block;" data-dismiss="modal">关闭
           </button>
+                  <button type="button" class="btn btn-primary" style="background-image: linear-gradient(180deg, #ffccaf 0%, #e93434 100%);
+                  border-radius: 2px;
+                  margin-left: 100px;width: 160px;height: 50px; text-align: center;display: none;" id="stp_compile_btn">停止编译
+                  </button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal -->
@@ -3074,8 +3075,10 @@ export function getANNSNNConvertPage(){
                   $("#error_detail").text(data.show_error);
                   if (data.show_stop_compile) {
                       $("#stp_compile_btn").css("display", "inline-block");
+                      $("#error_dialog_close_btn").css("margin-left", "60px");
                   } else {
                       $("#stp_compile_btn").css("display", "none");
+                      $("#error_dialog_close_btn").css("margin-left", "180px");
                   }
                   $("#alert_modal_btn").click();
                 } else if (data.preset_param) {

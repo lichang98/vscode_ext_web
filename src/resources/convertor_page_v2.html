@@ -489,7 +489,7 @@ function modal_show_error_dialog_hide() {
     $(document).ready(function(){
       $("#close_modal_btn").on("click", ()=>{
         $("#error_detail").css("height", "300px");
-        $("#error_detail").css("width", "700px");
+        $("#error_detail").css("width", "500px");
       });
       window.addEventListener("message", (event)=>{
         const data = JSON.parse(event.data);
@@ -497,6 +497,9 @@ function modal_show_error_dialog_hide() {
           console.log("接收到show_error 消息："+data.show_error);
           $("#error_detail").html(data.show_error);
           $("#modal_dialog_error_icon").css("opacity",1.0);
+
+          $("#error_detail").css("height", "300px");
+          $("#error_detail").css("width", "500px");
           if (data.display_loading) {
             $("#loading_anim").css("display", "block");
             $("#modal_dialog_error_icon").css("opacity", 0.0);

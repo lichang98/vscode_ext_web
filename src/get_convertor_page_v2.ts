@@ -2339,7 +2339,7 @@ export function getANNSNNConvertPage(){
                         margin-bottom: 2px;
                         letter-spacing: 1.15px;
                         height: 20px;
-                        display: none;">名称长度为10以内，小写英文字母，.b 后缀</p>
+                        display: none;">名称长度为9以内，小写英文字母，.b 后缀</p>
   
                         <div id="bin_pack_file_div" style="margin-top: 15px;">
                           <label for="bin_pack_file_name" id="lb_bin_pack_file_name" style="font-family: SourceHanSansCN-Normal;
@@ -2362,7 +2362,7 @@ export function getANNSNNConvertPage(){
                       margin-bottom: 2px;
                       letter-spacing: 1.15px;
                       height: 20px;
-                      display: none;">名称长度为10以内，小写英文字母、下划线，.dat 后缀</p>
+                      display: none;">名称长度为30以内，小写英文字母、下划线，.dat 后缀</p>
   
                     </form>
           </div>
@@ -2660,7 +2660,7 @@ export function getANNSNNConvertPage(){
           console.log("bin pack fname length failed.");
       } else {
           for (var i =0; i < config_fname.length - 2;++i) {
-              if (!(config_fname[i] >= 'a' && config_fname[i] <= 'z')) {
+              if (!((config_fname[i] >= 'a' && config_fname[i] <= 'z') || (config_fname[i] >= '0' && config_fname[i] <= '9'))) {
                   $("#bin_model_fname_error").text("名称长度为9以内，数字小写英文字母，.b 后缀");
                   $("#bin_model_fname_error").css("display", "block");
                   console.log("bin model file name check failed.");
@@ -2675,7 +2675,7 @@ export function getANNSNNConvertPage(){
           }
   
           for (var i =0; i < pack_fname.length - 4; ++i) {
-              if (!((pack_fname[i] >= 'a' && pack_fname[i] <= 'z') || pack_fname[i] === '_')) {
+              if (!((pack_fname[i] >= 'a' && pack_fname[i] <= 'z') || pack_fname[i] === '_' || (pack_fname[i] >= '0' && pack_fname[i] <= '9'))) {
                   $("#bin_pack_fname_err").text("名称长度为30以内，小写英文字母、下划线，.dat 后缀");
                   $("#bin_pack_fname_err").css("display", "block");
                   console.log("pack file name check failed");

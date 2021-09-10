@@ -291,6 +291,7 @@ function activate(context) {
     let X_TEST_DATA_PATH = undefined;
     let Y_TEST_DATA_PATH = undefined;
     let ANN_MODEL_FILE_PATH = undefined;
+    let SNN_VTH = "1";
     let DARWIN_LANG_FILE_PATHS = new Array();
     let DARWIN_LANG_BIN_PATHS = new Array();
     let CONVERT_SCRIPT_PARAMS = undefined;
@@ -591,6 +592,7 @@ function activate(context) {
                 let webParamSynapseDt = data.model_convert_params.synapse_dt;
                 let webParamDelay = data.model_convert_params.delay;
                 let webParamDura = data.model_convert_params.dura;
+                SNN_VTH = webParamVthresh;
                 console.log("Extension 接收到 webview的消息，启动脚本......");
                 sleep(1000);
                 // let scriptPath = undefined;
@@ -852,65 +854,98 @@ function activate(context) {
                 if (!LOG_OUTPUT_CHANNEL) {
                     LOG_OUTPUT_CHANNEL = vscode.window.createOutputChannel("Darwin Convertor");
                 }
+                console.log("接收到模型编译的配置：" + data.toString());
                 LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.show();
                 LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译中...");
                 binaryCompilingInterval = setInterval(() => {
                     LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append(".");
                 }, 500);
                 isCompiling = true;
-                compileSubProc = child_process_1.exec(cmdStr, (err, stdout, stderr) => {
-                    clearInterval(binaryCompilingInterval);
-                    if (err) {
-                        console.log("执行darwin2二进制部署文件错误...");
-                        vscode.window.showErrorMessage("二进制文件生成错误!!!");
-                        LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译错误!\n");
-                    }
-                    else {
-                        fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(path.dirname(PROJ_SAVE_PATH), data.config_fname));
-                        fs.renameSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", data.config_fname));
-                        fs.renameSync(path.join(path.dirname(PROJ_SAVE_PATH), "packed_bin_files.dat"), path.join(path.dirname(PROJ_SAVE_PATH), data.pack_fname));
-                        fs.copyFileSync(path.join(path.dirname(PROJ_SAVE_PATH), data.pack_fname), path.join(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", data.pack_fname)));
-                        DARWIN_LANG_BIN_PATHS.splice(0);
-                        inMemTreeViewStruct[0].children.splice(1, 1);
-                        treeview.data = inMemTreeViewStruct;
-                        treeview.refresh();
-                        inMemTreeViewStruct[0].children.push(new TreeViewProvider_1.TreeItemNode("编译", [
-                            new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [
-                                new TreeViewProvider_1.TreeItemNode("模型文件", [], false, "模型文件", 2),
-                                new TreeViewProvider_1.TreeItemNode("编解码配置文件", [], false, "模型文件", 2)
-                            ], false, "Darwin二进制文件", 2)
-                        ], false, "编译", 2));
-                        inMemTreeViewStruct[0].children[1].children[0].children[0].children.splice(0);
-                        inMemTreeViewStruct[0].children[1].children[0].children[1].children.splice(0);
-                        fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out"), (err, files) => {
-                            files.forEach(file => {
-                                if (file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1) {
-                                    if (file.search("\\.b") === -1 && file.search("\\.dat") === -1) {
-                                        DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", file));
+                if (data.target_arch === "达尔文2") {
+                    console.log("编译生成达尔文2部署文件......");
+                    compileSubProc = child_process_1.exec(cmdStr, (err, stdout, stderr) => {
+                        clearInterval(binaryCompilingInterval);
+                        if (err) {
+                            console.log("执行darwin2二进制部署文件错误...");
+                            vscode.window.showErrorMessage("二进制文件生成错误!!!");
+                            LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译错误!\n");
+                        }
+                        else {
+                            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(path.dirname(PROJ_SAVE_PATH), data.config_fname));
+                            fs.renameSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", "config.b"), path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", data.config_fname));
+                            fs.renameSync(path.join(path.dirname(PROJ_SAVE_PATH), "packed_bin_files.dat"), path.join(path.dirname(PROJ_SAVE_PATH), data.pack_fname));
+                            fs.copyFileSync(path.join(path.dirname(PROJ_SAVE_PATH), data.pack_fname), path.join(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", data.pack_fname)));
+                            DARWIN_LANG_BIN_PATHS.splice(0);
+                            inMemTreeViewStruct[0].children.splice(1, 1);
+                            treeview.data = inMemTreeViewStruct;
+                            treeview.refresh();
+                            inMemTreeViewStruct[0].children.push(new TreeViewProvider_1.TreeItemNode("编译", [
+                                new TreeViewProvider_1.TreeItemNode("Darwin二进制文件", [
+                                    new TreeViewProvider_1.TreeItemNode("模型文件", [], false, "模型文件", 2),
+                                    new TreeViewProvider_1.TreeItemNode("编解码配置文件", [], false, "模型文件", 2)
+                                ], false, "Darwin二进制文件", 2)
+                            ], false, "编译", 2));
+                            inMemTreeViewStruct[0].children[1].children[0].children[0].children.splice(0);
+                            inMemTreeViewStruct[0].children[1].children[0].children[1].children.splice(0);
+                            fs.readdir(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out"), (err, files) => {
+                                files.forEach(file => {
+                                    if (file !== "inputs" && file.indexOf("clear") === -1 && file.indexOf("enable") === -1) {
+                                        if (file.search("\\.b") === -1 && file.search("\\.dat") === -1) {
+                                            DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", file));
+                                        }
+                                        if (file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
+                                            file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {
+                                            TreeViewProvider_1.addDarwinFiles(data.config_fname);
+                                            TreeViewProvider_1.addDarwinFiles(data.pack_fname);
+                                            DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", data.config_fname));
+                                            DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", data.pack_fname));
+                                            inMemTreeViewStruct[0].children[1].children[0].children[0].children.splice(0);
+                                            inMemTreeViewStruct[0].children[1].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(data.config_fname));
+                                            inMemTreeViewStruct[0].children[1].children[0].children[1].children.splice(0);
+                                            inMemTreeViewStruct[0].children[1].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(data.pack_fname));
+                                        }
                                     }
-                                    if (file.indexOf("clear") === -1 && file.indexOf("enable") === -1 && file.indexOf("re_config") === -1 &&
-                                        file.indexOf("nodelist") === -1 && file.indexOf("linkout") === -1 && file.indexOf("layerWidth") === -1 && file.indexOf("1_1config.txt") === -1) {
-                                        TreeViewProvider_1.addDarwinFiles(data.config_fname);
-                                        TreeViewProvider_1.addDarwinFiles(data.pack_fname);
-                                        DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", data.config_fname));
-                                        DARWIN_LANG_BIN_PATHS.push(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out", data.pack_fname));
-                                        inMemTreeViewStruct[0].children[1].children[0].children[0].children.splice(0);
-                                        inMemTreeViewStruct[0].children[1].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(data.config_fname));
-                                        inMemTreeViewStruct[0].children[1].children[0].children[1].children.splice(0);
-                                        inMemTreeViewStruct[0].children[1].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(data.pack_fname));
-                                    }
-                                }
-                                treeview.data = inMemTreeViewStruct;
-                                treeview.refresh();
+                                    treeview.data = inMemTreeViewStruct;
+                                    treeview.refresh();
+                                });
+                                autoSaveWithCheck();
+                                // vscode.window.showInformationMessage("二进制文件生成结束!");
+                                LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译成功!\n");
                             });
+                            treeview.refresh();
+                        }
+                        isCompiling = false;
+                    });
+                }
+                else {
+                    console.log("编译生成达尔文3部署文件......");
+                    let gen3Script = path.join(__dirname, "darwin2sim", "gen_darwin3_bin_files.py");
+                    console.log("snn vthreshold=" + SNN_VTH);
+                    let cmdStr = PYTHON_INTERPRETER + " " + gen3Script + " " + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + " " + SNN_VTH;
+                    compileSubProc = child_process_1.exec(cmdStr, (err, stdout, stderr) => {
+                        clearInterval(binaryCompilingInterval);
+                        if (err) {
+                            console.log("执行darwin3二进制部署文件错误...");
+                            vscode.window.showErrorMessage("二进制文件生成错误!!!");
+                            LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译错误!\n");
+                        }
+                        else {
+                            console.log("darwin3 二进制部署文件编译完成！");
+                            LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n达尔文3 二进制部署文件编译完成！\n");
+                            TreeViewProvider_1.ITEM_ICON_MAP.set("darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip", "imgs/data_file_icon_new.png");
+                            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip"), path.join(path.dirname(PROJ_SAVE_PATH), "darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip"));
+                            // Mount zip file onto project explorer
+                            inMemTreeViewStruct[0].children[1].children.splice(1);
+                            inMemTreeViewStruct[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("Darwin3", [], false, "Darwin3", 2));
+                            inMemTreeViewStruct[0].children[1].children[1].children.push(new TreeViewProvider_1.TreeItemNode("darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip"));
+                            treeview.data = inMemTreeViewStruct;
+                            treeview.refresh();
                             autoSaveWithCheck();
-                            // vscode.window.showInformationMessage("二进制文件生成结束!");
-                            LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n二进制文件编译成功!\n");
-                        });
-                        treeview.refresh();
-                    }
-                    isCompiling = false;
-                });
+                        }
+                        isCompiling = false;
+                    });
+                    treeview.refresh();
+                }
                 console.log("编译进程号：" + compileSubProc.pid);
             }
             else if (data.stop_compile) {
@@ -1117,6 +1152,7 @@ function activate(context) {
                 ANN_MODEL_FILE_PATH = projData.model_path;
                 DARWIN_LANG_FILE_PATHS = projData.darwinlang_file_paths;
                 DARWIN_LANG_BIN_PATHS = projData.darwinlang_bin_paths;
+                SNN_VTH = projData.snn_vth;
                 console.log("导入工程的x_norm 文件路径为：" + X_NORM_DATA_PATH);
                 if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
                     fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
@@ -1243,6 +1279,13 @@ function activate(context) {
                 TreeViewProvider_1.addDarwinFiles(darwinPackFile);
                 inMemTreeViewStruct[0].children[1].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(darwinBinFile));
                 inMemTreeViewStruct[0].children[1].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(darwinPackFile));
+                // Mount zip file onto project explorer
+                if (fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip"))) {
+                    TreeViewProvider_1.ITEM_ICON_MAP.set("darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip", "imgs/data_file_icon_new.png");
+                    inMemTreeViewStruct[0].children[1].children.splice(1);
+                    inMemTreeViewStruct[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("Darwin3", [], false, "Darwin3", 2));
+                    inMemTreeViewStruct[0].children[1].children[1].children.push(new TreeViewProvider_1.TreeItemNode("darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip"));
+                }
                 // for(let i=0;i<DARWIN_LANG_BIN_PATHS.length;++i){
                 // 	if(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("clear") >=0 || 
                 // 			path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("enable") >=0||
@@ -2135,7 +2178,8 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
                 "y_test_path": Y_TEST_DATA_PATH,
                 "model_path": ANN_MODEL_FILE_PATH,
                 "darwinlang_file_paths": DARWIN_LANG_FILE_PATHS,
-                "darwinlang_bin_paths": DARWIN_LANG_BIN_PATHS
+                "darwinlang_bin_paths": DARWIN_LANG_BIN_PATHS,
+                "snn_vth": SNN_VTH
             };
             fs.writeFileSync(PROJ_SAVE_PATH, JSON.stringify(projInfoData));
         }
@@ -5978,6 +6022,7 @@ exports.ITEM_ICON_MAP = new Map([
     ['模拟器', "imgs/simulate_icon.png"],
     ['编译', "imgs/darwin_binary.png"],
     ['Darwin二进制文件', "imgs/binary_compile_icon.png"],
+    ["Darwin3", "imgs/binary_compile_icon.png"],
     ["ANN-SNN转换", "imgs/convert_icon.png",],
     ["模型文件", "imgs/binary_compile_icon.png"],
     ["编解码配置文件", "imgs/binary_compile_icon.png"]
@@ -8429,7 +8474,7 @@ function getANNSNNConvertPage() {
   <div class="modal fade" id="compile_binary_rnm_dialog" tabindex="-1" role="dialog" aria-labelledby="compile_binary_rnm_dialog_label" aria-hidden="true" 
                   style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white; width: 747px">
-        <div class="modal-content" style="width: 747px; height: 360px; background-color: white;border-radius: 15px;">
+        <div class="modal-content" style="width: 747px; height: 400px; background-color: white;border-radius: 15px;">
           <div style="background: #EEEEEE; height: 60px; border-top-right-radius: 15px; border-top-left-radius: 15px;">
             <button type="button" id="close_binary_fname_dialog_btn" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
             margin-right: 30px;
@@ -8452,6 +8497,23 @@ function getANNSNNConvertPage() {
           </div>
           <div>
                     <form role="form" id="binary_model_file">
+                      <div>
+                          <label for="target_arch" style="font-family: SourceHanSansCN-Normal;
+                          font-size: 22px;
+                          color: #333333;
+                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;margin-left: 68px;">目标芯片架构：</label>
+                          <select id="target_arch" style="margin-top: 20px; margin-left: 192px;background: white; 
+                          border: 1px solid #D9D9D9;
+                          border-radius: 6px;
+                          border-radius: 6px;width: 120px;font-family: PingFangSC-Regular;
+  font-size: 22px;
+  color: #999999;
+  letter-spacing: 0;
+  line-height: 14px;">
+                            <option>达尔文2</option>
+                            <option>达尔文3</option>
+                          </select>
+                      </div>
   
                       <div>
                           <label for="option_label" style="font-family: SourceHanSansCN-Normal;
@@ -8461,7 +8523,7 @@ function getANNSNNConvertPage() {
                           <select id="option_label" style="margin-top: 20px; margin-left: 160px;background: white; 
                           border: 1px solid #D9D9D9;
                           border-radius: 6px;
-                          border-radius: 6px;width: 80px;font-family: PingFangSC-Regular;
+                          border-radius: 6px;width: 120px;font-family: PingFangSC-Regular;
   font-size: 22px;
   color: #999999;
   letter-spacing: 0;
@@ -8801,6 +8863,7 @@ function getANNSNNConvertPage() {
       $("#bin_pack_fname_err").css("display", "none");
       config_fname = $("#bin_model_name").val().toString().trim();
       pack_fname = $("#bin_pack_file_name").val().toString().trim();
+      target_arch = $("#target_arch").val().toString();
       console.log("config file name="+config_fname);
       console.log("packed file name="+pack_fname);
       if (config_fname.length === 0 || config_fname.length >= 10) {
@@ -8844,7 +8907,7 @@ function getANNSNNConvertPage() {
   
           $("#close_binary_fname_dialog_btn").click();
           // 发送到extension
-          vscode.postMessage(JSON.stringify({"config_fname": config_fname, "pack_fname": pack_fname}));
+          vscode.postMessage(JSON.stringify({"config_fname": config_fname, "pack_fname": pack_fname, "target_arch": target_arch}));
       }
   }
   

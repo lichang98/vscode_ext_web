@@ -2276,7 +2276,7 @@ export function getANNSNNConvertPage(){
   <div class="modal fade" id="compile_binary_rnm_dialog" tabindex="-1" role="dialog" aria-labelledby="compile_binary_rnm_dialog_label" aria-hidden="true" 
                   style="background-color: white;color: #333;">
       <div class="modal-dialog" style="background-color: white; width: 747px">
-        <div class="modal-content" style="width: 747px; height: 360px; background-color: white;border-radius: 15px;">
+        <div class="modal-content" style="width: 747px; height: 400px; background-color: white;border-radius: 15px;">
           <div style="background: #EEEEEE; height: 60px; border-top-right-radius: 15px; border-top-left-radius: 15px;">
             <button type="button" id="close_binary_fname_dialog_btn" class="close" data-dismiss="modal" aria-hidden="true" style="color: rgb(0, 0, 0);
             margin-right: 30px;
@@ -2299,6 +2299,23 @@ export function getANNSNNConvertPage(){
           </div>
           <div>
                     <form role="form" id="binary_model_file">
+                      <div>
+                          <label for="target_arch" style="font-family: SourceHanSansCN-Normal;
+                          font-size: 22px;
+                          color: #333333;
+                          letter-spacing: 1.26px;padding-right: 5px;text-align: right;width: 200px;margin-left: 68px;">目标芯片架构：</label>
+                          <select id="target_arch" style="margin-top: 20px; margin-left: 192px;background: white; 
+                          border: 1px solid #D9D9D9;
+                          border-radius: 6px;
+                          border-radius: 6px;width: 120px;font-family: PingFangSC-Regular;
+  font-size: 22px;
+  color: #999999;
+  letter-spacing: 0;
+  line-height: 14px;">
+                            <option>达尔文2</option>
+                            <option>达尔文3</option>
+                          </select>
+                      </div>
   
                       <div>
                           <label for="option_label" style="font-family: SourceHanSansCN-Normal;
@@ -2308,7 +2325,7 @@ export function getANNSNNConvertPage(){
                           <select id="option_label" style="margin-top: 20px; margin-left: 160px;background: white; 
                           border: 1px solid #D9D9D9;
                           border-radius: 6px;
-                          border-radius: 6px;width: 80px;font-family: PingFangSC-Regular;
+                          border-radius: 6px;width: 120px;font-family: PingFangSC-Regular;
   font-size: 22px;
   color: #999999;
   letter-spacing: 0;
@@ -2648,6 +2665,7 @@ export function getANNSNNConvertPage(){
       $("#bin_pack_fname_err").css("display", "none");
       config_fname = $("#bin_model_name").val().toString().trim();
       pack_fname = $("#bin_pack_file_name").val().toString().trim();
+      target_arch = $("#target_arch").val().toString();
       console.log("config file name="+config_fname);
       console.log("packed file name="+pack_fname);
       if (config_fname.length === 0 || config_fname.length >= 10) {
@@ -2691,7 +2709,7 @@ export function getANNSNNConvertPage(){
   
           $("#close_binary_fname_dialog_btn").click();
           // 发送到extension
-          vscode.postMessage(JSON.stringify({"config_fname": config_fname, "pack_fname": pack_fname}));
+          vscode.postMessage(JSON.stringify({"config_fname": config_fname, "pack_fname": pack_fname, "target_arch": target_arch}));
       }
   }
   

@@ -6,6 +6,7 @@ import os
 from os import path
 import subprocess
 import shutil
+import pack_bin_files
 
 baseDirPath = os.path.dirname(os.path.abspath(__file__))
 snn_model_path = os.path.join(baseDirPath, "model_out", "test", "darlang_out")
@@ -70,4 +71,8 @@ if len(os.listdir(path.join(snn_model_path, "..", "bin_darwin3"))) > 1:
 else:
     exit(1)
 
-shutil.make_archive(path.join(snn_model_path, "..", "darwin3_"+sys.argv[1]), "zip", path.join(snn_model_path, "..", "bin_darwin3"))
+# shutil.make_archive(path.join(snn_model_path, "..", "darwin3_"+sys.argv[1]), "zip", path.join(snn_model_path, "..", "bin_darwin3"))
+target_files = list(os.listdir(path.join(snn_model_path, "..", "bin_darwin3")))
+target_files = [path.join(snn_model_path, "..", "bin_darwin3", e) for e in target_files]
+pack_bin_files.pack_files(target_files, path.join(snn_model_path, "..", "packed_bin_files.dat"))
+

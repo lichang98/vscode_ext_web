@@ -932,12 +932,13 @@ function activate(context) {
                         else {
                             console.log("darwin3 二进制部署文件编译完成！");
                             LOG_OUTPUT_CHANNEL === null || LOG_OUTPUT_CHANNEL === void 0 ? void 0 : LOG_OUTPUT_CHANNEL.append("\n达尔文3 二进制部署文件编译完成！\n");
-                            TreeViewProvider_1.ITEM_ICON_MAP.set("darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip", "imgs/data_file_icon_new.png");
-                            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip"), path.join(path.dirname(PROJ_SAVE_PATH), "darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip"));
+                            TreeViewProvider_1.ITEM_ICON_MAP.set("packed_bin_files.dat", "imgs/data_file_icon_new.png");
+                            fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "packed_bin_files.dat"), path.join(path.dirname(PROJ_SAVE_PATH), "packed_bin_files.dat"));
                             // Mount zip file onto project explorer
                             inMemTreeViewStruct[0].children[1].children.splice(1);
                             inMemTreeViewStruct[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("Darwin3", [], false, "Darwin3", 2));
-                            inMemTreeViewStruct[0].children[1].children[1].children.push(new TreeViewProvider_1.TreeItemNode("darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip"));
+                            inMemTreeViewStruct[0].children[1].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                            // inMemTreeViewStruct[0].children![1].children![1].children!.push(new TreeItemNode("darwin3_"+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")+".zip"));
                             treeview.data = inMemTreeViewStruct;
                             treeview.refresh();
                             autoSaveWithCheck();
@@ -1280,11 +1281,12 @@ function activate(context) {
                 inMemTreeViewStruct[0].children[1].children[0].children[0].children.push(new TreeViewProvider_1.TreeItemNode(darwinBinFile));
                 inMemTreeViewStruct[0].children[1].children[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode(darwinPackFile));
                 // Mount zip file onto project explorer
-                if (fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip"))) {
-                    TreeViewProvider_1.ITEM_ICON_MAP.set("darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip", "imgs/data_file_icon_new.png");
+                if (fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "packed_bin_files.dat"))) {
+                    TreeViewProvider_1.ITEM_ICON_MAP.set("packed_bin_files.dat", "imgs/data_file_icon_new.png");
                     inMemTreeViewStruct[0].children[1].children.splice(1);
                     inMemTreeViewStruct[0].children[1].children.push(new TreeViewProvider_1.TreeItemNode("Darwin3", [], false, "Darwin3", 2));
-                    inMemTreeViewStruct[0].children[1].children[1].children.push(new TreeViewProvider_1.TreeItemNode("darwin3_" + path.basename(PROJ_SAVE_PATH).replace("\.dar2", "") + ".zip"));
+                    inMemTreeViewStruct[0].children[1].children[1].children.push(new TreeViewProvider_1.TreeItemNode("packed_bin_files.dat"));
+                    // inMemTreeViewStruct[0].children![1].children![1].children!.push(new TreeItemNode("darwin3_"+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")+".zip"));
                 }
                 // for(let i=0;i<DARWIN_LANG_BIN_PATHS.length;++i){
                 // 	if(path.basename(DARWIN_LANG_BIN_PATHS[i].toString()).indexOf("clear") >=0 || 

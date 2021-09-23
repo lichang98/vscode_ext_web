@@ -2240,7 +2240,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 			panelPreprocess.title = "预处理";
 		}
 
-		let preprocessToolRoot = 'C:\\Users\\lc\\Downloads\\preprocess';
+		let preprocessToolRoot = path.join(__dirname, "preprocess");
 
 		// path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "darlang_out", "preprocess_config.json")
 		if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", "")))) {

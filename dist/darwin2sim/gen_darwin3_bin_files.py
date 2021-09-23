@@ -74,5 +74,8 @@ else:
 # shutil.make_archive(path.join(snn_model_path, "..", "darwin3_"+sys.argv[1]), "zip", path.join(snn_model_path, "..", "bin_darwin3"))
 target_files = list(os.listdir(path.join(snn_model_path, "..", "bin_darwin3")))
 target_files = [path.join(snn_model_path, "..", "bin_darwin3", e) for e in target_files]
+preprocess_files = list(os.listdir(path.join(snn_model_path, "..", "preprocess")))
+preprocess_files = [path.join(snn_model_path, "..", "preprocess", e) for e in preprocess_files]
+target_files.extend(preprocess_files)
 pack_bin_files.pack_files(target_files, path.join(snn_model_path, "..", "packed_bin_files.dat"))
 

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="http://localhost:6003/css/bootstrap337.min.css">
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: fit-content;
+        }
+
+        /* 浅色主题 */
+        .body.vscode-light {
+            background: white;
+            color: black;
+        }
+
+        /* 深色主题 */
+        body.vscode-dark {
+            background: #252526;
+            color: white;
+        }
+
+        /* 高对比度主题 */
+        body.vscode-high-contrast {
+            background: white;
+            color: red;
+        }
+
+        ul.sidenav {
+            list-style-type: none;
+            width: 100%;
+            height: auto;
+            position: relative;
+            margin: 0;
+            padding: 0;
+
+            background-color: #f1f1f1;
+
+            overflow: auto;
+        }
+
+        ul.sidenav li button {
+            display: block;
+            color: #000;
+            text-decoration: none;
+            float: left;
+            width: 100%;
+            border: 0px;
+            text-align: left;
+        }
+
+        ul.sidenav li button.active {
+            background-color: #77A4FF;
+            color: white;
+            font-size: 22px;
+        }
+
+        ul.sidenav li a:hover:not(.active) {
+            background-color: #555;
+            color: white;
+        }
+
+        .modal-content {
+            background-color: white;
+            width: 98%;
+            height: 900px;
+            margin: auto;
+            box-shadow: none;
+            border-radius: 8px;
+        }
+
+        .mymodalLabel {
+            font-family: SourceHanSansCN-Medium;
+            font-size: 20px;
+            color: #333333;
+            letter-spacing: 0.89px;
+            color: #333333;
+            height: 71px;
+            background: #EEEEEE;
+            font-weight: 600;
+            padding-left: 50px;
+            padding-top: 20px;
+            border-top-right-radius: 15px;
+            border-top-left-radius: 15px;
+        }
+
+        .global-form {
+            padding-top: 0px;
+            margin-bottom: 0;
+            text-align: right;
+        }
+
+        .control-label {
+            font-family: SourceHanSansCN-Normal;
+            color: #333333;
+            font-weight: normal;
+            text-align: right;
+            padding-left: 0%;
+            font-size: 20px;
+            letter-spacing: 1.14px;
+            padding-top: 10px;
+        }
+
+        .control-label-eng {
+            font-family: SourceHanSansCN-Normal;
+            font-size: 22px;
+            color: #333333;
+            letter-spacing: 1.26px;
+            font-weight: normal
+        }
+
+        .form-check-label {
+            font-family: SourceHanSansCN-Normal;
+            font-size: 22px;
+            color: #333333;
+            letter-spacing: 1.26px;
+            font-weight: normal
+        }
+
+        .text-box {
+            border-radius: 6px;
+            font-family: SourceHanSansCN-Normal;
+            font-size: 22px;
+            color: #999999;
+            letter-spacing: 1.26px;
+            margin-right: 20px;
+            padding: 0%;
+            width: 460px;
+            height: 50px;
+            font-weight: normal;
+            background: #FFFFFF;
+            border: 1px solid #C0C0C0;
+            padding-left: 20px;
+        }
+
+        .path-show {
+            font-family: SourceHanSansCN-Normal;
+            font-size: 22px;
+            font-weight: normal;
+            color: #999999;
+            background: #EEEEEE;
+            border-radius: 6px;
+            height: 50px;
+            width: 460px;
+            background: #FFFFFF;
+            border: 1px solid #C0C0C0;
+            padding-left: 20px;
+        }
+
+        .button-load-path {
+            height: 50px;
+            width: 120px;
+            font-family: SourceHanSansCN-Medium;
+            font-size: 20px;
+            color: #FFFFFF;
+            letter-spacing: 1.14px;
+            background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+            border-radius: 6px;
+            line-height: 50px;
+            text-align: center;
+            margin-left: 16px;
+        }
+
+        .learingAlgorithm-config {
+            padding-top: 0px;
+            margin-bottom: 0;
+            text-align: right;
+        }
+
+        .global-config {
+            padding-top: 0px;
+            margin-bottom: 0;
+            text-align: right;
+        }
+
+        .form-check-input {
+            zoom: 130%;
+        }
+
+        .globalProperties-button {
+            width: fit-content;
+            /* background: white; */
+            font-family: SourceHanSansCN-Normal;
+            font-size: 20px;
+            color: #333333;
+            letter-spacing: 1.14px;
+            margin-left: 10px;
+            vertical-align: middle;
+            font-weight: 500;
+        }
+
+        .warning_css {
+            font-family: SourceHanSansCN-Normal;
+            font-size: 20px;
+            color: #EC7760;
+            letter-spacing: 1.14px;
+            height: 20px;
+            width: 250px;
+            margin-left: 240px;
+            margin-top: 5px;
+        }
+
+        .self_define_button {
+            margin-left: 372px;
+            background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+            border-radius: 6px;
+            height: 50px;
+            font-family: SourceHanSansCN-Medium;
+            font-size: 20px;
+            color: #FFFFFF;
+            letter-spacing: 1.14px;
+        }
+
+        .vis_image {
+            width: 200px;
+            height: 200px;
+            display: block;
+        }
+
+        .right_arrow {
+            width: 100px;
+            height: 100px;
+            margin-left: 100px;
+            margin-right: 100px;
+            margin-top: -170px;
+            display: inline-block;
+        }
+
+        .input_area {
+            display: inline-block;
+
+            height: 100%;
+            width: fit-content;
+            margin: auto;
+        }
+
+        .process_area {
+            display: inline-block;
+            height: 100%;
+            width: fit-content;
+            margin: auto;
+
+        }
+
+        .img_label_group {
+            display: inline-block;
+            height: 230px;
+            width: 200px;
+        }
+
+        .label {
+            font-family: SourceHanSansCN-Normal;
+            color: #333333;
+            font-weight: normal;
+            text-align: right;
+            padding-left: 0%;
+            font-size: 20px;
+            letter-spacing: 1.14px;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="modal-content">
+        <div style="margin-top:35vh;width: fit-content;height: 230;margin-left: auto;margin-right: auto;">
+            <div id="input_area" class="input_area">
+
+            </div>
+            <div id="process_area" class="process_area">
+
+            </div>
+        </div>
+
+    </div>
+    <script src="http://localhost:6003/js/jquery211.min.js"></script>
+    <script src="http://localhost:6003/js/bootstrap337.min.js"></script>
+    <script src="http://localhost:6003/js/echarts501.min.js"></script>
+    <script type="text/javascript">
+        const vscode = acquireVsCodeApi();
+
+
+        window.addEventListener("message", function (event) {
+            const message = event.data; // JSON data from extension
+            console.log(message);
+            if (message.visualize_info) {
+                console.log(message.visualize_info);
+                for (let i = 0; i < message.visualize_info.length; ++i) {
+                    let this_info = message.visualize_info[i];
+                    if (this_info.method_name == 'input') {
+                        let group = document.createElement('div');
+                        group.className = "img_label_group";
+                        group = $(group);
+                        let img = document.createElement('img');
+                        img.src = this_info.file_path;
+                        img.className = 'vis_image';
+                        img = $(img);
+                        group.append(img);
+                        group.append('<label class="label" ">'+this_info.method_name+'</label>')
+
+                        $('#input_area').append(group);
+                    }
+                    else {
+                        $('#process_area').append('<img class="right_arrow" src="http://127.0.0.1:6003/res/img/right-arrow.png"></img>');
+                        let group = document.createElement('div');
+                        group.className = "img_label_group";
+                        group = $(group);
+                        let img = document.createElement('img');
+                        img.src = this_info.file_path;
+                        img.className = 'vis_image';
+                        img = $(img);
+                        group.append(img);
+                        group.append('<label class="label" ">'+this_info.method_name+'</label>')
+                        $('#process_area').append(group);
+                    }
+                }
+            }
+
+        });
+
+        vscode.postMessage(JSON.stringify({
+            "webview_ready": 1
+        }));
+
+
+    </script>
+</body>
+
+</html>

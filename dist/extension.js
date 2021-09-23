@@ -7,7 +7,7 @@ module.exports =
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deactivate = exports.activate = void 0;
+exports.deactivate = exports.replace_file_path = exports.openLocalFile = exports.activate = void 0;
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = __webpack_require__(1);
@@ -165,12 +165,14 @@ function activate(context) {
     let treeViewSimulator = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_simulator");
     let treeViewConvertDarLang = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
     let treeViewItemsImportFiles = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("act_import_files-item");
+    let treeViewProcess = TreeViewProvider_1.TreeViewProvider.initTreeViewItem("item_preprocess");
     // let treeViewSNNModelView = TreeViewProvider.initTreeViewItem("item_snn_model_view");
     let treeviewHome = vscode.window.createTreeView("treeView-item", { treeDataProvider: treeview });
     let treeViewCvtor = vscode.window.createTreeView("item_convertor", { treeDataProvider: treeviewConvertor });
     let treeViewSim = vscode.window.createTreeView("item_simulator", { treeDataProvider: treeViewSimulator });
     let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", { treeDataProvider: treeViewConvertDarLang });
     let treeViewImportFiles = vscode.window.createTreeView("act_import_files-item", { treeDataProvider: treeViewItemsImportFiles });
+    let treeViewPreprocessView = vscode.window.createTreeView("item_preprocess", { treeDataProvider: treeViewProcess });
     // let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
     let currPanelDisposed = false;
     let tmpDarlangWebview = undefined;
@@ -179,7 +181,7 @@ function activate(context) {
     let compileSubProc = undefined;
     let binaryCompilingInterval = undefined;
     function isAllOtherTreeViewInvisible() {
-        return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible;
+        return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible && !treeViewPreprocessView.visible;
     }
     if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target"))) {
         fs.mkdirSync(path.join(__dirname, "darwin2sim", "target"));
@@ -283,6 +285,21 @@ function activate(context) {
             }, 100);
         }
     });
+    treeViewPreprocessView.onDidChangeVisibility((evt) => {
+        if (evt.visible) {
+            console.log("预处理界面！");
+            treeviewHome.reveal(treeview.data[0]);
+            vscode.commands.executeCommand("item_preprocess.open");
+        }
+        else {
+            setTimeout(() => {
+                if (isAllOtherTreeViewInvisible()) {
+                    treeviewHome.reveal(treeview.data[0]);
+                    vscode.commands.executeCommand("item_preprocess.open");
+                }
+            }, 100);
+        }
+    });
     let inMemTreeViewStruct = new Array();
     // treeViewBinConvertDarLang.data = inMemTreeViewStruct;
     let X_NORM_DATA_PATH = undefined;
@@ -300,6 +317,8 @@ function activate(context) {
     let panelAnnModelVis = undefined;
     let panelSNNModelVis = undefined;
     let panelSNNVisWeb = undefined;
+    let panelPreprocess = undefined;
+    let panelPreprocessVis = undefined;
     let sampleImgsDir = path.join(__dirname, "..", "src", "resources", "script_res");
     let snnInfoFileDir = path.join(__dirname, "inner_scripts");
     let SNAP_SHOT_FNAME = "proj_snap_shot.pkl";
@@ -1787,7 +1806,7 @@ function activate(context) {
                 setTimeout(() => {
                     if (PROJ_DESC_INFO.project_type === "语音识别") {
                         console.log("语音识别任务向 模型转换界面发送预设参数。。。。");
-                        currentPanel.webview.postMessage(JSON.stringify({ "preset_param": "yes", "vthresh": 13 }));
+                        currentPanel.webview.postMessage(JSON.stringify({ "preset_param": "yes", "vthresh": 36 }));
                     }
                     else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
                         console.log("疲劳检测任务向  模型转换界面发送预设参数。。。。");
@@ -2186,8 +2205,247 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
             fs.writeFileSync(PROJ_SAVE_PATH, JSON.stringify(projInfoData));
         }
     }
+    // 数据预处理
+    vscode.commands.registerCommand("item_preprocess.open", () => {
+        if (!panelPreprocess) {
+            panelPreprocess = vscode.window.createWebviewPanel("darwin2web", "预处理", vscode.ViewColumn.One, { localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath))], enableScripts: true, retainContextWhenHidden: true });
+            panelPreprocess.webview.html = get_convertor_page_v2_1.getPreprocessPage();
+            panelPreprocess.title = "预处理";
+        }
+        let preprocessToolRoot = 'C:\\Users\\lc\\Downloads\\preprocess';
+        // path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "darlang_out", "preprocess_config.json")
+        if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
+            fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
+        }
+        if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out"))) {
+            fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin_out"));
+        }
+        if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin3"))) {
+            fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "bin_darwin3"));
+        }
+        if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out"))) {
+            fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "darlang_out"));
+        }
+        if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
+            fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
+        }
+        if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "preprocess"))) {
+            fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "preprocess"));
+        }
+        panelPreprocess.webview.onDidReceiveMessage((evt) => {
+            let res = JSON.parse(evt);
+            console.log("res=" + JSON.stringify(res));
+            if (res.webview_ready) {
+                // Get all preprocess methods
+                let getAllMethodProc = child_process_1.spawnSync(PYTHON_INTERPRETER.trim(), [path.join(preprocessToolRoot, "Util", "GetAllMethod.py")], { cwd: preprocessToolRoot, encoding: "utf-8" });
+                console.log("预处理方法列表：" + getAllMethodProc.stdout);
+                console.log("get all method.py stderr: " + getAllMethodProc.stderr);
+                panelPreprocess === null || panelPreprocess === void 0 ? void 0 : panelPreprocess.webview.postMessage({ "all_method": JSON.parse(getAllMethodProc.stdout) });
+                let processConfig = "";
+                if (PROJ_DESC_INFO.project_type === "图像分类") {
+                    processConfig = JSON.parse(fs.readFileSync(path.join(preprocessToolRoot, "Examples", "image.json"), { encoding: "utf-8" }));
+                }
+                else if (PROJ_DESC_INFO.project_type === "语音识别") {
+                    processConfig = JSON.parse(fs.readFileSync(path.join(preprocessToolRoot, "Examples", "audio.json"), { encoding: "utf-8" }));
+                }
+                else if (PROJ_DESC_INFO.project_type === "年龄检测") {
+                    processConfig = JSON.parse(fs.readFileSync(path.join(preprocessToolRoot, "Examples", "image.json"), { encoding: "utf-8" }));
+                }
+                console.log("发送preprocess config=" + JSON.stringify(processConfig));
+                panelPreprocess === null || panelPreprocess === void 0 ? void 0 : panelPreprocess.webview.postMessage({ "preprocess_config": processConfig });
+            }
+            else if (res.start_preprocess) {
+                let input_path = res.start_preprocess.input_path;
+                let output_path = res.start_preprocess.output_path;
+                let preprocess_config_to_save = res.start_preprocess.preprocess_config_new;
+                let config_path = "";
+                if (PROJ_DESC_INFO.project_type === "图像分类") {
+                    config_path = path.join(preprocessToolRoot, "Examples", "image.json");
+                }
+                else if (PROJ_DESC_INFO.project_type === "年龄检测") {
+                    config_path = path.join(preprocessToolRoot, "Examples", "image.json");
+                }
+                else if (PROJ_DESC_INFO.project_type === "语音识别") {
+                    config_path = path.join(preprocessToolRoot, "Examples", "audio.json");
+                }
+                console.log("写入新的配置文件，路径：" + config_path + ", config=" + preprocess_config_to_save);
+                fs.writeFileSync(config_path, JSON.stringify(preprocess_config_to_save), { encoding: "utf-8" });
+                fs.copyFileSync(config_path, path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "preprocess", "preprocess_config.json"));
+                let preprocessProc = child_process_1.spawnSync(PYTHON_INTERPRETER.trim(), [path.join(preprocessToolRoot, "main.py"),
+                    "--input_path",
+                    input_path,
+                    "--config_path",
+                    config_path,
+                    "--output_path",
+                    output_path,
+                    "--visualize"], {
+                    cwd: preprocessToolRoot,
+                    encoding: "utf-8"
+                });
+                console.log("预处理main stdout=" + preprocessProc.stdout);
+                console.log("预处理main stderr=" + preprocessProc.stderr);
+            }
+            else if (res.self_define_name) {
+                let self_define_method_path = path.join(preprocessToolRoot, "SelfDefine", res.self_define_name + ".py");
+                fs.copyFileSync(self_define_method_path, path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "preprocess", res.self_define_name + ".py"));
+                if (fs.existsSync(self_define_method_path)) {
+                    openLocalFile(self_define_method_path);
+                }
+                else {
+                    let selfDefineProc = child_process_1.spawnSync(PYTHON_INTERPRETER.trim(), [path.join(preprocessToolRoot, "Util", "AddSelfDefine.py"),
+                        res.self_define_name], {
+                        cwd: preprocessToolRoot,
+                        encoding: "utf-8"
+                    });
+                    openLocalFile(self_define_method_path);
+                }
+            }
+            else if (res.self_rewrite) {
+                let method_name = res.self_rewrite;
+                let self_rewrite_method_path = path.join(preprocessToolRoot, "SelfRewrite", method_name + ".py");
+                fs.copyFileSync(self_rewrite_method_path, path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", ""), "preprocess", method_name + ".py"));
+                if (fs.existsSync(self_rewrite_method_path)) {
+                    openLocalFile(self_rewrite_method_path);
+                }
+                else {
+                    let reWriteProc = child_process_1.spawnSync(PYTHON_INTERPRETER.trim(), [path.join(preprocessToolRoot, "Util", "addSelfRewrite.py"), method_name], {
+                        cwd: preprocessToolRoot,
+                        encoding: "utf-8"
+                    });
+                    openLocalFile(self_rewrite_method_path);
+                }
+            }
+            else if (res.input_path_select) {
+                const inputPathOptions = {
+                    canSelectMany: false,
+                    openLabel: "数据集路径",
+                    canSelectFiles: false,
+                    canSelectFolders: true
+                };
+                vscode.window.showOpenDialog(inputPathOptions).then(fileUri => {
+                    if (fileUri && fileUri[0]) {
+                        let dataPath = fileUri[0].fsPath;
+                        panelPreprocess === null || panelPreprocess === void 0 ? void 0 : panelPreprocess.webview.postMessage({ "input_path": dataPath });
+                    }
+                });
+            }
+            else if (res.output_path_select) {
+                const outputPathOptions = {
+                    canSelectMany: false,
+                    openLabel: "保存位置",
+                    canSelectFiles: false,
+                    canSelectFolders: true
+                };
+                vscode.window.showOpenDialog(outputPathOptions).then(fileUri => {
+                    if (fileUri && fileUri[0]) {
+                        let dataPath = fileUri[0].fsPath;
+                        if (panelPreprocess) {
+                            panelPreprocess.webview.postMessage({ "output_path": dataPath });
+                        }
+                    }
+                });
+            }
+            else if (res.check_visualize) {
+                // let temp_config_path = path.join(preprocessToolRoot, "temp_preprocess.json");
+                // fs.writeFileSync(temp_config_path, JSON.stringify(res.check_visualize), "utf-8");
+                // let input_path = '';
+                // if (res.check_visualize.input.type === "audio") {
+                // 	input_path = path.join(preprocessToolRoot, "./test/sample.wav");
+                // } else if (res.check_visualize.input.type === "image") {
+                // 	input_path = path.join(preprocessToolRoot, "./test/sample.png");
+                // }
+                // let visProc = spawnSync(PYTHON_INTERPRETER.trim(), 
+                // 		[path.join(preprocessToolRoot, "main.py"),
+                // 			"--input_path",
+                // 			input_path,
+                // 			"--config_path",
+                // 			temp_config_path,
+                // 			"--output_path",
+                // 			path.join(preprocessToolRoot, "./test/testtest/testoutput.npy"),
+                // 			"--visualize"],
+                // 		{
+                // 			cwd: preprocessToolRoot,
+                // 			encoding: "utf-8"
+                // 		});
+                // console.log("预处理可视化 stdout="+ visProc.stdout);
+                // console.log("预处理可视化 stderr="+visProc.stderr);
+                preprocess_visulize(context, path.join(preprocessToolRoot, "./test/testtest"));
+                // fs.unlinkSync(temp_config_path);
+            }
+        });
+        panelPreprocess.onDidDispose(() => {
+            panelPreprocess = undefined;
+        });
+    });
+    function preprocess_visulize(context, localResourceRoots) {
+        if (panelPreprocessVis) {
+            panelPreprocessVis.dispose();
+            panelPreprocessVis = undefined;
+        }
+        if (!panelPreprocessVis) {
+            panelPreprocessVis = vscode.window.createWebviewPanel("preProcessVis", "预处理预览", vscode.ViewColumn.One, {
+                localResourceRoots: [
+                    vscode.Uri.file(localResourceRoots),
+                    vscode.Uri.file(path.join(context.extensionPath))
+                ],
+                enableScripts: true,
+                retainContextWhenHidden: true
+            });
+            //globalState.preProcessVisulizePanel.reveal();
+            panelPreprocessVis.webview.html = get_convertor_page_v2_1.getPreprocessVisPage();
+            panelPreprocessVis.onDidDispose(() => {
+                panelPreprocessVis = undefined;
+            }, null, context.subscriptions);
+            panelPreprocessVis.webview.onDidReceiveMessage((evt) => {
+                let res = JSON.parse(evt);
+                if (res.webview_ready) {
+                    let files = fs.readdirSync(path.join(localResourceRoots, 'visualize'));
+                    let visualize_info = [];
+                    files.forEach(function (item, index) {
+                        let method_name = '';
+                        if (item === 'input.png') {
+                            method_name = 'input';
+                        }
+                        else {
+                            method_name = item.replace('.png', '');
+                        }
+                        let this_path = path.join(localResourceRoots, 'visualize', item);
+                        this_path = replace_file_path(this_path);
+                        let this_info = {
+                            'method_name': method_name,
+                            'file_path': this_path
+                        };
+                        visualize_info.push(this_info);
+                    });
+                    panelPreprocessVis.webview.postMessage({
+                        "visualize_info": visualize_info
+                    }).then((fullfill) => {
+                        //fs_extra.removeSync(localResourceRoots);
+                    });
+                }
+            });
+        }
+    }
 }
 exports.activate = activate;
+function openLocalFile(filePath) {
+    // 获取TextDocument对象
+    vscode.workspace.openTextDocument(filePath)
+        .then(doc => {
+        // 在VSCode编辑窗口展示读取到的文本
+        vscode.window.showTextDocument(doc, { preview: false });
+    }, err => {
+        console.log(`Open ${filePath} error, ${err}.`);
+    }).then(undefined, err => {
+        console.log(`Open ${filePath} error, ${err}.`);
+    });
+}
+exports.openLocalFile = openLocalFile;
+function replace_file_path(this_path) {
+    return 'https://file%2B.vscode-resource.vscode-webview.net/' + path.resolve(this_path);
+    //return vscode.Uri.file(path.resolve(this_path)).with({ scheme: 'vscode-resource' }).toString()
+}
+exports.replace_file_path = replace_file_path;
 // this method is called when your extension is deactivated
 function deactivate() {
     // shutdown local server
@@ -6208,7 +6466,7 @@ exports.TreeViewProvider = TreeViewProvider;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getSNNModelPage = exports.getSNNSimuPage = exports.getANNSNNConvertPage = exports.getConvertorPageV2 = exports.getConvertorModelPageV2 = exports.getConvertorDataPageV2 = void 0;
+exports.getPreprocessVisPage = exports.getPreprocessPage = exports.getSNNModelPage = exports.getSNNSimuPage = exports.getANNSNNConvertPage = exports.getConvertorPageV2 = exports.getConvertorModelPageV2 = exports.getConvertorDataPageV2 = void 0;
 function getConvertorDataPageV2(sample0, sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, test_sample0, test_sample1, test_sample2, test_sample3, test_sample4, test_sample5, test_sample6, test_sample7, test_sample8, test_sample9) {
     return `<!DOCTYPE html>
   <html style="height: 100%;width: 100%;">
@@ -11388,6 +11646,1235 @@ function getSNNModelPage() {
   `;
 }
 exports.getSNNModelPage = getSNNModelPage;
+function getPreprocessPage() {
+    return `<!DOCTYPE html>
+  <html lang="en">
+  
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title></title>
+      <link rel="stylesheet" href="http://localhost:6003/css/bootstrap337.min.css">
+      <style>
+          html,
+          body {
+              width: 100%;
+              height: fit-content;
+          }
+  
+          /* 浅色主题 */
+          .body.vscode-light {
+              background: white;
+              color: black;
+          }
+  
+          /* 深色主题 */
+          body.vscode-dark {
+              background: #252526;
+              color: white;
+          }
+  
+          /* 高对比度主题 */
+          body.vscode-high-contrast {
+              background: white;
+              color: red;
+          }
+  
+          ul.sidenav {
+              list-style-type: none;
+              width: 100%;
+              height: auto;
+              position: relative;
+              margin: 0;
+              padding: 0;
+  
+              background-color: #f1f1f1;
+  
+              overflow: auto;
+          }
+  
+          ul.sidenav li button {
+              display: block;
+              color: #000;
+              text-decoration: none;
+              float: left;
+              width: 100%;
+              border: 0px;
+              text-align: left;
+          }
+  
+          ul.sidenav li button.active {
+              background-color: #77A4FF;
+              color: white;
+              font-size: 22px;
+          }
+  
+          ul.sidenav li a:hover:not(.active) {
+              background-color: #555;
+              color: white;
+          }
+  
+          .modal-content {
+              background-color: white;
+              width: 890px;
+              margin: auto;
+              box-shadow: none;
+              border-radius: 8px;
+          }
+  
+          .mymodalLabel {
+              font-family: SourceHanSansCN-Medium;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 0.89px;
+              color: #333333;
+              height: 71px;
+              background: #EEEEEE;
+              font-weight: 600;
+              padding-left: 50px;
+              padding-top: 20px;
+              border-top-right-radius: 15px;
+              border-top-left-radius: 15px;
+          }
+  
+          .global-form {
+              padding-top: 0px;
+              margin-bottom: 0;
+              text-align: right;
+          }
+  
+          .control-label {
+              font-family: SourceHanSansCN-Normal;
+              color: #333333;
+              font-weight: normal;
+              text-align: right;
+              padding-left: 0%;
+              font-size: 20px;
+              letter-spacing: 1.14px;
+              padding-top: 10px;
+          }
+  
+          .control-label-eng {
+              font-family: SourceHanSansCN-Normal;
+              font-size: 22px;
+              color: #333333;
+              letter-spacing: 1.26px;
+              font-weight: normal
+          }
+  
+          .form-check-label {
+              font-family: SourceHanSansCN-Normal;
+              font-size: 22px;
+              color: #333333;
+              height: 50px;
+              letter-spacing: 1.26px;
+              font-weight: normal
+          }
+  
+          .text-box {
+              border-radius: 6px;
+              font-family: SourceHanSansCN-Normal;
+              font-size: 22px;
+              color: #999999;
+              letter-spacing: 1.26px;
+              margin-right: 20px;
+              padding: 0%;
+              width: 460px;
+              height: 50px;
+              font-weight: normal;
+              background: #FFFFFF;
+              border: 1px solid #C0C0C0;
+              padding-left: 20px;
+          }
+  
+          .path-show {
+              font-family: SourceHanSansCN-Normal;
+              font-size: 22px;
+              font-weight: normal;
+              color: #999999;
+              background: #EEEEEE;
+              border-radius: 6px;
+              height: 50px;
+              width: 460px;
+              background: #FFFFFF;
+              border: 1px solid #C0C0C0;
+              padding-left: 20px;
+          }
+  
+          .button-load-path {
+              height: 50px;
+              width: 120px;
+              font-family: SourceHanSansCN-Medium;
+              font-size: 20px;
+              color: #FFFFFF;
+              letter-spacing: 1.14px;
+              background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+              border-radius: 6px;
+              line-height: 50px;
+              text-align: center;
+              margin-left: 16px;
+          }
+  
+          .learingAlgorithm-config {
+              padding-top: 0px;
+              margin-bottom: 0;
+              text-align: right;
+          }
+  
+          .global-config {
+              padding-top: 0px;
+              margin-bottom: 0;
+              text-align: right;
+          }
+  
+          .form-check-input {
+              zoom: 130%;
+              vertical-align: middle;
+          }
+  
+          .globalProperties-button {
+              width: fit-content;
+              /* background: white; */
+              font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;
+              margin-left: 10px;
+              vertical-align: middle;
+              font-weight: 500;
+          }
+  
+          .warning_css {
+              font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #EC7760;
+              letter-spacing: 1.14px;
+              height: 20px;
+              width: 250px;
+              margin-left: 240px;
+              margin-top: 5px;
+          }
+  
+          .self_define_button {
+              margin-left: 372px;
+              background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+              border-radius: 6px;
+              height: 50px;
+              font-family: SourceHanSansCN-Medium;
+              font-size: 20px;
+              color: #FFFFFF;
+              letter-spacing: 1.14px;
+          }
+      </style>
+  </head>
+  
+  <body>
+      <div class="modal-content">
+          <div class="mymodalLabel">
+              预处理配置
+          </div>
+          <!-- <div class="warning_css" id="warning"></div> -->
+          <div style="height: 50px;"></div>
+          <div class="form-group">
+              <label for="input_path" class="control-label" style="padding-left: 100px;">待处理数据集路径 : </label>
+              <input type="text" id="input_path" class="path-show" style="width: 320px;">
+              </input>
+              <label id="input_path_load" class="button-load-path">浏览</label>
+              <!-- <div class="warning_css" id="warning_standard" style="display: block;"></div> -->
+          </div>
+          <div class="form-group">
+              <label for="output_path" class="control-label" style="padding-left: 100px;">输出数据集路径 : </label>
+              <input type="text" id="output_path" class="path-show" style="width: 320px;margin-left: 20px;">
+              </input>
+              <label id="output_path_load" class="button-load-path">浏览</label>
+              <!-- <div class="warning_css" id="warning_standard" style="display: block;"></div> -->
+          </div>
+  
+          <div style="border: 1px solid #CCCCCC;width: 800px;margin: auto;margin-top: 30px;"></div>
+  
+          <form id="input_form" role="form">
+              <div style="height: 50px;margin-left: 75px;margin-top: 20px;">
+                  <img src="http://localhost:6003/src/img/label.png" style="background-image: linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+                  border-radius: 4px;"></img>
+                  <label class="globalProperties-button" id="nav-global">输入:</label>
+              </div>
+              <div class="form-group">
+                  <label for="input_type" class="col-md-5 control-label">输入数据类型 : </label>
+                  <select id="input_type" class="text-box">
+                      <option value="audio">音频</option>
+                      <option value="image">图像</option>
+                  </select>
+              </div>
+  
+          </form>
+  
+          <div id="preprocess_area">
+          </div>
+  
+  
+  
+  
+  
+          <div id="add_method_area">
+              <div style="border: 1px solid #CCCCCC;width: 800px;margin: auto;margin-top: 30px;"></div>
+              <div style="height: 50px;margin-left: 75px;margin-top: 20px;">
+                  <img src="http://localhost:6003/src/img/label.png" style="background-image: linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+                  border-radius: 4px;"></img>
+                  <label class="globalProperties-button">增加预处理步骤:</label>
+                  <button type="button" class="btn btn-xs" data-dismiss="modal" id="add_method_button"
+                      style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+                  border-radius: 6px;font-family: SourceHanSansCN-Medium;font-size: 20px;color: #FFFFFF;letter-spacing: 1.14px;">+
+                  </button>
+              </div>
+          </div>
+  
+          <form id="output_form" role="form">
+              <div style="border: 1px solid #CCCCCC;width: 800px;margin: auto;margin-top: 30px;"></div>
+              <div style="height: 50px;margin-left: 75px;margin-top: 20px;">
+                  <img src="http://localhost:6003/src/img/label.png" style="background-image: linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);
+                  border-radius: 4px;"></img>
+                  <label class="globalProperties-button" id="nav-global">输出:</label>
+              </div>
+  
+              <div class="form-group">
+                  <label for="output_type" class="col-md-5 control-label">输出数据格式 : </label>
+                  <select id="output_type" class="text-box">
+                      <option value="auto" selected>Numpy</option>
+                  </select>
+              </div>
+          </form>
+  
+          <div style="margin-top: 50px;margin-bottom: 50px;">
+              <button type="button" class="btn btn-default" data-dismiss="modal" id="dismiss"
+                  style="margin-left: 200px;background: #F3F3F3;
+                  border: 1px solid #C0C0C0;
+                  border-radius: 2px;height: 50px;width: 150px;font-family: SourceHanSansCN-Medium;font-size: 20px;color: #979797;letter-spacing: 1.14px;">关闭配置
+              </button>
+              <button type="button" class="btn btn-default" id="check_visualize"
+                  style="margin-left: 50px;background-image: linear-gradient(180deg, #d0ecd0 0%, #c2af6e 100%);
+              border-radius: 6px;height: 50px;width: 150px;font-family: SourceHanSansCN-Medium;font-size: 20px;color: #FFFFFF;letter-spacing: 1.14px;">检查并预览
+              </button>
+              <button type="button" class="btn btn-default" id="configureDone"
+                  style="margin-left: 50px;background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+              border-radius: 6px;height: 50px;width: 150px;font-family: SourceHanSansCN-Medium;font-size: 20px;color: #FFFFFF;letter-spacing: 1.14px;">开始预处理
+              </button>
+          </div>
+          <div id="slider"></div>
+      </div>
+  
+      <script src="http://localhost:6003/js/jquery211.min.js"></script>
+      <script src="http://localhost:6003/js/bootstrap337.min.js"></script>
+      <script src="http://localhost:6003/js/echarts501.min.js"></script>
+      <script type="text/javascript">
+          const vscode = acquireVsCodeApi();
+          $("#warning").attr("style", "display:none");
+  
+  
+  
+          let all_method = undefined;     //所有的预处理方法名及参数信息
+          let preprocess_area = $("#preprocess_area");
+          let process_form_list = [];
+          let process_form_id_next = 1111;
+          let current_input_type = 'audio';
+  
+          //输入数据类型改变
+          $("#input_type").change(function () {
+              current_input_type = $("#input_type").val()
+              let method_name = 'load_' + current_input_type;
+              let method_info = get_method_info(method_name);
+              let form = $(this).parent().parent();
+              let arg_area = form.children('#' + form.attr('id') + '-' + 'argarea');
+              arg_area.empty();
+              for (let i = 0; i < method_info.args.length; ++i) {
+                  add_arg(arg_area, method_name, method_info.args[i]);
+              }
+  
+  
+          });
+  
+  
+          $("#input_path_load").on("click", function () {
+              console.log("select input path");
+              vscode.postMessage(JSON.stringify({
+                  "input_path_select": true
+              }));
+          });
+  
+          $("#output_path_load").on("click", function () {
+              console.log("select output path");
+              vscode.postMessage(JSON.stringify({
+                  "output_path_select": true
+              }));
+          });
+  
+          //增加预处理步骤
+          $('#add_method_button').click(function () {
+              add_method_form(preprocess_area);
+          });
+  
+          $('#configureDone').click(function () {
+              let preprocess_config = get_config_val();
+              vscode.postMessage(JSON.stringify({
+                  "preprocess_config_to_save": preprocess_config
+              }));
+              vscode.postMessage(JSON.stringify({
+                  "start_preprocess": {
+                      'input_path': $("#input_path").val(),
+                      'output_path': $("#output_path").val(),
+                      'preprocess_config_new': preprocess_config
+                  }
+              }));
+          });
+  
+          $('#check_visualize').click(function () {
+              vscode.postMessage(JSON.stringify({
+                  "check_visualize": get_config_val()
+              }));
+          });
+  
+          function get_next_process_form_id() {
+              result = process_form_id_next;
+              process_form_id_next += 1;
+              return result;
+          }
+  
+          function get_method_info(method_name) {
+              for (let type in all_method) {
+                  for (let method in all_method[type]) {
+                      if (method_name == method) {
+                          return all_method[type][method];
+                      }
+                  }
+              }
+          }
+  
+          function get_method_list() {
+              let method_list = [];
+              let method_list_zh = [];
+              let type_to_show = ['common', current_input_type];
+              for (let i = 0; i < type_to_show.length; ++i) {
+                  let type = type_to_show[i];
+                  for (let method in all_method[type]) {
+                      method_list.push(method);
+                      method_list_zh.push(all_method[type][method]['name_zh']);
+                  }
+              }
+              method_list.push('self_define');
+              method_list_zh.push('自定义预处理');
+              return {
+                  'method_list': method_list,
+                  'method_list_zh': method_list_zh
+              }
+          }
+  
+          function read_config_struct(preprocess_config) {
+              console.log("begin read config struct.....");
+              //input form
+              let input_form = $("#input_form");
+              init_input_form(input_form);
+              change_val($("#input_type"), preprocess_config.input.type);
+              let input_method_name = '';
+              if (preprocess_config.input.type === 'audio') {
+                  input_method_name = 'load_audio';
+              }
+              else if (preprocess_config.input.type === 'image') {
+                  input_method_name = 'load_image';
+              }
+  
+              let argarea_id = 'input_form' + '-' + 'argarea';
+              let arg_area = document.createElement('div');
+              arg_area.id = argarea_id;
+              arg_area = $(arg_area);
+              input_form.append(arg_area);
+              let method_info = get_method_info(input_method_name);
+              for (let i = 0; i < method_info.args.length; ++i) {
+                  add_arg(arg_area, input_method_name, method_info.args[i]);
+              }
+  
+  
+              //preprocesses 
+              preprocess_area.empty();
+              for (let i = 0; i < preprocess_config.processes.length; ++i) {
+                  add_method_form(preprocess_area);
+              }
+  
+              //add_method_area
+  
+  
+              //output_form 
+  
+          }
+  
+          function init_input_form(form) {
+              form.empty();
+  
+              form.append('<div style="height: 50px;margin-left: 75px;margin-top: 20px;">\
+                  <img src="http://localhost:6003/src/img/label.png" style="background-image: linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);\
+                  border-radius: 4px;"></img>\
+                  <label class="globalProperties-button" id="nav-global">输入:</label>\
+              </div>')
+              form.append(
+                  '<div class="form-group">\
+                          <label for= "input_type" class= "col-md-5 control-label"> 输入数据类型 : </label>\
+                          <select id="input_type" class="text-box">\
+                              <option value="audio" selected>音频</option>\
+                              <option value="image">图像</option>\
+                          </select>\
+                      </div>')
+          }
+  
+  
+          function add_method_form(preprocess_area) {
+              let form = document.createElement("form");
+              form.id = "form" + get_next_process_form_id();
+              form = $(form);
+              form.append(
+                  '<div style="border: 1px solid #CCCCCC;width: 800px;margin: auto;margin-top: 30px;">\
+                      </div>')
+  
+              let delete_button_id = form.attr('id') + '-' + 'delete';
+              form.append(
+                  '<div style = "height: 50px;margin-left: 75px;margin-top: 20px;">\
+                  <img src="http://localhost:6003/src/img/label.png" style = "background-image: linear-gradient(180deg, #A5CBFF 0%, #77A4FF 100%);border - radius: 4px;"></img>\
+                  <label class="globalProperties-button" > 预处理步骤:</label>\
+                  <button type="button" class="btn btn-xs" data-dismiss="modal" id="'+delete_button_id+'" style="background: #F3F3F3;border: 1px solid #C0C0C0;font-family: SourceHanSansCN-Medium;font-size: 20px;color: #979797;letter-spacing: 1.14px;">删除</button>\
+                  </div> ')
+  
+  
+              add_method_selection(form);
+              let argarea_id = form.attr('id') + '-' + 'argarea';
+              form.append("<div id='"+argarea_id+">");
+  
+  
+  
+              preprocess_area.append(form);
+              process_form_list.push(form.attr('id'));
+  
+              $('#' + delete_button_id).click(function () {
+                  let form = $(this).parent().parent();
+                  let form_id = form.attr('id');
+                  form.remove();
+                  for (let i = 0; i < process_form_list.length; ++i) {
+                      if (process_form_list[i] == form_id) {
+                          process_form_list.splice(i, 1);
+                          break;
+                      }
+                  }
+              })
+  
+          }
+  
+          function add_method_selection(form) {
+              let form_group = document.createElement("div");
+              form_group.className = "form-group";
+              form_group = $(form_group);
+              let id = form.attr('id') + '-' + 'method_selection';
+              form_group.append('<label for="'+id+'" class="col-md-5 control-label">预处理方法 : </label>');
+  
+              let select = document.createElement("select");
+              select.className = "text-box";
+              select.id = id;
+              select = $(select);
+              let methods = get_method_list();
+              let method_list = methods.method_list;
+              let method_list_zh = methods.method_list_zh;
+              for (let i = 0; i < method_list.length; ++i) {
+                  select.append('<option value="'+method_list[i]+'">'+method_list_zh[i]+'</option>');
+              }
+              form_group.append(select);
+  
+              select.change(function () {
+                  let method_name = $(this).val();
+                  let method_info = get_method_info(method_name);
+                  let form = $(this).parent().parent();
+                  let form_id = form.attr('id');
+                  let arg_area = form.children('#' + form_id + '-' + 'argarea');
+                  arg_area.empty();
+                  if (method_name == 'self_define') {
+                      $('#' + form.attr('id') + '-' + 'self_rewrite_area').hide();
+                      add_arg_selfdefine(arg_area);
+  
+                  }
+                  else {
+                      $('#' + form.attr('id') + '-' + 'self_rewrite_area').show();
+                      for (let i = 0; i < method_info.args.length; ++i) {
+                          add_arg(arg_area, method_name, method_info.args[i]);
+                      }
+                  }
+  
+              });
+              form.append(form_group);
+              add_self_rewrite_option(form);
+          }
+  
+          function add_self_rewrite_option(form) {
+              let option_id = form.attr('id') + '-' + 'self_rewrite';
+              let form_group = document.createElement('div');
+              form_group.className = 'form-group';
+              form_group.id = form.attr('id') + '-' + 'self_rewrite_area'
+              form_group = $(form_group);
+              form_group.append('<label for="'+option_id+'" class="col-md-5 control-label" style="padding-left: 30px;">重写预处理实现过程:</label>');
+  
+              let label = document.createElement('label');
+              label.className = 'form-check-label';
+              label = $(label);
+  
+              let input = document.createElement('input');
+              input.type = 'checkbox';
+              input.className = 'form-check-input';
+              input.id = option_id;
+              input = $(input);
+  
+              label.append(input);
+              form_group.append(label);
+  
+              form.append(form_group);
+              input.change(function () {
+                  if ($(this).prop('checked')) {
+                      let form = $(this).parent().parent().parent();
+                      let arg_area = form.children('#' + form.attr('id') + '-argarea');
+                      arg_area.empty();
+                      let button = document.createElement('button');
+                      button.type = 'button';
+                      button.className = 'btn btn-default self_define_button';
+                      button.id = arg_area.attr('id') + '-' + 'self_rewrite_button';
+                      button.innerHTML = "重写预处理实现过程";
+                      button = $(button);
+                      button.click(function () {
+                          let form = $(this).parent().parent();
+                          let method_name = form.children('.form-group').eq(0).children().eq(1).val();
+                          vscode.postMessage(JSON.stringify({
+                              "self_rewrite": method_name
+                          }));
+                      });
+                      arg_area.append(button);
+                  }
+                  else {
+                      let form = $(this).parent().parent().parent();
+                      let arg_area = form.children('#' + form.attr('id') + '-argarea');
+                      let method_name = form.children('.form-group').eq(0).children().eq(1).val();
+                      let method_info = get_method_info(method_name);
+                      arg_area.empty();
+                      for (let i = 0; i < method_info.args.length; ++i) {
+                          add_arg(arg_area, method_name, method_info.args[i]);
+                      }
+                  }
+              });
+          }
+  
+  
+  
+          function add_arg_selfdefine(arg_area) {
+              let arg_id = arg_area.attr('id') + '-' + 'self_define_name'
+              arg_area.append('<div class="form-group">\
+                  <label for="'+arg_id+'" class="col-md-5 control-label">自定义预处理名称 : </label>\
+                  <input type="text" class="text-box" id="'+arg_id+'" placeholder="字符串"></input>\
+              </div>')
+              let button = document.createElement('button');
+              button.type = 'button';
+              button.className = 'btn btn-default self_define_button';
+              button.id = arg_area.attr('id') + '-' + 'self_define_button';
+              button.innerHTML = "编写自定义预处理代码";
+              button = $(button);
+              button.click(function () {
+                  let self_define_name = $(this).parent().children('.form-group').children().eq(1).val();
+                  vscode.postMessage(JSON.stringify({
+                      "self_define_name": self_define_name
+                  }));
+              });
+              arg_area.append(button);
+  
+          }
+  
+          function add_arg(arg_area, method_name, arg_config) {
+              console.log('add arg: ' + arg_area.attr('id') + '-' + arg_config.argName);
+              let form_group = document.createElement("div");
+              form_group.className = "form-group";
+              form_group = $(form_group);
+  
+              if (arg_config.valueType == "int" || arg_config.valueType == "float") {
+                  let id = arg_area.attr('id') + '-' + arg_config.argName
+                  form_group.append('<label for="'+id+'" class="col-md-5 control-label">'+arg_config.argName_zh+' : </label>');
+  
+                  form_group.append('<input type="text" class="text-box" id="'+id+'" placeholder="正整数(e.g. '+arg_config.defaultValue+')"></input>');
+  
+                  form_group.append('<div class="warning_css" id="warning-'+id+'" style="display:none"></div>');
+  
+                  if (arg_config.valueType == 'int') {
+                      $("#" + id).change(function () {
+                          if (!/^[0-9]*[1-9][0-9]*$/.test($("#" + id).val())) {
+                              $("#warning-" + id).attr("style", "display:block;margin-left: 370px;");
+                              document.getElementById('warning-' + id).innerHTML = "仅正整数!";
+                              return;
+                          } else {
+                              $("#warning-" + id).attr("style", "display:none");
+                          }
+                      });
+                  }
+                  else if (arg_config.valueType == 'float') {
+                      $("#" + id).change(function () {
+                          if (!/^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$/.test($("#" + id).val())) {
+                              $("#" + 'warning-' + id).attr("style", "display:block;margin-left: 370px;");
+                              document.getElementById('warning-' + id).innerHTML = "仅正浮点数!";
+                              return;
+                          } else {
+                              $("#" + 'warning-' + id).attr("style", "display:none");
+                          }
+                      });
+                  }
+  
+              }
+  
+              else {
+                  let id = arg_area.attr('id') + '-' + arg_config.argName
+                  form_group.append('<label for="'+id+'" class="col-md-5 control-label">'+arg_config.argName_zh+' : </label>');
+  
+                  select = document.createElement("select");
+                  select.className = "text-box";
+                  select.id = id;
+                  select = $(select);
+                  if (arg_config.valueType == 'bool') {
+                      if (arg_config.defaultValue == true) {
+                          select.append('<option value="0" >否</option>');
+                          select.append('<option value="1" selected>是</option>');
+                      }
+                      else {
+                          select.append('<option value="0" selected>否</option>');
+                          select.append('<option value="1" >是</option>');
+                      }
+                  }
+                  else if (arg_config.valueType == 'selection') {
+                      for (let i = 0; i < arg_config.validValue.length; ++i) {
+                          value = arg_config.validValue[i];
+                          if (value === arg_config.defaultValue) {
+                              select.append('<option value="'+value+'" selected>'+arg_config.validValue_zh[i]+'</option>');
+                          }
+                          else {
+                              select.append('<option value="'+value+'" >'+arg_config.validValue_zh[i]+'</option>');
+                          }
+                      }
+                  }
+                  form_group.append(select);
+              }
+              arg_area.append(form_group);
+          }
+  
+  
+          function read_config_val(preprocess_config) {
+              console.log("begin read config value.....");
+              //input form
+              //input form has set its input_type selection
+              let input_form = $("#input_form");
+              for (let arg in preprocess_config.input.args) {
+                  let arg_fill = input_form.find('#' + 'input_form' + '-' + 'argarea' + '-' + arg);
+                  change_val(arg_fill, preprocess_config.input.args[arg]);
+              }
+  
+              console.log("DEBUGN START....");
+              console.log("preprocess length="+preprocess_config.processes.length)
+              //preprocesses 
+              for (let i = 0; i < preprocess_config.processes.length; ++i) {
+  
+                  let form = $('#' + process_form_list[i]);
+                  let form_name = form.attr('id');
+                  let select = form.children('.form-group:first').children('select:first');
+                  // change_val(select, preprocess_config.processes[i].method);
+                  if (preprocess_config.processes[i].method == 'self_define') {
+                      let arg_fill = form.find('#' + form_name + '-' + 'argarea' + '-' + 'self_define_name');
+                      change_val(arg_fill, preprocess_config.processes[i].args.name);
+                  }
+                  else {
+                      if ('rewrite' in preprocess_config.processes[i]) {
+                          let checkbox = form.find('#' + form_name + '-' + 'self_rewrite');
+                          checkbox.prop("checked", true).change();
+  
+                      }
+                      for (let arg in preprocess_config.processes[i].args) {
+                          let arg_fill = form.find('#' + form_name + '-' + 'argarea' + '-' + arg);
+                          change_val(arg_fill, preprocess_config.processes[i].args[arg]);
+                      }
+                  }
+  
+  
+              }
+  
+          }
+  
+          function change_val(element, value) {
+              if (value === true) {
+                  value = '1';
+              }
+              else if (value === false) {
+                  value = '0';
+              }
+              element.val(value).change();
+          }
+  
+          function get_config_val() {
+              console.log("begin save config value.....");
+              let preprocess_config = {};
+  
+              //input
+              let input_config = {};
+              let input_form = $("#input_form");
+              input_config.type = $('#input_type').val();
+              let input_args = {};
+              let input_method_name = 'load_' + input_config.type;
+              let method_info = get_method_info(input_method_name);
+              for (let i = 0; i < method_info.args.length; ++i) {
+                  let this_arg_info = method_info.args[i];
+                  let arg_name = this_arg_info.argName;
+                  let arg_value = $('#' + 'input_form' + '-argarea').find('#' + 'input_form' + '-argarea-' + arg_name).val();
+                  let arg_type = this_arg_info.valueType;
+                  if (arg_type == 'bool') {
+                      if (arg_value === '0') {
+                          arg_value = false;
+                      }
+                      else if (arg_value === '1') {
+                          arg_value = true;
+                      }
+                  }
+                  else if (arg_type == 'float') {
+                      arg_value = parseFloat(arg_value);
+                  }
+                  else if (arg_type == 'int') {
+                      arg_value = parseInt(arg_value);
+                  }
+                  input_args[arg_name] = arg_value;
+              }
+              input_config.args = input_args;
+              preprocess_config.input = input_config;
+  
+              //processes
+              let processes = [];
+              for (let i = 0; i < process_form_list.length; ++i) {
+                  let this_process_config = {};
+                  let form_name = process_form_list[i];
+                  let form = $('#' + form_name);
+                  let method_name = form.children('.form-group:first').children().eq(1).val();
+                  this_process_config.method = method_name;
+                  let args = {};
+  
+                  if (method_name == 'self_define') {
+                      args.name = $('#' + form_name + '-argarea').children().eq(0).children().eq(1).val();
+                  }
+                  else {
+                      let self_rewrite_checkbox = form.find('#' + form_name + '-' + 'self_rewrite');
+                      if (self_rewrite_checkbox.prop('checked')) {
+                          this_process_config.rewrite = true;
+                          this_process_config.args = {};
+                      }
+                      else {
+                          let method_info = get_method_info(method_name);
+                          for (let i = 0; i < method_info.args.length; ++i) {
+                              let this_arg_info = method_info.args[i];
+                              let arg_name = this_arg_info.argName;
+                              let arg_value = $('#' + form_name + '-argarea').find('#' + form_name + '-argarea-' + arg_name).val();
+                              let arg_type = this_arg_info.valueType;
+                              if (arg_type == 'bool') {
+                                  if (arg_value === '0') {
+                                      arg_value = false;
+                                  }
+                                  else if (arg_value === '1') {
+                                      arg_value = true;
+                                  }
+                              }
+                              else if (arg_type == 'float') {
+                                  arg_value = parseFloat(arg_value);
+                              }
+                              else if (arg_type == 'int') {
+                                  arg_value = parseInt(arg_value);
+                              }
+                              args[arg_name] = arg_value;
+                          }
+                      }
+                  }
+                  this_process_config.args = args;
+                  processes.push(this_process_config);
+              }
+              preprocess_config.processes = processes;
+  
+              //output
+              let output_config = {};
+              output_config.type = 'numpy';
+              preprocess_config.output = output_config;
+              return preprocess_config;
+  
+          }
+  
+          window.addEventListener("message", function (event) {
+              const message = event.data; // JSON data from extension
+              console.log(message);
+              if (message.preprocess_config) {
+                  console.log("web接收到预处理配置：" + JSON.stringify(message.preprocess_config));
+                  console.log("web 接收到预处理配置，input args="+ JSON.stringify(message.preprocess_config.input.args))
+  
+                  read_config_struct(message.preprocess_config);
+                  read_config_val(message.preprocess_config);
+              }
+              else if (message.all_method) {
+                  console.log("接收到预处理方法列表：" + message.all_method);
+                  all_method = message.all_method;
+              }
+              else if (message.input_path) {
+                  console.log("接收到input_path：" + message.input_path);
+                  $("#input_path").val(message.input_path);
+              }
+              else if (message.output_path) {
+                  $("#output_path").val(message.output_path);
+              }
+          });
+  
+          vscode.postMessage(JSON.stringify({
+              "webview_ready": 1
+          }));
+  
+  
+      </script>
+  </body>
+  
+  </html>`;
+}
+exports.getPreprocessPage = getPreprocessPage;
+function getPreprocessVisPage() {
+    return `
+  <!DOCTYPE html>
+  <html lang="en">
+  
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title></title>
+      <link rel="stylesheet" href="http://localhost:6003/css/bootstrap337.min.css">
+      <style>
+          html,
+          body {
+              width: 100%;
+              height: fit-content;
+          }
+  
+          /* 浅色主题 */
+          .body.vscode-light {
+              background: white;
+              color: black;
+          }
+  
+          /* 深色主题 */
+          body.vscode-dark {
+              background: #252526;
+              color: white;
+          }
+  
+          /* 高对比度主题 */
+          body.vscode-high-contrast {
+              background: white;
+              color: red;
+          }
+  
+          ul.sidenav {
+              list-style-type: none;
+              width: 100%;
+              height: auto;
+              position: relative;
+              margin: 0;
+              padding: 0;
+  
+              background-color: #f1f1f1;
+  
+              overflow: auto;
+          }
+  
+          ul.sidenav li button {
+              display: block;
+              color: #000;
+              text-decoration: none;
+              float: left;
+              width: 100%;
+              border: 0px;
+              text-align: left;
+          }
+  
+          ul.sidenav li button.active {
+              background-color: #77A4FF;
+              color: white;
+              font-size: 22px;
+          }
+  
+          ul.sidenav li a:hover:not(.active) {
+              background-color: #555;
+              color: white;
+          }
+  
+          .modal-content {
+              background-color: white;
+              width: 98%;
+              height: 900px;
+              margin: auto;
+              box-shadow: none;
+              border-radius: 8px;
+          }
+  
+          .mymodalLabel {
+              font-family: SourceHanSansCN-Medium;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 0.89px;
+              color: #333333;
+              height: 71px;
+              background: #EEEEEE;
+              font-weight: 600;
+              padding-left: 50px;
+              padding-top: 20px;
+              border-top-right-radius: 15px;
+              border-top-left-radius: 15px;
+          }
+  
+          .global-form {
+              padding-top: 0px;
+              margin-bottom: 0;
+              text-align: right;
+          }
+  
+          .control-label {
+              font-family: SourceHanSansCN-Normal;
+              color: #333333;
+              font-weight: normal;
+              text-align: right;
+              padding-left: 0%;
+              font-size: 20px;
+              letter-spacing: 1.14px;
+              padding-top: 10px;
+          }
+  
+          .control-label-eng {
+              font-family: SourceHanSansCN-Normal;
+              font-size: 22px;
+              color: #333333;
+              letter-spacing: 1.26px;
+              font-weight: normal
+          }
+  
+          .form-check-label {
+              font-family: SourceHanSansCN-Normal;
+              font-size: 22px;
+              color: #333333;
+              letter-spacing: 1.26px;
+              font-weight: normal
+          }
+  
+          .text-box {
+              border-radius: 6px;
+              font-family: SourceHanSansCN-Normal;
+              font-size: 22px;
+              color: #999999;
+              letter-spacing: 1.26px;
+              margin-right: 20px;
+              padding: 0%;
+              width: 460px;
+              height: 50px;
+              font-weight: normal;
+              background: #FFFFFF;
+              border: 1px solid #C0C0C0;
+              padding-left: 20px;
+          }
+  
+          .path-show {
+              font-family: SourceHanSansCN-Normal;
+              font-size: 22px;
+              font-weight: normal;
+              color: #999999;
+              background: #EEEEEE;
+              border-radius: 6px;
+              height: 50px;
+              width: 460px;
+              background: #FFFFFF;
+              border: 1px solid #C0C0C0;
+              padding-left: 20px;
+          }
+  
+          .button-load-path {
+              height: 50px;
+              width: 120px;
+              font-family: SourceHanSansCN-Medium;
+              font-size: 20px;
+              color: #FFFFFF;
+              letter-spacing: 1.14px;
+              background-image: linear-gradient(180deg, #AED77C 0%, #8FB740 100%);
+              border-radius: 6px;
+              line-height: 50px;
+              text-align: center;
+              margin-left: 16px;
+          }
+  
+          .learingAlgorithm-config {
+              padding-top: 0px;
+              margin-bottom: 0;
+              text-align: right;
+          }
+  
+          .global-config {
+              padding-top: 0px;
+              margin-bottom: 0;
+              text-align: right;
+          }
+  
+          .form-check-input {
+              zoom: 130%;
+          }
+  
+          .globalProperties-button {
+              width: fit-content;
+              /* background: white; */
+              font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #333333;
+              letter-spacing: 1.14px;
+              margin-left: 10px;
+              vertical-align: middle;
+              font-weight: 500;
+          }
+  
+          .warning_css {
+              font-family: SourceHanSansCN-Normal;
+              font-size: 20px;
+              color: #EC7760;
+              letter-spacing: 1.14px;
+              height: 20px;
+              width: 250px;
+              margin-left: 240px;
+              margin-top: 5px;
+          }
+  
+          .self_define_button {
+              margin-left: 372px;
+              background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+              border-radius: 6px;
+              height: 50px;
+              font-family: SourceHanSansCN-Medium;
+              font-size: 20px;
+              color: #FFFFFF;
+              letter-spacing: 1.14px;
+          }
+  
+          .vis_image {
+              width: 200px;
+              height: 200px;
+              display: block;
+          }
+  
+          .right_arrow {
+              width: 100px;
+              height: 100px;
+              margin-left: 100px;
+              margin-right: 100px;
+              margin-top: -170px;
+              display: inline-block;
+          }
+  
+          .input_area {
+              display: inline-block;
+  
+              height: 100%;
+              width: fit-content;
+              margin: auto;
+          }
+  
+          .process_area {
+              display: inline-block;
+              height: 100%;
+              width: fit-content;
+              margin: auto;
+  
+          }
+  
+          .img_label_group {
+              display: inline-block;
+              height: 230px;
+              width: 200px;
+          }
+  
+          .label {
+              font-family: SourceHanSansCN-Normal;
+              color: #333333;
+              font-weight: normal;
+              text-align: right;
+              padding-left: 0%;
+              font-size: 20px;
+              letter-spacing: 1.14px;
+              padding-top: 10px;
+          }
+      </style>
+  </head>
+  
+  <body>
+      <div class="modal-content">
+          <div style="margin-top:35vh;width: fit-content;height: 230;margin-left: auto;margin-right: auto;">
+              <div id="input_area" class="input_area">
+  
+              </div>
+              <div id="process_area" class="process_area">
+  
+              </div>
+          </div>
+  
+      </div>
+      <script src="http://localhost:6003/js/jquery211.min.js"></script>
+      <script src="http://localhost:6003/js/bootstrap337.min.js"></script>
+      <script src="http://localhost:6003/js/echarts501.min.js"></script>
+      <script type="text/javascript">
+          const vscode = acquireVsCodeApi();
+  
+  
+          window.addEventListener("message", function (event) {
+              const message = event.data; // JSON data from extension
+              console.log(message);
+              if (message.visualize_info) {
+                  console.log(message.visualize_info);
+                  for (let i = 0; i < message.visualize_info.length; ++i) {
+                      let this_info = message.visualize_info[i];
+                      if (this_info.method_name == 'input') {
+                          let group = document.createElement('div');
+                          group.className = "img_label_group";
+                          group = $(group);
+                          let img = document.createElement('img');
+                          img.src = this_info.file_path;
+                          img.className = 'vis_image';
+                          img = $(img);
+                          group.append(img);
+                          group.append('<label class="label" ">'+this_info.method_name+'</label>')
+  
+                          $('#input_area').append(group);
+                      }
+                      else {
+                          $('#process_area').append('<img class="right_arrow" src="http://127.0.0.1:6003/res/img/right-arrow.png"></img>');
+                          let group = document.createElement('div');
+                          group.className = "img_label_group";
+                          group = $(group);
+                          let img = document.createElement('img');
+                          img.src = this_info.file_path;
+                          img.className = 'vis_image';
+                          img = $(img);
+                          group.append(img);
+                          group.append('<label class="label" ">'+this_info.method_name+'</label>')
+                          $('#process_area').append(group);
+                      }
+                  }
+              }
+  
+          });
+  
+          vscode.postMessage(JSON.stringify({
+              "webview_ready": 1
+          }));
+  
+  
+      </script>
+  </body>
+  
+  </html>
+  `;
+}
+exports.getPreprocessVisPage = getPreprocessVisPage;
 
 
 /***/ }),

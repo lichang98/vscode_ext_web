@@ -6,11 +6,11 @@ import * as fs from 'fs';
 import * as axios from 'axios';
 // 引入 TreeViewProvider 的类
 import { ITEM_ICON_MAP, TreeItemNode, TreeViewProvider,addSlfProj,addSlfFile ,addDarwinFold, addDarwinFiles} from './TreeViewProvider';
-import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage,getSNNModelPage} from "./get_convertor_page_v2";
+import {getConvertorDataPageV2, getConvertorModelPageV2,getConvertorPageV2,getANNSNNConvertPage,getSNNSimuPage,getSNNModelPage, getPreprocessPage,getPreprocessVisPage} from "./get_convertor_page_v2";
 import {getSegDataVisPage, getSegSimulatePage, getANNSNNConvertSegPage} from "./get_seg_pages";
 import {getSpeechClsDataPage, getANNSNNConvertSpeechPage, getSNNSimuSpeechPage} from "./get_speech_pages";
 import {getFatigueDataVisPage, getANNSNNConvertFatiguePage, getSNNSimuFatiguePage} from "./get_fatigue_pages";
-import {ChildProcess, exec, execSync, spawn} from "child_process";
+import {ChildProcess, exec, execSync, spawn, spawnSync} from "child_process";
 const decode = require('audio-decode');
 var encoding = require('encoding');
 const iconv = require('iconv-lite');
@@ -159,6 +159,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let treeViewSimulator = TreeViewProvider.initTreeViewItem("item_simulator");
 	let treeViewConvertDarLang = TreeViewProvider.initTreeViewItem("item_darwinLang_convertor");
 	let treeViewItemsImportFiles = TreeViewProvider.initTreeViewItem("act_import_files-item");
+	let treeViewProcess = TreeViewProvider.initTreeViewItem("item_preprocess");
 	// let treeViewSNNModelView = TreeViewProvider.initTreeViewItem("item_snn_model_view");
 
 	let treeviewHome = vscode.window.createTreeView("treeView-item", {treeDataProvider: treeview});
@@ -166,6 +167,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let treeViewSim = vscode.window.createTreeView("item_simulator", {treeDataProvider:treeViewSimulator});
 	let treeViewCvtDarLang = vscode.window.createTreeView("item_darwinLang_convertor", {treeDataProvider:treeViewConvertDarLang});
 	let treeViewImportFiles = vscode.window.createTreeView("act_import_files-item", {treeDataProvider: treeViewItemsImportFiles});
+	let treeViewPreprocessView = vscode.window.createTreeView("item_preprocess", {treeDataProvider: treeViewProcess});
 	// let treeViewSNNMD = vscode.window.createTreeView("item_snn_model_view", {treeDataProvider: treeViewSNNModelView});
 
 	let currPanelDisposed:boolean = false;
@@ -178,7 +180,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let binaryCompilingInterval:NodeJS.Timeout|undefined = undefined;
 
 	function isAllOtherTreeViewInvisible(){
-		return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible;
+		return !treeviewHome.visible && !treeViewCvtor.visible && !treeViewSim.visible && !treeViewCvtDarLang.visible && !treeViewPreprocessView.visible;
 	}
 
 
@@ -286,6 +288,21 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	treeViewPreprocessView.onDidChangeVisibility((evt)=>{
+		if (evt.visible) {
+			console.log("预处理界面！");
+			treeviewHome.reveal(treeview.data[0]);
+			vscode.commands.executeCommand("item_preprocess.open");
+		} else {
+			setTimeout(() => {
+				if (isAllOtherTreeViewInvisible()) {
+					treeviewHome.reveal(treeview.data[0]);
+					vscode.commands.executeCommand("item_preprocess.open");
+				}
+			}, 100);
+		}
+	});
+
 	let inMemTreeViewStruct:Array<TreeItemNode>=new Array();
 	// treeViewBinConvertDarLang.data = inMemTreeViewStruct;
 	let X_NORM_DATA_PATH:string|undefined = undefined;
@@ -308,6 +325,8 @@ export function activate(context: vscode.ExtensionContext) {
 	let panelAnnModelVis:vscode.WebviewPanel|undefined = undefined;
 	let panelSNNModelVis:vscode.WebviewPanel|undefined = undefined;
 	let panelSNNVisWeb:vscode.WebviewPanel|undefined = undefined;
+	let panelPreprocess:vscode.WebviewPanel|undefined = undefined;
+	let panelPreprocessVis:vscode.WebviewPanel|undefined = undefined;
 
 	let sampleImgsDir = path.join(__dirname, "..", "src", "resources", "script_res");
 	let snnInfoFileDir = path.join(__dirname, "inner_scripts");
@@ -1800,7 +1819,7 @@ export function activate(context: vscode.ExtensionContext) {
 				setTimeout(() => {
 					if(PROJ_DESC_INFO.project_type === "语音识别") {
 						console.log("语音识别任务向 模型转换界面发送预设参数。。。。");
-						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 13}));
+						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 36}));
 					} else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
 						console.log("疲劳检测任务向  模型转换界面发送预设参数。。。。");
 						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 5}));
@@ -2212,7 +2231,265 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 		}
 	}
 
+	// 数据预处理
+	vscode.commands.registerCommand("item_preprocess.open", ()=>{
+		if (!panelPreprocess) {
+			panelPreprocess = vscode.window.createWebviewPanel("darwin2web", "预处理", vscode.ViewColumn.One, 
+					{localResourceRoots:[vscode.Uri.file(path.join(context.extensionPath))], enableScripts:true,retainContextWhenHidden:true});
+			panelPreprocess.webview.html = getPreprocessPage();
+			panelPreprocess.title = "预处理";
+		}
+
+		let preprocessToolRoot = 'C:\\Users\\lc\\Downloads\\preprocess';
+
+		// path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "darlang_out", "preprocess_config.json")
+		if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", "")))) {
+			fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", "")));
+		}
+		if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "bin_darwin_out"))) {
+			fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "bin_darwin_out"));
+		}
+		if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "bin_darwin3"))) {
+			fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "bin_darwin3"));
+		}
+		if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "darlang_out"))) {
+			fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "darlang_out"));
+		}
+		if (!fs.existsSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", "")))) {
+			fs.mkdirSync(path.join(__dirname, "darwin2sim", "target", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", "")));
+		}
+		if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "preprocess"))) {
+			fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "preprocess"));
+		}
+
+		panelPreprocess.webview.onDidReceiveMessage((evt)=>{
+			let res = JSON.parse(evt);
+			console.log("res="+JSON.stringify(res));
+			if (res.webview_ready) {
+				// Get all preprocess methods
+				let getAllMethodProc = spawnSync(PYTHON_INTERPRETER.trim(), [path.join(preprocessToolRoot, "Util", "GetAllMethod.py")], 
+							{cwd: preprocessToolRoot, encoding: "utf-8"});
+				console.log("预处理方法列表："+getAllMethodProc.stdout);
+				console.log("get all method.py stderr: "+getAllMethodProc.stderr);
+				panelPreprocess?.webview.postMessage({"all_method": JSON.parse(getAllMethodProc.stdout)});
+
+				let processConfig = "";
+				if (PROJ_DESC_INFO.project_type === "图像分类") {
+					processConfig = JSON.parse(fs.readFileSync(path.join(preprocessToolRoot, "Examples", "image.json"), {encoding: "utf-8"}));
+				} else if (PROJ_DESC_INFO.project_type === "语音识别") {
+					processConfig = JSON.parse(fs.readFileSync(path.join(preprocessToolRoot, "Examples", "audio.json"), {encoding: "utf-8"}));
+				} else if (PROJ_DESC_INFO.project_type === "年龄检测") {
+					processConfig = JSON.parse(fs.readFileSync(path.join(preprocessToolRoot, "Examples", "image.json"), {encoding: "utf-8"}));
+				}
+				console.log("发送preprocess config="+JSON.stringify(processConfig));
+				panelPreprocess?.webview.postMessage({"preprocess_config": processConfig});
+			} else if (res.start_preprocess) {
+				let input_path = res.start_preprocess.input_path;
+                let output_path = res.start_preprocess.output_path;
+                let preprocess_config_to_save = res.start_preprocess.preprocess_config_new;
+
+				let config_path = "";
+				if (PROJ_DESC_INFO.project_type === "图像分类") {
+					config_path = path.join(preprocessToolRoot, "Examples", "image.json");
+				} else if(PROJ_DESC_INFO.project_type === "年龄检测") {
+					config_path = path.join(preprocessToolRoot, "Examples", "image.json");
+				} else if (PROJ_DESC_INFO.project_type === "语音识别") {
+					config_path = path.join(preprocessToolRoot, "Examples", "audio.json");
+				}
+				console.log("写入新的配置文件，路径："+config_path+", config="+preprocess_config_to_save);
+				fs.writeFileSync(config_path, JSON.stringify(preprocess_config_to_save), {encoding: "utf-8"});
+				fs.copyFileSync(config_path, path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "preprocess","preprocess_config.json"));
+				let preprocessProc = spawnSync(PYTHON_INTERPRETER.trim(),
+						[path.join(preprocessToolRoot, "main.py"),
+							"--input_path",
+							input_path,
+							"--config_path",
+							config_path,
+							"--output_path",
+							output_path,
+							"--visualize"],
+							{
+								cwd: preprocessToolRoot,
+								encoding: "utf-8"
+							});
+				console.log("预处理main stdout=" + preprocessProc.stdout);
+				console.log("预处理main stderr=" + preprocessProc.stderr);
+			} else if (res.self_define_name) {
+				let self_define_method_path = path.join(preprocessToolRoot, "SelfDefine", res.self_define_name+".py");
+				fs.copyFileSync(self_define_method_path, 
+					path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "preprocess", res.self_define_name+".py"));
+				if (fs.existsSync(self_define_method_path)) {
+					openLocalFile(self_define_method_path);
+				} else {
+					let selfDefineProc = spawnSync(PYTHON_INTERPRETER.trim(),
+						[path.join(preprocessToolRoot, "Util", "AddSelfDefine.py"),
+								res.self_define_name],
+						{
+							cwd: preprocessToolRoot,
+							encoding: "utf-8"
+						});
+						openLocalFile(self_define_method_path);
+				}
+			} else if(res.self_rewrite) {
+				let method_name = res.self_rewrite;
+				let self_rewrite_method_path = path.join(preprocessToolRoot, "SelfRewrite", method_name+".py");
+				fs.copyFileSync(self_rewrite_method_path, 
+					path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "preprocess", method_name+".py"));
+				if (fs.existsSync(self_rewrite_method_path)) {
+					openLocalFile(self_rewrite_method_path);
+				} else {
+					let reWriteProc = spawnSync(PYTHON_INTERPRETER.trim(),
+						[path.join(preprocessToolRoot, "Util", "addSelfRewrite.py"), method_name],
+						{
+							cwd: preprocessToolRoot,
+							encoding: "utf-8"
+						});
+						openLocalFile(self_rewrite_method_path);
+				}
+			} else if(res.input_path_select) {
+				const inputPathOptions: vscode.OpenDialogOptions = {
+					canSelectMany: false,
+					openLabel: "数据集路径",
+					canSelectFiles: false,
+					canSelectFolders: true
+				};
+				vscode.window.showOpenDialog(inputPathOptions).then(fileUri => {
+					if (fileUri && fileUri[0]) {
+						let dataPath = fileUri[0].fsPath;
+						panelPreprocess?.webview.postMessage({"input_path": dataPath});
+					}
+				});
+			} else if(res.output_path_select) {
+				const outputPathOptions: vscode.OpenDialogOptions = {
+					canSelectMany: false,
+					openLabel: "保存位置",
+					canSelectFiles:false,
+					canSelectFolders: true
+				};
+				vscode.window.showOpenDialog(outputPathOptions).then(fileUri => {
+					if (fileUri && fileUri[0]) {
+						let dataPath = fileUri[0].fsPath;
+						if (panelPreprocess) {
+							panelPreprocess.webview.postMessage({"output_path": dataPath});
+						}
+					}
+				});
+			} else if (res.check_visualize) {
+				// let temp_config_path = path.join(preprocessToolRoot, "temp_preprocess.json");
+				// fs.writeFileSync(temp_config_path, JSON.stringify(res.check_visualize), "utf-8");
+				// let input_path = '';
+				// if (res.check_visualize.input.type === "audio") {
+				// 	input_path = path.join(preprocessToolRoot, "./test/sample.wav");
+				// } else if (res.check_visualize.input.type === "image") {
+				// 	input_path = path.join(preprocessToolRoot, "./test/sample.png");
+				// }
+				// let visProc = spawnSync(PYTHON_INTERPRETER.trim(), 
+				// 		[path.join(preprocessToolRoot, "main.py"),
+				// 			"--input_path",
+				// 			input_path,
+				// 			"--config_path",
+				// 			temp_config_path,
+				// 			"--output_path",
+				// 			path.join(preprocessToolRoot, "./test/testtest/testoutput.npy"),
+				// 			"--visualize"],
+				// 		{
+				// 			cwd: preprocessToolRoot,
+				// 			encoding: "utf-8"
+				// 		});
+				// console.log("预处理可视化 stdout="+ visProc.stdout);
+				// console.log("预处理可视化 stderr="+visProc.stderr);
+
+				preprocess_visulize(context, path.join(preprocessToolRoot, "./test/testtest"));
+
+				// fs.unlinkSync(temp_config_path);
+			}
+		});
+
+		panelPreprocess.onDidDispose(()=>{
+			panelPreprocess = undefined;
+		});
+	});
+
+
+
+function preprocess_visulize(context: vscode.ExtensionContext,
+	localResourceRoots: string) {
+	if (panelPreprocessVis) {
+		panelPreprocessVis.dispose();
+		panelPreprocessVis = undefined;
+	}
+	if (!panelPreprocessVis) {
+		panelPreprocessVis = vscode.window.createWebviewPanel("preProcessVis", "预处理预览", vscode.ViewColumn.One, {
+			localResourceRoots: [
+				vscode.Uri.file(localResourceRoots),
+				vscode.Uri.file(path.join(context.extensionPath))
+			],
+			enableScripts: true,
+			retainContextWhenHidden: true
+		});
+		//globalState.preProcessVisulizePanel.reveal();
+		panelPreprocessVis.webview.html = getPreprocessVisPage();
+		panelPreprocessVis.onDidDispose(() => {
+			panelPreprocessVis = undefined;
+		}, null, context.subscriptions);
+
+		panelPreprocessVis.webview.onDidReceiveMessage((evt) => {
+			let res = JSON.parse(evt);
+			if (res.webview_ready) {
+				let files = fs.readdirSync(path.join(localResourceRoots, 'visualize'));
+				let visualize_info:any = [];
+				files.forEach(function (item, index) {
+
+					let method_name = '';
+					if (item === 'input.png') {
+						method_name = 'input';
+					}
+					else {
+						method_name = item.replace('.png', '');
+					}
+					let this_path = path.join(localResourceRoots, 'visualize', item);
+					this_path = replace_file_path(this_path);
+					let this_info = {
+						'method_name': method_name,
+						'file_path': this_path
+					};
+					visualize_info.push(this_info);
+
+				});
+				panelPreprocessVis!.webview.postMessage({
+					"visualize_info": visualize_info
+				}).then((fullfill) => {
+					//fs_extra.removeSync(localResourceRoots);
+				});
+
+
+			}
+		});
+	}
 }
+
+}
+
+export function openLocalFile(filePath: string) {
+    // 获取TextDocument对象
+    vscode.workspace.openTextDocument(filePath)
+        .then(doc => {
+            // 在VSCode编辑窗口展示读取到的文本
+            vscode.window.showTextDocument(doc, { preview: false });
+        }, err => {
+            console.log(`Open ${filePath} error, ${err}.`);
+        }).then(undefined, err => {
+            console.log(`Open ${filePath} error, ${err}.`);
+        });
+}
+
+export function replace_file_path(this_path: string) {
+
+    return 'https://file%2B.vscode-resource.vscode-webview.net/' + path.resolve(this_path);
+
+    //return vscode.Uri.file(path.resolve(this_path)).with({ scheme: 'vscode-resource' }).toString()
+}
+
 
 // this method is called when your extension is deactivated
 export function deactivate() {

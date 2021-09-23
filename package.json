@@ -27,6 +27,7 @@
 		"onView:item_convertor",
 		"onView:item_simulator",
 		"onView:item_darwinLang_convertor",
+		"onView:item_preprocess",
 		"onCommand:treeView-item.newproj",
 		"onCommand:treeView-item.datavis",
 		"onCommand:treeView-item.import",
@@ -34,6 +35,7 @@
 		"onCommand:snn_model_ac.show_snn_model",
 		"onCommand:item_convertor.start_convert",
 		"onCommand:item_darwinLang_convertor.convert_to_darwin2",
+		"onCommand:item_preprocess.open",
 		"*"
 	],
 	"main": "./dist/extension.js",
@@ -101,6 +103,10 @@
 			{
 				"command": "item_darwinLang_convertor.convert_to_darwin2",
 				"title": "编译"
+			},
+			{
+				"command": "item_preprocess.open",
+				"title": "启动预处理"
 			}
 		],
 		"menus": {
@@ -133,6 +139,11 @@
 				{
 					"command": "item_darwinLang_convertor.start_convert",
 					"when": "view == item_darwinLang_convertor",
+					"group": "inline"
+				},
+				{
+					"command": "item_preprocess.open",
+					"when": "view == item_preprocess",
 					"group": "inline"
 				}
 			],
@@ -182,6 +193,11 @@
 					"id": "lang_convertor",
 					"title": "编译",
 					"icon": "src/resources/imgs/darwin_binary.png"
+				},
+				{
+					"id": "preprocess",
+					"title": "预处理",
+					"icon": "src/resources/preprocess_icon.png"
 				}
 			]
 		},
@@ -217,6 +233,13 @@
 			"lang_convertor": [
 				{
 					"id": "item_darwinLang_convertor",
+					"name": "",
+					"when": ""
+				}
+			],
+			"preprocess": [
+				{
+					"id": "item_preprocess",
 					"name": "",
 					"when": ""
 				}

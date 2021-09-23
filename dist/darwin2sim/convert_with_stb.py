@@ -256,7 +256,11 @@ for i in range(len(tmp_model.layers)):
     elif origin_layer_names[-1] == "Conv2D":
         layer_extras.append("relu")
 
-acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=testX[:50],y_test=testY[:50])
+if len(tmp_model.input_shape) == 2:
+    acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=np.reshape(testX[:50], (50, -1)),y_test=testY[:50])
+else:
+    acc = model_lib.evaluate(input_model['val_fn'], batch_size=1,num_to_test=50, x_test=testX[:50],y_test=testY[:50])
+
 ann_origin_acc = "{:.2%}".format(acc)
 
 # set path
@@ -283,7 +287,10 @@ parsed_model = model_parser.build_parsed_model()
 print(flush=True)
 # Normalize
 if run_alg == 0:
-    norm_data = {'x_norm':testX}
+    if len(tmp_model.input_shape) == 2:
+        norm_data = {"x_norm": np.reshape(testX, (len(testX), -1))}
+    else:
+        norm_data = {'x_norm':testX}
     normalize_parameters(parsed_model, config,**norm_data)
 else:
     # copy file self_preprcess.py
@@ -291,7 +298,10 @@ else:
     import self_preprocess
     self_preprocess.normalize_parameters(parsed_model, testX)
 
-score_norm = model_parser.evaluate(batch_size=1,num_to_test=50,x_test=testX[:50],y_test=testY[:50])
+if len(tmp_model.input_shape) == 2:
+    score_norm = model_parser.evaluate(batch_size=1,num_to_test=50,x_test=np.reshape(testX[:50], (50, -1)),y_test=testY[:50])
+else:
+    score_norm = model_parser.evaluate(batch_size=1,num_to_test=50,x_test=testX[:50],y_test=testY[:50])
 
 parsed_model.save(os.path.join(dir_name, "parsed_model.h5"))
 print(flush=True)
@@ -387,7 +397,7 @@ stage2_time_use = time.time()
 
 ######################
 # all_accus=[]
-# v_th_range=list(range(1,24,1))
+# v_th_range=list(range(31, 60, 1))
 # for v_th in v_th_range:
 #     acc = 0
 #     for i in range(50):
@@ -409,6 +419,7 @@ stage2_time_use = time.time()
 
 # best_vthresh = all_accus[np.argmax([e[1] for e in all_accus])][0]
 # print("choose best vthreshold={}".format(best_vthresh))
+# exit(1)
 #########################
 
 if vthresh_after_quantization_method == 0:

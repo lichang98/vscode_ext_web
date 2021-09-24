@@ -1388,6 +1388,14 @@ function activate(context) {
             panelSNNVisWeb.dispose();
             panelSNNVisWeb = undefined;
         }
+        if (panelPreprocess) {
+            panelPreprocess.dispose();
+            panelPreprocess = undefined;
+        }
+        if (panelPreprocessVis) {
+            panelPreprocessVis.dispose();
+            panelPreprocessVis = undefined;
+        }
         PROJ_SAVE_PATH = undefined;
         X_NORM_DATA_PATH = undefined;
         X_COLOR_DATA_PATH = undefined;
@@ -2212,7 +2220,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
             panelPreprocess.webview.html = get_convertor_page_v2_1.getPreprocessPage();
             panelPreprocess.title = "预处理";
         }
-        let preprocessToolRoot = 'C:\\Users\\lc\\Downloads\\preprocess';
+        let preprocessToolRoot = path.join(__dirname, "preprocess");
         // path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2", ""), "darlang_out", "preprocess_config.json")
         if (!fs.existsSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")))) {
             fs.mkdirSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH).replace("\.dar2", "")));
@@ -7628,7 +7636,7 @@ function getConvertorPageV2() {
             border-radius: 2px;
             border-radius: 2px;width: 140px;margin-left: 200px;">关闭
             </button>
-            <button type="button" class="btn btn-primary" onclick="checkoutCreateProjectAction()" id="create" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+            <button type="button" class="btn btn-primary" id="create" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
             border-radius: 2px;
             border-radius: 2px;width: 140px;margin-left: 60px;">创建
             </button>

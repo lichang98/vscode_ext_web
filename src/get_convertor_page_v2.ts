@@ -1169,7 +1169,7 @@ export function getConvertorPageV2(){
             border-radius: 2px;
             border-radius: 2px;width: 140px;margin-left: 200px;">关闭
             </button>
-            <button type="button" class="btn btn-primary" onclick="checkoutCreateProjectAction()" id="create" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
+            <button type="button" class="btn btn-primary" id="create" style="background-image: linear-gradient(180deg, #AFD1FF 0%, #77A4FF 100%);
             border-radius: 2px;
             border-radius: 2px;width: 140px;margin-left: 60px;">创建
             </button>

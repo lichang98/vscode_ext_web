@@ -1401,6 +1401,14 @@ export function activate(context: vscode.ExtensionContext) {
 			panelSNNVisWeb.dispose();
 			panelSNNVisWeb = undefined;
 		}
+		if(panelPreprocess) {
+			panelPreprocess.dispose();
+			panelPreprocess = undefined;
+		}
+		if(panelPreprocessVis) {
+			panelPreprocessVis.dispose();
+			panelPreprocessVis = undefined;
+		}
 		PROJ_SAVE_PATH = undefined;
 		X_NORM_DATA_PATH = undefined;
 		X_COLOR_DATA_PATH = undefined;

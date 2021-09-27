@@ -24,7 +24,7 @@ baseDirPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(baseDirPath, "snntoolbox"))
 # model_path = os.path.join(
 #     'E:\\courses\\ZJLab\\IDE-related-docs\\darwin2sim\\target\\mnist_cnn.h5')
-target_proj_name = "cnn_dig"
+target_proj_name = "tmp_mnist_test"
 if len(sys.argv) > 6:
     target_proj_name = sys.argv[6]
 
@@ -106,7 +106,7 @@ stage2_time_use=0
 stage3_time_use=0
 stage4_time_use=0
 
-def fixpt3(weights,bit_width=8):
+def fixpt3(weights,bit_width=5):
     range_pos = (2**(bit_width-1))-1
     range_neg = -(2**(bit_width-1))
 
@@ -365,7 +365,7 @@ if task_type == 2:
     vths = [int(e) for e in vths]
     print("vths={}".format(vths))
 elif task_type == 0:
-    all_wts = fixpt(all_wts)
+    all_wts = fixpt3(all_wts)
 elif task_type == 4:
     all_wts = fixpt3(all_wts)
 else:
@@ -397,7 +397,7 @@ stage2_time_use = time.time()
 
 ######################
 # all_accus=[]
-# v_th_range=list(range(31, 60, 1))
+# v_th_range=list(range(1, 50, 2))
 # for v_th in v_th_range:
 #     acc = 0
 #     for i in range(50):
@@ -420,7 +420,7 @@ stage2_time_use = time.time()
 # best_vthresh = all_accus[np.argmax([e[1] for e in all_accus])][0]
 # print("choose best vthreshold={}".format(best_vthresh))
 # exit(1)
-#########################
+# #########################
 
 if vthresh_after_quantization_method == 0:
     best_vthresh = sys_param_vthresh

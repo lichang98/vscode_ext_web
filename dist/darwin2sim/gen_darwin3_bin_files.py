@@ -7,6 +7,7 @@ from os import path
 import subprocess
 import shutil
 import pack_bin_files
+import json
 
 baseDirPath = os.path.dirname(os.path.abspath(__file__))
 snn_model_path = os.path.join(baseDirPath, "model_out", "test", "darlang_out")
@@ -37,6 +38,12 @@ for conn_file in os.listdir(snn_model_path):
 
 i,j,w = load_pickle_weight(path.join(snn_model_path, "input_to_layer_1.pickle"))
 connections[(0, 1)] = np.array([i + (0 << 14), j + (1 << 14), w], dtype=np.int64).T
+with open(path.join(snn_model_path, "snn_digit_darlang.json"), "rb") as f:
+    snn_mdl = json.load(f)
+n_input_neurons = int(snn_mdl["neuronGroups"][0]["neuronSize"])
+for loss_input_neuron in set(range(0, n_input_neurons)) - set(i):
+    connections[(0,1)] = np.vstack([connections[(0,1)], np.array([loss_input_neuron + (0 << 14), 0 + (1 << 14), 0], dtype=np.int64)])
+
 for idx in range(1, last_idx):
     i,j,w = load_pickle_weight(path.join(snn_model_path, "layer_{}_to_layer_{}.pickle".format(idx, idx + 1)))
     connections[(idx, idx + 1)] = np.array([i + (idx << 14), j + ((idx + 1) << 14), w], dtype=np.int64).T
@@ -74,8 +81,9 @@ else:
 # shutil.make_archive(path.join(snn_model_path, "..", "darwin3_"+sys.argv[1]), "zip", path.join(snn_model_path, "..", "bin_darwin3"))
 target_files = list(os.listdir(path.join(snn_model_path, "..", "bin_darwin3")))
 target_files = [path.join(snn_model_path, "..", "bin_darwin3", e) for e in target_files]
-preprocess_files = list(os.listdir(path.join(snn_model_path, "..", "preprocess")))
-preprocess_files = [path.join(snn_model_path, "..", "preprocess", e) for e in preprocess_files]
-target_files.extend(preprocess_files)
+if path.exists(path.join(snn_model_path, "..", "preprocess")):
+    preprocess_files = list(os.listdir(path.join(snn_model_path, "..", "preprocess")))
+    preprocess_files = [path.join(snn_model_path, "..", "preprocess", e) for e in preprocess_files]
+    target_files.extend(preprocess_files)
 pack_bin_files.pack_files(target_files, path.join(snn_model_path, "..", "packed_bin_files.dat"))
 

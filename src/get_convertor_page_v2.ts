@@ -2751,7 +2751,7 @@ export function getANNSNNConvertPage(){
   let s4_fin_stub = 397;
   
         $(document).ready(function(){
-          $("#select_vthresh").val("21"); // default value
+          $("#select_vthresh").val("31"); // default value
           $("#select_dura").val("100");
             $("#self_def_preprocess_alg").on("click", function(){
                 vscode.postMessage(JSON.stringify({"convert_self_def": "preprocess"}));
@@ -2784,26 +2784,31 @@ export function getANNSNNConvertPage(){
                   console.log("data split list len="+log_output_lists.length);
                   // $("#log_output_div").html(log_output_lists.join("<br/>"));
                   // document.getElementById("log_output_div").scrollTop = document.getElementById("log_output_div").scrollHeight;
+                  
                   if(log_output_lists.length <= s1_fin_stub){
                       console.log("increase sub progress bar 1, style width="+""+parseInt(log_output_lists.length/s1_fin_stub*100)+"%");
                           document.getElementById("model_convert_progress_div").style.width = ""+parseInt(log_output_lists.length/s1_fin_stub*100)+"%";
+                      process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / s4_fin_stub) * 100), 25));                        
                   }
                   if(stage1_convert_finish){
                       if(log_output_lists.length < s2_fin_stub && stage2_preprocess_finish !== true){
                           console.log("increase sub progress bar 2");
                               document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-s1_fin_stub)/(s2_fin_stub-s1_fin_stub)*100)+"%";
+                              process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / s4_fin_stub) * 100), 50));
                       }
                   }
                   if(stage2_preprocess_finish){
                       if(log_output_lists.length < s3_fin_stub && stage3_search_finish !== true){
                           console.log("increase sub progress bar 3");
                               document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-s2_fin_stub)/(s3_fin_stub-s2_fin_stub)*100)+"%";
+                          process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / s4_fin_stub) * 100), 75));
                       }
                   }
                   if(stage3_search_finish){
                       if(log_output_lists.length < s4_fin_stub && stage4_all_finish !== true){
                           console.log("increase sub progress bar 4");
                               document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-s3_fin_stub)/(s4_fin_stub-s3_fin_stub)*100)+"%";
+                          process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / s4_fin_stub) * 100), 95));
                       }
                   }
                   // if(stage4_all_finish !== true){
@@ -2813,7 +2818,7 @@ export function getANNSNNConvertPage(){
                   // $(".wave").attr("height", ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
                   // $(".wave").css("height",  ""+(560 - Math.floor(log_output_lists.length / 397 * (560 - 200)))+"px");
                   // $("#total_progress_text").text(""+Math.min(Math.floor((log_output_lists.length / 397) * 100), 100)+"%");
-                  process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / s4_fin_stub) * 100), 100));
+                  // process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / s4_fin_stub) * 100), 100));
                   document.getElementById("model_convert_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("model_convert_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                   document.getElementById("preprocess_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("preprocess_progress_div").style.width.replace("%", "")), 100)+"%</div>";
                   document.getElementById("search_progress_div").innerHTML = "<div style='color: #333;font-size:20px;padding-top:10px;'>"+Math.min(parseInt(document.getElementById("search_progress_div").style.width.replace("%", "")), 100)+"%</div>";
@@ -2823,6 +2828,7 @@ export function getANNSNNConvertPage(){
                     if (!error_occurred) {
                       // 结束
                       //   document.getElementById("start_convert_btn").style.backgroundColor = "";
+                      process_pie_update(processPie, process_pie_option, 100);
                       console.log("total finished, log_output_list length="+log_output_lists.length);
                       document.getElementById("model_convert_progress_div").style.width = "100%";
                       document.getElementById("preprocess_progress_div").style.width = "100%";

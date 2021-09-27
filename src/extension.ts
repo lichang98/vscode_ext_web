@@ -574,7 +574,7 @@ export function activate(context: vscode.ExtensionContext) {
 						]),
 					]),
 					new TreeItemNode("编译", [
-						new TreeItemNode("Darwin二进制文件", [
+						new TreeItemNode("Darwin II", [
 							new TreeItemNode("模型文件", []),
 							new TreeItemNode("编解码配置文件", [])
 						])
@@ -584,7 +584,7 @@ export function activate(context: vscode.ExtensionContext) {
 				// 	new TreeItemNode("ANN模型",[]),
 				// 	new TreeItemNode("SNN模型", [new TreeItemNode("连接文件", [])]),
 				// 	new TreeItemNode("数据", [new TreeItemNode("训练数据", []), new TreeItemNode("测试数据", []), new TreeItemNode("测试数据标签", [])])
-				// ]), new TreeItemNode("模拟器", []), new TreeItemNode("编译映射", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件", [])])])], true, "root"));
+				// ]), new TreeItemNode("模拟器", []), new TreeItemNode("编译映射", [new TreeItemNode("Darwin II", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件", [])])])], true, "root"));
 				treeview.data = inMemTreeViewStruct;
 				treeview.refresh();
 				// inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("数据", 
@@ -876,23 +876,27 @@ export function activate(context: vscode.ExtensionContext) {
 							vscode.window.showErrorMessage("二进制文件生成错误!!!");
 							LOG_OUTPUT_CHANNEL?.append("\n二进制文件编译错误!\n");
 						}else{
+							if (!fs.existsSync(path.join(path.dirname(PROJ_SAVE_PATH!), "darwin2_bin"))) {
+								fs.mkdirSync(path.join(path.dirname(PROJ_SAVE_PATH!), "darwin2_bin"));
+							}
 							fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),"bin_darwin_out", "config.b"),
-											path.join(path.dirname(PROJ_SAVE_PATH!), data.config_fname));
+											path.join(path.dirname(PROJ_SAVE_PATH!), "darwin2_bin",data.config_fname));
 							fs.renameSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),"bin_darwin_out", "config.b"),
 										path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),"bin_darwin_out", data.config_fname));
 							fs.renameSync(path.join(path.dirname(PROJ_SAVE_PATH!), "packed_bin_files.dat"), path.join(path.dirname(PROJ_SAVE_PATH!), data.pack_fname) );
 							fs.copyFileSync(path.join(path.dirname(PROJ_SAVE_PATH!), data.pack_fname), path.join(path.join(__dirname, "darwin2sim", "model_out", 
 											path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""), "bin_darwin_out", data.pack_fname)));
+							fs.renameSync(path.join(path.dirname(PROJ_SAVE_PATH!), data.pack_fname), path.join(path.dirname(PROJ_SAVE_PATH!), "darwin2_bin", data.pack_fname));
 							DARWIN_LANG_BIN_PATHS.splice(0);
 			
 							inMemTreeViewStruct[0].children!.splice(1,1);
 							treeview.data = inMemTreeViewStruct;
 							treeview.refresh();
 							inMemTreeViewStruct[0].children!.push(new TreeItemNode("编译", [
-								new TreeItemNode("Darwin二进制文件", [
+								new TreeItemNode("Darwin II", [
 									new TreeItemNode("模型文件", [], false, "模型文件", 2),
 									new TreeItemNode("编解码配置文件", [], false, "模型文件", 2)
-								], false, "Darwin二进制文件", 2)
+								], false, "Darwin II", 2)
 							], false, "编译", 2));
 			
 							inMemTreeViewStruct[0].children![1].children![0].children![0].children!.splice(0);
@@ -941,12 +945,17 @@ export function activate(context: vscode.ExtensionContext) {
 							console.log("darwin3 二进制部署文件编译完成！");
 							LOG_OUTPUT_CHANNEL?.append("\n达尔文3 二进制部署文件编译完成！\n");
 							ITEM_ICON_MAP.set("packed_bin_files.dat", "imgs/data_file_icon_new.png");
+							if (!fs.existsSync(path.join(path.dirname(PROJ_SAVE_PATH!), "darwin3_bin"))) {
+								fs.mkdirSync(path.join(path.dirname(PROJ_SAVE_PATH!), "darwin3_bin"));
+							}
 							fs.copyFileSync(path.join(__dirname, "darwin2sim", "model_out", path.basename(PROJ_SAVE_PATH!).replace("\.dar2",""),
 											"packed_bin_files.dat"), 
 											path.join(path.dirname(PROJ_SAVE_PATH!), "packed_bin_files.dat"));
+							fs.renameSync(path.join(path.dirname(PROJ_SAVE_PATH!), "packed_bin_files.dat"),
+							path.join(path.dirname(PROJ_SAVE_PATH!), "darwin3_bin","packed_bin_files.dat"));
 							// Mount zip file onto project explorer
 							inMemTreeViewStruct[0].children![1].children!.splice(1);
-							inMemTreeViewStruct[0].children![1].children!.push(new TreeItemNode("Darwin3", [], false, "Darwin3", 2));
+							inMemTreeViewStruct[0].children![1].children!.push(new TreeItemNode("Darwin III", [], false, "Darwin III", 2));
 							inMemTreeViewStruct[0].children![1].children![1].children!.push(new TreeItemNode("packed_bin_files.dat"));
 							// inMemTreeViewStruct[0].children![1].children![1].children!.push(new TreeItemNode("darwin3_"+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")+".zip"));
 							treeview.data = inMemTreeViewStruct;
@@ -1210,7 +1219,7 @@ export function activate(context: vscode.ExtensionContext) {
 						]),
 					]),
 					new TreeItemNode("编译", [
-						new TreeItemNode("Darwin二进制文件", [
+						new TreeItemNode("Darwin II", [
 							new TreeItemNode("模型文件", []),
 							new TreeItemNode("编解码配置文件", [])
 						])
@@ -1220,7 +1229,7 @@ export function activate(context: vscode.ExtensionContext) {
 				// 	new TreeItemNode("ANN模型",[]),
 				// 	new TreeItemNode("SNN模型", [new TreeItemNode("连接文件", [])]),
 				// 	new TreeItemNode("数据", [new TreeItemNode("训练数据", []), new TreeItemNode("测试数据", []), new TreeItemNode("测试数据标签", [])])
-				// ]), new TreeItemNode("模拟器", []), new TreeItemNode("编译映射", [new TreeItemNode("Darwin二进制文件", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件", [])])])], true, "root"));
+				// ]), new TreeItemNode("模拟器", []), new TreeItemNode("编译映射", [new TreeItemNode("Darwin II", [new TreeItemNode("模型文件", []), new TreeItemNode("编解码配置文件", [])])])], true, "root"));
 				let xNormFileOriginName = path.basename(X_NORM_DATA_PATH!),
 					xTestFileOriginName = path.basename(X_TEST_DATA_PATH!),
 					yTestFileOriginName = path.basename(Y_TEST_DATA_PATH!);
@@ -1310,7 +1319,7 @@ export function activate(context: vscode.ExtensionContext) {
 								"packed_bin_files.dat"))) {
 					ITEM_ICON_MAP.set("packed_bin_files.dat", "imgs/data_file_icon_new.png");
 					inMemTreeViewStruct[0].children![1].children!.splice(1);
-					inMemTreeViewStruct[0].children![1].children!.push(new TreeItemNode("Darwin3", [], false, "Darwin3", 2));
+					inMemTreeViewStruct[0].children![1].children!.push(new TreeItemNode("Darwin III", [], false, "Darwin III", 2));
 					inMemTreeViewStruct[0].children![1].children![1].children!.push(new TreeItemNode("packed_bin_files.dat"));
 					// inMemTreeViewStruct[0].children![1].children![1].children!.push(new TreeItemNode("darwin3_"+path.basename(PROJ_SAVE_PATH!).replace("\.dar2","")+".zip"));
 				}
@@ -2142,7 +2151,7 @@ def calc_vthreshold(layer_weights_int:List[np.ndarray], layer_weights_float:List
 	// 		]),
 	// 	]),
 	// 	new TreeItemNode("模型编译", [
-	// 		new TreeItemNode("Darwin二进制文件", [
+	// 		new TreeItemNode("Darwin II", [
 	// 			new TreeItemNode("模型文件", []),
 	// 			new TreeItemNode("编解码配置文件", [])
 	// 		])

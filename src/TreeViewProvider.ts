@@ -17,8 +17,8 @@ export let ITEM_ICON_MAP = new Map<string, string>([
     ['连接文件',"imgs/conn_files_icon.png"],
     ['模拟器', "imgs/simulate_icon.png"],
     ['编译',"imgs/darwin_binary.png"],
-    ['Darwin二进制文件',"imgs/binary_compile_icon.png"],
-    ["Darwin3", "imgs/binary_compile_icon.png"],
+    ['Darwin II',"imgs/binary_compile_icon.png"],
+    ["Darwin III", "imgs/binary_compile_icon.png"],
     ["ANN-SNN转换","imgs/convert_icon.png",],
     ["模型文件","imgs/binary_compile_icon.png"],
     ["编解码配置文件","imgs/binary_compile_icon.png"]

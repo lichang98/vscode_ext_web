@@ -69,9 +69,10 @@ target_files = [os.path.join(outputPath,"..", "bin_darwin_out", self_def_config_
                 os.path.join(outputPath, "..", "..", "..", "..", "inner_scripts", "encoding.py"),
                 os.path.join(outputPath, "..", "..", "..", "..", "inner_scripts", "spikeClassify.py")]
 
-preprocess_files = list(os.listdir(os.path.join(outputPath, "..", "preprocess")))
-preprocess_files = [os.path.join(outputPath, "..", "preprocess", e) for e in preprocess_files]
-target_files.extend(preprocess_files)
+if os.path.exists(os.path.join(outputPath, "..", "preprocess")):
+    preprocess_files = list(os.listdir(os.path.join(outputPath, "..", "preprocess")))
+    preprocess_files = [os.path.join(outputPath, "..", "preprocess", e) for e in preprocess_files]
+    target_files.extend(preprocess_files)
 
 darwin_lang_files = list(os.listdir(outputPath))
 darwin_lang_files = [os.path.join(outputPath, e) for e in darwin_lang_files]

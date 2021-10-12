@@ -2791,6 +2791,7 @@ export function getANNSNNConvertPage(){
                       process_pie_update(processPie, process_pie_option, Math.min(Math.floor((log_output_lists.length / s4_fin_stub) * 100), 25));                        
                   }
                   if(stage1_convert_finish){
+                      document.getElementById("model_convert_progress_div").style.width = "100%";
                       if(log_output_lists.length < s2_fin_stub && stage2_preprocess_finish !== true){
                           console.log("increase sub progress bar 2");
                               document.getElementById("preprocess_progress_div").style.width = ""+parseInt((log_output_lists.length-s1_fin_stub)/(s2_fin_stub-s1_fin_stub)*100)+"%";
@@ -2798,6 +2799,7 @@ export function getANNSNNConvertPage(){
                       }
                   }
                   if(stage2_preprocess_finish){
+                      document.getElementById("preprocess_progress_div").style.width = "100%";
                       if(log_output_lists.length < s3_fin_stub && stage3_search_finish !== true){
                           console.log("increase sub progress bar 3");
                               document.getElementById("search_progress_div").style.width = ""+parseInt((log_output_lists.length-s2_fin_stub)/(s3_fin_stub-s2_fin_stub)*100)+"%";
@@ -2805,6 +2807,7 @@ export function getANNSNNConvertPage(){
                       }
                   }
                   if(stage3_search_finish){
+                      document.getElementById("search_progress_div").style.width = "100%";
                       if(log_output_lists.length < s4_fin_stub && stage4_all_finish !== true){
                           console.log("increase sub progress bar 4");
                               document.getElementById("darlang_progress_div").style.width = ""+parseInt((log_output_lists.length-s3_fin_stub)/(s4_fin_stub-s3_fin_stub)*100)+"%";
@@ -5646,6 +5649,7 @@ export function getPreprocessPage():string{
               //preprocesses 
               preprocess_area.empty();
               for (let i = 0; i < preprocess_config.processes.length; ++i) {
+                  console.log("添加preprocess: "+JSON.stringify(preprocess_config.processes));
                   add_method_form(preprocess_area);
               }
   

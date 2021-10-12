@@ -577,7 +577,8 @@ export function activate(context: vscode.ExtensionContext) {
 						new TreeItemNode("Darwin II", [
 							new TreeItemNode("模型文件", []),
 							new TreeItemNode("编解码配置文件", [])
-						])
+						]),
+						new TreeItemNode("Darwin III", [])
 					])
 				], true, "root"));
 				// inMemTreeViewStruct.push(new TreeItemNode(data.project_info.project_name, [new TreeItemNode("模型转换", [
@@ -896,7 +897,8 @@ export function activate(context: vscode.ExtensionContext) {
 								new TreeItemNode("Darwin II", [
 									new TreeItemNode("模型文件", [], false, "模型文件", 2),
 									new TreeItemNode("编解码配置文件", [], false, "模型文件", 2)
-								], false, "Darwin II", 2)
+								], false, "Darwin II", 2),
+								new TreeItemNode("Darwin III", [])
 							], false, "编译", 2));
 			
 							inMemTreeViewStruct[0].children![1].children![0].children![0].children!.splice(0);
@@ -1222,7 +1224,8 @@ export function activate(context: vscode.ExtensionContext) {
 						new TreeItemNode("Darwin II", [
 							new TreeItemNode("模型文件", []),
 							new TreeItemNode("编解码配置文件", [])
-						])
+						]),
+						new TreeItemNode("Darwin III", [])
 					])
 				], true, "root"));
 				// inMemTreeViewStruct.push(new TreeItemNode(PROJ_DESC_INFO.project_name, [new TreeItemNode("模型转换", [
@@ -1836,7 +1839,9 @@ export function activate(context: vscode.ExtensionContext) {
 				setTimeout(() => {
 					if(PROJ_DESC_INFO.project_type === "语音识别") {
 						console.log("语音识别任务向 模型转换界面发送预设参数。。。。");
-						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 36}));
+						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 19}));
+						currentPanel!.webview.postMessage(JSON.stringify({"progress_stub": "yes", 
+							"s1_fin_stub": 81, "s2_fin_stub": 318, "s3_fin_stub": 418, "s4_fin_stub": 440}));
 					} else if (PROJ_DESC_INFO.project_type === "疲劳检测") {
 						console.log("疲劳检测任务向  模型转换界面发送预设参数。。。。");
 						currentPanel!.webview.postMessage(JSON.stringify({"preset_param": "yes", "vthresh": 5}));
@@ -1848,7 +1853,7 @@ export function activate(context: vscode.ExtensionContext) {
 						currentPanel!.webview.postMessage(JSON.stringify({"progress_stub": "yes", 
 								"s1_fin_stub": 121, "s2_fin_stub": 333, "s3_fin_stub": 433, "s4_fin_stub": 460}));
 					}
-				}, 800);
+				}, 1000);
 				console.log("显示currentpane  模型转换   1");
 				if (!fs.existsSync(path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py"))) {
 					fs.writeFileSync(path.join(path.dirname(PROJ_SAVE_PATH!), "self_preprocess.py"),`# -*- coding:utf-8 -*-

@@ -446,6 +446,7 @@
             //preprocesses 
             preprocess_area.empty();
             for (let i = 0; i < preprocess_config.processes.length; ++i) {
+                console.log("添加preprocess: "+JSON.stringify(preprocess_config.processes));
                 add_method_form(preprocess_area);
             }
 
